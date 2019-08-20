@@ -1,4 +1,4 @@
-# Activiti6-modeler-demo
+# cpss-designer
 spring boot 1.5.8整合Activiti6.0及其Activiti-modeler
 
 启动项目注意事项：  
@@ -9,4 +9,4 @@ spring boot 1.5.8整合Activiti6.0及其Activiti-modeler
 ![流程实例列表.png](src/main/resources/static/img/流程实例列表.png)
 
 ![流程设计器.png](src/main/resources/static/img/流程设计器.png)
-# cpss-designer
+
