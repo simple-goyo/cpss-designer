@@ -10,3 +10,13 @@ spring boot 1.5.8整合Activiti6.0及其Activiti-modeler
 
 ![流程设计器.png](src/main/resources/static/img/流程设计器.png)
 
+
+# Make Project
+```Shell
+mvn package
+```
+
+# Run
+```Shell
+java -jar ./target/activiti6-demo-1.0.0.jar
+```
