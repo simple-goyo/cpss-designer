@@ -911,6 +911,19 @@
       ]
     },
     {
+      "name": "resourcespackage",
+      "properties": [
+        {
+          "id": "resources",
+          "type": "Complex",
+          "title": "资源",
+          "value": "",
+          "description": "选择具体资源",
+          "popular": true
+        }
+      ]
+    },
+    {
       "name": "servicespackage",
       "properties": [
         {
@@ -977,6 +990,263 @@
       ],
       "hiddenPropertyPackages": [],
       "roles": []
+    },{
+      "type": "node",
+      "id": "Person",
+      "title": "人",
+      "description": "人资源",
+      "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\"m19,19c4.14375,0 7.5,-3.35625 7.5,-7.5s-3.35625,-7.5 -7.5,-7.5s-7.5,3.35625 -7.5,7.5s3.35625,7.5 7.5,7.5zm0,3.75c-5.00625,0 -15,2.5125 -15,7.5l0,3.75l30,0l0,-3.75c0,-4.9875 -9.99375,-7.5 -15,-7.5z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
+      "icon": "socialentity/person.png",
+      "groups": [
+        "社会实体"
+      ],
+      "propertyPackages": [
+        "overrideidpackage",
+        "namepackage",
+        "documentationpackage",
+        "executionlistenerspackage",
+        "initiatorpackage",
+        "formkeydefinitionpackage",
+        "formpropertiespackage",
+        "resourcespackage",
+        "servicespackage"
+      ],
+      "hiddenPropertyPackages": [],
+      "roles": [
+        "sequence_start",
+        "Startevents_all",
+        "StartEventsMorph",
+        "all"
+      ]
+    },
+    {
+      "type": "node",
+      "id": "Organization",
+      "title": "组织",
+      "description": "组织资源",
+      "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\"m5.684211,16.857142l0,12.333333l5.526316,0l0,-12.333333l-5.526316,0zm11.052632,0l0,12.333333l5.526316,0l0,-12.333333l-5.526316,0zm-14.736842,21.142857l35,0l0,-5.285714l-35,0l0,5.285714zm25.789474,-21.142857l0,12.333333l5.526316,0l0,-12.333333l-5.526316,0zm-8.289474,-15.857142l-17.5,8.809524l0,3.523809l35,0l0,-3.523809l-17.5,-8.809524z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
+      "icon": "socialentity/organization.png",
+      "groups": [
+        "社会实体"
+      ],
+      "propertyPackages": [
+        "overrideidpackage",
+        "namepackage",
+        "documentationpackage",
+        "executionlistenerspackage",
+        "initiatorpackage",
+        "formkeydefinitionpackage",
+        "formpropertiespackage",
+        "resourcespackage",
+        "servicespackage"
+      ],
+      "hiddenPropertyPackages": [],
+      "roles": [
+        "sequence_start",
+        "Startevents_all",
+        "StartEventsMorph",
+        "all"
+      ]
+    },
+    {
+      "type": "node",
+      "id": "Device",
+      "title": "设备",
+      "description": "设备资源",
+      "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\"m19.640998,20.909092l0,-1.818182l2.075533,-1.454545c0.188685,-0.181818 0.188685,-0.363636 0.188685,-0.545455l-1.886848,-3.090909c-0.188685,-0.181818 -0.37737,-0.363636 -0.566054,-0.181818l-2.452903,0.727273c-0.566054,-0.363636 -1.132109,-0.727273 -1.698163,-0.909091l-0.37737,-2.363636c0,-0.181818 -0.188685,-0.363636 -0.566054,-0.363636l-3.773696,0c-0.188685,0 -0.37737,0.181818 -0.566054,0.363636l-0.37737,2.363636c-0.566054,0.181818 -1.132109,0.545455 -1.698163,0.909091l-2.452903,-0.909091c-0.188685,0 -0.37737,0 -0.566054,0.181818l-1.886848,3.090909c-0.188685,0.181818 0,0.363636 0.188685,0.545455l2.075533,1.454545l0,1.818182l-2.075533,1.454545c-0.188685,0.363636 -0.188685,0.545455 -0.188685,0.727273l1.886848,3.090909c0.188685,0.181818 0.37737,0.363636 0.566054,0.181818l2.641587,-0.727273c0.566054,0.363636 1.132109,0.727273 1.698163,0.909091l0.37737,2.363636c-0.188685,0.181818 0.188685,0.363636 0.37737,0.363636l3.773696,0c0.188685,0 0.37737,-0.181818 0.566054,-0.363636l0.37737,-2.363636c0.566054,-0.181818 1.132109,-0.545455 1.698163,-0.909091l2.452903,0.909091c0.188685,0 0.37737,0 0.566054,-0.181818l1.886848,-3.090909c0.188685,-0.181818 0,-0.363636 -0.188685,-0.545455l-2.075533,-1.636364zm-7.170023,2.727273c-2.075533,0 -3.773696,-1.636364 -3.773696,-3.636364s1.698163,-3.636364 3.773696,-3.636364s3.773696,1.636364 3.773696,3.636364s-1.698163,3.636364 -3.773696,3.636364zm20.755329,-23.636364l-18.868481,0c-2.075533,0 -3.773696,1.636364 -3.773696,3.636364l0,5.454546l3.773696,0l0,-3.636364l18.868481,0l0,29.09091l-18.868481,0l0,-3.636364l-3.773696,0l0,5.454546c0,2 1.698163,3.636364 3.773696,3.636364l18.868481,0c2.075533,0 3.773696,-1.636364 3.773696,-3.636364l0,-32.727274c0,-2 -1.698163,-3.636364 -3.773696,-3.636364z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
+      "icon": "physicalentity/device.png",
+      "groups": [
+        "物理实体"
+      ],
+      "propertyPackages": [
+        "overrideidpackage",
+        "namepackage",
+        "documentationpackage",
+        "executionlistenerspackage",
+        "initiatorpackage",
+        "formkeydefinitionpackage",
+        "formpropertiespackage",
+        "resourcespackage",
+        "servicespackage"
+      ],
+      "hiddenPropertyPackages": [],
+      "roles": [
+        "sequence_start",
+        "Startevents_all",
+        "StartEventsMorph",
+        "all"
+      ]
+    },{
+      "type": "node",
+      "id": "PysicalObject",
+      "title": "物品",
+      "description": "物品",
+      "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\"m23,13.43636l-2,-1.72727l-8,6.90909l-8,-6.90909l-2,1.72727l8,6.90909l-8,6.90909l2,1.72727l8,-6.90909l8,6.90909l2,-1.72727l-8,-6.90909l8,-6.90909zm12,-12.43636l-20,0c-2.2,0 -4,1.55455 -4,3.45455l0,5.18182l4,0l0,-3.45455l20,0l0,27.63636l-20,0l0,-3.45455l-4,0l0,5.18182c0,1.9 1.8,3.45455 4,3.45455l20,0c2.2,0 4,-1.55455 4,-3.45455l0,-31.09091c0,-1.9 -1.8,-3.45455 -4,-3.45455z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
+      "icon": "physicalentity/pysicalobject.png",
+      "groups": [
+        "物理实体"
+      ],
+      "propertyPackages": [
+        "overrideidpackage",
+        "namepackage",
+        "documentationpackage",
+        "executionlistenerspackage",
+        "initiatorpackage",
+        "formkeydefinitionpackage",
+        "formpropertiespackage",
+        "resourcespackage",
+        "servicespackage"
+      ],
+      "hiddenPropertyPackages": [],
+      "roles": [
+        "sequence_start",
+        "Startevents_all",
+        "StartEventsMorph",
+        "all"
+      ]
+    },{
+      "type": "node",
+      "id": "Robot",
+      "title": "机器人",
+      "description": "机器人",
+      "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\"m9.6,29.999999c0,0.916667 0.855,1.666667 1.9,1.666667l1.9,0l0,5.833333c0,1.383333 1.273,2.5 2.85,2.5s2.85,-1.116667 2.85,-2.5l0,-5.833333l3.8,0l0,5.833333c0,1.383333 1.273,2.5 2.85,2.5s2.85,-1.116667 2.85,-2.5l0,-5.833333l1.9,0c1.045,0 1.9,-0.75 1.9,-1.666667l0,-16.666666l-22.8,0l0,16.666666zm-4.75,-16.666666c-1.577,0 -2.85,1.116667 -2.85,2.5l0,11.666666c0,1.383333 1.273,2.5 2.85,2.5s2.85,-1.116667 2.85,-2.5l0,-11.666666c0,-1.383333 -1.273,-2.5 -2.85,-2.5zm32.3,0c-1.577,0 -2.85,1.116667 -2.85,2.5l0,11.666666c0,1.383333 1.273,2.5 2.85,2.5s2.85,-1.116667 2.85,-2.5l0,-11.666666c0,-1.383333 -1.273,-2.5 -2.85,-2.5zm-9.443,-9.733333l2.47,-2.166667c0.38,-0.333333 0.38,-0.85 0,-1.183333c-0.38,-0.333333 -0.969,-0.333333 -1.349,0l-2.812,2.466667c-1.501,-0.666667 -3.211,-1.05 -5.016,-1.05c-1.824,0 -3.534,0.383333 -5.054,1.05l-2.831,-2.466667c-0.38,-0.333333 -0.969,-0.333333 -1.349,0c-0.38,0.333333 -0.38,0.85 0,1.183333l2.489,2.183333c-2.812,1.816667 -4.655,4.733333 -4.655,8.05l22.8,0c0,-3.316667 -1.843,-6.25 -4.693,-8.066666zm-10.507,4.733333l-1.9,0l0,-1.666667l1.9,0l0,1.666667zm9.5,0l-1.9,0l0,-1.666667l1.9,0l0,1.666667z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
+      "icon": "physicalentity/robot.png",
+      "groups": [
+        "物理实体"
+      ],
+      "propertyPackages": [
+        "overrideidpackage",
+        "namepackage",
+        "documentationpackage",
+        "executionlistenerspackage",
+        "initiatorpackage",
+        "formkeydefinitionpackage",
+        "formpropertiespackage",
+        "resourcespackage",
+        "servicespackage"
+      ],
+      "hiddenPropertyPackages": [],
+      "roles": [
+        "sequence_start",
+        "Startevents_all",
+        "StartEventsMorph",
+        "all"
+      ]
+    },
+    {
+      "type": "node",
+      "id": "CloudApp",
+      "title": "云应用",
+      "description": "云应用",
+      "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\" m32.250002,17.325001c-1.133333,-6.46875 -6.183334,-11.325001 -12.250001,-11.325001c-4.816667,0 -9.000001,3.075 -11.083334,7.575c-5.016667,0.6 -8.916667,5.38125 -8.916667,11.175001c0,6.20625 4.483334,11.250001 10.000001,11.250001l21.666668,0c4.6,0 8.333334,-4.2 8.333334,-9.375c0,-4.95 -3.416667,-8.9625 -7.75,-9.3z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
+      "icon": "cyberentity/cloudapp.png",
+      "groups": [
+        "信息实体"
+      ],
+      "propertyPackages": [
+        "overrideidpackage",
+        "namepackage",
+        "documentationpackage",
+        "executionlistenerspackage",
+        "initiatorpackage",
+        "formkeydefinitionpackage",
+        "formpropertiespackage",
+        "resourcespackage",
+        "servicespackage"
+      ],
+      "hiddenPropertyPackages": [],
+      "roles": [
+        "sequence_start",
+        "Startevents_all",
+        "StartEventsMorph",
+        "all"
+      ]
+    },{
+      "type": "node",
+      "id": "MobileApp",
+      "title": "移动应用",
+      "description": "移动应用",
+      "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\" m28,1l-16,0c-3.32,0 -6,2.314545 -6,5.181818l0,27.636364c0,2.867273 2.68,5.181818 6,5.181818l16,0c3.32,0 6,-2.314545 6,-5.181818l0,-27.636364c0,-2.867273 -2.68,-5.181818 -6,-5.181818zm-4,34.545455l-8,0l0,-1.727273l8,0l0,1.727273zm6.5,-5.181818l-21,0l0,-24.181818l21,0l0,24.181818z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
+      "icon": "cyberentity/deviceapp.png",
+      "groups": [
+        "信息实体"
+      ],
+      "propertyPackages": [
+        "overrideidpackage",
+        "namepackage",
+        "documentationpackage",
+        "executionlistenerspackage",
+        "initiatorpackage",
+        "formkeydefinitionpackage",
+        "formpropertiespackage",
+        "resourcespackage",
+        "servicespackage"
+      ],
+      "hiddenPropertyPackages": [],
+      "roles": [
+        "sequence_start",
+        "Startevents_all",
+        "StartEventsMorph",
+        "all"
+      ]
+    },
+    {
+      "type": "node",
+      "id": "EmbeddedApp",
+      "title": "嵌入式应用",
+      "description": "嵌入式应用",
+      "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\" m34.399999,0l-28.799999,0c-1.98,0 -3.6,1.8 -3.6,4l0,32c0,2.2 1.62,4 3.6,4l28.799999,0c1.98,0 3.6,-1.8 3.6,-4l0,-32c0,-2.2 -1.62,-4 -3.6,-4zm0,36l-28.799999,0l0,-32l28.799999,0l0,32zm-3.6,-28l-9,0c-1.98,0 -3.6,1.8 -3.6,4l0,4.56c-1.08,0.7 -1.8,1.96 -1.8,3.44c0,2.2 1.62,4 3.6,4s3.6,-1.8 3.6,-4c0,-1.48 -0.72,-2.76 -1.8,-3.44l0,-4.56l5.4,0l0,16l-14.4,0l0,-16l3.6,0l0,-4l-7.2,0l0,24l21.599999,0l0,-24z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
+      "icon": "cyberentity/embeddedapp.png",
+      "groups": [
+        "信息实体"
+      ],
+      "propertyPackages": [
+        "overrideidpackage",
+        "namepackage",
+        "documentationpackage",
+        "executionlistenerspackage",
+        "initiatorpackage",
+        "formkeydefinitionpackage",
+        "formpropertiespackage",
+        "resourcespackage",
+        "servicespackage"
+      ],
+      "hiddenPropertyPackages": [],
+      "roles": [
+        "sequence_start",
+        "Startevents_all",
+        "StartEventsMorph",
+        "all"
+      ]
+    },
+    {
+      "type": "node",
+      "id": "CyberObject ",
+      "title": "信息对象",
+      "description": "信息对象",
+      "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\" m4.454545,7.909091l-3.454545,0l0,27.636364c0,1.9 1.554545,3.454545 3.454545,3.454545l27.636364,0l0,-3.454545l-27.636364,0l0,-27.636364zm19,17.272727l3.454545,0l0,-17.272727l-6.909091,0l0,3.454545l3.454545,0l0,13.818182zm12.090909,-24.181818l-24.181818,0c-1.9,0 -3.454545,1.554545 -3.454545,3.454545l0,24.181818c0,1.9 1.554545,3.454545 3.454545,3.454545l24.181818,0c1.9,0 3.454545,-1.554545 3.454545,-3.454545l0,-24.181818c0,-1.9 -1.554545,-3.454545 -3.454545,-3.454545zm0,27.636364l-24.181818,0l0,-24.181818l24.181818,0l0,24.181818z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
+      "icon": "cyberentity/cyberobject.png",
+      "groups": [
+        "信息实体"
+      ],
+      "propertyPackages": [
+        "overrideidpackage",
+        "namepackage",
+        "documentationpackage",
+        "executionlistenerspackage",
+        "initiatorpackage",
+        "formkeydefinitionpackage",
+        "formpropertiespackage",
+        "resourcespackage",
+        "servicespackage"
+      ],
+      "hiddenPropertyPackages": [],
+      "roles": [
+        "sequence_start",
+        "Startevents_all",
+        "StartEventsMorph",
+        "all"
+      ]
     },
     {
       "type": "node",
@@ -995,7 +1265,9 @@
         "executionlistenerspackage",
         "initiatorpackage",
         "formkeydefinitionpackage",
-        "formpropertiespackage"
+        "formpropertiespackage",
+        "resourcespackage",
+        "servicespackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [

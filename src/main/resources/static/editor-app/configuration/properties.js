@@ -99,5 +99,9 @@ KISBPM.PROPERTY_CONFIG =
     "oryx-services-complex" : {
         "readModeTemplateUrl": "editor-app/configuration/properties/services-display-template.html",
         "writeModeTemplateUrl": "editor-app/configuration/properties/services-write-template.html"
+    },
+    "oryx-resources-complex" : {
+        "readModeTemplateUrl": "editor-app/configuration/properties/services-display-template.html",
+        "writeModeTemplateUrl": "editor-app/configuration/properties/resources-write-template.html"
     }
 };

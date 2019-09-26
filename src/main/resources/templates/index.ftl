@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8"/>
-<title>Activiti6流程设计器Demo</title>
+<title>人机物编程模型设计器</title>
 
 </head>
 <body>
