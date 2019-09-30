@@ -22,7 +22,7 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("forward:/home");
+        registry.addViewController("/").setViewName("forward:/home.html");
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
         super.addViewControllers(registry);
     }

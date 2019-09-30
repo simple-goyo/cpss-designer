@@ -4,18 +4,11 @@
     "children": [
       {
         "label": "资源列表",
-        "children": [
-          {"label": "1","link":"page1"},
-          {"label": "2","link":"page2"},
-          {"label": "3","link":"page3"},
-          {"label": "4","link":"page4"}
-        ]
+        "children": []
       },
       {
         "label": "使用统计",
-        "children": [
-          {"label": "使用状态监控","link":"page1"}
-        ]
+        "children": []
       }
     ]
   },
@@ -24,9 +17,7 @@
     "children": [
       {
         "label": "应用设计",
-        "children": [
-          {"label": "1","link":"editor"}
-        ]
+        "children": []
       },
       {
         "label": "应用发布",
@@ -39,9 +30,7 @@
     "children": [
       {
         "label": "执行统计",
-        "children": [
-          {"label": "宏观数据概览","link":"amap"}
-        ]
+        "children": []
       },
       {
         "label": "执行动态",
@@ -49,5 +38,9 @@
         "children": []
       }
     ]
+  },
+  {
+    "label": "系统管理",
+    "children": []
   }
 ]

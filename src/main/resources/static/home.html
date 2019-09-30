@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8"/>
-    <title>人机物融合应用</title>
+    <title>人机物融合应用1</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="editor-app/libs/bootstrap_3.1.1/css/bootstrap.min.css"/>
@@ -23,7 +23,7 @@
 
     <link rel="stylesheet" href="css/navigation.css"/>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini" ng-app="home">
 <div class="wrapper">
 
     <!-- Main Header -->
@@ -212,7 +212,7 @@
         </nav>
     </header>
     <!-- Left side column. contains the logo and sidebar -->
-    <aside class="main-sidebar">
+    <aside class="main-sidebar" ng-controller="NavbarCtrl">
 
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
@@ -243,37 +243,18 @@
 
             <!-- Sidebar Menu -->
             <ul class="sidebar-menu" data-widget="tree">
-                <li class="header">HEADER</li>
-                <!-- Optionally, you can add icons to the links -->
-                <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
-                <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-                <li class="treeview">
-                    <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
-                        <span class="pull-right-container">
+                <!--<#&#45;&#45;<li class="header">HEADER</li>&ndash;&gt;-->
+                <!--&lt;!&ndash; Optionally, you can add icons to the links &ndash;&gt;-->
+                <!--<#&#45;&#45;<li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>&ndash;&gt;-->
+                <!--<#&#45;&#45;<li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>&ndash;&gt;-->
+                <li ng-repeat="a1 in navbar" ng-class="{treeview:a1.children.length>0}">
+                    <a href="#"><i class="fa fa-link"></i> <span>{{ a1.label }}</span>
+                        <span class="pull-right-container" ng-if="a1.children.length>0">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
                     </a>
-                    <ul class="treeview-menu">
-                        <li><a href="javascript:void(0)" class="myLeftMenu" data="add.html">我是add</a></li>
-                        <li><a href="javascript:void(0)" class="myLeftMenu" data="checkbox.html">点击是checkbox页面</a></li>
-                        <li><a href="javascript:void(0)" class="myLeftMenu" data="userList.html">我是userList</a></li>
-                    </ul>
-                </li>
-
-                <li class="header text-center panel panel-primary"><span class="fa-lg ">我就是系统标题</span></li>
-                <!-- Optionally, you can add icons to the links -->
-                <li class=""><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
-                <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-                <li class="treeview">
-                    <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
-                        <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="javascript:void(0)" class="myLeftMenu" data="add.html">我是add</a></li>
-                        <li><a href="javascript:void(0)" class="myLeftMenu" data="checkbox.html">点击是checkbox页面</a></li>
-                        <li><a href="javascript:void(0)" class="myLeftMenu" data="userList.html">我是userList</a></li>
+                    <ul class="treeview-menu" ng-if="a1.children.length>0">
+                        <li ng-repeat="a2 in a1.children"><a href="javascript:void(0)" class="myLeftMenu" data="add.html">{{ a2.label }}</a></li>
                     </ul>
                 </li>
             </ul>
@@ -410,7 +391,7 @@
 <script src="editor-app/libs/bootstrap_3.1.1/js/bootstrap.min.js"></script>
 <script src="editor-app/libs/angular-ui-router.min.js"></script>
 <script src="https://webapi.amap.com/maps?v=1.4.15&key=0527fc08a6b9ab7a0d2dacdf50ed20d6"></script>
-<script src="js/app.js"></script>
+<script src="app/app.js"></script>
 <!-- AdminLTE App -->
 <script src="js/adminlte.js"></script>
 <!-- Optionally, you can add Slimscroll and FastClick plugins.

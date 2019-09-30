@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class NavigationController {
 
-    @RequestMapping("home")
-    public String editor(){
-        return "home";
-    }
+//    @RequestMapping("home")
+//    public String editor(){
+//        return "home";
+//    }
 
 }
