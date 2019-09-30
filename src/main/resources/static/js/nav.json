@@ -1,0 +1,53 @@
+[
+  {
+    "label": "资源管理",
+    "children": [
+      {
+        "label": "资源列表",
+        "children": [
+          {"label": "1","link":"page1"},
+          {"label": "2","link":"page2"},
+          {"label": "3","link":"page3"},
+          {"label": "4","link":"page4"}
+        ]
+      },
+      {
+        "label": "使用统计",
+        "children": [
+          {"label": "使用状态监控","link":"page1"}
+        ]
+      }
+    ]
+  },
+  {
+    "label": "应用管理",
+    "children": [
+      {
+        "label": "应用设计",
+        "children": [
+          {"label": "1","link":"editor"}
+        ]
+      },
+      {
+        "label": "应用发布",
+        "children": []
+      }
+    ]
+  },
+  {
+    "label": "执行管理",
+    "children": [
+      {
+        "label": "执行统计",
+        "children": [
+          {"label": "宏观数据概览","link":"amap"}
+        ]
+      },
+      {
+        "label": "执行动态",
+        "link":"amap",
+        "children": []
+      }
+    ]
+  }
+]

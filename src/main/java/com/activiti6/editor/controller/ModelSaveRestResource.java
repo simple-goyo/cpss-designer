@@ -1,4 +1,4 @@
-package com.activiti6.controller.editor;
+package com.activiti6.editor.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

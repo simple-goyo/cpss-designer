@@ -1,4 +1,4 @@
-package com.activiti6.controller;
+package com.activiti6.editor.controller;
 
 import java.io.IOException;
 import java.util.HashMap;

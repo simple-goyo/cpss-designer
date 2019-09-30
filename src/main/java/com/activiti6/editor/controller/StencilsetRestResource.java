@@ -1,4 +1,4 @@
-package com.activiti6.controller.editor;
+package com.activiti6.editor.controller;
 
 import org.activiti.engine.ActivitiException;
 import org.apache.commons.io.IOUtils;
