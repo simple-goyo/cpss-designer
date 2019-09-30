@@ -3,12 +3,10 @@
     "label": "资源管理",
     "children": [
       {
-        "label": "资源列表",
-        "children": []
+        "label": "资源列表"
       },
       {
-        "label": "使用统计",
-        "children": []
+        "label": "使用统计"
       }
     ]
   },
@@ -17,11 +15,10 @@
     "children": [
       {
         "label": "应用设计",
-        "children": []
+        "link":"/index"
       },
       {
-        "label": "应用发布",
-        "children": []
+        "label": "应用发布"
       }
     ]
   },
@@ -29,18 +26,15 @@
     "label": "执行管理",
     "children": [
       {
-        "label": "执行统计",
-        "children": []
+        "label": "执行统计"
       },
       {
         "label": "执行动态",
-        "link":"amap",
-        "children": []
+        "link":"amap"
       }
     ]
   },
   {
-    "label": "系统管理",
-    "children": []
+    "label": "系统管理"
   }
 ]

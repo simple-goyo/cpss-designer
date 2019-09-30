@@ -247,14 +247,14 @@
                 <!--&lt;!&ndash; Optionally, you can add icons to the links &ndash;&gt;-->
                 <!--<#&#45;&#45;<li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>&ndash;&gt;-->
                 <!--<#&#45;&#45;<li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>&ndash;&gt;-->
-                <li ng-repeat="a1 in navbar" ng-class="{treeview:a1.children.length>0}">
+                <li ng-repeat="a1 in navbar" ng-class="{treeview:a1.children.length>0}" ng-click="clickMenu()">
                     <a href="#"><i class="fa fa-link"></i> <span>{{ a1.label }}</span>
                         <span class="pull-right-container" ng-if="a1.children.length>0">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
                     </a>
                     <ul class="treeview-menu" ng-if="a1.children.length>0">
-                        <li ng-repeat="a2 in a1.children"><a href="javascript:void(0)" class="myLeftMenu" data="add.html">{{ a2.label }}</a></li>
+                        <li ng-repeat="a2 in a1.children"><a class="myLeftMenu" data="{{ a2.link }}" ng-click="clickItem(a2.link)">{{ a2.label }}</a></li>
                     </ul>
                 </li>
             </ul>
@@ -265,17 +265,17 @@
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-            <h1>
-                Page Header
-                <small>Optional description</small>
-            </h1>
-            <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                <li class="active">Here</li>
-            </ol>
-        </section>
+        <!--&lt;!&ndash; Content Header (Page header) &ndash;&gt;-->
+        <!--<section class="content-header">-->
+            <!--<h1>-->
+                <!--Page Header-->
+                <!--<small>Optional description</small>-->
+            <!--</h1>-->
+            <!--<ol class="breadcrumb">-->
+                <!--<li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>-->
+                <!--<li class="active">Here</li>-->
+            <!--</ol>-->
+        <!--</section>-->
 
         <!-- Main content -->
         <section class="content container-fluid">
@@ -399,18 +399,16 @@
      user experience. -->
 <script>
     $(function () {
-        $('ul.sidebar-menu li').click(function () {
-            var li = $('ul.sidebar-menu li.active');
-            li.removeClass('active');
-            $(this).addClass('active');
-        });
-
-        $('.myLeftMenu').click(function (e) {
-
-            var url = $(this).attr('data');
-            //  console.log(url);
-            $('#container').load(url);
-        });
+        // $('ul.sidebar-menu li').click(function () {
+        //
+        // });
+        //
+        // $('.myLeftMenu').click(function (e) {
+        //
+        //     var url = $(this).attr('data');
+        //     //  console.log(url);
+        //     $('#container').load(url);
+        // });
     })
 </script>
 </body>
