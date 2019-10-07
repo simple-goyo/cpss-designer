@@ -121,6 +121,10 @@
                             </div>
                         </div>
                         <div class="selected-item-body">
+                            <span>
+                            <ng-include
+                                    src="'editor-app/configuration/properties/propertyInit.html'"
+                                    ng-if="property.mode=='set'"></ng-include></span>
                             <div>
                                 <div class="property-row" ng-repeat="property in selectedItem.properties"
                                      ng-click="propertyClicked($index)" ng-class="{'clear' : $index%2 == 0}">
