@@ -27,30 +27,34 @@
 <div class="wrapper">
 
     <!-- Main Header -->
-    <header class="main-header">
+    <header class="main-header"  >
 
-        <!-- Logo -->
-        <a href="index2.html" target="_blank" class="logo">
+         <!--Logo -->
+        <a href="index2.html" target="_blank" class="logo" style="background-image: url(img/header-profile-down.png)" >
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>C</b>RM</span>
+            <span class="logo-mini"><b>P</b>RM</span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>Welcome</b>  visit crm</span>
+
+            <span class="logo-lg">人机物系统</span>
         </a>
 
         <!-- Header Navbar -->
-        <nav class="navbar navbar-static-top" role="navigation">
+        <nav class="navbar navbar-static-top" role="navigation" style="background-color:white">
             <!-- Sidebar toggle button-->
-            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-                <span class="sr-only">Toggle navigation</span>
+
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button" style="padding-top:5px;
+padding-bottom:5px;padding-right:10px;padding-left:10px;margin-left:10px;margin-top:10px;" >
+            <span class="sr-only" >Toggle navigation</span>
             </a>
+
             <!-- Navbar Right Menu -->
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <!-- Messages: style can be found in dropdown.less-->
                     <li class="dropdown messages-menu">
                         <!-- Menu toggle button -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-envelope-o"></i>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="background-color:white">
+                            <i class="fa fa-envelope-o" style="color:grey"></i>
                             <span class="label label-success">4</span>
                         </a>
                         <ul class="dropdown-menu">
@@ -101,8 +105,8 @@
                     <!-- Notifications Menu -->
                     <li class="dropdown notifications-menu">
                         <!-- Menu toggle button -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-bell-o"></i>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="background-color:white">
+                            <i class="fa fa-bell-o" style="color:grey"></i>
                             <span class="label label-warning">10</span>
                         </a>
                         <ul class="dropdown-menu">
@@ -124,12 +128,12 @@
                     <!-- Tasks Menu -->
                     <li class="dropdown tasks-menu">
                         <!-- Menu Toggle Button -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-flag-o"></i>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="background-color:white">
+                            <i class="fa fa-tasks" style="color:grey"></i>
                             <span class="label label-danger">9</span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li class="header">You have 9 tasks</li>
+                            <li class="header">You have 9 tasks</li>tasks
                             <li>
                                 <!-- Inner menu: contains the tasks -->
                                 <ul class="menu">
@@ -161,16 +165,16 @@
                     <!-- User Account Menu -->
                     <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="background-color:white">
                             <!-- The user img in the navbar-->
                             <img src="img/1.png" class="user-image" alt="User Image">
                             <!-- hidden-xs hides the username on small devices so only the img appears. -->
-                            <span class="hidden-xs">Alexander Pierce</span>
+                            <span class="hidden-xs" style="color:grey">woker</span>
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" >
                             <!-- The user img in the menu -->
                             <li class="user-header">
-                                <img src="img/1.png" class="img-circle" alt="User Image">
+                                <img src="img/1.png" class="img-circle" alt="User Image" >
 
                                 <p>
                                     Alexander Pierce - Web Developer
@@ -205,7 +209,7 @@
                     </li>
                     <!-- Control Sidebar Toggle Button -->
                     <li>
-                        <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                        <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears" style="color:grey"></i></a>
                     </li>
                 </ul>
             </div>
@@ -215,17 +219,17 @@
     <aside class="main-sidebar" ng-controller="NavbarCtrl">
 
         <!-- sidebar: style can be found in sidebar.less -->
-        <section class="sidebar">
+        <section class="sidebar" >
 
             <!-- Sidebar user panel (optional) -->
-            <div class="user-panel">
-                <div class="pull-left image">
-                    <img src="img/3.png" class="img-circle" alt="User Image">
+            <div class="user-panel" style="background-image: url(img/header-profile.png)">
+                <div class="pull-left image" >
+                    <img src="img/3.png" class="img-circle" alt="User Image" >
                 </div>
                 <div class="pull-left info">
-                    <p>Alexander Pierce</p>
+                    <p>Admin</p>
                     <!-- Status -->
-                    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                    <a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
                 </div>
             </div>
 
@@ -248,10 +252,26 @@
                 <!--<#&#45;&#45;<li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>&ndash;&gt;-->
                 <!--<#&#45;&#45;<li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>&ndash;&gt;-->
                 <li ng-repeat="a1 in navbar" ng-class="{treeview:a1.children.length>0}" ng-click="clickMenu()">
-                    <a href="#"><i class="fa fa-link"></i> <span>{{ a1.label }}</span>
+                    <a href="#">
+                        <i class="fa" ng-class="{1:'fa-laptop',2:'fa-th-large',3:'fa-gavel',4:'fa-wrench'}[a1.icon]"></i>
+                        <!--<span ng-if="a1.icon==1">-->
+                            <!--<i class="fa fa-laptop"></i>-->
+                        <!--</span>-->
+                        <!--<span ng-if="a1.icon==2">-->
+                            <!--<i class="fa fa-th-large"></i>-->
+                        <!--</span>-->
+                        <!--<span ng-if="a1.icon==3">-->
+                            <!--<i class="fa fa-gavel"></i>-->
+                        <!--</span>-->
+                        <!--<span ng-if="a1.icon==4">-->
+                            <!--<i class="fa fa-wrench"></i>-->
+                        <!--</span>-->
+
+                        <span>{{ a1.label }}</span>
                         <span class="pull-right-container" ng-if="a1.children.length>0">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+
                     </a>
                     <ul class="treeview-menu" ng-if="a1.children.length>0">
                         <li ng-repeat="a2 in a1.children"><a class="myLeftMenu" ui-sref="{{a2.link}}">{{ a2.label }}</a></li>
@@ -303,7 +323,7 @@
         <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
             <li class="active"><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
             <li><a href="#control-sidebar-stats-tab" data-toggle="tab"><i class="fa fa-stumbleupon"></i></a></li>
-            <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
+            <li><a href="#control-sidebar-settings-tab" data-toggle="tab" ><i class="fa fa-gears" ></i></a></li>
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">

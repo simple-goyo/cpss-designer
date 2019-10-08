@@ -1,0 +1,157 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (malloc) failed to allocate 1048576 bytes for AllocateHeap
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   In 32 bit mode, the process size limit was hit
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Use 64 bit Java on a 64 bit OS
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (memory/allocation.inline.hpp:61), pid=5696, tid=0x00000000000037f8
+#
+# JRE version:  (8.0_152-b39) (build )
+# Java VM: OpenJDK 64-Bit Server VM (25.152-b39 mixed mode windows-amd64 compressed oops)
+# Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x000000000299e800):  JavaThread "Unknown thread" [_thread_in_vm, id=14328, stack(0x00000000029a0000,0x0000000002aa0000)]
+
+Stack: [0x00000000029a0000,0x0000000002aa0000]
+[error occurred during error reporting (printing stack bounds), id 0xc0000005]
+
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+
+Other Threads:
+
+=>0x000000000299e800 (exited) JavaThread "Unknown thread" [_thread_in_vm, id=14328, stack(0x00000000029a0000,0x0000000002aa0000)]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap:
+ PSYoungGen      total 38400K, used 665K [0x00000000d5e00000, 0x00000000d8880000, 0x0000000100000000)
+  eden space 33280K, 2% used [0x00000000d5e00000,0x00000000d5ea6670,0x00000000d7e80000)
+  from space 5120K, 0% used [0x00000000d8380000,0x00000000d8380000,0x00000000d8880000)
+  to   space 5120K, 0% used [0x00000000d7e80000,0x00000000d7e80000,0x00000000d8380000)
+ ParOldGen       total 87552K, used 0K [0x0000000081a00000, 0x0000000086f80000, 0x00000000d5e00000)
+  object space 87552K, 0% used [0x0000000081a00000,0x0000000081a00000,0x0000000086f80000)
+ Metaspace       used 772K, capacity 4480K, committed 4480K, reserved 1056768K
+  class space    used 73K, capacity 384K, committed 384K, reserved 1048576K
+
+Card table byte_map: [0x00000000122d0000,0x00000000126d0000] byte_map_base: 0x0000000011ec3000
+
+Marking Bits: (ParMarkBitMap*) 0x0000000052575aa0
+ Begin Bits: [0x0000000012d80000, 0x0000000014d18000)
+ End Bits:   [0x0000000014d18000, 0x0000000016cb0000)
+
+Polling page: 0x0000000002920000
+
+CodeCache: size=245760Kb used=328Kb max_used=328Kb free=245431Kb
+ bounds [0x0000000002f10000, 0x0000000003180000, 0x0000000011f10000]
+ total_blobs=57 nmethods=0 adapters=38
+ compilation: enabled
+
+Compilation events (0 events):
+No events
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+Events (10 events):
+Event: 0.053 loading class java/lang/Short
+Event: 0.053 loading class java/lang/Short done
+Event: 0.053 loading class java/lang/Integer
+Event: 0.053 loading class java/lang/Integer done
+Event: 0.053 loading class java/lang/Long
+Event: 0.053 loading class java/lang/Long done
+Event: 0.055 loading class java/lang/NullPointerException
+Event: 0.055 loading class java/lang/NullPointerException done
+Event: 0.055 loading class java/lang/ArithmeticException
+Event: 0.055 loading class java/lang/ArithmeticException done
+
+
+Dynamic libraries:
+0x00007ff78d5a0000 - 0x00007ff78d5d1000 	D:\Study\ideaIU-2018.1.6.win\jre64\bin\java.exe
+0x00007ffa2d9c0000 - 0x00007ffa2dba1000 	C:\WINDOWS\SYSTEM32\ntdll.dll
+0x00007ffa2d300000 - 0x00007ffa2d3b1000 	C:\WINDOWS\System32\KERNEL32.DLL
+0x00007ffa2a290000 - 0x00007ffa2a503000 	C:\WINDOWS\System32\KERNELBASE.dll
+0x00007ffa2d8e0000 - 0x00007ffa2d981000 	C:\WINDOWS\System32\ADVAPI32.dll
+0x00007ffa2b550000 - 0x00007ffa2b5ee000 	C:\WINDOWS\System32\msvcrt.dll
+0x00007ffa2cf00000 - 0x00007ffa2cf5b000 	C:\WINDOWS\System32\sechost.dll
+0x00007ffa2b750000 - 0x00007ffa2b874000 	C:\WINDOWS\System32\RPCRT4.dll
+0x00007ffa2d730000 - 0x00007ffa2d8c0000 	C:\WINDOWS\System32\USER32.dll
+0x00007ffa2acc0000 - 0x00007ffa2ace0000 	C:\WINDOWS\System32\win32u.dll
+0x00007ffa2d560000 - 0x00007ffa2d588000 	C:\WINDOWS\System32\GDI32.dll
+0x00007ffa29e50000 - 0x00007ffa29fe1000 	C:\WINDOWS\System32\gdi32full.dll
+0x00007ffa2a510000 - 0x00007ffa2a5af000 	C:\WINDOWS\System32\msvcp_win.dll
+0x00007ffa2ace0000 - 0x00007ffa2add8000 	C:\WINDOWS\System32\ucrtbase.dll
+0x00007ffa176a0000 - 0x00007ffa17909000 	C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.17134.1006_none_d3fbb8f77c940c3f\COMCTL32.dll
+0x00007ffa2cf60000 - 0x00007ffa2d281000 	C:\WINDOWS\System32\combase.dll
+0x00007ffa29d80000 - 0x00007ffa29df9000 	C:\WINDOWS\System32\bcryptPrimitives.dll
+0x00007ffa2b3a0000 - 0x00007ffa2b3cd000 	C:\WINDOWS\System32\IMM32.DLL
+0x0000000051bf0000 - 0x0000000051cc2000 	D:\Study\ideaIU-2018.1.6.win\jre64\bin\msvcr100.dll
+0x0000000051db0000 - 0x00000000525f1000 	D:\Study\ideaIU-2018.1.6.win\jre64\bin\server\jvm.dll
+0x00007ffa2d2f0000 - 0x00007ffa2d2f8000 	C:\WINDOWS\System32\PSAPI.DLL
+0x00007ffa1c620000 - 0x00007ffa1c62a000 	C:\WINDOWS\SYSTEM32\VERSION.dll
+0x00007ffa1ac80000 - 0x00007ffa1ac89000 	C:\WINDOWS\SYSTEM32\WSOCK32.dll
+0x00007ffa27ed0000 - 0x00007ffa27ef3000 	C:\WINDOWS\SYSTEM32\WINMM.dll
+0x00007ffa2d420000 - 0x00007ffa2d48c000 	C:\WINDOWS\System32\WS2_32.dll
+0x00007ffa27e90000 - 0x00007ffa27eba000 	C:\WINDOWS\SYSTEM32\WINMMBASE.dll
+0x00007ffa29e00000 - 0x00007ffa29e49000 	C:\WINDOWS\System32\cfgmgr32.dll
+0x00007ffa261b0000 - 0x00007ffa261bf000 	D:\Study\ideaIU-2018.1.6.win\jre64\bin\verify.dll
+0x00007ffa15fb0000 - 0x00007ffa15fd9000 	D:\Study\ideaIU-2018.1.6.win\jre64\bin\java.dll
+0x00007ffa1ad00000 - 0x00007ffa1ad16000 	D:\Study\ideaIU-2018.1.6.win\jre64\bin\zip.dll
+
+VM Arguments:
+java_command: org.jetbrains.git4idea.ssh.SSHMain git@github.com git-upload-pack 'simple-goyo/cpss-designer.git'
+java_class_path (initial): D:/Study/ideaIU-2018.1.6.win/plugins/git4idea/lib/git4idea-rt.jar;D:/Study/ideaIU-2018.1.6.win/lib/xmlrpc-2.0.1.jar;D:/Study/ideaIU-2018.1.6.win/lib/commons-codec-1.9.jar;D:/Study/ideaIU-2018.1.6.win/lib/util.jar;D:/Study/ideaIU-2018.1.6.win/lib/trilead-ssh2-build-217-jenkins-11.jar;D:/Study/ideaIU-2018.1.6.win/lib/eddsa-0.2.0.jar;D:/Study/ideaIU-2018.1.6.win/lib/jbcrypt-1.0.0.jar
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=E:\Java\jdk1.8.0_101
+CLASSPATH=.;E:\Java\jdk1.8.0_101\lib\tools.jar;E:\Java\jdk1.8.0_101\lib\dt.jar
+PATH=D:\Study\git\Git\mingw64/libexec/git-core;D:\Study\git\Git\mingw64/libexec/git-core;D:\Study\git\Git\mingw64\bin;D:\Study\git\Git\usr\bin;C:\Users\Dennis\bin;C:\Program Files\Microsoft MPI\Bin\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\system32\config\systemprofile\.dnx\bin;C:\Program Files\Microsoft DNX\Dnvm\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;.;E:\Java\jdk1.8.0_101\bin;E:\Java\jre\bin;E:\Java\jre7\bin;C:\Program Files (x86)\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\130\DTS\Binn\;C:\Program Files\Microsoft SQL Server\130\DTS\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\130\Tools\Binn\ManagementStudio\;C:\Program Files (x86)\Microsoft SQL Server\110\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\120\DTS\Binn\;D:\Study\git\Git\cmd;D:\Study\opencv\opencv\build\x64\vc14\bin;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\;D:\Study\VS2015\QT\5.7\msvc2015_64\bin;D:\Study\Qt\5.9.3\msvc2015_64\bin;D:\Study\MCM\MikTex\miktex\bin\x64\;D:\Study\NodeJS\;D:\Study\putty\;D:\Study\vs code\Microsoft VS Code\bin;C:\WINDOWS\System32\OpenSSH\;D:\Study\python3.6.1\Scripts\;D:\Study\python3.6.1\;C:\Users\Dennis\AppData\Local\Microsoft\WindowsApps;D:\Study\MCM\MikTex\miktex\bin\x64;C:\Users\Dennis\AppData\Roaming\npm;D:\Study\mysql-8.0.17-winx64\bin;
+USERNAME=Dennis
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 60 Stepping 3, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 10.0 , 64 bit Build 17134 (10.0.17134.753)
+
+CPU:total 4 (initial active 4) (2 cores per cpu, 2 threads per core) family 6 model 60 stepping 3, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, erms, lzcnt, ht, tsc, tscinvbit, bmi1, bmi2
+
+Memory: 4k page, physical 8281452k(1608748k free), swap 10739052k(5320k free)
+
+vm_info: OpenJDK 64-Bit Server VM (25.152-b39) for windows-amd64 JRE (1.8.0_152-release-1136-b39), built on May 14 2018 16:48:09 by "builduser" with MS VC++ 10.0 (VS2010)
+
+time: Tue Oct 08 19:17:43 2019
+elapsed time: 0 seconds (0d 0h 0m 0s)
+

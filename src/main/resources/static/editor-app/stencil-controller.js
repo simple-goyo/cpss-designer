@@ -63,7 +63,6 @@ angular.module('activitiModeler')
              StencilSet items
              */
             $http({method: 'GET', url: KISBPM.URL.getStencilSet()}).success(function (data, status, headers, config) {
-
                 var quickMenuDefinition = ['UserTask', 'EndNoneEvent', 'ExclusiveGateway',
                     'CatchTimerEvent', 'ThrowNoneEvent', 'TextAnnotation',
                     'SequenceFlow', 'Association'];
@@ -319,6 +318,9 @@ angular.module('activitiModeler')
                             else {
                                 currentProperty.hasReadWriteMode = true;
                             }
+
+                            if (currentProperty.title === "Id")
+                                currentProperty.value = selectedShape.id;
 
                             if (currentProperty.value === undefined
                                 || currentProperty.value === null
@@ -927,9 +929,9 @@ angular.module('activitiModeler')
             $scope.quickMenu = undefined;
             $scope.dropTargetElement = undefined;
 
-            //todo
+            //set mode to set is to judge whether the item is dragged to canvas firstly.
+            //selectedItem.properties[1] is name property
             $scope.property = $scope.selectedItem.properties[1];
-            console.log($scope.selectedItem);
             if (!$scope.property.hidden && setting) {
                 $scope.property.mode = 'set';
             }
