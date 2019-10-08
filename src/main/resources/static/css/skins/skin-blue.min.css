@@ -22,7 +22,7 @@
 
 .skin-blue .main-header .navbar .sidebar-toggle {
     color: #ffffff;
-    background: rgba(34,45,50)
+    background: rgba(36,54,70)
 }
 
 /*.skin-blue .main-header .navbar .sidebar-toggle:hover {*/
@@ -62,7 +62,7 @@
 }
 
 .skin-blue .wrapper, .skin-blue .main-sidebar, .skin-blue .left-side {
-    background-color: #222d32
+    background-color: #243646
 }
 
 .skin-blue .user-panel > .info, .skin-blue .user-panel > .info > a {
