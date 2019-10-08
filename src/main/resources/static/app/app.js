@@ -1,4 +1,5 @@
 var home = angular.module('home', ['ui.router']);
+
 home.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
     $stateProvider.state('editor',{
             url: '/editor',
@@ -13,8 +14,9 @@ home.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $
         url: '/page4',
         templateUrl: 'tpl/amap.html'
     })
-    $urlRouterProvider.when("amap1","/tpl/amap.html").otherwise('amap');
+    $urlRouterProvider.otherwise('/index');
 }]);
+
 home.controller('NavbarCtrl', function ($scope,$http) {
     $http.get("/js/nav.json").success(function(json){
         $scope.navbar = json;
@@ -25,26 +27,26 @@ home.controller('NavbarCtrl', function ($scope,$http) {
         $(this).addClass('active');
     }
 
+    //获取地图需要显示的资源
+    $scope.lng = 121.5982675552;
+    $scope.lat = 31.1903363811;
 
-    $scope.lng = 116.397428;
-    $scope.lat = 39.90923;
-
-    $scope.getPath = function() {
-        var lngX = $scope.lng;
-        var latY = $scope.lat;
-        var lineArr = [];
-        lineArr.push([lngX, latY]);
-        for (var i = 1; i < 100; i++) {
-            lngX = lngX + Math.random() * 0.05;
-            if (i % 2) {
-                latY = latY + Math.random() * 0.0001;
-            } else {
-                latY = latY + Math.random() * 0.06;
-            }
-            lineArr.push([lngX, latY]);
-        }
-        // return lineArr;
-    };
+    // $scope.getPath = function() {
+    //     var lngX = $scope.lng;
+    //     var latY = $scope.lat;
+    //     var lineArr = [];
+    //     lineArr.push([lngX, latY]);
+    //     for (var i = 1; i < 100; i++) {
+    //         lngX = lngX + Math.random() * 0.05;
+    //         if (i % 2) {
+    //             latY = latY + Math.random() * 0.0001;
+    //         } else {
+    //             latY = latY + Math.random() * 0.06;
+    //         }
+    //         lineArr.push([lngX, latY]);
+    //     }
+    //     // return lineArr;
+    // };
 
     // $scope.clickItem=function (url) {
     //     // var url = $(this).attr('data');
@@ -59,7 +61,7 @@ home.directive('gaodeMap', [function () {
     return {
         restrict: 'E',
         replace:true,
-        template: '<div id="container" lng="lng" lat="lat" path="getPath()" timeout="2000"></div>',
+        template: '<div id="container" lng="lng" lat="lat" path="getPath()" timeout="5"></div>',
         scope: {
             lng: '=', //纬线
             lat: '=', //经线
@@ -96,7 +98,7 @@ home.directive('gaodeMap', [function () {
             $scope.markerClickListener; //点击界面添加标记监听器
 
             if(typeof $scope.timeout == 'undefined') {
-                $scope.timeout = 500;
+                $scope.timeout = 5;
             }
 
             $scope.initAMap = function() {
@@ -113,7 +115,7 @@ home.directive('gaodeMap', [function () {
                 $scope.mapObj = new AMap.Map($scope.AMapId,{
                     view:new AMap.View2D({
                         center:position,
-                        zoom:14,
+                        zoom:20,
                         rotation:0
                     }),
                     lang:'zh_cn'
@@ -126,8 +128,12 @@ home.directive('gaodeMap', [function () {
                     marker=new AMap.Marker({
                         map:$scope.mapObj,
                         position:e.lnglat,
-                        icon:"/img/3.png",
-                        offset:new AMap.Pixel(-10,-34)
+                        offset:new AMap.Pixel(-10,-34),
+                        icon:new AMap.Icon({
+                            size: new AMap.Size(200, 200),
+                            image: "/img/gif-test4.gif",
+                            imageSize: new AMap.Size(200, 200)
+                        }),
                     });
                     $scope.mapObj.setCenter(lnglat);
                     if($scope.bmove){
