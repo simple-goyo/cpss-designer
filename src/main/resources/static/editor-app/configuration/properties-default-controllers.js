@@ -113,3 +113,26 @@ var KisBpmTextPropertyPopupCtrl = ['$scope', function($scope) {
         $scope.$hide();
     };
 }];
+var propertyInitPopupController= [ '$scope', '$modal', function($scope, $modal) {
+
+    var opts = {
+        template:  'editor-app/configuration/properties/propertyInitPopup.html?version=' + Date.now(),
+        scope: $scope
+    };
+
+    // Open the dialog
+    $modal(opts);
+}];
+
+var propertyInitController = ['$scope', function ($scope) {
+    $scope.property=$scope.selectedItem.properties[1];
+    $scope.save = function () {
+        $scope.updatePropertyInModel($scope.property);
+        $scope.close();
+    };
+
+    $scope.close = function () {
+        $scope.property.mode = 'read';
+        $scope.$hide();
+    };
+}];
