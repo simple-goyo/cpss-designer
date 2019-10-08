@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8"/>
-    <title>人机物融合应用1</title>
+    <title>人机物融合应用</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="editor-app/libs/bootstrap_3.1.1/css/bootstrap.min.css"/>
@@ -254,7 +254,7 @@
               </span>
                     </a>
                     <ul class="treeview-menu" ng-if="a1.children.length>0">
-                        <li ng-repeat="a2 in a1.children"><a class="myLeftMenu" data="{{ a2.link }}" ng-click="clickItem(a2.link)">{{ a2.label }}</a></li>
+                        <li ng-repeat="a2 in a1.children"><a class="myLeftMenu" ui-sref="{{a2.link}}">{{ a2.label }}</a></li>
                     </ul>
                 </li>
             </ul>
@@ -264,7 +264,7 @@
     </aside>
 
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
+    <div class="content-wrapper" style="display: flow-root">
         <!--&lt;!&ndash; Content Header (Page header) &ndash;&gt;-->
         <!--<section class="content-header">-->
             <!--<h1>-->
@@ -278,15 +278,10 @@
         <!--</section>-->
 
         <!-- Main content -->
-        <section class="content container-fluid">
-            <div id="container">
-                我是内容~~~~~
-            </div>
+        <section class="content " ui-view="">
+            <!--<div  ui-view="" >-->
 
-            <!--------------------------
-              | Your Page Content Here |
-              -------------------------->
-
+            <!--</div>-->
         </section>
         <!-- /.content -->
     </div>
@@ -397,19 +392,5 @@
 <!-- Optionally, you can add Slimscroll and FastClick plugins.
      Both of these plugins are recommended to enhance the
      user experience. -->
-<script>
-    $(function () {
-        // $('ul.sidebar-menu li').click(function () {
-        //
-        // });
-        //
-        // $('.myLeftMenu').click(function (e) {
-        //
-        //     var url = $(this).attr('data');
-        //     //  console.log(url);
-        //     $('#container').load(url);
-        // });
-    })
-</script>
 </body>
 </html>

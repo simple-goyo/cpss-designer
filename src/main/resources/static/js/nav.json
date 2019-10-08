@@ -15,7 +15,7 @@
     "children": [
       {
         "label": "应用设计",
-        "link":"/index"
+        "link":"editor"
       },
       {
         "label": "应用发布"
