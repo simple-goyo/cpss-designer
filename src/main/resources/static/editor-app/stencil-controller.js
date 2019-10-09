@@ -491,6 +491,15 @@ angular.module('activitiModeler')
                 // play
                 // console.log($("#"+animationID2));
                 //$("#"+animationID2).parents("g")[1].css("transition","transform 1s ease-out 0s").attr("transform","translate(160,20)");
+                var selector = angular.element("#"+animationID2).parent().parent();
+                console.log(selector);
+                //selector.css("transition","transform 1s ease-out 0s").attr("transform","translate(160,20)");
+                selector.animate({
+                    position:'absolute',
+                    left:'250px',
+                    height:'+=150px',
+                    width:'+=150px'
+                });
 
                 // e.g. Update canvas
                 // construct: function (option, dockedShape, canAttach, position, facade)
