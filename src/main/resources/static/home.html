@@ -18,12 +18,10 @@
           apply the skin class to the body tag so the changes take effect. -->
     <link rel="stylesheet" href="css/skins/skin-blue.min.css">
 
-    <!-- Google Font -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-
     <link rel="stylesheet" href="css/navigation.css"/>
+    <link rel="stylesheet" href="css/amap.css" />
 </head>
-<body class="hold-transition skin-blue sidebar-mini" ng-app="home">
+<body class="hold-transition skin-blue sidebar-mini" ng-app="myApp">
 <div class="wrapper">
 
     <!-- Main Header -->
@@ -407,6 +405,11 @@ padding-bottom:5px;padding-right:10px;padding-left:10px;margin-left:10px;margin-
 <script src="editor-app/libs/angular-ui-router.min.js"></script>
 <script src="https://webapi.amap.com/maps?v=1.4.15&key=0527fc08a6b9ab7a0d2dacdf50ed20d6"></script>
 <script src="app/app.js"></script>
+<script src="app/router.js"></script>
+<script src="app/directives/GaodeMap.js"></script>
+<script src="app/services/ActionDisplayService.js"></script>
+<script src="app/controllers/ActionDisplayController.js"></script>
+
 <!-- AdminLTE App -->
 <script src="js/adminlte.js"></script>
 <!-- Optionally, you can add Slimscroll and FastClick plugins.
