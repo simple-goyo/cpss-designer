@@ -25,6 +25,8 @@
 	<link rel="stylesheet" href="editor-app/css/style-common.css">
     <link rel="stylesheet" href="editor-app/css/style-editor.css">
 
+	<link rel="stylesheet" href="editor-app/css/animate.css" type="text/css"/>
+
 </head>
 <body>
 
