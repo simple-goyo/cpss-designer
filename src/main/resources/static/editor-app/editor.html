@@ -66,7 +66,6 @@
             <div id="canvasHelpWrapper" class="col-xs-9">
                 <div class="canvas-wrapper" id="canvasSection"
                      ng-model="droppedElement"
-                     ng-model="droppedElement"
                      data-drop="true"
                      data-jqyoui-options
                      jqyoui-droppable="{onDrop:'dropCallback',onOver: 'overCallback', onOut: 'outCallback'}">
@@ -82,6 +81,13 @@
                          id="morph-button"
                          title="{{'BUTTON.ACTION.MORPH.TOOLTIP' | translate}}"
                          ng-click="morphShape()"
+                         style="display:none">
+                        <img src="editor-app/images/wrench.png"/>
+                    </div>
+                    <div class="Oryx_button"
+                         id="play-button"
+                         title="播放动画"
+                         ng-click="playShape()"
                          style="display:none">
                         <img src="editor-app/images/wrench.png"/>
                     </div>

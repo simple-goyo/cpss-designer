@@ -475,6 +475,40 @@ angular.module('activitiModeler')
                 $rootScope.stencilInitialized = true;
             }
 
+            /* Click handler for clicking an Action */
+            $scope.playShape = function(){
+                console.log("clicked!");
+                console.log($scope);
+
+                // get animation resource id
+                var propertylist = $scope.selectedItem.properties;
+                var animationID1 = $scope.getPropertybyKey(propertylist,"oryx-contain_resource");
+                var animationID2 = $scope.getPropertybyKey(propertylist,"oryx-animation");
+
+                // get animation resource position
+                // ...
+
+                // play
+                // console.log($("#"+animationID2));
+                //$("#"+animationID2).parents("g")[1].css("transition","transform 1s ease-out 0s").attr("transform","translate(160,20)");
+
+                // e.g. Update canvas
+                // construct: function (option, dockedShape, canAttach, position, facade)
+                // var command = new commandClass(option, $scope.dragCurrentParent, canAttach, pos, $scope.editor);
+                // $scope.editor.executeCommands([command]);
+
+                // var selection = $scope.editor.getSelection();
+                // var currentSelection = $scope.editor.getSelection();
+                // console.log(selection);
+                // var p = {x: 200, y: 80};
+                //
+                // // Instantiate the moveCommand
+                // // var commands = [new ORYX.Core.Command.Move(selection, p, null, currentSelection, $scope)];
+                // var command = new ANIMATION.createCommand(selection, currentSelection, p, $scope.editor);
+                // // Execute the commands
+                // $scope.editor.executeCommands([command]);
+
+            };
             $scope.morphShape = function () {
                 $scope.safeApply(function () {
 
@@ -704,6 +738,17 @@ angular.module('activitiModeler')
                 if (item !== undefined)
                     return group;
             }
+            return undefined;
+        };
+
+        $scope.getPropertybyKey = function (propertylist, key){
+            console.log(propertylist);
+            for(var i=0;i < propertylist.length;i++){
+                if(propertylist[i].key == key){
+                    return propertylist[i].value;
+                }
+            }
+
             return undefined;
         };
 
@@ -1279,6 +1324,25 @@ angular.module('activitiModeler')
         };
 
     }]);
+
+// var ANIMATION = ANIMATION || {};
+// ANIMATION.createCommand = ORYX.Core.Command.extend({
+//     construct: function(selection, currentSelection, p, facade){
+//         this.selection = selection;
+//         this.p = p;
+//         this.currentSelection = currentSelection;
+//         this.facade = facade;
+//     },
+//     execute:function(){
+//         // Instantiate the moveCommand
+//         var commands = [new ORYX.Core.Command.Move(selection, p, null, currentSelection, this)];
+//         // Execute the commands
+//         this.facade.executeCommands(commands);
+//     },
+//     rollback:function(){
+//         console.log("Failed to execute")
+//     }
+// });
 
 var KISBPM = KISBPM || {};
 //create command for undo/redo
