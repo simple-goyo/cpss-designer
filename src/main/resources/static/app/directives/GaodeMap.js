@@ -126,17 +126,22 @@ angular.module("myApp")
                     });
                 };
 
-                $scope.jump = function (lnglat) {
-                    console.log(lnglat);
+                $scope.jump = function (buildingId) {
+                    console.log(buildingId);
                     $state.go("editor",{
-                        lnglat:lnglat
+                        buildingId:buildingId
                     });
                 }
 
                 $scope.ListenClick = function () {
                     $scope.markerClickListener = AMap.event.addListener($scope.mapObj, 'dblclick', function (e) {
                         var lnglat = e.lnglat;
-                        $scope.jump(lnglat)
+                        //判断点击在哪个建筑物上
+                        var buildingId=1;
+                        //如果有就跳转
+                        if(buildingId !=null){
+                            $scope.jump(buildingId);
+                        }
 
                         // var marker = new AMap.Marker({
                         //     map: $scope.mapObj,
