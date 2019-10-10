@@ -484,6 +484,7 @@ angular.module('activitiModeler')
                 var propertylist = $scope.selectedItem.properties;
                 var animationID1 = $scope.getPropertybyKey(propertylist,"oryx-contain_resource");
                 var animationID2 = $scope.getPropertybyKey(propertylist,"oryx-animation");
+                var direction    = $scope.getPropertybyKey(propertylist,"oryx-animate_direction");
 
                 // get animation selector
                 //$("#"+animationID2).parents("g")[1].css("transition","transform 1s ease-out 0s").attr("transform","translate(160,20)");
@@ -496,18 +497,20 @@ angular.module('activitiModeler')
                 var pos_animation = $scope.getPositionbyselector(selectorID2);
 
                 // play
+                //selector.css("transition","transform 1s ease-out 0s").attr("transform","translate(160,20)");
                 var style = document.styleSheets[7]; // 7==animate.css
-                var CSSKeyframeRule = $scope.buildCSSRule(pos_stable, pos_animation, "customLeft", 1);
-                var CSSStyleRule = ".customLeft { animation-name: customLeft; }"
+                var CSSKeyframeRule = $scope.buildCSSRule(pos_stable, pos_animation, "custom", direction);
+                var CSSStyleRule = ".custom { animation-name: custom; }";
                 style.insertRule(CSSKeyframeRule);
                 style.insertRule(CSSStyleRule);
 
-
-                selectorID2.attr("class","stencils animated slow customLeft infinite");
+                selectorID2.attr("class","stencils animated slow custom infinite");
                 setTimeout(function(){
                     selectorID2.attr("class","stencils");
+                    style.removeRule(0);
+                    style.removeRule(0);
                 },5000);
-                //selector.css("transition","transform 1s ease-out 0s").attr("transform","translate(160,20)");
+
 
 
             };
@@ -776,7 +779,7 @@ angular.module('activitiModeler')
             var offsetX = p_stable.x - Math.round(0.2*(p_stable.x-p_animate.x));
             var offsetY = p_stable.y - Math.round(0.2*(p_stable.y-p_animate.y));
 
-            if (direction == 0){
+            if (direction == "0"){
                 var r = "@keyframes "+rulename+" {   0% { opacity: 0; transform: translate("+p_animate.x+"px, "+p_animate.y+"px); }  100% { opacity: 1; transform: translate("+offsetX+"px, "+offsetY+"px); }}";
                 console.log(r);
                 return r;
@@ -818,6 +821,7 @@ angular.module('activitiModeler')
                 if (group.name === "物理实体") {
                     setting = true;
                 }
+                setting = true;
 
                 var pos = {x: event.pageX, y: event.pageY};
 

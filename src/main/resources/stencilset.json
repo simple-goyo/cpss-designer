@@ -9,7 +9,7 @@
         {
           "id": "contain_resource",
           "type": "String",
-          "title": "资源ID",
+          "title": "固定资源ID",
           "value": "",
           "description": "Action中包含的资源",
           "popular": true
@@ -21,7 +21,7 @@
         {
           "id": "animation",
           "type": "String",
-          "title": "动画资源ID",
+          "title": "移动资源ID",
           "value": "",
           "description": "Action中运动的资源",
           "popular": true
@@ -34,8 +34,20 @@
           "id": "animate_direction",
           "type": "String",
           "title": "方向",
-          "value": "",
+          "value": "0",
           "description": "Action中动画的移动方向",
+          "popular": true
+        }
+      ]
+    },{
+      "name": "acitontypepackage",
+      "properties": [
+        {
+          "id": "aciton_type",
+          "type": "String",
+          "title": "动作类型",
+          "value": "",
+          "description": "指定动作类别，如：单向移动、来回移动、原地旋转等",
           "popular": true
         }
       ]
@@ -1298,16 +1310,10 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
+        "containresourcepackage",
         "animationpackage",
         "animatedirectionpackage",
-        "isforcompensationpackage",
-        "usertaskassignmentpackage",
-        "formkeydefinitionpackage",
-        "duedatedefinitionpackage",
-        "prioritydefinitionpackage",
-        "formpropertiespackage",
-        "tasklistenerspackage",
-        "servicespackage"
+        "acitontypepackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1331,16 +1337,10 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
+        "containresourcepackage",
         "animationpackage",
         "animatedirectionpackage",
-        "isforcompensationpackage",
-        "usertaskassignmentpackage",
-        "formkeydefinitionpackage",
-        "duedatedefinitionpackage",
-        "prioritydefinitionpackage",
-        "formpropertiespackage",
-        "tasklistenerspackage",
-        "servicespackage"
+        "acitontypepackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1367,14 +1367,7 @@
         "containresourcepackage",
         "animationpackage",
         "animatedirectionpackage",
-        "isforcompensationpackage",
-        "usertaskassignmentpackage",
-        "formkeydefinitionpackage",
-        "duedatedefinitionpackage",
-        "prioritydefinitionpackage",
-        "formpropertiespackage",
-        "tasklistenerspackage",
-        "servicespackage"
+        "acitontypepackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
