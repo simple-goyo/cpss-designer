@@ -485,39 +485,30 @@ angular.module('activitiModeler')
                 var animationID1 = $scope.getPropertybyKey(propertylist,"oryx-contain_resource");
                 var animationID2 = $scope.getPropertybyKey(propertylist,"oryx-animation");
 
-                // get animation resource position
-                // ...
-
-                // play
-                // console.log($("#"+animationID2));
+                // get animation selector
                 //$("#"+animationID2).parents("g")[1].css("transition","transform 1s ease-out 0s").attr("transform","translate(160,20)");
                 //var selector = angular.element("#"+animationID2).parent().parent();
-                var selector = jQuery("#"+animationID2).parent().parent();
-                console.log(selector);
-                selector.attr("class","stencils animated fadeInLeftBig infinite");
+                var selectorID1 = jQuery("#"+animationID1).parent().parent();
+                var selectorID2 = jQuery("#"+animationID2).parent().parent();
+
+                // get animation resource position
+                var pos_stable    = $scope.getPositionbyselector(selectorID1);
+                var pos_animation = $scope.getPositionbyselector(selectorID2);
+
+                // play
+                var style = document.styleSheets[7]; // 7==animate.css
+                var CSSKeyframeRule = $scope.buildCSSRule(pos_stable, pos_animation, "customLeft", 1);
+                var CSSStyleRule = ".customLeft { animation-name: customLeft; }"
+                style.insertRule(CSSKeyframeRule);
+                style.insertRule(CSSStyleRule);
+
+
+                selectorID2.attr("class","stencils animated slow customLeft infinite");
+                setTimeout(function(){
+                    selectorID2.attr("class","stencils");
+                },5000);
                 //selector.css("transition","transform 1s ease-out 0s").attr("transform","translate(160,20)");
-                // selector.animate({
-                //     position:'absolute',
-                //     left:'250px',
-                //     height:'+=150px',
-                //     width:'+=150px'
-                // });
 
-                // e.g. Update canvas
-                // construct: function (option, dockedShape, canAttach, position, facade)
-                // var command = new commandClass(option, $scope.dragCurrentParent, canAttach, pos, $scope.editor);
-                // $scope.editor.executeCommands([command]);
-
-                // var selection = $scope.editor.getSelection();
-                // var currentSelection = $scope.editor.getSelection();
-                // console.log(selection);
-                // var p = {x: 200, y: 80};
-                //
-                // // Instantiate the moveCommand
-                // // var commands = [new ORYX.Core.Command.Move(selection, p, null, currentSelection, $scope)];
-                // var command = new ANIMATION.createCommand(selection, currentSelection, p, $scope.editor);
-                // // Execute the commands
-                // $scope.editor.executeCommands([command]);
 
             };
             $scope.morphShape = function () {
@@ -761,6 +752,40 @@ angular.module('activitiModeler')
             }
 
             return undefined;
+        };
+
+        $scope.getPositionbyselector = function (selector){
+            var p = {x: 0, y: 0};
+            var p_str = selector.attr("transform");// p_str="translate(315.5, 151.999995)"
+            var regX = "(?<=\\()(.+?)(?=\,)";
+            var regY = "(?<=\,)(.+?)(?=\\))";
+
+            var resltX = p_str.match(regX);// ["303.5, 124.999995", "303.5, 124.999995", index: 10, input: "translate(303.5, 124.999995)", groups: undefined]
+            var resltY = p_str.match(regY);
+
+            if(resltX && resltY){
+                p.x = Math.round(resltX[0].trim());
+                p.y = Math.round(resltY[0].trim());
+            }
+
+            console.log(p);
+            return p;
+        };
+
+        $scope.buildCSSRule = function(p_stable, p_animate, rulename, direction){
+            var offsetX = p_stable.x - Math.round(0.2*(p_stable.x-p_animate.x));
+            var offsetY = p_stable.y - Math.round(0.2*(p_stable.y-p_animate.y));
+
+            if (direction == 0){
+                var r = "@keyframes "+rulename+" {   0% { opacity: 0; transform: translate("+p_animate.x+"px, "+p_animate.y+"px); }  100% { opacity: 1; transform: translate("+offsetX+"px, "+offsetY+"px); }}";
+                console.log(r);
+                return r;
+            }
+            else{
+                var r = "@keyframes "+rulename+" {   0% { opacity: 0; transform: translate("+offsetX+"px, "+offsetY+"px); }   100% { opacity: 1; transform: translate("+p_animate.x+"px, "+p_animate.y+"px); }}";
+                return r;
+            }
+
         };
 
         /*
