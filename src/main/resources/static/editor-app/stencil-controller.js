@@ -475,6 +475,45 @@ angular.module('activitiModeler')
                 $rootScope.stencilInitialized = true;
             }
 
+            /* Click handler for clicking an Action */
+            $scope.playShape = function(){
+                console.log("clicked!");
+                console.log($scope);
+
+                // get animation resource id
+                var propertylist = $scope.selectedItem.properties;
+                var animationID1 = $scope.getPropertybyKey(propertylist,"oryx-contain_resource");
+                var animationID2 = $scope.getPropertybyKey(propertylist,"oryx-animation");
+                var direction    = $scope.getPropertybyKey(propertylist,"oryx-animate_direction");
+
+                // get animation selector
+                //$("#"+animationID2).parents("g")[1].css("transition","transform 1s ease-out 0s").attr("transform","translate(160,20)");
+                //var selector = angular.element("#"+animationID2).parent().parent();
+                var selectorID1 = jQuery("#"+animationID1).parent().parent();
+                var selectorID2 = jQuery("#"+animationID2).parent().parent();
+
+                // get animation resource position
+                var pos_stable    = $scope.getPositionbyselector(selectorID1);
+                var pos_animation = $scope.getPositionbyselector(selectorID2);
+
+                // play
+                //selector.css("transition","transform 1s ease-out 0s").attr("transform","translate(160,20)");
+                var style = document.styleSheets[7]; // 7==animate.css
+                var CSSKeyframeRule = $scope.buildCSSRule(pos_stable, pos_animation, "custom", direction);
+                var CSSStyleRule = ".custom { animation-name: custom; }";
+                style.insertRule(CSSKeyframeRule);
+                style.insertRule(CSSStyleRule);
+
+                selectorID2.attr("class","stencils animated slow custom infinite");
+                setTimeout(function(){
+                    selectorID2.attr("class","stencils");
+                    style.removeRule(0);
+                    style.removeRule(0);
+                },5000);
+
+
+
+            };
             $scope.morphShape = function () {
                 $scope.safeApply(function () {
 
@@ -707,6 +746,51 @@ angular.module('activitiModeler')
             return undefined;
         };
 
+        $scope.getPropertybyKey = function (propertylist, key){
+            console.log(propertylist);
+            for(var i=0;i < propertylist.length;i++){
+                if(propertylist[i].key == key){
+                    return propertylist[i].value;
+                }
+            }
+
+            return undefined;
+        };
+
+        $scope.getPositionbyselector = function (selector){
+            var p = {x: 0, y: 0};
+            var p_str = selector.attr("transform");// p_str="translate(315.5, 151.999995)"
+            var regX = "(?<=\\()(.+?)(?=\,)";
+            var regY = "(?<=\,)(.+?)(?=\\))";
+
+            var resltX = p_str.match(regX);// ["303.5, 124.999995", "303.5, 124.999995", index: 10, input: "translate(303.5, 124.999995)", groups: undefined]
+            var resltY = p_str.match(regY);
+
+            if(resltX && resltY){
+                p.x = Math.round(resltX[0].trim());
+                p.y = Math.round(resltY[0].trim());
+            }
+
+            console.log(p);
+            return p;
+        };
+
+        $scope.buildCSSRule = function(p_stable, p_animate, rulename, direction){
+            var offsetX = p_stable.x - Math.round(0.2*(p_stable.x-p_animate.x));
+            var offsetY = p_stable.y - Math.round(0.2*(p_stable.y-p_animate.y));
+
+            if (direction == "0"){
+                var r = "@keyframes "+rulename+" {   0% { opacity: 0; transform: translate("+p_animate.x+"px, "+p_animate.y+"px); }  100% { opacity: 1; transform: translate("+offsetX+"px, "+offsetY+"px); }}";
+                console.log(r);
+                return r;
+            }
+            else{
+                var r = "@keyframes "+rulename+" {   0% { opacity: 0; transform: translate("+offsetX+"px, "+offsetY+"px); }   100% { opacity: 1; transform: translate("+p_animate.x+"px, "+p_animate.y+"px); }}";
+                return r;
+            }
+
+        };
+
         /*
          * DRAG AND DROP FUNCTIONALITY
          */
@@ -737,6 +821,7 @@ angular.module('activitiModeler')
                 if (group.name === "物理实体") {
                     setting = true;
                 }
+                setting = true;
 
                 var pos = {x: event.pageX, y: event.pageY};
 
@@ -1289,6 +1374,25 @@ angular.module('activitiModeler')
         };
 
     }]);
+
+// var ANIMATION = ANIMATION || {};
+// ANIMATION.createCommand = ORYX.Core.Command.extend({
+//     construct: function(selection, currentSelection, p, facade){
+//         this.selection = selection;
+//         this.p = p;
+//         this.currentSelection = currentSelection;
+//         this.facade = facade;
+//     },
+//     execute:function(){
+//         // Instantiate the moveCommand
+//         var commands = [new ORYX.Core.Command.Move(selection, p, null, currentSelection, this)];
+//         // Execute the commands
+//         this.facade.executeCommands(commands);
+//     },
+//     rollback:function(){
+//         console.log("Failed to execute")
+//     }
+// });
 
 var KISBPM = KISBPM || {};
 //create command for undo/redo
