@@ -125,14 +125,13 @@ var propertyInitPopupController= [ '$scope', '$modal', function($scope, $modal) 
 }];
 
 var propertyInitController = ['$scope', function ($scope) {
-    $scope.property=$scope.selectedItem.properties[1];
     $scope.save = function () {
-        $scope.updatePropertyInModel($scope.property);
+        $scope.updatePropertyInModel($scope.nameProperty);
         $scope.close();
     };
 
     $scope.close = function () {
-        $scope.property.mode = 'read';
+        $scope.nameProperty.mode = 'read';
         $scope.$hide();
     };
 }];
