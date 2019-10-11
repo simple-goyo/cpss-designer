@@ -1,13 +1,16 @@
-<div class="modal" ng-controller="propertyInitController">
+<div class="modal" ng-controller="OutputPopupController">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;
                 </button>
-                <h2>{{'PROPERTY.SETTING.TITLE' | translate:nameProperty}}</h2>
+                <h2 translate>PROPERTY.OUTPUT.SELECT</h2>
             </div>
             <div class="modal-body">
-                <input type="text" id="initProperty" ng-model="nameProperty.value" class="form-control"/>
+                <select ng-init="property.output=entities[0]" ng-model="property.output"
+                        ng-options="entity.name for entity in entities"
+                        ng-if="entities.length>1" class="form-control"></select>
+                <h3 ng-if="entities.length<=1" translate>PROPERTY.SELECT.EMPTY</h3>
             </div>
             <div class="modal-footer">
                 <button ng-click="save()" class="btn btn-primary" translate>ACTION.SAVE</button>

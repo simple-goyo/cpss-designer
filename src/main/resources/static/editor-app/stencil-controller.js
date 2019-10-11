@@ -319,8 +319,8 @@ angular.module('activitiModeler')
                                 currentProperty.hasReadWriteMode = true;
                             }
 
-                            if (currentProperty.title === "Id")
-                                currentProperty.value = selectedShape.id;
+                            // if (currentProperty.title === "Id")
+                            //     currentProperty.value = selectedShape.id;
 
                             if (currentProperty.value === undefined
                                 || currentProperty.value === null
@@ -1050,14 +1050,24 @@ angular.module('activitiModeler')
             $scope.dragCanContain = undefined;
             $scope.quickMenu = undefined;
             $scope.dropTargetElement = undefined;
-
-            //set mode to set is to judge whether the item is dragged to canvas firstly.
-            //selectedItem.properties[1] is name property
-            $scope.property = $scope.selectedItem.properties[1];
-            if (!$scope.property.hidden && setting) {
-                $scope.property.mode = 'set';
+            for (var index = 0; index < $scope.selectedItem.properties.length; index++) {
+                var property = $scope.selectedItem.properties[index];
+                if (property.title === "名称") {
+                    $scope.nameProperty = property;
+                } else if (property.title === "Id") {
+                    var entities = [$scope.editor.getCanvas()][0].children;
+                    property.value = entities[entities.length - 1].id;
+                    $scope.updatePropertyInModel(property);
+                } else if (property.title === "类型" && setting) {
+                    property.value = "物理实体";
+                    $scope.updatePropertyInModel(property);
+                }
             }
 
+            //set mode to set is to judge whether the item is dragged to canvas firstly.
+            if (!$scope.nameProperty.hidden && setting) {
+                $scope.nameProperty.mode = 'set';
+            }
         };
 
 
