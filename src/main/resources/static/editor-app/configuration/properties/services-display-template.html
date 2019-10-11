@@ -1,5 +1,8 @@
 <!--<span ng-if="property.value.assignment.assignee">{{'PROPERTY.SERVICES.SOURCE_DISPLAY' | translate:property.value.assignment }} </span>-->
 <!--<span ng-if="property.value.assignment.candidateUsers.length > 0">{{'PROPERTY.SERVICES.FUNCTION_DISPLAY' | translate:property.value.assignment.candidateUsers}} </span>-->
 <!--<span ng-if="!property.value.assignment.assignee && (!property.value.assignment.candidateUsers || property.value.assignment.candidateUsers.length == 0))" translate>PROPERTY.SERVICES.EMPTY</span>-->
-<span ng-if="property.value.function" translate>{{property.value.function}}}</span>
-<span ng-if="!property.value.function">{{'PROPERTY.SERVICES.EMPTY'|translate}}</span>
+
+<div ng-controller="ServicesDisplayedCtrl">
+    <span ng-if="property.value.function" translate>{{property.value.function}}</span>
+    <span ng-if="!property.value.function&&property.value.id" translate>{{property.value.id}}</span>
+    <span ng-if="!property.value.function&&!property.value.id">{{'PROPERTY.SERVICES.EMPTY'|translate}}</span></div>

@@ -135,18 +135,83 @@ var KisBpmServicesPopupCtrl = ['$scope', function ($scope) {
 }];
 
 var ServicesPopupCtrl = ['$scope', function ($scope) {
-    $scope.save = function () {
 
-        $scope.property.value = {};
-        $scope.property.value.function = $scope.property.function;
-        $scope.updatePropertyInModel($scope.property);
-        $scope.close();
-        $scope.createAction($scope);
+    $scope.save = function () {
+        if (!$scope.property.value) {
+            $scope.property.value = {"id": "", "function": ""};
+        }
+
+        if ($scope.property.function !== $scope.property.value.function) {
+
+            var shapeToRemove = $scope.getShapeById($scope.property.value.id);
+            $scope.editor.deleteShape(shapeToRemove);
+
+            $scope.property.value.function = $scope.property.function;
+            var shapeId = $scope.selectedShape.id;
+            $scope.updatePropertyInModel($scope.property);
+            $scope.close();
+            $scope.createAction($scope);
+            $scope.property.value.id = $scope.editor.getSelection()[0].id;
+            $scope.updatePropertyInModel($scope.property, shapeId);
+        }
+
     };
 
     $scope.createAction = function ($scope) {
-        var selectItem = $scope.editor.getSelection();
-        console.log(selectItem);
+        var selectItem = $scope.editor.getSelection()[0];
+        var itemId = "actionActivity";
+        var action = undefined;
+        var stencilSets = $scope.editor.getStencilSets().values();
+        for (var i = 0; i < stencilSets.length; i++) {
+            var stencilSet = stencilSets[i];
+            var nodes = stencilSet.nodes();
+            for (var j = 0; j < nodes.length; j++) {
+                if (nodes[j].idWithoutNs() === itemId) {
+                    action = nodes[j];
+                    break;
+                }
+            }
+        }
+        if (!action) return;
+        var option = {
+            type: selectItem.getStencil().namespace() + itemId,
+            namespace: selectItem.getStencil().namespace()
+        };
+
+        option['connectedShape'] = selectItem;
+        option['parent'] = selectItem.parent;
+        option['containedStencil'] = action;
+
+        console.log($scope.editor.getSelection()[0].bounds);
+
+        var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
+
+        $scope.editor.executeCommands([command]);
+
+        console.log($scope.editor.getSelection()[0].bounds);
+
+
+        var actionActivity = $scope.selectedItem;
+        for (var i = 0; i < actionActivity.properties.length; i++) {
+            var property = actionActivity.properties[i];
+            if (property.title === "Id") {
+                property.value = $scope.editor.getSelection()[0].id;
+                $scope.updatePropertyInModel(property);
+            } else if (property.title === "名称") {
+                property.value = selectItem.properties["oryx-services"].function;
+                $scope.updatePropertyInModel(property);
+
+            } else if (property.title === "活动元素") {
+                property.value = {
+                    "id": selectItem.properties["oryx-overrideid"],
+                    "name": selectItem.properties["oryx-name"]
+                };
+                $scope.updatePropertyInModel(property);
+            } else if (property.title === "输入") {
+                property.mode = 'set';
+            }
+        }
+
     };
 
     // Close button handler
@@ -154,4 +219,16 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
         $scope.property.mode = 'read';
         $scope.$hide();
     };
+}];
+
+var ServicesDisplayedCtrl = ['$scope', function ($scope) {
+    if ($scope.property.value.id) {
+        var shape = $scope.getShapeById($scope.property.value.id);
+        if (!shape) {
+            $scope.property.value = {};
+        } else {
+            $scope.property.value.function = shape.properties["oryx-name"];
+        }
+        $scope.updatePropertyInModel($scope.property);
+    }
 }];

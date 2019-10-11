@@ -37,3 +37,14 @@ var OutputPopupController = ['$scope', function ($scope) {
         $scope.$hide();
     };
 }];
+var OutputDisplayController = ['$scope', function ($scope) {
+    if ($scope.property.value.id) {
+        var shape = $scope.getShapeById($scope.property.value.id);
+        if (!shape) {
+            $scope.property.value = {};
+        }else {
+            $scope.property.value.name = shape.properties["oryx-name"];
+        }
+        $scope.updatePropertyInModel($scope.property);
+    }
+}];

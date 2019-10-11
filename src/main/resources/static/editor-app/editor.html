@@ -144,6 +144,8 @@
                                                     ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
 	                                    <ng-include src="getPropertyWriteModeTemplateUrl($index)"
                                                     ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+                                        <ng-include src="getPropertyWriteModeTemplateUrl($index)"
+                                                    ng-if="property.hasReadWriteMode && property.mode == 'set'"></ng-include>
 	                                </span>
                                 </div>
                             </div>

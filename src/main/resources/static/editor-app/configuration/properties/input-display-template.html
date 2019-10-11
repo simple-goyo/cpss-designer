@@ -1,2 +1,4 @@
-<span ng-if="property.value.name" translate>{{property.value.name}} </span>
-<span ng-if="!property.value.name" translate>PROPERTY.INPUT.EMPTY</span>
+<div ng-controller="InputDisplayController">
+    <span ng-if="property.value.name" translate>{{property.value.name}} </span>
+    <span ng-if="!property.value.name&&property.value.id" translate>{{property.value.id}} </span>
+    <span ng-if="!property.value.name&&!property.value.id" translate>PROPERTY.INPUT.EMPTY</span></div>
