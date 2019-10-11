@@ -1042,10 +1042,38 @@
     },{
       "type": "node",
       "id": "Person",
-      "title": "人",
+      "title": "用户",
       "description": "人资源",
       "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\"m19,19c4.14375,0 7.5,-3.35625 7.5,-7.5s-3.35625,-7.5 -7.5,-7.5s-7.5,3.35625 -7.5,7.5s3.35625,7.5 7.5,7.5zm0,3.75c-5.00625,0 -15,2.5125 -15,7.5l0,3.75l30,0l0,-3.75c0,-4.9875 -9.99375,-7.5 -15,-7.5z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
       "icon": "socialentity/person.png",
+      "groups": [
+        "社会实体"
+      ],
+      "propertyPackages": [
+        "overrideidpackage",
+        "namepackage",
+        "documentationpackage",
+        "executionlistenerspackage",
+        "initiatorpackage",
+        "formkeydefinitionpackage",
+        "formpropertiespackage",
+        "resourcespackage",
+        "servicespackage"
+      ],
+      "hiddenPropertyPackages": [],
+      "roles": [
+        "sequence_start",
+        "Startevents_all",
+        "StartEventsMorph",
+        "all"
+      ]
+    },{
+      "type": "node",
+      "id": "Person_Worker",
+      "title": "工人",
+      "description": "人资源",
+      "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg \n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"40\"\n   height=\"40\"\n   version=\"1.0\">\n\t<defs></defs>\n\t<oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  \t</oryx:magnets>\n  \t<g pointer-events=\"fill\">\n\t<path id=\"path1\" d=\"m39.350433,32.911472l0,1.046478c0,2.166431 -7.757564,4.021889 -7.757564,4.021889l-3.232349,-0.300764c0,0 -5.169211,-0.473127 -8.404057,-0.473127c-3.230095,0 -8.404058,0.473127 -8.404058,0.473127l-3.20865,0.293809c0,0 -7.781262,-1.856393 -7.781262,-4.014934l0,-1.046478c0,-2.013463 3.586482,-4.045429 7.789791,-5.603778c0.203598,-0.075303 2.729506,10.392647 2.729506,10.392647l1.117109,-0.021267c0,0 -2.158433,-10.807993 -1.93936,-10.881468c1.163531,-0.389442 1.929004,-0.754452 3.073527,-1.056599c0.424559,-0.113199 2.454265,-0.919904 1.318819,-3.092265c-2.629718,-1.961746 -4.421101,-3.862456 -4.421101,-8.148639l19.51234,0c0,4.241777 -1.837135,6.160098 -4.44949,8.124564l0.015109,0c-1.110469,2.464387 0.665441,3.04884 0.948236,3.11585c1.132583,0.274014 2.260109,0.702289 3.39647,1.057089c0.281577,0.087786 -1.939421,10.881468 -1.939421,10.881468l1.180589,-0.023184c0,0 2.407783,-10.433709 2.654025,-10.345477c4.267032,1.528834 7.801793,3.546488 7.801793,5.601058l0,0zm-8.271494,-22.925332c0,-4.925564 -9.165388,-7.388123 -9.165388,-7.388123c-1.298045,-0.427829 -2.586525,-0.330368 -3.914177,0c0,0 -9.165754,2.16224 -9.165754,7.388123c0,0.781292 -1.937533,0.613567 -2.578605,3.084909l27.403442,0c-1.166638,-2.488418 -2.579519,-2.303617 -2.579519,-3.084909l0,0zm0,0\" fill=\"#585858\" stroke=\"none\" />\n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
+      "icon": "socialentity/person_worker.png",
       "groups": [
         "社会实体"
       ],

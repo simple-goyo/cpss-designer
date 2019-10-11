@@ -480,11 +480,12 @@ angular.module('activitiModeler')
                 console.log("clicked!");
                 console.log($scope);
 
-                // get animation resource id
+                // get animation resource
                 var propertylist = $scope.selectedItem.properties;
                 var animationID1 = $scope.getPropertybyKey(propertylist,"oryx-contain_resource");
                 var animationID2 = $scope.getPropertybyKey(propertylist,"oryx-animation");
                 var direction    = $scope.getPropertybyKey(propertylist,"oryx-animate_direction");
+                var type         = $scope.getPropertybyKey(propertylist,"oryx-type");
 
                 // get animation selector
                 //$("#"+animationID2).parents("g")[1].css("transition","transform 1s ease-out 0s").attr("transform","translate(160,20)");
@@ -497,20 +498,9 @@ angular.module('activitiModeler')
                 var pos_animation = $scope.getPositionbyselector(selectorID2);
 
                 // play
-                //selector.css("transition","transform 1s ease-out 0s").attr("transform","translate(160,20)");
-                var style = document.styleSheets[7]; // 7==animate.css
-                var CSSKeyframeRule = $scope.buildCSSRule(pos_stable, pos_animation, "custom", direction);
-                var CSSStyleRule = ".custom { animation-name: custom; }";
-                style.insertRule(CSSKeyframeRule);
-                style.insertRule(CSSStyleRule);
-
-                selectorID2.attr("class","stencils animated slow custom infinite");
-                setTimeout(function(){
-                    selectorID2.attr("class","stencils");
-                    style.removeRule(0);
-                    style.removeRule(0);
-                },5000);
-
+                // selector.css("transition","transform 1s ease-out 0s").attr("transform","translate(160,20)");
+                $scope.playAnimation(selectorID1, "flash", direction, pos_stable, pos_animation);
+                $scope.playAnimation(selectorID2, "linear", direction, pos_stable, pos_animation);
 
 
             };
@@ -775,22 +765,69 @@ angular.module('activitiModeler')
             return p;
         };
 
-        $scope.buildCSSRule = function(p_stable, p_animate, rulename, direction){
-            var offsetX = p_stable.x - Math.round(0.2*(p_stable.x-p_animate.x));
-            var offsetY = p_stable.y - Math.round(0.2*(p_stable.y-p_animate.y));
-
-            if (direction == "0"){
-                var r = "@keyframes "+rulename+" {   0% { opacity: 0; transform: translate("+p_animate.x+"px, "+p_animate.y+"px); }  100% { opacity: 1; transform: translate("+offsetX+"px, "+offsetY+"px); }}";
-                console.log(r);
-                return r;
+        $scope.createCSSRulefromTemplate = function(type, direction){
+            var ruleFunction;
+            switch (type) {
+                case "linear":
+                    if (direction === "0"){
+                        ruleFunction = function (from, to) {
+                            return "@keyframes linear {   0% { opacity: 0; transform: translate("+from.x+"px, "+from.y+"px); }  100% { opacity: 1; transform: translate("+to.x+"px, "+to.y+"px); }}";
+                        };
+                    }
+                    else{
+                        ruleFunction = function(from, to){
+                            return "@keyframes linear {   0% { opacity: 0; transform: translate("+to.x+"px, "+to.y+"px); }   100% { opacity: 1; transform: translate("+from.x+"px, "+from.y+"px); }}";
+                        };
+                    }
+                    break;
+                case "flash":
+                    ruleFunction = function () {
+                        return "@keyframes flash {  0% {    opacity: 0;    -webkit-transform: scale3d(0.3, 0.3, 0.3);    transform: scale3d(0.3, 0.3, 0.3);  }  50% {    opacity: 0.5;  }  100% {    opacity: 1;   }}"
+                    };
+                    break;
+                case "double":
+                    break;
             }
-            else{
-                var r = "@keyframes "+rulename+" {   0% { opacity: 0; transform: translate("+offsetX+"px, "+offsetY+"px); }   100% { opacity: 1; transform: translate("+p_animate.x+"px, "+p_animate.y+"px); }}";
-                return r;
-            }
-
+            return ruleFunction;
         };
 
+        $scope.buildCSSRule = function(p_stable, p_animate, type, direction){
+            var ruleFunc = $scope.createCSSRulefromTemplate(type, direction);
+            var r;
+            switch (type) {
+                case "linear":
+                    var offsetX = p_stable.x - Math.round(0.2*(p_stable.x-p_animate.x));
+                    var offsetY = p_stable.y - Math.round(0.2*(p_stable.y-p_animate.y));
+                    var p={x:offsetX,y:offsetY};
+
+                    r = ruleFunc(p_animate, p);
+                    break;
+                case "flash":
+                    r = ruleFunc();
+                    break;
+            }
+            console.log(r);
+            return r;
+        };
+
+        $scope.playAnimation = function(selector, type, direction, pos_stable, pos_animation){
+            var style = document.styleSheets[7]; // 7==animate.css
+            if(type === "" || type===undefined){
+                type = "linear";
+            }
+            var CSSKeyframeRule = $scope.buildCSSRule(pos_stable, pos_animation, type, direction);
+            var CSSStyleRule = "."+type+" { -webkit-animation-name: "+type+"; animation-name: "+type+"; }";
+            style.insertRule(CSSKeyframeRule);
+            style.insertRule(CSSStyleRule);
+
+            selector.attr("class","stencils animated slow "+type+" iteration-5");
+            setTimeout(function(){
+                selector.attr("class","stencils");
+                style.removeRule(0);
+                style.removeRule(0);
+            },5000);
+
+        };
         /*
          * DRAG AND DROP FUNCTIONALITY
          */
@@ -1522,3 +1559,25 @@ KISBPM.CreateCommand = ORYX.Core.Command.extend({
         this.facade.setSelection(this.facade.getSelection().without(this.shape, this.edge));
     }
 });
+
+
+var player = {
+    name: "",
+    property:"",
+
+    createCSSAnimation: function (id) {
+        switch (id) {
+            case "0":
+
+                break;
+            case "1":
+                break;
+            case "2":
+                break;
+            default:break;
+        }
+
+
+    }
+
+};
