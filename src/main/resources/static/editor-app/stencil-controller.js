@@ -480,41 +480,53 @@ angular.module('activitiModeler')
                 console.log("clicked!");
                 console.log($scope);
 
+                // ----old----
                 // get animation resource
+                // var propertylist = $scope.selectedItem.properties;
+                //
+                // var animationID1 = $scope.getPropertybyKey(propertylist,"oryx-contain_resource");
+                // var animationID2 = $scope.getPropertybyKey(propertylist,"oryx-animation");
+                // var direction    = $scope.getPropertybyKey(propertylist,"oryx-animate_direction");
+                // var type         = $scope.getPropertybyKey(propertylist,"oryx-type");
+                //
+                // // get animation selector
+                // //$("#"+animationID2).parents("g")[1].css("transition","transform 1s ease-out 0s").attr("transform","translate(160,20)");
+                // //var selector = angular.element("#"+animationID2).parent().parent();
+                // var selectorID1 = jQuery("#" + animationID1).parent().parent();
+                // var selectorID2 = jQuery("#" + animationID2).parent().parent();
+                //
+                // // get animation resource position
+                // var pos_stable = $scope.getPositionbyselector(selectorID1);
+                // var pos_animation = $scope.getPositionbyselector(selectorID2);
+
+
+                // ----new----
+                // get res from prop
                 var propertylist = $scope.selectedItem.properties;
 
-                var animationID1 = $scope.getPropertybyKey(propertylist,"oryx-contain_resource");
-                var animationID2 = $scope.getPropertybyKey(propertylist,"oryx-animation");
-                var direction    = $scope.getPropertybyKey(propertylist,"oryx-animate_direction");
-                var type         = $scope.getPropertybyKey(propertylist,"oryx-type");
+                var inputProp    = $scope.getPropertybyKey(propertylist,"oryx-input");
+                var outputProp    = $scope.getPropertybyKey(propertylist,"oryx-output");
+                var AEProp    = $scope.getPropertybyKey(propertylist,"oryx-activityelement");
 
-                // get animation selector
-                //$("#"+animationID2).parents("g")[1].css("transition","transform 1s ease-out 0s").attr("transform","translate(160,20)");
-                //var selector = angular.element("#"+animationID2).parent().parent();
-                var selectorID1 = jQuery("#" + animationID1).parent().parent();
-                var selectorID2 = jQuery("#" + animationID2).parent().parent();
+                // create jquery selector
+                var inputPropSel   = jQuery("#" + inputProp.id).parent().parent();
+                var outputPropSel  = jQuery("#" + outputProp.id).parent().parent();
+                var AEPropSel      = jQuery("#" + AEProp.id).parent().parent();
 
                 // get animation resource position
-                var pos_stable = $scope.getPositionbyselector(selectorID1);
-                var pos_animation = $scope.getPositionbyselector(selectorID2);
+                var pos_input = $scope.getPositionbyselector(inputPropSel);
+                var pos_output = $scope.getPositionbyselector(outputPropSel);
+                var pos_AE = $scope.getPositionbyselector(AEPropSel);
 
                 // play
-                //selector.css("transition","transform 1s ease-out 0s").attr("transform","translate(160,20)");
-                var style = document.styleSheets[7]; // 7==animate.css
-                var CSSKeyframeRule = $scope.buildCSSRule(pos_stable, pos_animation, "custom", direction);
-                var CSSStyleRule = ".custom { animation-name: custom; }";
-                style.insertRule(CSSKeyframeRule);
-                style.insertRule(CSSStyleRule);
 
-                selectorID2.attr("class", "stencils animated slow custom infinite");
-                setTimeout(function () {
-                    selectorID2.attr("class", "stencils");
-                    style.removeRule(0);
-                    style.removeRule(0);
-                }, 5000);
-                // selector.css("transition","transform 1s ease-out 0s").attr("transform","translate(160,20)");
-                $scope.playAnimation(selectorID1, "flash", direction, pos_stable, pos_animation);
-                $scope.playAnimation(selectorID2, "linear", direction, pos_stable, pos_animation);
+                // ----new----
+                if(AEProp.type != "社会实体"){
+
+                }
+                $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
+                $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
+                $scope.playAnimation(outputPropSel, "linear", "1", pos_AE, pos_output);
 
             };
             $scope.morphShape = function () {
@@ -797,36 +809,37 @@ angular.module('activitiModeler')
             return p;
         };
 
-        $scope.buildCSSRule = function (p_stable, p_animate, rulename, direction) {
-            var offsetX = p_stable.x - Math.round(0.2 * (p_stable.x - p_animate.x));
-            var offsetY = p_stable.y - Math.round(0.2 * (p_stable.y - p_animate.y));
-
-            if (direction == "0") {
-                var r = "@keyframes " + rulename + " {   0% { opacity: 0; transform: translate(" + p_animate.x + "px, " + p_animate.y + "px); }  100% { opacity: 1; transform: translate(" + offsetX + "px, " + offsetY + "px); }}";
-                console.log(r);
-                return r;
-            }
-            else {
-                var r = "@keyframes " + rulename + " {   0% { opacity: 0; transform: translate(" + offsetX + "px, " + offsetY + "px); }   100% { opacity: 1; transform: translate(" + p_animate.x + "px, " + p_animate.y + "px); }}";
-                return r;}}
+        // $scope.buildCSSRule = function (p_stable, p_animate, rulename, direction) {
+        //     var offsetX = p_stable.x - Math.round(0.2 * (p_stable.x - p_animate.x));
+        //     var offsetY = p_stable.y - Math.round(0.2 * (p_stable.y - p_animate.y));
+        //
+        //     if (direction == "0") {
+        //         var r = "@keyframes " + rulename + " {   0% { opacity: 0; transform: translate(" + p_animate.x + "px, " + p_animate.y + "px); }  100% { opacity: 1; transform: translate(" + offsetX + "px, " + offsetY + "px); }}";
+        //         console.log(r);
+        //         return r;
+        //     }
+        //     else {
+        //         var r = "@keyframes " + rulename + " {   0% { opacity: 0; transform: translate(" + offsetX + "px, " + offsetY + "px); }   100% { opacity: 1; transform: translate(" + p_animate.x + "px, " + p_animate.y + "px); }}";
+        //         return r;}}
         $scope.createCSSRulefromTemplate = function(type, direction){
             var ruleFunction;
             switch (type) {
                 case "linear":
                     if (direction === "0"){
-                        ruleFunction = function (from, to) {
-                            return "@keyframes linear {   0% { opacity: 0; transform: translate("+from.x+"px, "+from.y+"px); }  100% { opacity: 1; transform: translate("+to.x+"px, "+to.y+"px); }}";
+                        ruleFunction = function (from, to, ruleName) {
+                            return "@keyframes "+ruleName+" {   0% { opacity: 0; transform: translate("+from.x+"px, "+from.y+"px); }  100% { opacity: 1; transform: translate("+to.x+"px, "+to.y+"px); }}";
                         };
                     }
                     else{
-                        ruleFunction = function(from, to){
-                            return "@keyframes linear {   0% { opacity: 0; transform: translate("+to.x+"px, "+to.y+"px); }   100% { opacity: 1; transform: translate("+from.x+"px, "+from.y+"px); }}";
+                        ruleFunction = function(from, to, ruleName){
+                            return "@keyframes "+ruleName+" {   0% { opacity: 0; transform: translate("+to.x+"px, "+to.y+"px); }   100% { opacity: 1; transform: translate("+from.x+"px, "+from.y+"px); }}";
                         };
                     }
                     break;
                 case "flash":
-                    ruleFunction = function () {
-                        return "@keyframes flash {  0% {    opacity: 0;    -webkit-transform: scale3d(0.3, 0.3, 0.3);    transform: scale3d(0.3, 0.3, 0.3);  }  50% {    opacity: 0.5;  }  100% {    opacity: 1;   }}"
+                    ruleFunction = function (ruleName) {
+                        //return "@keyframes "+ruleName+" {  0% {    opacity: 0;    -webkit-transform: scale3d(0.3, 0.3, 0.3);    transform: scale3d(0.3, 0.3, 0.3);  }  50% {    opacity: 1;   }}"
+                        return "@keyframes "+ruleName+" {  from,  50%,  to {    opacity: 1;  }  25%,  75% {    opacity: 0;  }}";
                     };
                     break;
                 case "double":
@@ -835,20 +848,24 @@ angular.module('activitiModeler')
             return ruleFunction;
         };
 
-        $scope.buildCSSRule = function(p_stable, p_animate, type, direction){
+        $scope.buildCSSRule = function(p_stable, p_animate, type, direction, ruleName){
             var ruleFunc = $scope.createCSSRulefromTemplate(type, direction);
             var r;
+            if (ruleName === ""){ruleName = type;}
             switch (type) {
                 case "linear":
                     var offsetX = p_stable.x - Math.round(0.2*(p_stable.x-p_animate.x));
                     var offsetY = p_stable.y - Math.round(0.2*(p_stable.y-p_animate.y));
                     var p={x:offsetX,y:offsetY};
 
-                    r = ruleFunc(p_animate, p);
+                    r = ruleFunc(p_animate, p, ruleName);
                     break;
                 case "flash":
-                    r = ruleFunc();
+                    r = ruleFunc(ruleName);
                     break;
+                case "double":
+                    break;
+                default: break;
             }
             console.log(r);
             return r;
@@ -859,16 +876,36 @@ angular.module('activitiModeler')
             if(type === "" || type===undefined){
                 type = "linear";
             }
-            var CSSKeyframeRule = $scope.buildCSSRule(pos_stable, pos_animation, type, direction);
-            var CSSStyleRule = "."+type+" { -webkit-animation-name: "+type+"; animation-name: "+type+"; }";
+            var cssRuleName = type + Date.now() + parseInt(Math.random()*100);;
+            var CSSKeyframeRule = $scope.buildCSSRule(pos_stable, pos_animation, type, direction, cssRuleName);
+            var CSSStyleRule = "."+cssRuleName+" { -webkit-animation-name: "+cssRuleName+"; animation-name: "+cssRuleName+"; }";
             style.insertRule(CSSKeyframeRule);
             style.insertRule(CSSStyleRule);
 
-            selector.attr("class","stencils animated slow "+type+" iteration-5");
+            selector.attr("class","stencils animated slow "+cssRuleName+" infinite");
             setTimeout(function(){
                 selector.attr("class","stencils");
-                style.removeRule(0);
-                style.removeRule(0);
+                var index = 99999999;
+                for(var i=0;i<style.cssRules.length;i++){
+                    if(style.cssRules[i].name == cssRuleName){
+                        index = i;
+                        break;
+                    }
+                }
+                if(index < style.cssRules.length){
+                    style.removeRule(index);
+                }
+                index = 99999999;
+                for(var i=0;i<style.cssRules.length;i++){
+                    if(style.cssRules[i].selectorText == "."+cssRuleName){
+                        index = i;
+                        break;
+                    }
+                }
+                if(index < style.cssRules.length){
+                    style.removeRule(index);
+                }
+
             },5000);
 
         };
