@@ -512,13 +512,29 @@ angular.module('activitiModeler')
                     }
                 }else{
                     // 众包
-                    // 1.人闪两下,2.人前往目标位置，3.人取东西；4.人携带东西回到原来位置
+                    // 0.显示输入指令？,1.人闪两下,2.人前往目标位置，3.人取东西；4.人携带东西回到原来位置
                     // AE: 人；    input：指令；    output： 取的东西
+                    // step0
+                    $scope.playAnimation(outputPropSel, "flash", "0",pos_input, pos_input);
+
                     // step1
                     $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
+
                     // step2
-                    $scope.playAnimation(AEPropSel, "linear", "0",pos_input, pos_AE);
-                    // step3
+                    setTimeout( function() {
+                        $scope.playAnimation(AEPropSel, "linear", "0", pos_AE, pos_output);
+                    },2000);
+
+                    // // step3
+                    // setTimeout( function() {
+                    //     $scope.playAnimation(outputPropSel, "flash", "0", pos_output, pos_output);
+                    // }, 3000);
+                    //
+                    // // step4
+                    // setTimeout( function() {
+                    //     $scope.playAnimation(AEPropSel, "linear", "1", pos_output, pos_AE);
+                    //     $scope.playAnimation(outputPropSel, "linear", "1", pos_output, pos_AE);
+                    // },4000);
 
                 }
                 
@@ -857,7 +873,17 @@ angular.module('activitiModeler')
                         return "@keyframes " + ruleName + " {  from,  50%,  to {    opacity: 1;  }  25%,  75% {    opacity: 0;  }}";
                     };
                     break;
-                case "double":
+                case "linear2":
+                    if (direction === "0") {
+                        ruleFunction = function (from, to, ruleName) {
+                            return "@keyframes " + ruleName + " {   0% { opacity: 0; transform: translate(" + from.x + "px, " + from.y + "px); }  100% { opacity: 1; transform: translate(" + to.x + "px, " + to.y + "px); }}";
+                        };
+                    }
+                    else {
+                        ruleFunction = function (from, to, ruleName) {
+                            return "@keyframes " + ruleName + " {   0% { opacity: 0; transform: translate(" + to.x + "px, " + to.y + "px); }   100% { opacity: 1; transform: translate(" + from.x + "px, " + from.y + "px); }}";
+                        };
+                    }
                     break;
             }
             return ruleFunction;
@@ -880,7 +906,8 @@ angular.module('activitiModeler')
                 case "flash":
                     r = ruleFunc(ruleName);
                     break;
-                case "double":
+                case "linear2":
+                    r = ruleFunc();
                     break;
                 default:
                     break;
