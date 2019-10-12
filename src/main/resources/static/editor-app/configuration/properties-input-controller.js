@@ -13,10 +13,14 @@ var InputWriteCtrl = ['$scope', '$modal', '$timeout', '$translate', function ($s
 var InputPopupController = ['$scope', '$modal', function ($scope, $modal) {
     var temp = [$scope.editor.getCanvas()][0].children;
     $scope.entities = [];
-    $scope.entities[0] = {"id": "none", "name": "请选择输入实体"};
+    $scope.entities[0] = {"id": "none", "name": "请选择输入实体", "type": "none"};
     for (var i = 0; i < temp.length; i++) {
-        if (temp[i].properties["oryx-type"] === "物理实体")
-            $scope.entities[$scope.entities.length] = {"id": temp[i].id, "name": temp[i].properties["oryx-name"]};
+        if (temp[i].properties["oryx-type"])
+            $scope.entities[$scope.entities.length] = {
+                "id": temp[i].id,
+                "name": temp[i].properties["oryx-name"],
+                "type": temp[i].properties["oryx-type"]
+            };
     }
     $scope.save = function () {
 
@@ -64,7 +68,7 @@ var InputDisplayController = ['$scope', function ($scope) {
         var shape = $scope.getShapeById($scope.property.value.id);
         if (!shape) {
             $scope.property.value = {};
-        }else {
+        } else {
             $scope.property.value.name = shape.properties["oryx-name"];
         }
         $scope.updatePropertyInModel($scope.property);

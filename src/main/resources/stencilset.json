@@ -86,7 +86,7 @@
           "type": "Complex",
           "title": "活动元素",
           "value": "",
-          "description": "",
+          "description": "action中对应的活动对象",
           "popular": true
         }
       ]
@@ -99,7 +99,7 @@
           "type": "String",
           "title": "类型",
           "value": "",
-          "description": "",
+          "description": "实体类型",
           "popular": true
         }
       ]
@@ -112,7 +112,7 @@
           "type": "Complex",
           "title": "输入",
           "value": "",
-          "description": "",
+          "description": "action所需的输入对象",
           "popular": true
         }
       ]
@@ -125,7 +125,7 @@
           "type": "Complex",
           "title": "输出",
           "value": "",
-          "description": "",
+          "description": "action所需的输出对象",
           "popular": true
         }
       ]
@@ -1081,6 +1081,7 @@
         "process_idpackage",
         "namepackage",
         "documentationpackage",
+        "typepackage",
         "process_authorpackage",
         "process_versionpackage",
         "process_namespacepackage",
@@ -1106,6 +1107,7 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
+        "typepackage",
         "executionlistenerspackage",
         "initiatorpackage",
         "formkeydefinitionpackage",
@@ -1134,6 +1136,7 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
+        "typepackage",
         "executionlistenerspackage",
         "initiatorpackage",
         "formkeydefinitionpackage",
@@ -1163,6 +1166,7 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
+        "typepackage",
         "executionlistenerspackage",
         "initiatorpackage",
         "formkeydefinitionpackage",
@@ -1282,6 +1286,7 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
+        "typepackage",
         "executionlistenerspackage",
         "initiatorpackage",
         "formkeydefinitionpackage",
@@ -1311,6 +1316,7 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
+        "typepackage",
         "executionlistenerspackage",
         "initiatorpackage",
         "formkeydefinitionpackage",
@@ -1340,6 +1346,7 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
+        "typepackage",
         "executionlistenerspackage",
         "initiatorpackage",
         "formkeydefinitionpackage",
@@ -1369,6 +1376,7 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
+        "typepackage",
         "executionlistenerspackage",
         "initiatorpackage",
         "formkeydefinitionpackage",
@@ -1483,8 +1491,7 @@
         "initiatorpackage",
         "formkeydefinitionpackage",
         "formpropertiespackage",
-        "resourcespackage",
-        "servicespackage"
+        "resourcespackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1650,8 +1657,7 @@
         "duedatedefinitionpackage",
         "prioritydefinitionpackage",
         "formpropertiespackage",
-        "tasklistenerspackage",
-        "servicespackage"
+        "tasklistenerspackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1689,8 +1695,7 @@
         "servicetaskexpressionpackage",
         "servicetaskdelegateexpressionpackage",
         "servicetaskfieldspackage",
-        "servicetaskresultvariablepackage",
-        "servicespackage"
+        "servicetaskresultvariablepackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [

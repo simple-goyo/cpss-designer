@@ -504,14 +504,14 @@ angular.module('activitiModeler')
                 // get res from prop
                 var propertylist = $scope.selectedItem.properties;
 
-                var inputProp    = $scope.getPropertybyKey(propertylist,"oryx-input");
-                var outputProp    = $scope.getPropertybyKey(propertylist,"oryx-output");
-                var AEProp    = $scope.getPropertybyKey(propertylist,"oryx-activityelement");
+                var inputProp = $scope.getPropertybyKey(propertylist, "oryx-input");
+                var outputProp = $scope.getPropertybyKey(propertylist, "oryx-output");
+                var AEProp = $scope.getPropertybyKey(propertylist, "oryx-activityelement");
 
                 // create jquery selector
-                var inputPropSel   = jQuery("#" + inputProp.id).parent().parent();
-                var outputPropSel  = jQuery("#" + outputProp.id).parent().parent();
-                var AEPropSel      = jQuery("#" + AEProp.id).parent().parent();
+                var inputPropSel = jQuery("#" + inputProp.id).parent().parent();
+                var outputPropSel = jQuery("#" + outputProp.id).parent().parent();
+                var AEPropSel = jQuery("#" + AEProp.id).parent().parent();
 
                 // get animation resource position
                 var pos_input = $scope.getPositionbyselector(inputPropSel);
@@ -521,7 +521,7 @@ angular.module('activitiModeler')
                 // play
 
                 // ----new----
-                if(AEProp.type != "社会实体"){
+                if (AEProp.type != "社会实体") {
 
                 }
                 $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
@@ -821,25 +821,25 @@ angular.module('activitiModeler')
         //     else {
         //         var r = "@keyframes " + rulename + " {   0% { opacity: 0; transform: translate(" + offsetX + "px, " + offsetY + "px); }   100% { opacity: 1; transform: translate(" + p_animate.x + "px, " + p_animate.y + "px); }}";
         //         return r;}}
-        $scope.createCSSRulefromTemplate = function(type, direction){
+        $scope.createCSSRulefromTemplate = function (type, direction) {
             var ruleFunction;
             switch (type) {
                 case "linear":
-                    if (direction === "0"){
+                    if (direction === "0") {
                         ruleFunction = function (from, to, ruleName) {
-                            return "@keyframes "+ruleName+" {   0% { opacity: 0; transform: translate("+from.x+"px, "+from.y+"px); }  100% { opacity: 1; transform: translate("+to.x+"px, "+to.y+"px); }}";
+                            return "@keyframes " + ruleName + " {   0% { opacity: 0; transform: translate(" + from.x + "px, " + from.y + "px); }  100% { opacity: 1; transform: translate(" + to.x + "px, " + to.y + "px); }}";
                         };
                     }
-                    else{
-                        ruleFunction = function(from, to, ruleName){
-                            return "@keyframes "+ruleName+" {   0% { opacity: 0; transform: translate("+to.x+"px, "+to.y+"px); }   100% { opacity: 1; transform: translate("+from.x+"px, "+from.y+"px); }}";
+                    else {
+                        ruleFunction = function (from, to, ruleName) {
+                            return "@keyframes " + ruleName + " {   0% { opacity: 0; transform: translate(" + to.x + "px, " + to.y + "px); }   100% { opacity: 1; transform: translate(" + from.x + "px, " + from.y + "px); }}";
                         };
                     }
                     break;
                 case "flash":
                     ruleFunction = function (ruleName) {
                         //return "@keyframes "+ruleName+" {  0% {    opacity: 0;    -webkit-transform: scale3d(0.3, 0.3, 0.3);    transform: scale3d(0.3, 0.3, 0.3);  }  50% {    opacity: 1;   }}"
-                        return "@keyframes "+ruleName+" {  from,  50%,  to {    opacity: 1;  }  25%,  75% {    opacity: 0;  }}";
+                        return "@keyframes " + ruleName + " {  from,  50%,  to {    opacity: 1;  }  25%,  75% {    opacity: 0;  }}";
                     };
                     break;
                 case "double":
@@ -848,15 +848,17 @@ angular.module('activitiModeler')
             return ruleFunction;
         };
 
-        $scope.buildCSSRule = function(p_stable, p_animate, type, direction, ruleName){
+        $scope.buildCSSRule = function (p_stable, p_animate, type, direction, ruleName) {
             var ruleFunc = $scope.createCSSRulefromTemplate(type, direction);
             var r;
-            if (ruleName === ""){ruleName = type;}
+            if (ruleName === "") {
+                ruleName = type;
+            }
             switch (type) {
                 case "linear":
-                    var offsetX = p_stable.x - Math.round(0.2*(p_stable.x-p_animate.x));
-                    var offsetY = p_stable.y - Math.round(0.2*(p_stable.y-p_animate.y));
-                    var p={x:offsetX,y:offsetY};
+                    var offsetX = p_stable.x - Math.round(0.2 * (p_stable.x - p_animate.x));
+                    var offsetY = p_stable.y - Math.round(0.2 * (p_stable.y - p_animate.y));
+                    var p = {x: offsetX, y: offsetY};
 
                     r = ruleFunc(p_animate, p, ruleName);
                     break;
@@ -865,48 +867,50 @@ angular.module('activitiModeler')
                     break;
                 case "double":
                     break;
-                default: break;
+                default:
+                    break;
             }
             console.log(r);
             return r;
         };
 
-        $scope.playAnimation = function(selector, type, direction, pos_stable, pos_animation){
+        $scope.playAnimation = function (selector, type, direction, pos_stable, pos_animation) {
             var style = document.styleSheets[7]; // 7==animate.css
-            if(type === "" || type===undefined){
+            if (type === "" || type === undefined) {
                 type = "linear";
             }
-            var cssRuleName = type + Date.now() + parseInt(Math.random()*100);;
+            var cssRuleName = type + Date.now() + parseInt(Math.random() * 100);
+            ;
             var CSSKeyframeRule = $scope.buildCSSRule(pos_stable, pos_animation, type, direction, cssRuleName);
-            var CSSStyleRule = "."+cssRuleName+" { -webkit-animation-name: "+cssRuleName+"; animation-name: "+cssRuleName+"; }";
+            var CSSStyleRule = "." + cssRuleName + " { -webkit-animation-name: " + cssRuleName + "; animation-name: " + cssRuleName + "; }";
             style.insertRule(CSSKeyframeRule);
             style.insertRule(CSSStyleRule);
 
-            selector.attr("class","stencils animated slow "+cssRuleName+" infinite");
-            setTimeout(function(){
-                selector.attr("class","stencils");
+            selector.attr("class", "stencils animated slow " + cssRuleName + " infinite");
+            setTimeout(function () {
+                selector.attr("class", "stencils");
                 var index = 99999999;
-                for(var i=0;i<style.cssRules.length;i++){
-                    if(style.cssRules[i].name == cssRuleName){
+                for (var i = 0; i < style.cssRules.length; i++) {
+                    if (style.cssRules[i].name == cssRuleName) {
                         index = i;
                         break;
                     }
                 }
-                if(index < style.cssRules.length){
+                if (index < style.cssRules.length) {
                     style.removeRule(index);
                 }
                 index = 99999999;
-                for(var i=0;i<style.cssRules.length;i++){
-                    if(style.cssRules[i].selectorText == "."+cssRuleName){
+                for (var i = 0; i < style.cssRules.length; i++) {
+                    if (style.cssRules[i].selectorText == "." + cssRuleName) {
                         index = i;
                         break;
                     }
                 }
-                if(index < style.cssRules.length){
+                if (index < style.cssRules.length) {
                     style.removeRule(index);
                 }
 
-            },5000);
+            }, 5000);
 
         };
         /*
@@ -931,7 +935,7 @@ angular.module('activitiModeler')
 
             KISBPM.eventBus.dispatch(KISBPM.eventBus.EVENT_TYPE_HIDE_SHAPE_BUTTONS);
 
-            var setting = false;
+            // var setting = false;
             if ($scope.dragCanContain) {
 
                 var item = $scope.getStencilItemById(ui.draggable[0].id);
@@ -939,7 +943,7 @@ angular.module('activitiModeler')
                 // if (group.name === "物理实体") {
                 //     setting = true;
                 // }
-                setting = true;
+                // setting = true;
 
                 var pos = {x: event.pageX, y: event.pageY};
 
@@ -1139,14 +1143,14 @@ angular.module('activitiModeler')
                     var entities = [$scope.editor.getCanvas()][0].children;
                     property.value = entities[entities.length - 1].id;
                     $scope.updatePropertyInModel(property);
-                } else if (property.title === "类型" && setting) {
-                    property.value = "物理实体";
+                } else if (property.title === "类型") {
+                    property.value = item.name;
                     $scope.updatePropertyInModel(property);
                 }
             }
 
             //set mode to set is to judge whether the item is dragged to canvas firstly.
-            if (!$scope.nameProperty.hidden && setting) {
+            if (!$scope.nameProperty.hidden) {
                 $scope.nameProperty.mode = 'set';
             }
         };
@@ -1654,7 +1658,7 @@ KISBPM.CreateCommand = ORYX.Core.Command.extend({
 
 var player = {
     name: "",
-    property:"",
+    property: "",
 
     createCSSAnimation: function (id) {
         switch (id) {
@@ -1665,7 +1669,8 @@ var player = {
                 break;
             case "2":
                 break;
-            default:break;
+            default:
+                break;
         }
 
 
