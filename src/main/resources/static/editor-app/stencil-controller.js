@@ -480,26 +480,6 @@ angular.module('activitiModeler')
                 console.log("clicked!");
                 console.log($scope);
 
-                // ----old----
-                // get animation resource
-                // var propertylist = $scope.selectedItem.properties;
-                //
-                // var animationID1 = $scope.getPropertybyKey(propertylist,"oryx-contain_resource");
-                // var animationID2 = $scope.getPropertybyKey(propertylist,"oryx-animation");
-                // var direction    = $scope.getPropertybyKey(propertylist,"oryx-animate_direction");
-                // var type         = $scope.getPropertybyKey(propertylist,"oryx-type");
-                //
-                // // get animation selector
-                // //$("#"+animationID2).parents("g")[1].css("transition","transform 1s ease-out 0s").attr("transform","translate(160,20)");
-                // //var selector = angular.element("#"+animationID2).parent().parent();
-                // var selectorID1 = jQuery("#" + animationID1).parent().parent();
-                // var selectorID2 = jQuery("#" + animationID2).parent().parent();
-                //
-                // // get animation resource position
-                // var pos_stable = $scope.getPositionbyselector(selectorID1);
-                // var pos_animation = $scope.getPositionbyselector(selectorID2);
-
-
                 // ----new----
                 // get res from prop
                 var propertylist = $scope.selectedItem.properties;
@@ -519,14 +499,29 @@ angular.module('activitiModeler')
                 var pos_AE = $scope.getPositionbyselector(AEPropSel);
 
                 // play
-
                 // ----new----
-                if (AEProp.type != "社会实体") {
+                if (AEProp.type !== "工人") {
+                    for(var i=0;i<10;i++){
+                        $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
+                        setTimeout(function () {
+                            $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
+                        },"1000");
+                        setTimeout( function(){
+                            $scope.playAnimation(outputPropSel, "linear", "1", pos_AE, pos_output);
+                        },"2500");
+                    }
+                }else{
+                    // 众包
+                    // 1.人闪两下,2.人前往目标位置，3.人取东西；4.人携带东西回到原来位置
+                    // AE: 人；    input：指令；    output： 取的东西
+                    // step1
+                    $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
+                    // step2
+                    $scope.playAnimation(AEPropSel, "linear", "0",pos_input, pos_AE);
+                    // step3
 
                 }
-                $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
-                $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
-                $scope.playAnimation(outputPropSel, "linear", "1", pos_AE, pos_output);
+
 
             };
             $scope.morphShape = function () {
@@ -880,7 +875,7 @@ angular.module('activitiModeler')
                 type = "linear";
             }
             var cssRuleName = type + Date.now() + parseInt(Math.random() * 100);
-            ;
+
             var CSSKeyframeRule = $scope.buildCSSRule(pos_stable, pos_animation, type, direction, cssRuleName);
             var CSSStyleRule = "." + cssRuleName + " { -webkit-animation-name: " + cssRuleName + "; animation-name: " + cssRuleName + "; }";
             style.insertRule(CSSKeyframeRule);
@@ -910,7 +905,7 @@ angular.module('activitiModeler')
                     style.removeRule(index);
                 }
 
-            }, 5000);
+            }, 1500);
 
         };
         /*
