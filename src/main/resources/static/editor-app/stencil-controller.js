@@ -524,9 +524,30 @@ angular.module('activitiModeler')
                 if (AEProp.type != "社会实体") {
 
                 }
+
+                //隐藏与动作无关的其他内容
+                var selectItemId = $scope.editor.getSelection()[0].id;
+                var shapes = [$scope.editor.getCanvas()][0].children;
+                for (var i = 0; i < shapes.length; i++) {
+                    var shapeId = shapes[i].id;
+                    if (shapeId !== selectItemId
+                        && shapeId !== inputProp.id
+                        && shapeId !== outputProp.id
+                        && shapeId !== AEProp.id) {
+                        jQuery('#' + shapeId).parent().parent().attr("display", "none");
+                    }
+                }
+
                 $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
                 $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
                 $scope.playAnimation(outputPropSel, "linear", "1", pos_AE, pos_output);
+
+                //让内容全部显示
+                setTimeout(function () {
+                    for (var i = 0; i < shapes.length; i++) {
+                        jQuery('#' + shapes[i].id).parent().parent().attr("display", "");
+                    }
+                }, 5000);
 
             };
             $scope.morphShape = function () {
@@ -643,7 +664,6 @@ angular.module('activitiModeler')
             return $scope.selectedItem.properties[index].readModeTemplateUrl;
         };
         $scope.getPropertyWriteModeTemplateUrl = function (index) {
-            console.log($scope.selectedItem.properties[index].writeModeTemplateUrl);
             return $scope.selectedItem.properties[index].writeModeTemplateUrl;
         };
         /* Method available to all sub controllers (for property controllers) to update the internal Oryx model */
