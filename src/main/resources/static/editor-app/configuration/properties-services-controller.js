@@ -173,23 +173,30 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
             }
         }
         if (!action) return;
+
+        var nodes = [$scope.editor.getCanvas()][0].children;
+        var positionOffset = {x: 0, y: 0};
+        for (var i = 0; i < nodes.length; i++) {
+            if (nodes[i].properties["oryx-activityelement"]) {
+                if (positionOffset.y < nodes[i].bounds.center().y) {
+                    positionOffset.y = nodes[i].bounds.center().y;
+                }
+            }
+        }
+
         var option = {
             type: selectItem.getStencil().namespace() + itemId,
-            namespace: selectItem.getStencil().namespace()
+            namespace: selectItem.getStencil().namespace(),
+            parent: selectItem.parent,
+            containedStencil: action,
+            positionOffset: positionOffset
         };
-
-        option['connectedShape'] = selectItem;
-        option['parent'] = selectItem.parent;
-        option['containedStencil'] = action;
-
-        console.log($scope.editor.getSelection()[0].bounds);
 
         var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
 
         $scope.editor.executeCommands([command]);
 
         console.log($scope.editor.getSelection()[0].bounds);
-
 
         var actionActivity = $scope.selectedItem;
         for (var i = 0; i < actionActivity.properties.length; i++) {

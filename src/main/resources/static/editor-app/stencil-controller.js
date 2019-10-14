@@ -501,19 +501,19 @@ angular.module('activitiModeler')
                 // play
                 // ----new----
                 if (AEProp.type !== "工人") {
-                    for(var i=0;i<10;i++){
+                    for (var i = 0; i < 10; i++) {
                         $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
                         $scope.stopAnimation(inputPropSel, 1500);
                         setTimeout(function () {
                             $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
                             $scope.stopAnimation(AEPropSel, 1500);
-                        },"1000");
-                        setTimeout( function(){
+                        }, "1000");
+                        setTimeout(function () {
                             $scope.playAnimation(outputPropSel, "linear", "1", pos_AE, pos_output);
                             $scope.stopAnimation(outputPropSel, 1500);
-                        },"2500");
+                        }, "2500");
                     }
-                }else{
+                } else {
                     // 众包
                     // 0.订单输入？,1.人闪两下,2.人前往目标位置，3.人取东西；4.人携带东西回到原来位置
                     // AE: 人；    input：指令；    output： 取的东西
@@ -524,22 +524,22 @@ angular.module('activitiModeler')
                     $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
                     $scope.stopAnimation(AEPropSel, 1500);
                     // step2
-                    setTimeout( function() {
+                    setTimeout(function () {
                         $scope.playAnimation(AEPropSel, "linear2", "0", pos_output, pos_AE);
                         $scope.stopAnimation(AEPropSel, 1500);
-                    },2000);
+                    }, 2000);
 
                     // step3
-                    setTimeout( function() {
+                    setTimeout(function () {
                         $scope.playAnimation(outputPropSel, "flash", "0", pos_output, pos_output);
                         $scope.stopAnimation(outputPropSel, 1000);
                     }, 3000);
 
                     // step4
-                    setTimeout( function() {
-                        var obj_pos_output = {x:pos_output.x, y:pos_output.y};
-                        var obj_pos_AE     = {x:pos_AE.x, y:pos_AE.y};
-                        if(pos_output.x - 40 > 0){
+                    setTimeout(function () {
+                        var obj_pos_output = {x: pos_output.x, y: pos_output.y};
+                        var obj_pos_AE = {x: pos_AE.x, y: pos_AE.y};
+                        if (pos_output.x - 40 > 0) {
                             obj_pos_output.x -= 40;
                             obj_pos_AE.x -= 40;
                         }
@@ -548,10 +548,10 @@ angular.module('activitiModeler')
 
                         $scope.stopAnimation(AEPropSel, 4000);
                         $scope.stopAnimation(outputPropSel, 4000);
-                    },5000);
+                    }, 5000);
 
                 }
-                
+
                 //隐藏与动作无关的其他内容
                 var selectItemId = $scope.editor.getSelection()[0].id;
                 var shapes = [$scope.editor.getCanvas()][0].children;
@@ -564,7 +564,6 @@ angular.module('activitiModeler')
                         jQuery('#' + shapeId).parent().parent().attr("display", "none");
                     }
                 }
-
 
 
                 //让内容全部显示
@@ -946,7 +945,7 @@ angular.module('activitiModeler')
             selector.attr("class", "stencils animated slow " + cssRuleName + " infinite");
         };
 
-        $scope.stopAnimation = function (selector, delay){
+        $scope.stopAnimation = function (selector, delay) {
             var style = document.styleSheets[7]; // 7==animate.css
             setTimeout(function () {
                 selector.attr("class", "stencils");
@@ -973,7 +972,6 @@ angular.module('activitiModeler')
 
             }, delay);
         };
-
 
 
         /*
@@ -1600,6 +1598,7 @@ KISBPM.CreateCommand = ORYX.Core.Command.extend({
         this.type = option.type;
         this.containedStencil = option.containedStencil;
         this.parent = option.parent;
+        this.positionOffset = option.positionOffset;
         this.currentReference = currentReference;
         this.shapeOptions = option.shapeOptions;
     },
@@ -1657,32 +1656,39 @@ KISBPM.CreateCommand = ORYX.Core.Command.extend({
                 this.targetRefPos = this.edge.dockers.last().referencePoint;
             }
         } else {
-            var containedStencil = this.containedStencil;
-            var connectedShape = this.connectedShape;
-            var bc = connectedShape.bounds;
+            var pos;
             var bs = this.shape.bounds;
+            if (this.connectedShape) {
+                var containedStencil = this.containedStencil;
+                var connectedShape = this.connectedShape;
+                var bc = connectedShape.bounds;
 
-            var pos = bc.center();
-            if (containedStencil.defaultAlign() === "north") {
-                pos.y -= (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.height() / 2);
-            } else if (containedStencil.defaultAlign() === "northeast") {
-                pos.x += (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
-                pos.y -= (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.height() / 2);
-            } else if (containedStencil.defaultAlign() === "southeast") {
-                pos.x += (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
-                pos.y += (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.height() / 2);
-            } else if (containedStencil.defaultAlign() === "south") {
-                pos.y += (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.height() / 2);
-            } else if (containedStencil.defaultAlign() === "southwest") {
-                pos.x -= (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
-                pos.y += (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.height() / 2);
-            } else if (containedStencil.defaultAlign() === "west") {
-                pos.x -= (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.width() / 2);
-            } else if (containedStencil.defaultAlign() === "northwest") {
-                pos.x -= (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
-                pos.y -= (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.height() / 2);
+                pos = bc.center();
+                if (containedStencil.defaultAlign() === "north") {
+                    pos.y -= (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.height() / 2);
+                } else if (containedStencil.defaultAlign() === "northeast") {
+                    pos.x += (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
+                    pos.y -= (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.height() / 2);
+                } else if (containedStencil.defaultAlign() === "southeast") {
+                    pos.x += (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
+                    pos.y += (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.height() / 2);
+                } else if (containedStencil.defaultAlign() === "south") {
+                    pos.y += (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.height() / 2);
+                } else if (containedStencil.defaultAlign() === "southwest") {
+                    pos.x -= (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
+                    pos.y += (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.height() / 2);
+                } else if (containedStencil.defaultAlign() === "west") {
+                    pos.x -= (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.width() / 2);
+                } else if (containedStencil.defaultAlign() === "northwest") {
+                    pos.x -= (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
+                    pos.y -= (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.height() / 2);
+                } else {
+                    pos.x += (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.width() / 2);
+                }
             } else {
-                pos.x += (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.width() / 2);
+                pos = this.positionOffset;
+                pos.x = ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
+                pos.y += ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.height() / 2);
             }
 
             // Move shape to the new position
