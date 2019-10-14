@@ -204,7 +204,8 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
             } else if (property.title === "活动元素") {
                 property.value = {
                     "id": selectItem.properties["oryx-overrideid"],
-                    "name": selectItem.properties["oryx-name"]
+                    "name": selectItem.properties["oryx-name"],
+                    "type": selectItem.properties["oryx-type"]
                 };
                 $scope.updatePropertyInModel(property);
             } else if (property.title === "输入") {
