@@ -1619,7 +1619,8 @@
         "documentationpackage",
         "activityelementpackage",
         "inputpackage",
-        "outputpackage"
+        "outputpackage",
+        "animatedirectionpackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
