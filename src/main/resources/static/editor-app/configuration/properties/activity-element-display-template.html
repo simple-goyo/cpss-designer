@@ -1,0 +1,3 @@
+<div ng-controller="ActivityElementDisplayController"><span ng-if="property.value.name" translate>{{property.value.name}} </span>
+    <span ng-if="!property.value.name&&property.value.id" translate>{{property.value.id}} </span>
+    <span ng-if="!property.value.name&&!property.value.id" translate>PROPERTY.ACTIVITY.ELEMENT.EMPTY</span></div>

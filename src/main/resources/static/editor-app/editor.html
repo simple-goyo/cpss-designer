@@ -62,10 +62,16 @@
                         </ul>
                     </div>
                 </div>
+<!--                <div class="customAction" id="ActionWrapper"-->
+<!--                     ng-model="droppedElement"-->
+<!--                     data-drop="true"-->
+<!--                     data-jqyoui-options-->
+<!--                     jqyoui-droppable="{onDrop:'dropCallback',onOver: 'overCallback', onOut: 'outCallback'}">-->
+<!--                    <div ng-controller="">-->
+<!--                </div>-->
             </div>
             <div id="canvasHelpWrapper" class="col-xs-9">
                 <div class="canvas-wrapper" id="canvasSection"
-                     ng-model="droppedElement"
                      ng-model="droppedElement"
                      data-drop="true"
                      data-jqyoui-options
@@ -84,6 +90,13 @@
                          ng-click="morphShape()"
                          style="display:none">
                         <img src="editor-app/images/wrench.png"/>
+                    </div>
+                    <div class="Oryx_button"
+                         id="play-button"
+                         title="播放动画"
+                         ng-click="playShape()"
+                         style="display:none">
+                        <img src="editor-app/images/play.png"/>
                     </div>
                     <div class="Oryx_button"
                          ng-repeat="item in quickMenuItems"
@@ -124,7 +137,7 @@
                             <span>
                             <ng-include
                                     src="'editor-app/configuration/properties/propertyInit.html'"
-                                    ng-if="property.mode=='set'"></ng-include></span>
+                                    ng-if="nameProperty.mode=='set'"></ng-include></span>
                             <div>
                                 <div class="property-row" ng-repeat="property in selectedItem.properties"
                                      ng-click="propertyClicked($index)" ng-class="{'clear' : $index%2 == 0}">
@@ -138,6 +151,8 @@
                                                     ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
 	                                    <ng-include src="getPropertyWriteModeTemplateUrl($index)"
                                                     ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+                                        <ng-include src="getPropertyWriteModeTemplateUrl($index)"
+                                                    ng-if="property.hasReadWriteMode && property.mode == 'set'"></ng-include>
 	                                </span>
                                 </div>
                             </div>

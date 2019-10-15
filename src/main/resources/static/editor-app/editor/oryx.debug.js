@@ -1864,7 +1864,7 @@ ORYX.CONFIG.NAMESPACE_ORYX =			"http://www.b3mn.org/oryx";
 ORYX.CONFIG.NAMESPACE_SVG =				"http://www.w3.org/2000/svg";
 
 	/* UI */
-ORYX.CONFIG.CANVAS_WIDTH =				1200; 
+ORYX.CONFIG.CANVAS_WIDTH =				1200;
 ORYX.CONFIG.CANVAS_HEIGHT =				1050;
 ORYX.CONFIG.CANVAS_RESIZE_INTERVAL =	100;
 ORYX.CONFIG.CANVAS_MIN_WIDTH =  800;
@@ -1890,6 +1890,7 @@ ORYX.CONFIG.MAX_NUM_SHAPES_NO_GROUP	=	20; // Updated so the form editor shows al
 
 ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER = 30;
 ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET = 45;
+ORYX.CONFIG.SHOW_ACTION_SPACE_WIDTH=160;
 
 	/* Shape-Menu Align */
 ORYX.CONFIG.SHAPEMENU_RIGHT =			"Oryx_Right";
@@ -5993,7 +5994,7 @@ ORYX.Core.StencilSet.Stencil = {
 	
 	defaultAlign: function() {
 		if(!this._jsonStencil.defaultAlign)
-			return "east";
+			return "north";
 		return this._jsonStencil.defaultAlign;
 	},
 

@@ -319,8 +319,8 @@ angular.module('activitiModeler')
                                 currentProperty.hasReadWriteMode = true;
                             }
 
-                            if (currentProperty.title === "Id")
-                                currentProperty.value = selectedShape.id;
+                            // if (currentProperty.title === "Id")
+                            //     currentProperty.value = selectedShape.id;
 
                             if (currentProperty.value === undefined
                                 || currentProperty.value === null
@@ -475,6 +475,105 @@ angular.module('activitiModeler')
                 $rootScope.stencilInitialized = true;
             }
 
+            /* Click handler for clicking an Action */
+            $scope.playShape = function () {
+                console.log("clicked!");
+                console.log($scope);
+
+                // ----new----
+                // get res from prop
+                var propertylist = $scope.selectedItem.properties;
+
+                var inputProp = $scope.getPropertybyKey(propertylist, "oryx-input");
+                var outputProp = $scope.getPropertybyKey(propertylist, "oryx-output");
+                var AEProp = $scope.getPropertybyKey(propertylist, "oryx-activityelement");
+
+                // create jquery selector
+                var inputPropSel = jQuery("#" + inputProp.id).parent().parent();
+                var outputPropSel = jQuery("#" + outputProp.id).parent().parent();
+                var AEPropSel = jQuery("#" + AEProp.id).parent().parent();
+
+                // get animation resource position
+                var pos_input = $scope.getPositionbyselector(inputPropSel);
+                var pos_output = $scope.getPositionbyselector(outputPropSel);
+                var pos_AE = $scope.getPositionbyselector(AEPropSel);
+
+                // play
+                // ----new----
+                if (AEProp.type !== "工人") {
+                    for (var i = 0; i < 10; i++) {
+                        $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
+                        $scope.stopAnimation(inputPropSel, 1500);
+                        setTimeout(function () {
+                            $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
+                            $scope.stopAnimation(AEPropSel, 1500);
+                        }, "1000");
+                        setTimeout(function () {
+                            $scope.playAnimation(outputPropSel, "linear", "1", pos_AE, pos_output);
+                            $scope.stopAnimation(outputPropSel, 1500);
+                        }, "2500");
+                    }
+                } else {
+                    // 众包
+                    // 0.订单输入？,1.人闪两下,2.人前往目标位置，3.人取东西；4.人携带东西回到原来位置
+                    // AE: 人；    input：指令；    output： 取的东西
+                    // step0
+                    $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
+                    $scope.stopAnimation(inputPropSel, 1500);
+                    // step1
+                    $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
+                    $scope.stopAnimation(AEPropSel, 1500);
+                    // step2
+                    setTimeout(function () {
+                        $scope.playAnimation(AEPropSel, "linear2", "0", pos_output, pos_AE);
+                        $scope.stopAnimation(AEPropSel, 1500);
+                    }, 2000);
+
+                    // step3
+                    setTimeout(function () {
+                        $scope.playAnimation(outputPropSel, "flash", "0", pos_output, pos_output);
+                        $scope.stopAnimation(outputPropSel, 1000);
+                    }, 3000);
+
+                    // step4
+                    setTimeout(function () {
+                        var obj_pos_output = {x: pos_output.x, y: pos_output.y};
+                        var obj_pos_AE = {x: pos_AE.x, y: pos_AE.y};
+                        if (pos_output.x - 40 > 0) {
+                            obj_pos_output.x -= 40;
+                            obj_pos_AE.x -= 40;
+                        }
+                        $scope.playAnimation(AEPropSel, "linear", "1", pos_output, pos_AE);
+                        $scope.playAnimation(outputPropSel, "linear", "1", obj_pos_output, obj_pos_AE);
+
+                        $scope.stopAnimation(AEPropSel, 4000);
+                        $scope.stopAnimation(outputPropSel, 4000);
+                    }, 5000);
+
+                }
+
+                //隐藏与动作无关的其他内容
+                var selectItemId = $scope.editor.getSelection()[0].id;
+                var shapes = [$scope.editor.getCanvas()][0].children;
+                for (var i = 0; i < shapes.length; i++) {
+                    var shapeId = shapes[i].id;
+                    if (shapeId !== selectItemId
+                        && shapeId !== inputProp.id
+                        && shapeId !== outputProp.id
+                        && shapeId !== AEProp.id) {
+                        jQuery('#' + shapeId).parent().parent().attr("display", "none");
+                    }
+                }
+
+
+                //让内容全部显示
+                setTimeout(function () {
+                    for (var i = 0; i < shapes.length; i++) {
+                        jQuery('#' + shapes[i].id).parent().parent().attr("display", "");
+                    }
+                }, 5000);
+
+            };
             $scope.morphShape = function () {
                 $scope.safeApply(function () {
 
@@ -504,7 +603,26 @@ angular.module('activitiModeler')
                 });
             };
 
+            $scope.getShapeById = function (id) {
+                var shapes = [$scope.editor.getCanvas()][0].children;
+                for (var i = 0; i < shapes.length; i++) {
+                    if (id === shapes[i].id)
+                        return shapes[i];
+                }
+                return undefined;
+            };
+
             $scope.deleteShape = function () {
+                var shapes = [$scope.editor.getCanvas()][0].children;
+                var shapeToRemove = undefined;
+                for (var i = 0; i < shapes.length; i++) {
+                    if (shapes[i].properties["oryx-activityelement"] && shapes[i].properties["oryx-activityelement"].id === $scope.editor.getSelection()[0].id) {
+                        shapeToRemove = shapes[i];
+                        break;
+                    }
+
+                }
+                $scope.editor.deleteShape(shapeToRemove);
                 KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
             };
 
@@ -570,7 +688,6 @@ angular.module('activitiModeler')
             return $scope.selectedItem.properties[index].readModeTemplateUrl;
         };
         $scope.getPropertyWriteModeTemplateUrl = function (index) {
-            console.log($scope.selectedItem.properties[index].writeModeTemplateUrl);
             return $scope.selectedItem.properties[index].writeModeTemplateUrl;
         };
         /* Method available to all sub controllers (for property controllers) to update the internal Oryx model */
@@ -707,6 +824,156 @@ angular.module('activitiModeler')
             return undefined;
         };
 
+        $scope.getPropertybyKey = function (propertylist, key) {
+            console.log(propertylist);
+            for (var i = 0; i < propertylist.length; i++) {
+                if (propertylist[i].key == key) {
+                    return propertylist[i].value;
+                }
+            }
+
+            return undefined;
+        };
+
+        $scope.getPositionbyselector = function (selector) {
+            var p = {x: 0, y: 0};
+            var p_str = selector.attr("transform");// p_str="translate(315.5, 151.999995)"
+            var regX = "(?<=\\()(.+?)(?=\,)";
+            var regY = "(?<=\,)(.+?)(?=\\))";
+
+            var resltX = p_str.match(regX);// ["303.5, 124.999995", "303.5, 124.999995", index: 10, input: "translate(303.5, 124.999995)", groups: undefined]
+            var resltY = p_str.match(regY);
+
+            if (resltX && resltY) {
+                p.x = Math.round(resltX[0].trim());
+                p.y = Math.round(resltY[0].trim());
+            }
+
+            console.log(p);
+            return p;
+        };
+
+        // $scope.buildCSSRule = function (p_stable, p_animate, rulename, direction) {
+        //     var offsetX = p_stable.x - Math.round(0.2 * (p_stable.x - p_animate.x));
+        //     var offsetY = p_stable.y - Math.round(0.2 * (p_stable.y - p_animate.y));
+        //
+        //     if (direction == "0") {
+        //         var r = "@keyframes " + rulename + " {   0% { opacity: 0; transform: translate(" + p_animate.x + "px, " + p_animate.y + "px); }  100% { opacity: 1; transform: translate(" + offsetX + "px, " + offsetY + "px); }}";
+        //         console.log(r);
+        //         return r;
+        //     }
+        //     else {
+        //         var r = "@keyframes " + rulename + " {   0% { opacity: 0; transform: translate(" + offsetX + "px, " + offsetY + "px); }   100% { opacity: 1; transform: translate(" + p_animate.x + "px, " + p_animate.y + "px); }}";
+        //         return r;}}
+        $scope.createCSSRulefromTemplate = function (type, direction) {
+            var ruleFunction;
+            switch (type) {
+                // A -> B
+                // 直线移动，从A点移动到B点
+                case "linear":
+                    if (direction === "0") {
+                        ruleFunction = function (from, to, ruleName) {
+                            return "@keyframes " + ruleName + " {   0% { opacity: 0; transform: translate(" + from.x + "px, " + from.y + "px); }  100% { opacity: 1; transform: translate(" + to.x + "px, " + to.y + "px); }}";
+                        };
+                    }
+                    else {
+                        ruleFunction = function (from, to, ruleName) {
+                            return "@keyframes " + ruleName + " {   0% { opacity: 0; transform: translate(" + to.x + "px, " + to.y + "px); }   100% { opacity: 1; transform: translate(" + from.x + "px, " + from.y + "px); }}";
+                        };
+                    }
+                    break;
+                case "flash":
+                    ruleFunction = function (ruleName) {
+                        //return "@keyframes "+ruleName+" {  0% {    opacity: 0;    -webkit-transform: scale3d(0.3, 0.3, 0.3);    transform: scale3d(0.3, 0.3, 0.3);  }  50% {    opacity: 1;   }}"
+                        return "@keyframes " + ruleName + " {  from,  50%,  to {    opacity: 1;  }  25%,  75% {    opacity: 0;  }}";
+                    };
+                    break;
+                default:
+                    console.log("No such type!");
+                    break;
+            }
+            return ruleFunction;
+        };
+
+        $scope.buildCSSRule = function (p_stable, p_animate, type, direction, ruleName) {
+            var ruleFunc;
+            var r;
+            if (ruleName === "") {
+                ruleName = type;
+            }
+            switch (type) {
+                case "linear":
+                    var offsetX = p_stable.x - Math.round(0.2 * (p_stable.x - p_animate.x));
+                    var offsetY = p_stable.y - Math.round(0.2 * (p_stable.y - p_animate.y));
+                    var distance = {x: offsetX, y: offsetY};
+
+                    ruleFunc = $scope.createCSSRulefromTemplate(type, direction);
+                    r = ruleFunc(p_animate, distance, ruleName);
+                    break;
+                case "flash":
+                    ruleFunc = $scope.createCSSRulefromTemplate(type, direction);
+                    r = ruleFunc(ruleName);
+                    break;
+                case "linear2":
+                    var offsetX = p_stable.x - Math.round(0.2 * (p_stable.x - p_animate.x));
+                    var offsetY = p_stable.y - Math.round(0.2 * (p_stable.y - p_animate.y));
+                    var distance = {x: offsetX, y: offsetY};
+
+                    ruleFunc = $scope.createCSSRulefromTemplate("linear", direction);
+                    r = ruleFunc(p_animate, distance, ruleName);
+                    break;
+                default:
+                    console.log("No such type!");
+                    break;
+            }
+            console.log(r);
+            return r;
+        };
+
+        $scope.playAnimation = function (selector, type, direction, pos_stable, pos_animation) {
+            var style = document.styleSheets[7]; // 7==animate.css
+            if (type === "" || type === undefined) {
+                type = "linear";
+            }
+            var cssRuleName = type + Date.now() + parseInt(Math.random() * 100);
+
+            var CSSKeyframeRule = $scope.buildCSSRule(pos_stable, pos_animation, type, direction, cssRuleName);
+            var CSSStyleRule = "." + cssRuleName + " { -webkit-animation-name: " + cssRuleName + "; animation-name: " + cssRuleName + "; }";
+            style.insertRule(CSSKeyframeRule);
+            style.insertRule(CSSStyleRule);
+
+            selector.attr("class", "stencils animated slow " + cssRuleName + " infinite");
+        };
+
+        $scope.stopAnimation = function (selector, delay) {
+            var style = document.styleSheets[7]; // 7==animate.css
+            setTimeout(function () {
+                selector.attr("class", "stencils");
+                var index = 99999999;
+                for (var i = 0; i < style.cssRules.length; i++) {
+                    if (style.cssRules[i].name === cssRuleName) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index < style.cssRules.length) {
+                    style.removeRule(index);
+                }
+                index = 99999999;
+                for (i = 0; i < style.cssRules.length; i++) {
+                    if (style.cssRules[i].selectorText === "." + cssRuleName) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index < style.cssRules.length) {
+                    style.removeRule(index);
+                }
+
+            }, delay);
+        };
+
+
         /*
          * DRAG AND DROP FUNCTIONALITY
          */
@@ -729,14 +996,15 @@ angular.module('activitiModeler')
 
             KISBPM.eventBus.dispatch(KISBPM.eventBus.EVENT_TYPE_HIDE_SHAPE_BUTTONS);
 
-            var setting = false;
+            // var setting = false;
             if ($scope.dragCanContain) {
 
                 var item = $scope.getStencilItemById(ui.draggable[0].id);
-                var group = $scope.findGroupNameByStencilItem(ui.draggable[0].id);
-                if (group.name === "物理实体") {
-                    setting = true;
-                }
+                // var group = $scope.findGroupNameByStencilItem(ui.draggable[0].id);
+                // if (group.name === "物理实体") {
+                //     setting = true;
+                // }
+                // setting = true;
 
                 var pos = {x: event.pageX, y: event.pageY};
 
@@ -928,14 +1196,24 @@ angular.module('activitiModeler')
             $scope.dragCanContain = undefined;
             $scope.quickMenu = undefined;
             $scope.dropTargetElement = undefined;
-
-            //set mode to set is to judge whether the item is dragged to canvas firstly.
-            //selectedItem.properties[1] is name property
-            $scope.property = $scope.selectedItem.properties[1];
-            if (!$scope.property.hidden && setting) {
-                $scope.property.mode = 'set';
+            for (var index = 0; index < $scope.selectedItem.properties.length; index++) {
+                var property = $scope.selectedItem.properties[index];
+                if (property.title === "名称") {
+                    $scope.nameProperty = property;
+                } else if (property.title === "Id") {
+                    var entities = [$scope.editor.getCanvas()][0].children;
+                    property.value = entities[entities.length - 1].id;
+                    $scope.updatePropertyInModel(property);
+                } else if (property.title === "类型") {
+                    property.value = item.name;
+                    $scope.updatePropertyInModel(property);
+                }
             }
 
+            //set mode to set is to judge whether the item is dragged to canvas firstly.
+            if (!$scope.nameProperty.hidden) {
+                $scope.nameProperty.mode = 'set';
+            }
         };
 
 
@@ -1280,6 +1558,25 @@ angular.module('activitiModeler')
 
     }]);
 
+// var ANIMATION = ANIMATION || {};
+// ANIMATION.createCommand = ORYX.Core.Command.extend({
+//     construct: function(selection, currentSelection, p, facade){
+//         this.selection = selection;
+//         this.p = p;
+//         this.currentSelection = currentSelection;
+//         this.facade = facade;
+//     },
+//     execute:function(){
+//         // Instantiate the moveCommand
+//         var commands = [new ORYX.Core.Command.Move(selection, p, null, currentSelection, this)];
+//         // Execute the commands
+//         this.facade.executeCommands(commands);
+//     },
+//     rollback:function(){
+//         console.log("Failed to execute")
+//     }
+// });
+
 var KISBPM = KISBPM || {};
 //create command for undo/redo
 KISBPM.CreateCommand = ORYX.Core.Command.extend({
@@ -1301,6 +1598,7 @@ KISBPM.CreateCommand = ORYX.Core.Command.extend({
         this.type = option.type;
         this.containedStencil = option.containedStencil;
         this.parent = option.parent;
+        this.positionOffset = option.positionOffset;
         this.currentReference = currentReference;
         this.shapeOptions = option.shapeOptions;
     },
@@ -1358,32 +1656,39 @@ KISBPM.CreateCommand = ORYX.Core.Command.extend({
                 this.targetRefPos = this.edge.dockers.last().referencePoint;
             }
         } else {
-            var containedStencil = this.containedStencil;
-            var connectedShape = this.connectedShape;
-            var bc = connectedShape.bounds;
+            var pos;
             var bs = this.shape.bounds;
+            if (this.connectedShape) {
+                var containedStencil = this.containedStencil;
+                var connectedShape = this.connectedShape;
+                var bc = connectedShape.bounds;
 
-            var pos = bc.center();
-            if (containedStencil.defaultAlign() === "north") {
-                pos.y -= (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.height() / 2);
-            } else if (containedStencil.defaultAlign() === "northeast") {
-                pos.x += (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
-                pos.y -= (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.height() / 2);
-            } else if (containedStencil.defaultAlign() === "southeast") {
-                pos.x += (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
-                pos.y += (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.height() / 2);
-            } else if (containedStencil.defaultAlign() === "south") {
-                pos.y += (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.height() / 2);
-            } else if (containedStencil.defaultAlign() === "southwest") {
-                pos.x -= (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
-                pos.y += (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.height() / 2);
-            } else if (containedStencil.defaultAlign() === "west") {
-                pos.x -= (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.width() / 2);
-            } else if (containedStencil.defaultAlign() === "northwest") {
-                pos.x -= (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
-                pos.y -= (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.height() / 2);
+                pos = bc.center();
+                if (containedStencil.defaultAlign() === "north") {
+                    pos.y -= (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.height() / 2);
+                } else if (containedStencil.defaultAlign() === "northeast") {
+                    pos.x += (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
+                    pos.y -= (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.height() / 2);
+                } else if (containedStencil.defaultAlign() === "southeast") {
+                    pos.x += (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
+                    pos.y += (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.height() / 2);
+                } else if (containedStencil.defaultAlign() === "south") {
+                    pos.y += (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.height() / 2);
+                } else if (containedStencil.defaultAlign() === "southwest") {
+                    pos.x -= (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
+                    pos.y += (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.height() / 2);
+                } else if (containedStencil.defaultAlign() === "west") {
+                    pos.x -= (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.width() / 2);
+                } else if (containedStencil.defaultAlign() === "northwest") {
+                    pos.x -= (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
+                    pos.y -= (bc.height() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.height() / 2);
+                } else {
+                    pos.x += (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.width() / 2);
+                }
             } else {
-                pos.x += (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.width() / 2);
+                pos = this.positionOffset;
+                pos.x = ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
+                pos.y += ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.height() / 2);
             }
 
             // Move shape to the new position
@@ -1418,3 +1723,26 @@ KISBPM.CreateCommand = ORYX.Core.Command.extend({
         this.facade.setSelection(this.facade.getSelection().without(this.shape, this.edge));
     }
 });
+
+
+var player = {
+    name: "",
+    property: "",
+
+    createCSSAnimation: function (id) {
+        switch (id) {
+            case "0":
+
+                break;
+            case "1":
+                break;
+            case "2":
+                break;
+            default:
+                break;
+        }
+
+
+    }
+
+};
