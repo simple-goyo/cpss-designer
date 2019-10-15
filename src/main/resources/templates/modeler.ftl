@@ -130,7 +130,8 @@
 	<script src="editor-app/configuration/properties-signal-scope-controller.js" type="text/javascript"></script>
 	<script src="editor-app/configuration/properties-message-definitions-controller.js" type="text/javascript"></script>
 	<script src="editor-app/configuration/properties-message-scope-controller.js" type="text/javascript"></script>
-    <script src="editor-app/configuration/properties-services-controller.js" type="text/javascript"></script>
+<#--    <script src="editor-app/configuration/properties-services-controller.js" type="text/javascript"></script>-->
+	<script src="editor-app/configuration/properties-services-controller_new.js" type="text/javascript"></script>
     <script src="editor-app/configuration/properties-input-controller.js" type="text/javascript"></script>
     <script src="editor-app/configuration/properties-output-controller.js" type="text/javascript"></script>
     <script src="editor-app/configuration/properties-activity-element-controller.js" type="text/javascript"></script>
