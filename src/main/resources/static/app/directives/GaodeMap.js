@@ -4,24 +4,10 @@ angular.module("myApp")
             restrict: 'EA',
             replace: true,
             template: '<div id="container"></div>',
-            scope: {
-                entitys: '=',
-                states: '=',
-            },
             link: function ($scope, ele, attrs) {
                 $scope.$watch("entitys", function (newValue, oldValue) {
-                    //当前需要显示的资源变更
-                    // if (typeof $scope.oldEntitys == "undefined") {
-                    //     //界面上没有图标显示
-                    //     $scope.oldEntitys = $scope.entitys;
-                    //     //显示所有图标
-                    //     for (var i = 0; i < $scope.entitys.length; i++) {
-                    //         //显示新的标记
-                    //         $scope.addNewMaker($scope.entitys[i]);
-                    //     }
-                    // } else {
-                    $.each($scope.markers, function (key, marker) {
-                        if ($scope.entitys.indexOf(key) >= 0) {
+                    $scope.markers.forEach(function (marker, key, map) {
+                        if ($scope.entitys.indexOf(parseInt(key)) >= 0) {
                             //标记依旧存在，不做任何操作
                         } else {
                             // 标记不存在，删除老标记
@@ -29,41 +15,83 @@ angular.module("myApp")
                         }
                     });
                     $.each($scope.entitys, function (index, entityId) {
-                        if ($scope.markers.get(entityId) != null) {
+                        if ($scope.markers.get(entityId+"") != null) {
                             //标记已存在，不做任何操作
                         } else {
                             // 标记不存在，需要新增
                             $scope.addNewMaker(entityId);
                         }
                     });
-                    // for (var i = 0; i < $scope.entitys.length; i++) {
-                    //     if ($scope.markers.get($scope.entitys) >= 0) {
-                    //         //标记已存在，不做任何操作
-                    //     } else {
-                    //         // 标记不存在，需要新增
-                    //         $scope.addNewMaker($scope.entitys[i]);
-                    //     }
-                    // }
-                    // for (var i = 0; i < $scope.oldEntitys.length; i++) {
-                    //     if ($scope.entitys.indexOf($scope.oldEntitys[i]) >= 0) {
-                    //         //标记依旧存在，不做任何操作
-                    //     } else {
-                    //         // 标记不存在，删除老标记
-                    //         $scope.markers.get($scope.oldEntitys[i]).setMap(null);
-                    //     }
-                    // }
-
-                    // $scope.oldEntitys = $scope.entitys;
 
                     //显示状态变更
+                    $scope.first=true;
                     $scope.states.forEach(function (state, key, map) {
                         // var state = $scope.states.get(key);
                         var marker = $scope.markers.get(key);
                         //移动
-                        marker.moveTo([state.lo, state.la], $scope.timeout);
+                        if($scope.first==true){
+                            marker.moveTo([state.lo, state.la], $scope.timeout,function (k) {
+                                if($scope.adaptiveDisplay){
+                                    $scope.mapObj.setFitView();
+                                }
+                                return k;
+                            });
+                        }else {
+                            marker.moveTo([state.lo, state.la], $scope.timeout);
+                        }
                         //改状态（改图标）
-                        marker.setIcon(state.action)
+                        if(state.bIndoor==false){
+                            marker.setIcon(new AMap.Icon({
+                                size: new AMap.Size(200, 200),
+                                image: state.type,
+                                imageSize: new AMap.Size(100, 100),
+                                offset: new AMap.Pixel(-40, -80),
+                            }));
+
+                            if($scope.showStateInfo){
+                                $scope.content=$scope.getOtherStateContent(state.otherState);
+                                marker.setLabel({
+                                    offset: new AMap.Pixel(-50,-10),  //设置文本标注偏移量
+                                    content:$scope.content, //设置文本标注内容
+                                    direction: 'top' //设置文本标注方位
+                                });
+                            }else {
+                                marker.setLabel({
+                                    offset: new AMap.Pixel(-50,-10),  //设置文本标注偏移量
+                                    content: "worker", //设置文本标注内容
+                                    direction: 'top' //设置文本标注方位
+                                });
+                            }
+
+                        }else {
+                            marker.setIcon(new AMap.Icon({
+                                size: new AMap.Size(200, 200),
+                                image: state.type,
+                                imageSize: new AMap.Size(20, 20),
+                                offset: new AMap.Pixel(-3, -6)
+                            }));
+
+                            if($scope.showStateInfo){
+                                $scope.content=$scope.getOtherStateContent(state.otherState);
+                                marker.setLabel({
+                                    offset: new AMap.Pixel(-90,-20),  //设置文本标注偏移量
+                                    content: $scope.content, //设置文本标注内容
+                                    direction: 'top' //设置文本标注方位
+                                });
+                            }else {
+                                marker.setLabel({
+                                    offset: new AMap.Pixel(-90,-20),  //设置文本标注偏移量
+                                    content: "worker", //设置文本标注内容
+                                    direction: 'top' //设置文本标注方位
+                                });
+                            }
+                        }
+                        //已经不是第一个了
+                        $scope.first=false;
                     });
+
+                    //
+                    // $scope.mapObj.setFitView();
                     // $.each($scope.states, function (key, state) {
                     //     // var state = $scope.states.get(key);
                     //     var marker = $scope.markers.get(key);
@@ -96,9 +124,9 @@ angular.module("myApp")
                 $scope.mapObj; //获得的初始化高德地图对象
                 $scope.markers = new Map();
 
-                $scope.timeout = 50;
-                $scope.lat = 31.1903363811;
-                $scope.lng = 121.5982675552;
+                $scope.timeout = 200;
+                $scope.lat = 31.1917000000;
+                $scope.lng = 121.5990840000;
                 $scope.bmove = false;
                 $scope.markerClickListener; //点击界面添加标记监听器
 
@@ -109,26 +137,27 @@ angular.module("myApp")
                     $scope.mapObj = new AMap.Map($scope.AMapId, {
                         view: new AMap.View2D({
                             center: position,
-                            zoom: 20,
+                            zoom: 15,
                             rotation: 0
                         }),
+                        mapStyle: 'amap://styles/light',
                         layers: [
                             // new AMap.TileLayer.Satellite(),
                             new AMap.TileLayer(),//高德默认标准图层
                             // 楼块图层
                             new AMap.Buildings({
-                                zooms: [16, 18],
-                                zIndex: 10,
+                                zooms: [16, 21],
+                                zIndex: 100,
                                 heightFactor: 2//2倍于默认高度，3D下有效
                             })
                         ],
-                        lang: 'zh_cn'
+                        lang: 'zh_cn',
                     });
                 };
 
                 $scope.jump = function (buildingId) {
                     console.log(buildingId);
-                    $state.go("editor",{
+                    $state.go("thing3d",{
                         buildingId:buildingId
                     });
                 }
@@ -172,7 +201,7 @@ angular.module("myApp")
                 };
 
                 $scope.addNewMaker = function (entityId) {
-                    var state = $scope.states.get(entityId);
+                    var state = $scope.states.get(entityId+"");
                     if (typeof state == "undefined") {
                         return;
                     }
@@ -183,7 +212,29 @@ angular.module("myApp")
                         icon: "/img/2.png",
                         autoRotation: true
                     });
-                    $scope.markers.set(entityId, marker)
+                    $scope.markers.set(entityId+"", marker)
+                }
+
+                $scope.getOtherStateContent=function(otherState){
+                    var thead="<div class='shadow bg-white rounded'><table class=\"table\">\n" +
+                        "  <thead>\n" +
+                        "    <tr>\n" +
+                        "      <th scope=\"col\">状态名称</th>\n" +
+                        "      <th scope=\"col\">状态数值</th>\n" +
+                        "    </tr>\n" +
+                        "  </thead>\n" +
+                        "  <tbody>\n";
+                    var tfooter=  "  </tbody>\n" +
+                        "</table></div>";
+                    var tbody="";
+                    for (var key in otherState){
+                        tbody+="    <tr>\n" +
+                            "      <td>"+key+"</td>\n" +
+                            "      <td>"+otherState[key]+"</td>\n" +
+                            "    </tr>\n" ;
+                    };
+                    var table=thead+tbody+tfooter;
+                    return table;
                 }
 
                 $scope.initAMap();
@@ -219,16 +270,47 @@ angular.module("myApp")
                 //     strokeStyle: "solid"  //线样式
                 // });
 
-                $scope.mapObj.setFitView();
+                // $scope.mapObj.setFitView();
 
-                var markerPerson = new AMap.Marker({
-                    map: $scope.mapObj,
-                    position: [$scope.lng, $scope.lat],
-                    icon: "/img/2.png",
-                    label: "worker",
-                    offset: new AMap.Pixel(-60, -120),
-                    autoRotation: true
-                });
+                //
+                // var markerPerson = new AMap.Marker({
+                //     map: $scope.mapObj,
+                //     position: [$scope.lng, $scope.lat],
+                //     icon: new AMap.Icon({
+                //         size: new AMap.Size(200, 200),
+                //         image: "/img/1.png",
+                //         imageSize: new AMap.Size(100, 100),
+                //         title:"title"
+                //     }),
+                //     label: "worker",
+                //     offset: new AMap.Pixel(-40, -80),
+                //     autoRotation: true
+                // });
+                //
+                // markerPerson.setLabel({
+                //     offset: new AMap.Pixel(-50,-20),  //设置文本标注偏移量
+                //     content: "<div class='info'>我是 大marker 的 label 标签我是 大marker 的 label 标签我是 大marker 的 label 标签</div>", //设置文本标注内容
+                //     direction: 'top' //设置文本标注方位
+                // });
+                //
+                // var marker = new AMap.Marker({
+                //     map: $scope.mapObj,
+                //     position: [$scope.lng, $scope.lat],
+                //     icon: new AMap.Icon({
+                //         size: new AMap.Size(200, 200),
+                //         image: "/img/1.png",
+                //         imageSize: new AMap.Size(20, 20),
+                //         title:"title"
+                //     }),
+                //     offset: new AMap.Pixel(-3, -6)
+                // });
+                //
+                // marker.setLabel({
+                //     offset: new AMap.Pixel(-90,-20),  //设置文本标注偏移量
+                //     content: "<div class='info'>m</div>", //设置文本标注内容
+                //     direction: 'top' //设置文本标注方位
+                // });
+
 
                 //根据actionEntity读取每个entity的状态
                 // $scope.timer = $interval(function () {
