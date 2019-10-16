@@ -211,7 +211,7 @@ var ServicesDisplayedCtrl = ['$scope', function ($scope) {
         if (!shape) {
             $scope.property.value = {};
         } else {
-            $scope.property.value.function = shape.properties["oryx-name"];
+            //$scope.property.value.function = shape.properties["oryx-name"];
         }
         $scope.updatePropertyInModel($scope.property);
     }

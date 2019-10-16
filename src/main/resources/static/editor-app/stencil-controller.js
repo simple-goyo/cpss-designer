@@ -650,12 +650,15 @@ angular.module('activitiModeler')
                 for (var i = 0; i < shapes.length; i++) {
                     if (shapes[i].properties["oryx-activityelement"] && shapes[i].properties["oryx-activityelement"].id === $scope.editor.getSelection()[0].id) {
                         shapeToRemove = shapes[i];
-                        break;
+                        //break;
+
+                        $scope.editor.deleteShape(shapeToRemove);
+                        KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
                     }
 
                 }
-                $scope.editor.deleteShape(shapeToRemove);
-                KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
+                // $scope.editor.deleteShape(shapeToRemove);
+                // KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
             };
 
             $scope.quickAddItem = function (newItemId) {
@@ -886,18 +889,6 @@ angular.module('activitiModeler')
             return p;
         };
 
-        // $scope.buildCSSRule = function (p_stable, p_animate, rulename, direction) {
-        //     var offsetX = p_stable.x - Math.round(0.2 * (p_stable.x - p_animate.x));
-        //     var offsetY = p_stable.y - Math.round(0.2 * (p_stable.y - p_animate.y));
-        //
-        //     if (direction == "0") {
-        //         var r = "@keyframes " + rulename + " {   0% { opacity: 0; transform: translate(" + p_animate.x + "px, " + p_animate.y + "px); }  100% { opacity: 1; transform: translate(" + offsetX + "px, " + offsetY + "px); }}";
-        //         console.log(r);
-        //         return r;
-        //     }
-        //     else {
-        //         var r = "@keyframes " + rulename + " {   0% { opacity: 0; transform: translate(" + offsetX + "px, " + offsetY + "px); }   100% { opacity: 1; transform: translate(" + p_animate.x + "px, " + p_animate.y + "px); }}";
-        //         return r;}}
         $scope.createCSSRulefromTemplate = function (type, direction) {
             var ruleFunction;
             switch (type) {
@@ -1591,24 +1582,6 @@ angular.module('activitiModeler')
 
     }]);
 
-// var ANIMATION = ANIMATION || {};
-// ANIMATION.createCommand = ORYX.Core.Command.extend({
-//     construct: function(selection, currentSelection, p, facade){
-//         this.selection = selection;
-//         this.p = p;
-//         this.currentSelection = currentSelection;
-//         this.facade = facade;
-//     },
-//     execute:function(){
-//         // Instantiate the moveCommand
-//         var commands = [new ORYX.Core.Command.Move(selection, p, null, currentSelection, this)];
-//         // Execute the commands
-//         this.facade.executeCommands(commands);
-//     },
-//     rollback:function(){
-//         console.log("Failed to execute")
-//     }
-// });
 
 var KISBPM = KISBPM || {};
 //create command for undo/redo
@@ -1756,26 +1729,3 @@ KISBPM.CreateCommand = ORYX.Core.Command.extend({
         this.facade.setSelection(this.facade.getSelection().without(this.shape, this.edge));
     }
 });
-
-
-var player = {
-    name: "",
-    property: "",
-
-    createCSSAnimation: function (id) {
-        switch (id) {
-            case "0":
-
-                break;
-            case "1":
-                break;
-            case "2":
-                break;
-            default:
-                break;
-        }
-
-
-    }
-
-};
