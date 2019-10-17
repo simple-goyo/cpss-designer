@@ -15,7 +15,8 @@
           "popular": true
         }
       ]
-    }, {
+    },
+    {
       "name": "animationpackage",
       "properties": [
         {
@@ -27,7 +28,8 @@
           "popular": true
         }
       ]
-    }, {
+    },
+    {
       "name": "animatedirectionpackage",
       "properties": [
         {
@@ -39,7 +41,8 @@
           "popular": true
         }
       ]
-    },{
+    },
+    {
       "name": "acitontypepackage",
       "properties": [
         {
@@ -48,6 +51,58 @@
           "title": "动作类型",
           "value": "",
           "description": "指定动作类别，如：单向移动、来回移动、原地旋转等",
+          "popular": true
+        }
+      ]
+    },
+    {
+      "name": "ownerpackage",
+      "properties": [
+        {
+          "id": "owner",
+          "type": "complex",
+          "title": "拥有的物品",
+          "value": "",
+          "description": "指定拥有的物品，如：[{Id}]",
+          "popular": true
+        }
+      ]
+    },
+    {
+      "name": "ownedbywhopackage",
+      "properties": [
+        {
+          "id": "ownedByWho",
+          "type": "complex",
+          "title": "被谁拥有",
+          "value": "",
+          "description": "指定被谁拥有，如：{Id}",
+          "popular": true
+        }
+      ]
+    },
+    {
+      "name": "actioninputstatuspackage",
+      "properties": [
+        {
+          "id": "action_input_status",
+          "type": "complex",
+          "title": "动作输入状态",
+          "value": "",
+          "description": "指定输入状态，如：[{Id,Type,name,position}]",
+          "popular": true
+        }
+      ]
+    },
+    {
+      "name": "actionoutputstatuspackage",
+      "properties": [
+        {
+          "id": "action_output_status",
+          "type": "complex",
+          "title": "动作输出状态",
+          "value": "",
+          "description": "指定输出状态，如：[{Id,Type,name,position}]",
           "popular": true
         }
       ]
@@ -1108,6 +1163,9 @@
         "namepackage",
         "documentationpackage",
         "typepackage",
+        "ownerpackage",
+        "actioninputstatuspackage",
+        "actionoutputstatuspackage",
         "executionlistenerspackage",
         "initiatorpackage",
         "formkeydefinitionpackage",
@@ -1122,7 +1180,8 @@
         "StartEventsMorph",
         "all"
       ]
-    },{
+    },
+    {
       "type": "node",
       "id": "Person_Worker",
       "title": "工人",
@@ -1137,6 +1196,9 @@
         "namepackage",
         "documentationpackage",
         "typepackage",
+        "ownerpackage",
+        "actioninputstatuspackage",
+        "actionoutputstatuspackage",
         "executionlistenerspackage",
         "initiatorpackage",
         "formkeydefinitionpackage",
@@ -1197,6 +1259,7 @@
         "namepackage",
         "documentationpackage",
         "typepackage",
+        "ownedbywhopackage",
         "executionlistenerspackage",
         "initiatorpackage",
         "formkeydefinitionpackage",
@@ -1227,6 +1290,7 @@
         "namepackage",
         "documentationpackage",
         "typepackage",
+        "ownedbywhopackage",
         "executionlistenerspackage",
         "initiatorpackage",
         "formkeydefinitionpackage",
@@ -1257,6 +1321,7 @@
         "namepackage",
         "documentationpackage",
         "typepackage",
+        "ownedByWhoPackage",
         "executionlistenerspackage",
         "initiatorpackage",
         "formkeydefinitionpackage",
@@ -1391,7 +1456,8 @@
         "StartEventsMorph",
         "all"
       ]
-    },{
+    },
+    {
       "type": "node",
       "id": "SocialAction",
       "title": "社会动作",
@@ -1418,7 +1484,8 @@
         "ActivitiesMorph",
         "all"
       ]
-    },{
+    },
+    {
       "type": "node",
       "id": "CyberAction",
       "title": "信息动作",
@@ -1445,7 +1512,8 @@
         "ActivitiesMorph",
         "all"
       ]
-    },{
+    },
+    {
       "type": "node",
       "id": "PhysicalAction",
       "title": "物理动作",

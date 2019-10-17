@@ -141,6 +141,7 @@
 	
 	<script src="editor-app/configuration/properties.js" type="text/javascript"></script>
 	<script src="editor-app/configuration/properties-custom-controllers.js" type="text/javascript"></script>
+	<script src="editor-app/configuration/thing-get-or-leave-controllers.js" type="text/javascript"></script>
 
 </body>
 </html>

@@ -299,5 +299,10 @@
     "PROPERTY.INPUT.SELECT":"选择输入实体",
     "PROPERTY.OUTPUT.SELECT":"选择输出实体",
     "PROPERTY.ACTIVITY.ELEMENT.SELECT":"选择活动实体",
-    "PROPERTY.SELECT.EMPTY":"无实体可选择"
+    "PROPERTY.SELECT.EMPTY":"无实体可选择",
+    "THING.GET.OR.LEAVE":"物品处理",
+    "NO.THING":"无物品",
+    "SELECT.WAT.TO.DO":"请选择方式",
+    "THING.GET":"获取",
+    "THING.LEAVE":"放下"
 }

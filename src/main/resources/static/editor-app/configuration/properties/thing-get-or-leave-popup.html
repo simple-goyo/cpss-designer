@@ -1,0 +1,42 @@
+<div class="modal" ng-controller="ThingGetOrLeaveController">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;
+                </button>
+                <h2 translate>THING.GET.OR.LEAVE</h2>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label>
+                        <input type="radio" name="wayToDo" ng-model="wayToDo" ng-checked="true" value="get"><span
+                            translate>THING.GET</span>
+
+                        <input type="radio" name="wayToDo" ng-model="wayToDo" value="leave"><span
+                            translate>THING.LEAVE</span>
+                    </label>
+                </div>
+                <div>
+                    <div style="overflow:scroll;overflow-x:hidden;overflow-y: hidden;" ng-if="wayToDo&&wayToDo==='get'">
+                        <div ng-if="neibor&&neibor.length>0" ng-repeat="element in neibor">
+                            <input type="checkbox" ng-model="selectedElements"
+                                   value={{element.id}}><span>{{element.name}}</span>
+                        </div>
+                        <h3 ng-if="!neibor||neibor.length==0" translate>NO.THING</h3>
+                    </div>
+
+                    <div style="overflow:scroll;overflow-x:hidden;" ng-if="wayToDo&&wayToDo==='leave'">
+                        <div ng-if="outputStatus&&outputStatus.length>0" ng-repeat="element in thingCanLeave">
+                            <input type="checkbox" ng-model="selectedElements"
+                                   value={{element.id}}><span>{{element.name}}</span>
+                        </div>
+                        <h3 ng-if="!outputStatus||outputStatus.length==0" translate>NO.THING</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button ng-click="save()" class="btn btn-primary" translate>ACTION.SAVE</button>
+            </div>
+        </div>
+    </div>
+</div>

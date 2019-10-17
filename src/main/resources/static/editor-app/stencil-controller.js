@@ -19,7 +19,7 @@
 'use strict';
 
 angular.module('activitiModeler')
-    .controller('StencilController', ['$rootScope', '$scope', '$http', '$modal', '$timeout', function ($rootScope, $scope, $http, $modal, $timeout) {
+    .controller('StencilController', ['$rootScope', '$scope', '$http', '$modal', '$timeout', '$compile', function ($rootScope, $scope, $http, $modal, $timeout, $compile) {
 
         // Property window toggle state
         $scope.propertyWindowState = {'collapsed': false};
@@ -209,6 +209,97 @@ angular.module('activitiModeler')
             }).error(function (data, status, headers, config) {
                 console.log('Something went wrong when fetching stencil items:' + JSON.stringify(data));
             });
+
+            $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEDOWN, function (event) {
+                var shapes = $scope.editor.getSelection();
+                if (shapes && shapes.length > 0) {
+                    var selectedShape = shapes.first();
+                    $scope.inputStatus = [{
+                        id: selectedShape.id,
+                        type: selectedShape.properties["oryx-type"],
+                        name: selectedShape.properties["oryx-name"],
+                        position: selectedShape.bounds.center()
+                    }];
+                    if (selectedShape.properties["oryx-owner"] || selectedShape.properties["oryx-ownedbywho"]) {
+                        if (selectedShape.properties["oryx-ownedbywho"]) {
+                            selectedShape = $scope.getShapeById(selectedShape.properties["oryx-ownedbywho"].id);
+                        }
+                        for (var i = 0; i < selectedShape.properties["oryx-owner"]; i++) {
+                            var ownerId = selectedShape.properties["oryx-owner"][i].id;
+                            var ownerShape = $scope.getShapeById(ownerId);
+                            $scope.inputStatus[$scope.inputStatus.length] = {
+                                id: ownerId,
+                                type: ownerShape.properties["oryx-type"],
+                                name: ownerShape.properties["oryx-name"],
+                                position: ownerShape.bounds.center()
+                            }
+                        }
+
+                    }
+                    $scope.editor.selection = [];
+                    for (var i = 0; i < $scope.inputStatus.length; i++) {
+                        $scope.editor.selection[$scope.editor.selection.length] = $scope.getShapeById($scope.inputStatus[i].id);
+                    }
+                }
+            });
+            $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEUP, function (event) {
+                if ($scope.inputStatus) {
+                    $scope.outputStatus = [];
+                    var userShape = undefined;
+                    var userOriginPosition = undefined;
+                    for (var i = 0; i < $scope.inputStatus.length; i++) {
+                        var id = $scope.inputStatus[i].id;
+                        var shape = $scope.getShapeById(id);
+                        if ($scope.inputStatus[i].type === "工人" || $scope.inputStatus[i].type === "用户") {
+                            userShape = shape;
+                            userOriginPosition = $scope.inputStatus[i].position;
+                        }
+                        $scope.outputStatus[$scope.outputStatus.length] = {
+                            id: id,
+                            type: shape.properties["oryx-type"],
+                            name: shape.properties["oryx-name"],
+                            position: shape.bounds.center()
+                        }
+                    }
+                    if (!userShape)
+                        return;
+                    var position = userShape.bounds.center();
+
+                    if (userOriginPosition.x === position.x && userOriginPosition.y === position.y)
+                        return;
+
+                    var shapes = [$scope.editor.getCanvas()][0].children;
+                    $scope.neibor = [];
+                    var width = Math.abs(userShape.bounds.b.x - userShape.bounds.a.x);
+                    var height = Math.abs(userShape.bounds.b.y - userShape.bounds.a.y);
+                    for (var i = 0; i < shapes.length; i++) {
+                        var shape = shapes[i];
+                        var inOutputStatus = false;
+                        for (var j = 0; j < $scope.outputStatus.length; j++) {
+                            if (shape.id === $scope.outputStatus[j].id) {
+                                inOutputStatus = true;
+                                break;
+                            }
+                        }
+                        var shapePosition = shape.bounds.center();
+                        if (!inOutputStatus && Math.abs(position.y - shapePosition.y) <= height && Math.abs(position.x - shapePosition.x) <= width)
+                            $scope.neibor[$scope.neibor.length] = {
+                                "id": shape.id,
+                                "type": shape.properties["oryx-type"],
+                                "name": shape.properties["oryx-name"],
+                                "position": shapePosition
+                            };
+                    }
+                    if (!$scope.neibor||$scope.neibor.length===0)
+                        return;
+                    var opts = {
+                        template: "editor-app/configuration/properties/thing-get-or-leave-popup.html",
+                        scope: $scope
+                    };
+                    $modal(opts);
+                }
+            });
+
 
             /*
              * Listen to selection change events: show properties
