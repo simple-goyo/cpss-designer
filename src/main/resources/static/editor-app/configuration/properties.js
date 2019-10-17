@@ -101,8 +101,8 @@ KISBPM.PROPERTY_CONFIG =
             "writeModeTemplateUrl": "editor-app/configuration/properties/services-write-template.html"
         },
         "oryx-resources-complex": {
-            "readModeTemplateUrl": "editor-app/configuration/properties/services-display-template.html",
-            "writeModeTemplateUrl": "editor-app/configuration/properties/resources-write-template.html"
+            "readModeTemplateUrl": "editor-app/configuration/properties/events-display-template.html",
+            "writeModeTemplateUrl": "editor-app/configuration/properties/events-write-template.html"
         },
         "oryx-input-complex": {
             "readModeTemplateUrl": "editor-app/configuration/properties/input-display-template.html",

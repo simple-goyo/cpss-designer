@@ -578,6 +578,7 @@ angular.module('activitiModeler')
                 var inputProp = $scope.getPropertybyKey(propertylist, "oryx-input");
                 var outputProp = $scope.getPropertybyKey(propertylist, "oryx-output");
                 var AEProp = $scope.getPropertybyKey(propertylist, "oryx-activityelement");
+                var direction = $scope.getPropertybyKey(propertylist, "oryx-animate_direction");
 
                 // create jquery selector
                 var inputPropSel = jQuery("#" + inputProp.id).parent().parent();
@@ -591,55 +592,86 @@ angular.module('activitiModeler')
 
                 // play
                 // ----new----
+                var playTime = 0;
                 if (AEProp.type !== "工人") {
                     for (var i = 0; i < 10; i++) {
-                        $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
-                        $scope.stopAnimation(inputPropSel, 1500);
+
+                        if(inputPropSel.length !== 0){
+                            setTimeout(function () {
+                                $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
+                                $scope.stopAnimation(inputPropSel, 1500);
+                            }, playTime);
+                            playTime += 1000;
+                        }
                         setTimeout(function () {
                             $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
                             $scope.stopAnimation(AEPropSel, 1500);
-                        }, "1000");
-                        setTimeout(function () {
-                            $scope.playAnimation(outputPropSel, "linear", "1", pos_AE, pos_output);
-                            $scope.stopAnimation(outputPropSel, 1500);
-                        }, "2500");
+                        }, playTime);
+                        playTime += 1500;
+                        if(outputPropSel.length !== 0){
+                            setTimeout(function () {
+                                $scope.playAnimation(outputPropSel, "linear", "1", pos_AE, pos_output);
+                                $scope.stopAnimation(outputPropSel, 1500);
+                            }, playTime);
+
+                        }
+
                     }
                 } else {
-                    // 众包
-                    // 0.订单输入？,1.人闪两下,2.人前往目标位置，3.人取东西；4.人携带东西回到原来位置
-                    // AE: 人；    input：指令；    output： 取的东西
-                    // step0
-                    $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
-                    $scope.stopAnimation(inputPropSel, 1500);
-                    // step1
-                    $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
-                    $scope.stopAnimation(AEPropSel, 1500);
-                    // step2
-                    setTimeout(function () {
-                        $scope.playAnimation(AEPropSel, "linear2", "0", pos_output, pos_AE);
+                    if(direction === "0"){
+                        // 众包取东西
+                        // 0.订单输入？,1.人闪两下,2.人前往目标位置，3.人取东西；4.人携带东西回到原来位置
+                        // AE: 人；    input：指令；    output： 取的东西
+                        // step0
+                        $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
+                        $scope.stopAnimation(inputPropSel, 1500);
+                        // step1
+                        $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
                         $scope.stopAnimation(AEPropSel, 1500);
-                    }, 2000);
+                        // step2
+                        setTimeout(function () {
+                            $scope.playAnimation(AEPropSel, "linear2", "0", pos_output, pos_AE);
+                            $scope.stopAnimation(AEPropSel, 1500);
+                        }, 2000);
 
-                    // step3
-                    setTimeout(function () {
-                        $scope.playAnimation(outputPropSel, "flash", "0", pos_output, pos_output);
-                        $scope.stopAnimation(outputPropSel, 1000);
-                    }, 3000);
+                        // step3
+                        setTimeout(function () {
+                            $scope.playAnimation(outputPropSel, "flash", "0", pos_output, pos_output);
+                            $scope.stopAnimation(outputPropSel, 1500);
+                        }, 3000);
 
-                    // step4
-                    setTimeout(function () {
-                        var obj_pos_output = {x: pos_output.x, y: pos_output.y};
-                        var obj_pos_AE = {x: pos_AE.x, y: pos_AE.y};
-                        if (pos_output.x - 40 > 0) {
-                            obj_pos_output.x -= 40;
-                            obj_pos_AE.x -= 40;
-                        }
-                        $scope.playAnimation(AEPropSel, "linear", "1", pos_output, pos_AE);
-                        $scope.playAnimation(outputPropSel, "linear", "1", obj_pos_output, obj_pos_AE);
+                        // step4
+                        setTimeout(function () {
+                            var obj_pos_output = {x: pos_output.x, y: pos_output.y};
+                            var obj_pos_AE = {x: pos_AE.x, y: pos_AE.y};
+                            if (pos_output.x - 40 > 0) {
+                                obj_pos_output.x -= 40;
+                                obj_pos_AE.x -= 40;
+                            }
+                            $scope.playAnimation(AEPropSel, "linear", "1", pos_output, pos_AE);
+                            $scope.playAnimation(outputPropSel, "linear", "1", obj_pos_output, obj_pos_AE);
 
-                        $scope.stopAnimation(AEPropSel, 4000);
-                        $scope.stopAnimation(outputPropSel, 4000);
-                    }, 5000);
+                            $scope.stopAnimation(AEPropSel, 2000);
+                            $scope.stopAnimation(outputPropSel, 2000);
+                        }, 5500);
+                    }else{
+                        // 众包送东西
+                        // 1. 人闪两下；2.人携带东西到目标位置
+                        // step1
+                        setTimeout(function () {
+                            $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
+                            $scope.stopAnimation(AEPropSel, 1500);
+                        }, playTime);
+                        playTime += 2000;
+
+                        // step2
+                        setTimeout(function () {
+                            $scope.playAnimation(AEPropSel, "linear2", "0", pos_output, pos_AE);
+                            $scope.stopAnimation(AEPropSel, 1500);
+                        }, playTime);
+
+                    }
+
 
                 }
 
@@ -662,7 +694,7 @@ angular.module('activitiModeler')
                     for (var i = 0; i < shapes.length; i++) {
                         jQuery('#' + shapes[i].id).parent().parent().attr("display", "");
                     }
-                }, 5000);
+                }, 9000);
 
             };
             $scope.morphShape = function () {
@@ -709,12 +741,15 @@ angular.module('activitiModeler')
                 for (var i = 0; i < shapes.length; i++) {
                     if (shapes[i].properties["oryx-activityelement"] && shapes[i].properties["oryx-activityelement"].id === $scope.editor.getSelection()[0].id) {
                         shapeToRemove = shapes[i];
-                        break;
+                        //break;
+
+                        $scope.editor.deleteShape(shapeToRemove);
+                        KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
                     }
 
                 }
-                $scope.editor.deleteShape(shapeToRemove);
-                KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
+                // $scope.editor.deleteShape(shapeToRemove);
+                // KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
             };
 
             $scope.quickAddItem = function (newItemId) {
@@ -927,6 +962,7 @@ angular.module('activitiModeler')
         };
 
         $scope.getPositionbyselector = function (selector) {
+            if(selector.length === 0) {return undefined;}
             var p = {x: 0, y: 0};
             var p_str = selector.attr("transform");// p_str="translate(315.5, 151.999995)"
             var regX = "(?<=\\()(.+?)(?=\,)";
@@ -944,18 +980,6 @@ angular.module('activitiModeler')
             return p;
         };
 
-        // $scope.buildCSSRule = function (p_stable, p_animate, rulename, direction) {
-        //     var offsetX = p_stable.x - Math.round(0.2 * (p_stable.x - p_animate.x));
-        //     var offsetY = p_stable.y - Math.round(0.2 * (p_stable.y - p_animate.y));
-        //
-        //     if (direction == "0") {
-        //         var r = "@keyframes " + rulename + " {   0% { opacity: 0; transform: translate(" + p_animate.x + "px, " + p_animate.y + "px); }  100% { opacity: 1; transform: translate(" + offsetX + "px, " + offsetY + "px); }}";
-        //         console.log(r);
-        //         return r;
-        //     }
-        //     else {
-        //         var r = "@keyframes " + rulename + " {   0% { opacity: 0; transform: translate(" + offsetX + "px, " + offsetY + "px); }   100% { opacity: 1; transform: translate(" + p_animate.x + "px, " + p_animate.y + "px); }}";
-        //         return r;}}
         $scope.createCSSRulefromTemplate = function (type, direction) {
             var ruleFunction;
             switch (type) {
@@ -1649,24 +1673,6 @@ angular.module('activitiModeler')
 
     }]);
 
-// var ANIMATION = ANIMATION || {};
-// ANIMATION.createCommand = ORYX.Core.Command.extend({
-//     construct: function(selection, currentSelection, p, facade){
-//         this.selection = selection;
-//         this.p = p;
-//         this.currentSelection = currentSelection;
-//         this.facade = facade;
-//     },
-//     execute:function(){
-//         // Instantiate the moveCommand
-//         var commands = [new ORYX.Core.Command.Move(selection, p, null, currentSelection, this)];
-//         // Execute the commands
-//         this.facade.executeCommands(commands);
-//     },
-//     rollback:function(){
-//         console.log("Failed to execute")
-//     }
-// });
 
 var KISBPM = KISBPM || {};
 //create command for undo/redo
@@ -1814,26 +1820,3 @@ KISBPM.CreateCommand = ORYX.Core.Command.extend({
         this.facade.setSelection(this.facade.getSelection().without(this.shape, this.edge));
     }
 });
-
-
-var player = {
-    name: "",
-    property: "",
-
-    createCSSAnimation: function (id) {
-        switch (id) {
-            case "0":
-
-                break;
-            case "1":
-                break;
-            case "2":
-                break;
-            default:
-                break;
-        }
-
-
-    }
-
-};

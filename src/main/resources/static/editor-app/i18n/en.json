@@ -270,6 +270,11 @@
     "PROPERTY.SERVICES.SOURCE_DISPLAY" : "资源 {{assignee}}",
     "PROPERTY.SERVICES.FUNCTION_DISPLAY" : "{{length}}服务方法",
 
+    "PROPERTY.EVENTS.TITLE" : "指定事件",
+    "PROPERTY.EVENTS.LISTENER" : "事件监听器",
+    "PROPERTY.EVENTS.EMPTY" : "暂无监听器",
+    "PROPERTY.EVENTS.LISTENER_DISPLAY" : "{{length}}监听器",
+
     "MODEL.SAVE.TITLE" : "确认保存模型",
     "MODEL.NAME" : "名称",
     "MODEL.DESCRIPTION" : "描述",

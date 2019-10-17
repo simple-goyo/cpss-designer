@@ -33,7 +33,7 @@
 	<div class="navbar navbar-fixed-top navbar-inverse" role="navigation" id="main-header">
 	    <div class="navbar-header">
             <a href="" ng-click="backToLanding()" class="navbar-brand">
-				<span style="margin-left: 50px;">人机物融合应用程序流程图模型</span></a>
+				<span style="margin-left: 50px;">人机物融合应用建模工具</span></a>
         </div>
 	</div>
 	
@@ -130,11 +130,12 @@
 	<script src="editor-app/configuration/properties-signal-scope-controller.js" type="text/javascript"></script>
 	<script src="editor-app/configuration/properties-message-definitions-controller.js" type="text/javascript"></script>
 	<script src="editor-app/configuration/properties-message-scope-controller.js" type="text/javascript"></script>
-    <script src="editor-app/configuration/properties-services-controller.js" type="text/javascript"></script>
+<#--    <script src="editor-app/configuration/properties-services-controller.js" type="text/javascript"></script>-->
+	<script src="editor-app/configuration/properties-services-controller_new.js" type="text/javascript"></script>
     <script src="editor-app/configuration/properties-input-controller.js" type="text/javascript"></script>
     <script src="editor-app/configuration/properties-output-controller.js" type="text/javascript"></script>
     <script src="editor-app/configuration/properties-activity-element-controller.js" type="text/javascript"></script>
-
+	<script src="editor-app/configuration/properties-events-controller.js" type="text/javascript"></script>
 
     <script src="editor-app/configuration/toolbar.js" type="text/javascript"></script>
 	<script src="editor-app/configuration/toolbar-custom-actions.js" type="text/javascript"></script>
