@@ -268,7 +268,7 @@
     "PROPERTY.SERVICES.FUNCTION" : "服务方法",
     "PROPERTY.SERVICES.EMPTY" : "暂无服务",
     "PROPERTY.SERVICES.SOURCE_DISPLAY" : "资源 {{assignee}}",
-    "PROPERTY.SERVICES.FUNCTION_DISPLAY" : "{{length}}服务方法",
+    "PROPERTY.SERVICES.FUNCTION_DISPLAY" : "{{length}}个服务方法",
 
     "PROPERTY.EVENTS.TITLE" : "指定事件",
     "PROPERTY.EVENTS.LISTENER" : "事件监听器",
