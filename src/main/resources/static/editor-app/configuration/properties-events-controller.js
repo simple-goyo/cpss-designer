@@ -35,7 +35,7 @@ var KisBPMEventsCtrl = [ '$scope', '$modal', function($scope, $modal) {
 var EventsPopupCtrl = [ '$scope', function($scope) {
 	var ActivityElement;
 	// Put json representing entity on scope
-	if ($scope.property.value !== undefined && $scope.property.value !== null
+	if ($scope.property !== undefined && $scope.property.value !== undefined && $scope.property.value !== null
 		&& $scope.property.value.length > 0)
 	{
 		for(var i=0 ; i<$scope.property.value.length ; i++){
@@ -44,6 +44,7 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 
 	} else {
 		$scope.entity = {};
+		$scope.property = {};
 	}
 
     if ($scope.entity.listeners == undefined || $scope.entity.listeners.length == 0)
