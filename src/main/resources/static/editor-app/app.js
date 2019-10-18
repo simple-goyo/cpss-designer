@@ -238,7 +238,7 @@ activitiModeler
 	        	            }
 	                	}
 
-	                    var totalAvailable = jQuery(window).height() - offset.top - mainHeader.height() - 21;
+	                    var totalAvailable = jQuery(window).height();//隐藏属性界面// - offset.top - mainHeader.height() - 21;
 	                    canvas.height(totalAvailable - propSectionHeight);
 	                    jQuery('#paletteSection').height(totalAvailable);
 
