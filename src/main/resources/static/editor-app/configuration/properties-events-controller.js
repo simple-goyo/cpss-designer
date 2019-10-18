@@ -83,7 +83,7 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 
 	$scope.createEvent = function ($scope) {
 		var selectItem = ActivityElement;//$scope.editor.getSelection()[0];
-		var itemId = "StartMessageEvent";
+		var itemId = "actionActivity";
 		var action = undefined;
 		var stencilSets = $scope.editor.getStencilSets().values();
 		for (var i = 0; i < stencilSets.length; i++) {
@@ -99,7 +99,7 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 		if (!action) return;
 
 		var nodes = [$scope.editor.getCanvas()][0].children;
-		var positionOffset = {x: 0, y: 0};
+		var positionOffset = {type: 'offsetY', x: 0, y: 0};;
 		for (var i = 0; i < nodes.length; i++) {
 			if (nodes[i].properties["oryx-activityelement"]) {
 				if (positionOffset.y < nodes[i].bounds.center().y) {
@@ -139,9 +139,10 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 					"type": selectItem.properties["oryx-type"]
 				};
 				$scope.updatePropertyInModel(property);
-			} else if (property.title === "输入") {
-				property.mode = 'set';
 			}
+			// else if (property.title === "输入") {
+			// 	property.mode = 'set';
+			// }
 		}
 	};
 

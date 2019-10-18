@@ -1629,6 +1629,7 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
+        "activityelementpackage",
         "executionlistenerspackage",
         "messagerefpackage"
       ],
