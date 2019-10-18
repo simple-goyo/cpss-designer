@@ -4789,13 +4789,14 @@ ORYX.Core.SVG.Label = Clazz.extend({
 							break;
 						case 'top':
 							dy = index * (fontSize);
-							dy += fontSize;
+							dy += fontSize+7;
+							x += 5;
 							break;
 					}
 					// 设置文字位置
-					tspan.setAttributeNS(null, 'dy', 7+Math.floor(dy));
+					tspan.setAttributeNS(null, 'dy', Math.floor(dy));
 					
-					tspan.setAttributeNS(null, 'x', 5+x);
+					tspan.setAttributeNS(null, 'x', x);
 					tspan.setAttributeNS(null, 'y', y);
 					indic.push(index);
 				}

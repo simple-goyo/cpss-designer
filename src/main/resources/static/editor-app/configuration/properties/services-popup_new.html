@@ -14,8 +14,13 @@
                         <!--<input type="text" id="assigneeField" class="form-control" ng-model="assignment.assignee"-->
                         <!--placeholder="{{'PROPERTY.ASSIGNMENT.SOURCE_PLACEHOLDER' | translate}}"/>-->
                         <label>{{'PROPERTY.SERVICES.FUNCTION' | translate}}</label>
+                        <select class="form-control" ng-model="selectedFunc" ng-change="changeData()">
+                            <option value=""  selected="selected">---请选择---</option>
+                            <option ng-repeat="x in constfunctions" value="{{x.name}}">{{x.name}}</option>
+                        </select>
                         <div ng-repeat="Service in entity.Services">
-                            <input class="form-control" type="text" ng-model="Service.value"/>
+                            <input class="form-control" type="hidden" ng-model="Service.value" />
+<!--                            <input class="form-control" type="text" ng-model="Service.value" />-->
                             <i class="glyphicon glyphicon-minus clickable-property"
                                ng-click="removeServiceValue($index)"></i>
                             <i ng-if="$index == (entity.Services.length - 1)"

@@ -1458,11 +1458,13 @@
       "propertyPackages": [
         "overrideidpackage",
         "namepackage",
+        "actioninputstatuspackage",
+        "actionoutputstatuspackage",
         "documentationpackage",
-        "containresourcepackage",
-        "animationpackage",
-        "animatedirectionpackage",
-        "acitontypepackage"
+        "activityelementpackage",
+        "inputpackage",
+        "outputpackage",
+        "animatedirectionpackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1486,11 +1488,13 @@
       "propertyPackages": [
         "overrideidpackage",
         "namepackage",
+        "actioninputstatuspackage",
+        "actionoutputstatuspackage",
         "documentationpackage",
-        "containresourcepackage",
-        "animationpackage",
-        "animatedirectionpackage",
-        "acitontypepackage"
+        "activityelementpackage",
+        "inputpackage",
+        "outputpackage",
+        "animatedirectionpackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1514,11 +1518,13 @@
       "propertyPackages": [
         "overrideidpackage",
         "namepackage",
+        "actioninputstatuspackage",
+        "actionoutputstatuspackage",
         "documentationpackage",
-        "containresourcepackage",
-        "animationpackage",
-        "animatedirectionpackage",
-        "acitontypepackage"
+        "activityelementpackage",
+        "inputpackage",
+        "outputpackage",
+        "animatedirectionpackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1628,9 +1634,12 @@
       ],
       "hiddenPropertyPackages": [],
       "roles": [
+        "Activity",
         "sequence_start",
         "Startevents_all",
         "StartEventsMorph",
+        "sequence_end",
+        "ActivitiesMorph",
         "all"
       ]
     },

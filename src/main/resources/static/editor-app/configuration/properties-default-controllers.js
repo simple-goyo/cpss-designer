@@ -125,6 +125,7 @@ var propertyInitPopupController= [ '$scope', '$modal', function($scope, $modal) 
 }];
 
 var propertyInitController = ['$scope', function ($scope) {
+    console.log($scope);
     $scope.save = function () {
         $scope.updatePropertyInModel($scope.nameProperty);
         $scope.close();

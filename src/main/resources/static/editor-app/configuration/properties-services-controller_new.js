@@ -51,6 +51,12 @@ var KisBpmServicesPopupCtrl = ['$scope', function ($scope) {
 
 var ServicesPopupCtrl = ['$scope', function ($scope) {
     var ActivityElement;
+    $scope.constfunctions = [
+        {name : "获取水杯", url : "http://www.google.com"},
+        {name : "获取咖啡", url : "http://www.runoob.com"},
+        {name : "递交物品", url : "http://www.taobao.com"}
+    ];
+
     // Put json representing entity on scope
     if ($scope.property.value !== undefined && $scope.property.value !== null
         && $scope.property.value.length > 0) {
@@ -64,7 +70,7 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
         $scope.entity = {};
     }
 
-    if ($scope.entity.Services == undefined || $scope.entity.Services.length == 0) {
+    if ($scope.entity.Services === undefined || $scope.entity.Services.length === 0) {
         $scope.entity.Services = [{value: ''}];
     }
 
@@ -96,14 +102,17 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
             $scope.property.value = [];
         }
         if (!$scope.entity.Services) {
-            for (var i = $scope.property.value.length - 1; i >= 0; i--) {
-                var remove = $scope.getShapeById($scope.property.value[i].id);
-                $scope.editor.deleteShape(remove);
-            }
-            $scope.property.value = [];
-            $scope.updatePropertyInModel($scope.property);
-            $scope.close();
-            return;
+            $scope.entity.Services = [{value: $scope.selectedFunc}];
+            // for (var i = $scope.property.value.length - 1; i >= 0; i--) {
+            //     var remove = $scope.getShapeById($scope.property.value[i].id);
+            //     $scope.editor.deleteShape(remove);
+            // }
+            // $scope.property.value = [];
+            // $scope.updatePropertyInModel($scope.property);
+            // $scope.close();
+            // return;
+        }else{
+            $scope.entity.Services[$scope.entity.Services.length] = {value:$scope.selectedFunc};
         }
         var indexToRemove = [];
         var hasRemoveNum = 0;
@@ -140,8 +149,8 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
             if (index < 0) {
                 // var shapeToRemove = $scope.getShapeById($scope.property.value.id);
                 // $scope.editor.deleteShape(shapeToRemove);
-
                 $scope.createAction($scope, $scope.entity.Services[i].value);
+                //$scope.createAction($scope,$scope.selectedFunc);
                 $scope.property.value[$scope.property.value.length] = {
                     id: $scope.editor.getSelection()[0].id, function: $scope.entity.Services[i].value
                 };
@@ -156,7 +165,8 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
 
     $scope.createAction = function ($scope, actionName) {
         var selectItem = ActivityElement;//$scope.editor.getSelection()[0];
-        var itemId = "actionActivity";
+        //var itemId = "actionActivity";
+        var itemId = "SocialAction";
         var action = undefined;
         var stencilSets = $scope.editor.getStencilSets().values();
         for (var i = 0; i < stencilSets.length; i++) {
@@ -172,7 +182,7 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
         if (!action) return;
 
         var nodes = [$scope.editor.getCanvas()][0].children;
-        var positionOffset = {x: 0, y: 0};
+        var positionOffset = {x: 180, y: 0};
         for (var i = 0; i < nodes.length; i++) {
             if (nodes[i].properties["oryx-activityelement"]) {
                 if (positionOffset.y < nodes[i].bounds.center().y) {
@@ -180,9 +190,9 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
                 }
             }
         }
-        if (positionOffset.y != 0) {
+        //if (positionOffset.y !== 0) {
             positionOffset.y += 30;
-        }
+        //}
 
         var option = {
             type: selectItem.getStencil().namespace() + itemId,
@@ -228,6 +238,10 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
         }
     };
 
+    $scope.changeData = function(){
+        console.log("datachanged!")
+    };
+
     // Close button handler
     $scope.close = function () {
         //handleEntityInput($scope);
@@ -240,7 +254,7 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
             var emptyUsers = true;
             var toRemoveIndexes = [];
             for (var i = 0; i < $scope.entity.Services.length; i++) {
-                if ($scope.entity.Services[i].value != '') {
+                if ($scope.entity.Services[i].value !== '') {
                     emptyUsers = false;
                 }
                 else {
