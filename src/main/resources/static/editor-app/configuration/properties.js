@@ -115,5 +115,21 @@ KISBPM.PROPERTY_CONFIG =
         "oryx-activityelement-complex": {
             "readModeTemplateUrl": "editor-app/configuration/properties/activity-element-display-template.html",
             "writeModeTemplateUrl": "editor-app/configuration/properties/activity-element-write-template.html"
+        },
+        "oryx-ownedbywho-complex": {
+            "readModeTemplateUrl": null,
+            "writeModeTemplateUrl": null
+        },
+        "oryx-owner-complex": {
+            "readModeTemplateUrl": null,
+            "writeModeTemplateUrl": null
+        },
+        "oryx-actioninputstatus-complex": {
+            "readModeTemplateUrl": null,
+            "writeModeTemplateUrl": null
+        },
+        "oryx-actionoutputstatus-complex": {
+            "readModeTemplateUrl": null,
+            "writeModeTemplateUrl": null
         }
     };

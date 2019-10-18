@@ -214,18 +214,30 @@ angular.module('activitiModeler')
                 var shapes = $scope.editor.getSelection();
                 if (shapes && shapes.length > 0) {
                     var selectedShape = shapes.first();
+                    $scope.addToInputStatus(selectedShape);
+                    var selections = [];
+                    for (var i = 0; i < $scope.inputStatus.length; i++) {
+                        selections[selections.length] = $scope.getShapeById($scope.inputStatus[i].id);
+                    }
+                    $scope.editor.setSelection(selections);
+                    $scope.editor.getCanvas().update();
+                } else $scope.inputStatus = [];
+            });
+
+            $scope.addToInputStatus = function (shape) {
+                if (shape.properties["oryx-ownedbywho"]) {
+                    shape = $scope.getShapeById(shape.properties["oryx-ownedbywho"].id);
+                    $scope.addToInputStatus(shape);
+                } else {
                     $scope.inputStatus = [{
-                        id: selectedShape.id,
-                        type: selectedShape.properties["oryx-type"],
-                        name: selectedShape.properties["oryx-name"],
-                        position: selectedShape.bounds.center()
+                        id: shape.id,
+                        type: shape.properties["oryx-type"],
+                        name: shape.properties["oryx-name"],
+                        position: shape.bounds.center()
                     }];
-                    if (selectedShape.properties["oryx-owner"] || selectedShape.properties["oryx-ownedbywho"]) {
-                        if (selectedShape.properties["oryx-ownedbywho"]) {
-                            selectedShape = $scope.getShapeById(selectedShape.properties["oryx-ownedbywho"].id);
-                        }
-                        for (var i = 0; i < selectedShape.properties["oryx-owner"]; i++) {
-                            var ownerId = selectedShape.properties["oryx-owner"][i].id;
+                    if (shape.properties["oryx-owner"]) {
+                        for (var i = 0; i < shape.properties["oryx-owner"].length; i++) {
+                            var ownerId = shape.properties["oryx-owner"][i].id;
                             var ownerShape = $scope.getShapeById(ownerId);
                             $scope.inputStatus[$scope.inputStatus.length] = {
                                 id: ownerId,
@@ -234,14 +246,10 @@ angular.module('activitiModeler')
                                 position: ownerShape.bounds.center()
                             }
                         }
-
-                    }
-                    $scope.editor.selection = [];
-                    for (var i = 0; i < $scope.inputStatus.length; i++) {
-                        $scope.editor.selection[$scope.editor.selection.length] = $scope.getShapeById($scope.inputStatus[i].id);
                     }
                 }
-            });
+            };
+
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEUP, function (event) {
                 if ($scope.selectedItem.title === ""){return;}// 选都没选，直接返回
                 if ($scope.inputStatus) {
@@ -255,6 +263,7 @@ angular.module('activitiModeler')
                             userShape = shape;
                             userOriginPosition = $scope.inputStatus[i].position;
                         }
+                        console.log(shape);
                         $scope.outputStatus[$scope.outputStatus.length] = {
                             id: id,
                             type: shape.properties["oryx-type"],
@@ -291,23 +300,14 @@ angular.module('activitiModeler')
                                 "position": shapePosition
                             };
                     }
-                    if (!$scope.neibor||$scope.neibor.length===0)
+                    if (!$scope.neibor || $scope.neibor.length === 0)
                         return;
                     var opts = {
                         template: "editor-app/configuration/properties/thing-get-or-leave-popup.html",
                         scope: $scope
                     };
                     $modal(opts);
-
-                    // Config for the modal window
-                    var opts2 = {
-                        template: 'editor-app/configuration/properties/services-popup_new.html',
-                        scope: $scope
-                    };
-
-                    // Open the dialog
-                    $modal(opts2);
-                }
+                } else $scope.outputStatus = [];
             });
 
 
@@ -397,13 +397,13 @@ angular.module('activitiModeler')
                                 'value': selectedShape.properties[key]
                             };
 
-                            if ((currentProperty.type === 'complex' || currentProperty.type === 'multiplecomplex') && currentProperty.value && currentProperty.value.length > 0) {
-                                try {
-                                    currentProperty.value = JSON.parse(currentProperty.value);
-                                } catch (err) {
-                                    // ignore
-                                }
-                            }
+                            // if ((currentProperty.type === 'complex' || currentProperty.type === 'multiplecomplex') && currentProperty.value && currentProperty.value.length > 0) {
+                            //     try {
+                            //         currentProperty.value = JSON.parse(currentProperty.value);
+                            //     } catch (err) {
+                            //         // ignore
+                            //     }
+                            // }
 
                             if (propertyConfig.readModeTemplateUrl !== undefined && propertyConfig.readModeTemplateUrl !== null) {
                                 currentProperty.readModeTemplateUrl = propertyConfig.readModeTemplateUrl + '?version=' + $rootScope.staticIncludeVersion;
@@ -606,7 +606,7 @@ angular.module('activitiModeler')
                 if (AEProp.type !== "工人") {
                     for (var i = 0; i < 10; i++) {
 
-                        if(inputPropSel.length !== 0){
+                        if (inputPropSel.length !== 0) {
                             setTimeout(function () {
                                 $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
                                 $scope.stopAnimation(inputPropSel, 1500);
@@ -618,7 +618,7 @@ angular.module('activitiModeler')
                             $scope.stopAnimation(AEPropSel, 1500);
                         }, playTime);
                         playTime += 1500;
-                        if(outputPropSel.length !== 0){
+                        if (outputPropSel.length !== 0) {
                             setTimeout(function () {
                                 $scope.playAnimation(outputPropSel, "linear", "1", pos_AE, pos_output);
                                 $scope.stopAnimation(outputPropSel, 1500);
@@ -628,7 +628,7 @@ angular.module('activitiModeler')
 
                     }
                 } else {
-                    if(direction === "0"){
+                    if (direction === "0") {
                         // 众包取东西
                         // 0.订单输入？,1.人闪两下,2.人前往目标位置，3.人取东西；4.人携带东西回到原来位置
                         // AE: 人；    input：指令；    output： 取的东西
@@ -664,7 +664,7 @@ angular.module('activitiModeler')
                             $scope.stopAnimation(AEPropSel, 2000);
                             $scope.stopAnimation(outputPropSel, 2000);
                         }, 5500);
-                    }else{
+                    } else {
                         // 众包送东西
                         // 1. 人闪两下；2.人携带东西到目标位置
                         // step1
@@ -751,15 +751,12 @@ angular.module('activitiModeler')
                 for (var i = 0; i < shapes.length; i++) {
                     if (shapes[i].properties["oryx-activityelement"] && shapes[i].properties["oryx-activityelement"].id === $scope.editor.getSelection()[0].id) {
                         shapeToRemove = shapes[i];
-                        break;
-
-                        // $scope.editor.deleteShape(shapeToRemove);
-                        // KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
+                        $scope.editor.deleteShape(shapeToRemove);
                     }
-
                 }
-                $scope.editor.deleteShape(shapeToRemove);
                 KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
+                // $scope.editor.deleteShape(shapeToRemove);
+                // KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
             };
 
             $scope.quickAddItem = function (newItemId) {
@@ -972,7 +969,9 @@ angular.module('activitiModeler')
         };
 
         $scope.getPositionbyselector = function (selector) {
-            if(selector.length === 0) {return undefined;}
+            if (selector.length === 0) {
+                return undefined;
+            }
             var p = {x: 0, y: 0};
             var p_str = selector.attr("transform");// p_str="translate(315.5, 151.999995)"
             var regX = "(?<=\\()(.+?)(?=\,)";

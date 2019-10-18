@@ -72,7 +72,7 @@
       "name": "ownedbywhopackage",
       "properties": [
         {
-          "id": "ownedByWho",
+          "id": "ownedbywho",
           "type": "complex",
           "title": "被谁拥有",
           "value": "",
@@ -85,7 +85,7 @@
       "name": "actioninputstatuspackage",
       "properties": [
         {
-          "id": "action_input_status",
+          "id": "actioninputstatus",
           "type": "complex",
           "title": "动作输入状态",
           "value": "",
@@ -98,7 +98,7 @@
       "name": "actionoutputstatuspackage",
       "properties": [
         {
-          "id": "action_output_status",
+          "id": "actionoutputstatus",
           "type": "complex",
           "title": "动作输出状态",
           "value": "",
@@ -1176,8 +1176,6 @@
         "documentationpackage",
         "typepackage",
         "ownerpackage",
-        "actioninputstatuspackage",
-        "actionoutputstatuspackage",
         "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
@@ -1207,8 +1205,6 @@
         "documentationpackage",
         "typepackage",
         "ownerpackage",
-        "actioninputstatuspackage",
-        "actionoutputstatuspackage",
         "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
@@ -1323,7 +1319,7 @@
         "namepackage",
         "documentationpackage",
         "typepackage",
-        "ownedByWhoPackage",
+        "ownedbywhopackage",
         "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
@@ -1676,6 +1672,8 @@
       "propertyPackages": [
         "overrideidpackage",
         "namepackage",
+        "actioninputstatuspackage",
+        "actionoutputstatuspackage",
         "documentationpackage",
         "activityelementpackage",
         "inputpackage",

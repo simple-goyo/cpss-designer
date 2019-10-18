@@ -13,11 +13,14 @@
                         <!--<label for="assigneeField">{{'PROPERTY.SERVICES.SOURCE' | translate}}</label>-->
                         <!--<input type="text" id="assigneeField" class="form-control" ng-model="assignment.assignee"-->
                         <!--placeholder="{{'PROPERTY.ASSIGNMENT.SOURCE_PLACEHOLDER' | translate}}"/>-->
-                        <label for="function">{{'PROPERTY.SERVICES.FUNCTION' | translate}}</label>
+                        <label>{{'PROPERTY.SERVICES.FUNCTION' | translate}}</label>
                         <div ng-repeat="Service in entity.Services">
-                            <input id="function" class="form-control" type="text" ng-model="Service.value" />
-                            <i class="glyphicon glyphicon-minus clickable-property" ng-click="removeServiceValue($index)"></i>
-                            <i ng-if="$index == (entity.Services.length - 1)" class="glyphicon glyphicon-plus clickable-property" ng-click="addServiceValue($index)"></i>
+                            <input class="form-control" type="text" ng-model="Service.value"/>
+                            <i class="glyphicon glyphicon-minus clickable-property"
+                               ng-click="removeServiceValue($index)"></i>
+                            <i ng-if="$index == (entity.Services.length - 1)"
+                               class="glyphicon glyphicon-plus clickable-property"
+                               ng-click="addServiceValue($index)"></i>
                         </div>
                     </div>
                 </div>

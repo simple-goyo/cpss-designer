@@ -1,6 +1,6 @@
 var ThingGetOrLeaveController = ['$scope', '$modal', function ($scope, $modal) {
     $scope.wayToDo = 'get';
-
+    $scope.selectedElements = [];
     $scope.thingCanLeave = [];
     var userShape = undefined;
     for (var i = 0; i < $scope.outputStatus.length; i++) {
@@ -11,40 +11,83 @@ var ThingGetOrLeaveController = ['$scope', '$modal', function ($scope, $modal) {
         }
     }
 
+    $scope.thingCanGet = [];
+    for (var i = 0; i < $scope.neibor.length; i++) {
+        if ($scope.neibor[i].type !== "用户" && $scope.neibor[i].type !== "工人") {
+            $scope.thingCanGet[$scope.thingCanGet.length] = $scope.neibor[i];
+        }
+    }
+
+    $scope.updateSelectedElements = function () {
+        $scope.selectedElements = [];
+    };
+
+    $scope.updateSelection = function ($event, id) {
+        var checkbox = $event.target;
+        var action = (checkbox.checked ? 'add' : 'remove');
+        var element = {id: id};
+        if (action === 'add' && $scope.selectedElements.indexOf(element) === -1) $scope.selectedElements.push(element);
+        if (action === 'remove' && $scope.selectedElements.indexOf(element) !== -1) $scope.selectedElements.splice($scope.selectedElements.indexOf(element), 1);
+    };
+
+    $scope.isSelected = function (id) {
+        return $scope.selectedElements.indexOf({id: id}) >= 0;
+    };
+
+
     $scope.save = function () {
         if ($scope.selectedElements.length > 0) {
             if ($scope.wayToDo === 'get') {
                 for (var i = 0; i < $scope.selectedElements.length; i++) {
-                    var selectedShapeToGet = $scope.getShapeById($scope.selectedElements[i].value);
+                    var selectedShapeToGet = $scope.getShapeById($scope.selectedElements[i].id);
                     selectedShapeToGet.setProperty("oryx-ownedbywho", {id: userShape.id});
-                    var owners = userShape.properties["oryx-owner"];
-                    owners[owners.length] = selectedShapeToGet.id;
-                    userShape.setProperty("oryx-owner", owners);
-                }
-            } else {
-                for (var i = 0; i < $scope.selectedElements.length; i++) {
-                    var selectedShapeToLeave = $scope.getShapeById($scope.selectedElements[i].value);
-                    selectedShapeToLeave.setProperty("oryx-ownedbywho", {id: ""});
-                    var owners = [];
-                    for (var j = 0; j < $scope.properties["oryx-owner"].length; j++) {
-                        if ($scope.properties["oryx-owner"][j].id !== selectedShapeToLeave.id) {
-                            owners[owners.length] = {id: $scope.properties["oryx-owner"][j].id}
-                        }
+                    if (userShape.properties["oryx-owner"]) {
+                        owners = userShape.properties["oryx-owner"];
+                    } else {
+                        owners = [];
                     }
+                    owners[owners.length] = {id: selectedShapeToGet.id};
                     userShape.setProperty("oryx-owner", owners);
+                    $scope.outputStatus[$scope.outputStatus.length] = {
+                        id: selectedShapeToGet.id,
+                        type: selectedShapeToGet.properties["oryx-type"],
+                        name: selectedShapeToGet.properties["oryx-name"],
+                        position: selectedShapeToGet.bounds.center()
+                    };
+                }
+            } else if (userShape && userShape.properties["oryx-owner"]) {
+                for (var i = 0; i < $scope.selectedElements.length; i++) {
+                    var selectedShapeToLeave = $scope.getShapeById($scope.selectedElements[i].id);
+                    selectedShapeToLeave.setProperty("oryx-ownedbywho", "");
+                    var owners = userShape.properties["oryx-owner"];
+                    var index = owners.indexOf({id: selectedShapeToLeave.id});
+                    owners.splice(index, 1);
+                    userShape.setProperty("oryx-owner", owners);
+                    $scope.outputStatus.splice(index, 1);
                 }
             }
         }
-        var opts = {
-            template: "editor-app/configuration/properties/services-popup.html",
-            scope: $scope
-        };
-        $modal(opts);
         $scope.close();
-
     };
 
     $scope.close = function () {
+        $scope.selectedShape = userShape;
+        if (!userShape.properties["oryx-services"]) {
+            $scope.property = {
+                key: "oryx-services",
+                value: []
+            };
+        } else {
+            $scope.property = {
+                key: "oryx-services",
+                value: userShape.properties["oryx-services"]
+            }
+        }
+        var opts = {
+            template: "editor-app/configuration/properties/services-popup_new.html",
+            scope: $scope
+        };
+        $modal(opts);
         $scope.$hide();
     };
 }];
