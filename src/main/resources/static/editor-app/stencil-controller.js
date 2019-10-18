@@ -63,9 +63,10 @@ angular.module('activitiModeler')
              StencilSet items
              */
             $http({method: 'GET', url: KISBPM.URL.getStencilSet()}).success(function (data, status, headers, config) {
-                var quickMenuDefinition = ['UserTask', 'EndNoneEvent', 'ExclusiveGateway',
-                    'CatchTimerEvent', 'ThrowNoneEvent', 'TextAnnotation',
-                    'SequenceFlow', 'Association'];
+                // var quickMenuDefinition = ['UserTask', 'EndNoneEvent', 'ExclusiveGateway',
+                //     'CatchTimerEvent', 'ThrowNoneEvent', 'TextAnnotation',
+                //     'SequenceFlow', 'Association'];
+                var quickMenuDefinition = ['SequenceFlow'];
                 var ignoreForPaletteDefinition = ['SequenceFlow', 'MessageFlow', 'Association', 'DataAssociation', 'DataStore', 'SendTask'];
                 var quickMenuItems = [];
 
@@ -734,6 +735,20 @@ angular.module('activitiModeler')
                         showSelectShapeDialog();
                     }
                 });
+            };
+            $scope.setService = function () {
+                var opts = {
+                    template: 'editor-app/configuration/properties/services-popup_new.html?version=' + Date.now(),
+                    scope: $scope
+                };
+                $modal(opts);
+            };
+            $scope.setEvent = function () {
+                var opts = {
+                    template:  'editor-app/configuration/properties/events-popup.html?version=' + Date.now(),
+                    scope: $scope
+                };
+                $modal(opts);
             };
 
             $scope.getShapeById = function (id) {

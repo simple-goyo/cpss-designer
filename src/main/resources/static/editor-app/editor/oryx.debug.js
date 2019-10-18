@@ -10109,11 +10109,17 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
 				['svg', {id: "underlay-container"}]);
 		
 		// Create 2 svg-elements in the svg-container
+        // 分割左右两块区域
 		this.columnHightlight1 = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
 				['rect', {x: 0, width: ORYX.CONFIG.FORM_ROW_WIDTH , height: "100%", style: "fill: #fff6d5", visibility: "true"}]);
 		
-		this.columnHightlight2 = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-				['rect', {x: ORYX.CONFIG.FORM_ROW_WIDTH , width: options.width - ORYX.CONFIG.FORM_ROW_WIDTH , height: "100%", style: "fill: #CFFFF7", visibility: "hidden"}]);
+		//this.columnHightlight2 = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+		//		['rect', {x: ORYX.CONFIG.FORM_ROW_WIDTH , width: options.width - ORYX.CONFIG.FORM_ROW_WIDTH , height: "100%", style: "fill: #CFFFF7", visibility: "hidden"}]);
+
+		// 增加一块区域位于第二块分割区域中间
+        this.columnRealworld   = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+            ['rect', {x:ORYX.CONFIG.FORM_ROW_WIDTH, y:200, width:options.width - ORYX.CONFIG.FORM_ROW_WIDTH - 186, height:"38%", rx:5, ry:5, style: "fill:#FFFFFFFF;stroke-width:4;stroke:#000000", visibility: "true"}]);
+
 
 		this.node = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.rootNode,
 			['g', {},
@@ -12411,7 +12417,7 @@ ORYX.Editor.createByUrl = function(modelUrl){
         new ORYX.Editor(editorConfig);
       }.bind(this)
     });
-}
+};
 
 // TODO Implement namespace awareness on attribute level.
 /**

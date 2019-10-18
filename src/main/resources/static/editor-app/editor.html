@@ -99,17 +99,31 @@
                         <img src="editor-app/images/play.png"/>
                     </div>
                     <div class="Oryx_button"
-                         ng-repeat="item in quickMenuItems"
-                         id="{{item.id}}"
-                         title="{{item.description}}"
-                         ng-click="quickAddItem(item.id)"
-                         ng-model="draggedElement"
-                         data-drag="true"
-                         jqyoui-draggable="{onStart:'startDragCallbackQuickMenu', onDrag:'dragCallbackQuickMenu'}"
-                         data-jqyoui-options="{revert: 'invalid', helper: 'clone', opacity : 0.5}"
+                         id="service-button"
+                         title="设置服务"
+                         ng-click="setService()"
                          style="display:none">
-                        <img ng-src="editor-app/stencilsets/bpmn2.0/icons/{{item.icon}}"/>
+                        <img src="editor-app/images/service.png"/>
                     </div>
+                    <div class="Oryx_button"
+                         id="event-button"
+                         title="设置事件"
+                         ng-click="setEvent()"
+                         style="display:none">
+                        <img src="editor-app/images/event.png"/>
+                    </div>
+<!--                    <div class="Oryx_button"-->
+<!--                         ng-repeat="item in quickMenuItems"-->
+<!--                         id="{{item.id}}"-->
+<!--                         title="{{item.description}}"-->
+<!--                         ng-click="quickAddItem(item.id)"-->
+<!--                         ng-model="draggedElement"-->
+<!--                         data-drag="true"-->
+<!--                         jqyoui-draggable="{onStart:'startDragCallbackQuickMenu', onDrag:'dragCallbackQuickMenu'}"-->
+<!--                         data-jqyoui-options="{revert: 'invalid', helper: 'clone', opacity : 0.5}"-->
+<!--                         style="display:none">-->
+<!--                        <img ng-src="editor-app/stencilsets/bpmn2.0/icons/{{item.icon}}"/>-->
+<!--                    </div>-->
                 </div>
             </div>
             <div id="propertiesHelpWrapper" class="col-xs-9" height="0px">
