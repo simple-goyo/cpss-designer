@@ -10117,9 +10117,23 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
 		//		['rect', {x: ORYX.CONFIG.FORM_ROW_WIDTH , width: options.width - ORYX.CONFIG.FORM_ROW_WIDTH , height: "100%", style: "fill: #CFFFF7", visibility: "hidden"}]);
 
 		// 增加一块区域位于第二块分割区域中间
-        this.columnRealworld   = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-            ['rect', {x:ORYX.CONFIG.FORM_ROW_WIDTH, y:200, width:options.width - ORYX.CONFIG.FORM_ROW_WIDTH - 186, height:"38%", rx:5, ry:5, style: "fill:#FFFFFFFF;stroke-width:4;stroke:#000000", visibility: "true"}]);
+		// <line x1="0" y1="0" x2="300" y2="300" style="stroke:rgb(99,99,99);stroke-width:2"/>
+        // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+        //    ['rect', {x:ORYX.CONFIG.FORM_ROW_WIDTH, y:200, width:options.width - ORYX.CONFIG.FORM_ROW_WIDTH - 186, height:"38%", rx:5, ry:5, style: "fill:#FFFFFFFF;stroke-width:4;stroke:#000000", visibility: "true"}]);
 
+        // 四根线
+		var X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 60;
+		var X2 = options.width - 186 - 60;
+		var Y1 = 200;
+		var Y2 = 500;
+		ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+			['line', {x1:X1, y1:Y1, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#FFFFFFFF;stroke-width:4;stroke:#000000", visibility: "true"}]);
+		ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+			['line', {x1:X1, y1:Y1, x2:X2, y2:Y1, rx:5, ry:5, style: "fill:#FFFFFFFF;stroke-width:4;stroke:#000000", visibility: "true"}]);
+		ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+			['line', {x1:X2, y1:Y1, x2:X2, y2:Y2, rx:5, ry:5, style: "fill:#FFFFFFFF;stroke-width:4;stroke:#000000", visibility: "true"}]);
+		ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+			['line', {x1:X2, y1:Y2, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#FFFFFFFF;stroke-width:4;stroke:#000000", visibility: "true"}]);
 
 		this.node = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.rootNode,
 			['g', {},

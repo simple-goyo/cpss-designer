@@ -52,10 +52,11 @@ var KisBpmServicesPopupCtrl = ['$scope', function ($scope) {
 var ServicesPopupCtrl = ['$scope', function ($scope) {
     var ActivityElement;
     $scope.constfunctions = [
-        {name: "获取水杯", url: "http://www.google.com"},
-        {name: "获取咖啡", url: "http://www.runoob.com"},
-        {name: "递交物品", url: "http://www.taobao.com"},
-        {name: "Web点餐服务", url: ""}
+        {name: "获取水杯", type: "SocialAction"},
+        {name: "获取咖啡", type: "SocialAction"},
+        {name: "递交物品", type: "SocialAction"},
+        {name: "制作咖啡", type: "PhysicalAction"},
+        {name: "点咖啡服务", type: "CyberAction"}
     ];
 
     // Put json representing entity on scope
@@ -205,6 +206,13 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
         var selectItem = ActivityElement;//$scope.editor.getSelection()[0];
         //var itemId = "actionActivity";
         var itemId = "SocialAction";
+        if("点咖啡服务"===actionName){
+            itemId = "CyberAction";
+        }else if("制作咖啡"===actionName){
+            itemId = "PhysicalAction";
+        }else{
+            itemId = "SocialAction";
+        }
         var action = undefined;
         var stencilSets = $scope.editor.getStencilSets().values();
         for (var i = 0; i < stencilSets.length; i++) {
@@ -229,7 +237,7 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
             }
         }
         //if (positionController.y !== 0) {
-        positionOffset.y += 30;
+        // positionOffset.y += 30;
         //}
 
         var option = {
