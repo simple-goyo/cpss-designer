@@ -217,12 +217,18 @@ angular.module('activitiModeler')
                     var selectedShape = shapes.first();
                     $scope.addToInputStatus(selectedShape);
                     var selections = [];
+                    var coffeeMachines = [];
                     for (var i = 0; i < $scope.inputStatus.length; i++) {
-                        if ($scope.inputStatus[i].name === '咖啡机')
+                        if ($scope.inputStatus[i].name === '咖啡机') {
+                            coffeeMachines[coffeeMachines.length] = $scope.getShapeById($scope.inputStatus[i].id);
                             continue;
+                        }
                         selections[selections.length] = $scope.getShapeById($scope.inputStatus[i].id);
                     }
-                    $scope.editor.setSelection(selections);
+                    if (selections.length === 0)
+                        $scope.editor.setSelection(coffeeMachines);
+                    else
+                        $scope.editor.setSelection(selections);
                     $scope.editor.getCanvas().update();
                 } else $scope.inputStatus = [];
             });
@@ -749,7 +755,7 @@ angular.module('activitiModeler')
             };
             $scope.setEvent = function () {
                 var opts = {
-                    template:  'editor-app/configuration/properties/events-popup.html?version=' + Date.now(),
+                    template: 'editor-app/configuration/properties/events-popup.html?version=' + Date.now(),
                     scope: $scope
                 };
                 $modal(opts);
