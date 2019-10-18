@@ -217,6 +217,8 @@ angular.module('activitiModeler')
                     $scope.addToInputStatus(selectedShape);
                     var selections = [];
                     for (var i = 0; i < $scope.inputStatus.length; i++) {
+                        if ($scope.inputStatus.name === '咖啡机')
+                            continue;
                         selections[selections.length] = $scope.getShapeById($scope.inputStatus[i].id);
                     }
                     $scope.editor.setSelection(selections);
@@ -251,7 +253,9 @@ angular.module('activitiModeler')
             };
 
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEUP, function (event) {
-                if ($scope.selectedItem.title === ""){return;}// 选都没选，直接返回
+                if ($scope.selectedItem.title === "") {
+                    return;
+                }// 选都没选，直接返回
                 if ($scope.inputStatus) {
                     $scope.outputStatus = [];
                     var userShape = undefined;
@@ -292,7 +296,7 @@ angular.module('activitiModeler')
                             }
                         }
                         var shapePosition = shape.bounds.center();
-                        if (!inOutputStatus && Math.abs(position.y - shapePosition.y) <= 2*height && Math.abs(position.x - shapePosition.x) <= 2*width)
+                        if (!inOutputStatus && Math.abs(position.y - shapePosition.y) <= 2 * height && Math.abs(position.x - shapePosition.x) <= 2 * width)
                             $scope.neibor[$scope.neibor.length] = {
                                 "id": shape.id,
                                 "type": shape.properties["oryx-type"],
@@ -1704,7 +1708,7 @@ KISBPM.CreateCommand = ORYX.Core.Command.extend({
         this.type = option.type;
         this.containedStencil = option.containedStencil;
         this.parent = option.parent;
-        this.positionOffset = option.positionOffset;
+        this.positionController = option.positionController;
         this.currentReference = currentReference;
         this.shapeOptions = option.shapeOptions;
     },
@@ -1792,9 +1796,17 @@ KISBPM.CreateCommand = ORYX.Core.Command.extend({
                     pos.x += (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.width() / 2);
                 }
             } else {
-                pos = this.positionOffset;
-                pos.x = ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
-                pos.y += ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.height() / 2);
+                pos = {x: this.positionController.x, y: this.positionController.y};//this.positionController.type==='set'
+                if (this.positionController.type === 'offsetY') {
+                    pos.x = ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
+                    pos.y += ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.height() / 2);
+                } else if (this.positionController.type === 'offsetX') {
+                    pos.x += ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
+                    pos.y = ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.height() / 2);
+                } else if (this.positionController.type === 'offset') {
+                    pos.x += ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
+                    pos.y += ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.height() / 2);
+                }
             }
 
             // Move shape to the new position

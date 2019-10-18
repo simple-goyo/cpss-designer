@@ -191,7 +191,7 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
             namespace: selectItem.getStencil().namespace(),
             parent: selectItem.parent,
             containedStencil: action,
-            positionOffset: positionOffset
+            positionController: positionOffset
         };
 
         var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
