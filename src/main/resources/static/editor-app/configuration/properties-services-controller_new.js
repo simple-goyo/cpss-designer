@@ -51,6 +51,9 @@ var KisBpmServicesPopupCtrl = ['$scope', function ($scope) {
 
 var ServicesPopupCtrl = ['$scope', function ($scope) {
     var ActivityElement;
+
+    var shape = $scope.selectedShape;
+
     $scope.constfunctions = [
         {name: "获取水杯", type: "SocialAction"},
         {name: "获取咖啡", type: "SocialAction"},
@@ -58,6 +61,36 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
         {name: "制作咖啡", type: "PhysicalAction"},
         {name: "点咖啡服务", type: "CyberAction"}
     ];
+    $scope.resourceToFunctionType = [
+        {name: "设备", type: "PhysicalAction"},
+        {name: "物品", type: "PhysicalAction"},
+        {name: "机器人", type: "PhysicalAction"},
+        {name: "用户", type: "SocialAction"},
+        {name: "工人", type: "SocialAction"},
+        {name: "云应用", type: "CyberAction"},
+        {name: "移动应用", type: "CyberAction"},
+        {name: "嵌入式应用", type: "CyberAction"},
+        {name: "信息对象", type: "CyberAction"}
+    ];
+
+    var selectedShapeFunctionType = undefined;
+    for (var i = 0; i < $scope.resourceToFunctionType.length; i++) {
+        if ($scope.resourceToFunctionType[i].name === shape.properties["oryx-type"]) {
+            selectedShapeFunctionType = $scope.resourceToFunctionType[i].type;
+        }
+    }
+
+    $scope.functions = [];
+
+    if (selectedShapeFunctionType) {
+        for (var i = 0; i < $scope.constfunctions.length; i++) {
+            if ($scope.constfunctions[i].type === selectedShapeFunctionType) {
+                $scope.functions[$scope.functions.length] = {name: $scope.constfunctions[i].name};
+            }
+        }
+    } else {
+        $scope.functions = $scope.constfunctions;
+    }
 
     // Put json representing entity on scope
     if ($scope.property.value !== undefined && $scope.property.value !== null
@@ -139,8 +172,6 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
         }
 
 
-        var shape = $scope.selectedShape;
-
         for (var i = 0; i < $scope.entity.Services.length; i++) {
             index = -1;
             for (var j = 0; j < functions.length; j++) {
@@ -160,7 +191,7 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
                 $scope.editor.getCanvas().update();
                 $scope.editor.updateSelection();
                 // $scope.updatePropertyInModel($scope.property, shapeId);
-                if ($scope.entity.Services[i].value === 'Web点餐服务') {
+                if ($scope.entity.Services[i].value === '点咖啡服务') {
                     $scope.createResource($scope, shape, "CyberObject");
                     $scope.editor.getSelection()[0].setProperty("oryx-name", "订单");
                     $scope.editor.getCanvas().update();
@@ -206,11 +237,11 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
         var selectItem = ActivityElement;//$scope.editor.getSelection()[0];
         //var itemId = "actionActivity";
         var itemId = "SocialAction";
-        if("点咖啡服务"===actionName){
+        if ("点咖啡服务" === actionName) {
             itemId = "CyberAction";
-        }else if("制作咖啡"===actionName){
+        } else if ("制作咖啡" === actionName) {
             itemId = "PhysicalAction";
-        }else{
+        } else {
             itemId = "SocialAction";
         }
         var action = undefined;
@@ -282,10 +313,6 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
                 $scope.updatePropertyInModel(property);
             }
         }
-    };
-
-    $scope.changeData = function () {
-        console.log("datachanged!")
     };
 
     // Close button handler
