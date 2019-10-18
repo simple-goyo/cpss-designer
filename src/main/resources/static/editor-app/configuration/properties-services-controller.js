@@ -147,12 +147,14 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
             $scope.editor.deleteShape(shapeToRemove);
 
             $scope.property.value.function = $scope.property.function;
-            var shapeId = $scope.selectedShape.id;
+            //var shapeId = $scope.selectedShape.id;
+
             $scope.updatePropertyInModel($scope.property);
             $scope.close();
+
             $scope.createAction($scope);
             $scope.property.value.id = $scope.editor.getSelection()[0].id;
-            $scope.updatePropertyInModel($scope.property, shapeId);
+            //$scope.updatePropertyInModel($scope.property, shapeId);
         }
 
     };
@@ -219,7 +221,6 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
                 property.mode = 'set';
             }
         }
-
     };
 
     // Close button handler

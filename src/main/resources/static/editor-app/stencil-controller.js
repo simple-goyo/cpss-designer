@@ -19,10 +19,10 @@
 'use strict';
 
 angular.module('activitiModeler')
-    .controller('StencilController', ['$rootScope', '$scope', '$http', '$modal', '$timeout', function ($rootScope, $scope, $http, $modal, $timeout) {
+    .controller('StencilController', ['$rootScope', '$scope', '$http', '$modal', '$timeout', '$compile', function ($rootScope, $scope, $http, $modal, $timeout, $compile) {
 
         // Property window toggle state
-        $scope.propertyWindowState = {'collapsed': false};
+        $scope.propertyWindowState = {'collapsed': true};
 
         // Add reference to global header-config
         $scope.headerConfig = KISBPM.HEADER_CONFIG;
@@ -210,6 +210,107 @@ angular.module('activitiModeler')
                 console.log('Something went wrong when fetching stencil items:' + JSON.stringify(data));
             });
 
+            $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEDOWN, function (event) {
+                var shapes = $scope.editor.getSelection();
+                if (shapes && shapes.length > 0) {
+                    var selectedShape = shapes.first();
+                    $scope.addToInputStatus(selectedShape);
+                    var selections = [];
+                    for (var i = 0; i < $scope.inputStatus.length; i++) {
+                        selections[selections.length] = $scope.getShapeById($scope.inputStatus[i].id);
+                    }
+                    $scope.editor.setSelection(selections);
+                    $scope.editor.getCanvas().update();
+                } else $scope.inputStatus = [];
+            });
+
+            $scope.addToInputStatus = function (shape) {
+                if (shape.properties["oryx-ownedbywho"]) {
+                    shape = $scope.getShapeById(shape.properties["oryx-ownedbywho"].id);
+                    $scope.addToInputStatus(shape);
+                } else {
+                    $scope.inputStatus = [{
+                        id: shape.id,
+                        type: shape.properties["oryx-type"],
+                        name: shape.properties["oryx-name"],
+                        position: shape.bounds.center()
+                    }];
+                    if (shape.properties["oryx-owner"]) {
+                        for (var i = 0; i < shape.properties["oryx-owner"].length; i++) {
+                            var ownerId = shape.properties["oryx-owner"][i].id;
+                            var ownerShape = $scope.getShapeById(ownerId);
+                            $scope.inputStatus[$scope.inputStatus.length] = {
+                                id: ownerId,
+                                type: ownerShape.properties["oryx-type"],
+                                name: ownerShape.properties["oryx-name"],
+                                position: ownerShape.bounds.center()
+                            }
+                        }
+                    }
+                }
+            };
+
+            $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEUP, function (event) {
+                if ($scope.selectedItem.title === ""){return;}// 选都没选，直接返回
+                if ($scope.inputStatus) {
+                    $scope.outputStatus = [];
+                    var userShape = undefined;
+                    var userOriginPosition = undefined;
+                    for (var i = 0; i < $scope.inputStatus.length; i++) {
+                        var id = $scope.inputStatus[i].id;
+                        var shape = $scope.getShapeById(id);
+                        if ($scope.inputStatus[i].type === "工人" || $scope.inputStatus[i].type === "用户") {
+                            userShape = shape;
+                            userOriginPosition = $scope.inputStatus[i].position;
+                        }
+                        console.log(shape);
+                        $scope.outputStatus[$scope.outputStatus.length] = {
+                            id: id,
+                            type: shape.properties["oryx-type"],
+                            name: shape.properties["oryx-name"],
+                            position: shape.bounds.center()
+                        }
+                    }
+                    if (!userShape)
+                        return;
+                    var position = userShape.bounds.center();
+
+                    if (userOriginPosition.x === position.x && userOriginPosition.y === position.y)
+                        return;
+
+                    var shapes = [$scope.editor.getCanvas()][0].children;
+                    $scope.neibor = [];
+                    var width = Math.abs(userShape.bounds.b.x - userShape.bounds.a.x);
+                    var height = Math.abs(userShape.bounds.b.y - userShape.bounds.a.y);
+                    for (var i = 0; i < shapes.length; i++) {
+                        var shape = shapes[i];
+                        var inOutputStatus = false;
+                        for (var j = 0; j < $scope.outputStatus.length; j++) {
+                            if (shape.id === $scope.outputStatus[j].id) {
+                                inOutputStatus = true;
+                                break;
+                            }
+                        }
+                        var shapePosition = shape.bounds.center();
+                        if (!inOutputStatus && Math.abs(position.y - shapePosition.y) <= 2*height && Math.abs(position.x - shapePosition.x) <= 2*width)
+                            $scope.neibor[$scope.neibor.length] = {
+                                "id": shape.id,
+                                "type": shape.properties["oryx-type"],
+                                "name": shape.properties["oryx-name"],
+                                "position": shapePosition
+                            };
+                    }
+                    if (!$scope.neibor || $scope.neibor.length === 0)
+                        return;
+                    var opts = {
+                        template: "editor-app/configuration/properties/thing-get-or-leave-popup.html",
+                        scope: $scope
+                    };
+                    $modal(opts);
+                } else $scope.outputStatus = [];
+            });
+
+
             /*
              * Listen to selection change events: show properties
              */
@@ -296,13 +397,13 @@ angular.module('activitiModeler')
                                 'value': selectedShape.properties[key]
                             };
 
-                            if ((currentProperty.type === 'complex' || currentProperty.type === 'multiplecomplex') && currentProperty.value && currentProperty.value.length > 0) {
-                                try {
-                                    currentProperty.value = JSON.parse(currentProperty.value);
-                                } catch (err) {
-                                    // ignore
-                                }
-                            }
+                            // if ((currentProperty.type === 'complex' || currentProperty.type === 'multiplecomplex') && currentProperty.value && currentProperty.value.length > 0) {
+                            //     try {
+                            //         currentProperty.value = JSON.parse(currentProperty.value);
+                            //     } catch (err) {
+                            //         // ignore
+                            //     }
+                            // }
 
                             if (propertyConfig.readModeTemplateUrl !== undefined && propertyConfig.readModeTemplateUrl !== null) {
                                 currentProperty.readModeTemplateUrl = propertyConfig.readModeTemplateUrl + '?version=' + $rootScope.staticIncludeVersion;
@@ -487,6 +588,7 @@ angular.module('activitiModeler')
                 var inputProp = $scope.getPropertybyKey(propertylist, "oryx-input");
                 var outputProp = $scope.getPropertybyKey(propertylist, "oryx-output");
                 var AEProp = $scope.getPropertybyKey(propertylist, "oryx-activityelement");
+                var direction = $scope.getPropertybyKey(propertylist, "oryx-animate_direction");
 
                 // create jquery selector
                 var inputPropSel = jQuery("#" + inputProp.id).parent().parent();
@@ -500,55 +602,86 @@ angular.module('activitiModeler')
 
                 // play
                 // ----new----
+                var playTime = 0;
                 if (AEProp.type !== "工人") {
                     for (var i = 0; i < 10; i++) {
-                        $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
-                        $scope.stopAnimation(inputPropSel, 1500);
+
+                        if (inputPropSel.length !== 0) {
+                            setTimeout(function () {
+                                $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
+                                $scope.stopAnimation(inputPropSel, 1500);
+                            }, playTime);
+                            playTime += 1000;
+                        }
                         setTimeout(function () {
                             $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
                             $scope.stopAnimation(AEPropSel, 1500);
-                        }, "1000");
-                        setTimeout(function () {
-                            $scope.playAnimation(outputPropSel, "linear", "1", pos_AE, pos_output);
-                            $scope.stopAnimation(outputPropSel, 1500);
-                        }, "2500");
+                        }, playTime);
+                        playTime += 1500;
+                        if (outputPropSel.length !== 0) {
+                            setTimeout(function () {
+                                $scope.playAnimation(outputPropSel, "linear", "1", pos_AE, pos_output);
+                                $scope.stopAnimation(outputPropSel, 1500);
+                            }, playTime);
+
+                        }
+
                     }
                 } else {
-                    // 众包
-                    // 0.订单输入？,1.人闪两下,2.人前往目标位置，3.人取东西；4.人携带东西回到原来位置
-                    // AE: 人；    input：指令；    output： 取的东西
-                    // step0
-                    $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
-                    $scope.stopAnimation(inputPropSel, 1500);
-                    // step1
-                    $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
-                    $scope.stopAnimation(AEPropSel, 1500);
-                    // step2
-                    setTimeout(function () {
-                        $scope.playAnimation(AEPropSel, "linear2", "0", pos_output, pos_AE);
+                    if (direction === "0") {
+                        // 众包取东西
+                        // 0.订单输入？,1.人闪两下,2.人前往目标位置，3.人取东西；4.人携带东西回到原来位置
+                        // AE: 人；    input：指令；    output： 取的东西
+                        // step0
+                        $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
+                        $scope.stopAnimation(inputPropSel, 1500);
+                        // step1
+                        $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
                         $scope.stopAnimation(AEPropSel, 1500);
-                    }, 2000);
+                        // step2
+                        setTimeout(function () {
+                            $scope.playAnimation(AEPropSel, "linear2", "0", pos_output, pos_AE);
+                            $scope.stopAnimation(AEPropSel, 1500);
+                        }, 2000);
 
-                    // step3
-                    setTimeout(function () {
-                        $scope.playAnimation(outputPropSel, "flash", "0", pos_output, pos_output);
-                        $scope.stopAnimation(outputPropSel, 1000);
-                    }, 3000);
+                        // step3
+                        setTimeout(function () {
+                            $scope.playAnimation(outputPropSel, "flash", "0", pos_output, pos_output);
+                            $scope.stopAnimation(outputPropSel, 1500);
+                        }, 3000);
 
-                    // step4
-                    setTimeout(function () {
-                        var obj_pos_output = {x: pos_output.x, y: pos_output.y};
-                        var obj_pos_AE = {x: pos_AE.x, y: pos_AE.y};
-                        if (pos_output.x - 40 > 0) {
-                            obj_pos_output.x -= 40;
-                            obj_pos_AE.x -= 40;
-                        }
-                        $scope.playAnimation(AEPropSel, "linear", "1", pos_output, pos_AE);
-                        $scope.playAnimation(outputPropSel, "linear", "1", obj_pos_output, obj_pos_AE);
+                        // step4
+                        setTimeout(function () {
+                            var obj_pos_output = {x: pos_output.x, y: pos_output.y};
+                            var obj_pos_AE = {x: pos_AE.x, y: pos_AE.y};
+                            if (pos_output.x - 40 > 0) {
+                                obj_pos_output.x -= 40;
+                                obj_pos_AE.x -= 40;
+                            }
+                            $scope.playAnimation(AEPropSel, "linear", "1", pos_output, pos_AE);
+                            $scope.playAnimation(outputPropSel, "linear", "1", obj_pos_output, obj_pos_AE);
 
-                        $scope.stopAnimation(AEPropSel, 4000);
-                        $scope.stopAnimation(outputPropSel, 4000);
-                    }, 5000);
+                            $scope.stopAnimation(AEPropSel, 2000);
+                            $scope.stopAnimation(outputPropSel, 2000);
+                        }, 5500);
+                    } else {
+                        // 众包送东西
+                        // 1. 人闪两下；2.人携带东西到目标位置
+                        // step1
+                        setTimeout(function () {
+                            $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
+                            $scope.stopAnimation(AEPropSel, 1500);
+                        }, playTime);
+                        playTime += 2000;
+
+                        // step2
+                        setTimeout(function () {
+                            $scope.playAnimation(AEPropSel, "linear2", "0", pos_output, pos_AE);
+                            $scope.stopAnimation(AEPropSel, 1500);
+                        }, playTime);
+
+                    }
+
 
                 }
 
@@ -571,7 +704,7 @@ angular.module('activitiModeler')
                     for (var i = 0; i < shapes.length; i++) {
                         jQuery('#' + shapes[i].id).parent().parent().attr("display", "");
                     }
-                }, 5000);
+                }, 9000);
 
             };
             $scope.morphShape = function () {
@@ -618,12 +751,12 @@ angular.module('activitiModeler')
                 for (var i = 0; i < shapes.length; i++) {
                     if (shapes[i].properties["oryx-activityelement"] && shapes[i].properties["oryx-activityelement"].id === $scope.editor.getSelection()[0].id) {
                         shapeToRemove = shapes[i];
-                        break;
+                        $scope.editor.deleteShape(shapeToRemove);
                     }
-
                 }
-                $scope.editor.deleteShape(shapeToRemove);
                 KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
+                // $scope.editor.deleteShape(shapeToRemove);
+                // KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
             };
 
             $scope.quickAddItem = function (newItemId) {
@@ -836,6 +969,9 @@ angular.module('activitiModeler')
         };
 
         $scope.getPositionbyselector = function (selector) {
+            if (selector.length === 0) {
+                return undefined;
+            }
             var p = {x: 0, y: 0};
             var p_str = selector.attr("transform");// p_str="translate(315.5, 151.999995)"
             var regX = "(?<=\\()(.+?)(?=\,)";
@@ -853,18 +989,6 @@ angular.module('activitiModeler')
             return p;
         };
 
-        // $scope.buildCSSRule = function (p_stable, p_animate, rulename, direction) {
-        //     var offsetX = p_stable.x - Math.round(0.2 * (p_stable.x - p_animate.x));
-        //     var offsetY = p_stable.y - Math.round(0.2 * (p_stable.y - p_animate.y));
-        //
-        //     if (direction == "0") {
-        //         var r = "@keyframes " + rulename + " {   0% { opacity: 0; transform: translate(" + p_animate.x + "px, " + p_animate.y + "px); }  100% { opacity: 1; transform: translate(" + offsetX + "px, " + offsetY + "px); }}";
-        //         console.log(r);
-        //         return r;
-        //     }
-        //     else {
-        //         var r = "@keyframes " + rulename + " {   0% { opacity: 0; transform: translate(" + offsetX + "px, " + offsetY + "px); }   100% { opacity: 1; transform: translate(" + p_animate.x + "px, " + p_animate.y + "px); }}";
-        //         return r;}}
         $scope.createCSSRulefromTemplate = function (type, direction) {
             var ruleFunction;
             switch (type) {
@@ -1558,24 +1682,6 @@ angular.module('activitiModeler')
 
     }]);
 
-// var ANIMATION = ANIMATION || {};
-// ANIMATION.createCommand = ORYX.Core.Command.extend({
-//     construct: function(selection, currentSelection, p, facade){
-//         this.selection = selection;
-//         this.p = p;
-//         this.currentSelection = currentSelection;
-//         this.facade = facade;
-//     },
-//     execute:function(){
-//         // Instantiate the moveCommand
-//         var commands = [new ORYX.Core.Command.Move(selection, p, null, currentSelection, this)];
-//         // Execute the commands
-//         this.facade.executeCommands(commands);
-//     },
-//     rollback:function(){
-//         console.log("Failed to execute")
-//     }
-// });
 
 var KISBPM = KISBPM || {};
 //create command for undo/redo
@@ -1723,26 +1829,3 @@ KISBPM.CreateCommand = ORYX.Core.Command.extend({
         this.facade.setSelection(this.facade.getSelection().without(this.shape, this.edge));
     }
 });
-
-
-var player = {
-    name: "",
-    property: "",
-
-    createCSSAnimation: function (id) {
-        switch (id) {
-            case "0":
-
-                break;
-            case "1":
-                break;
-            case "2":
-                break;
-            default:
-                break;
-        }
-
-
-    }
-
-};

@@ -268,7 +268,12 @@
     "PROPERTY.SERVICES.FUNCTION" : "服务方法",
     "PROPERTY.SERVICES.EMPTY" : "暂无服务",
     "PROPERTY.SERVICES.SOURCE_DISPLAY" : "资源 {{assignee}}",
-    "PROPERTY.SERVICES.FUNCTION_DISPLAY" : "{{length}}服务方法",
+    "PROPERTY.SERVICES.FUNCTION_DISPLAY" : "{{length}}个服务方法",
+
+    "PROPERTY.EVENTS.TITLE" : "指定事件",
+    "PROPERTY.EVENTS.LISTENER" : "事件监听器",
+    "PROPERTY.EVENTS.EMPTY" : "暂无监听器",
+    "PROPERTY.EVENTS.LISTENER_DISPLAY" : "{{length}}监听器",
 
     "MODEL.SAVE.TITLE" : "确认保存模型",
     "MODEL.NAME" : "名称",
@@ -299,5 +304,10 @@
     "PROPERTY.INPUT.SELECT":"选择输入实体",
     "PROPERTY.OUTPUT.SELECT":"选择输出实体",
     "PROPERTY.ACTIVITY.ELEMENT.SELECT":"选择活动实体",
-    "PROPERTY.SELECT.EMPTY":"无实体可选择"
+    "PROPERTY.SELECT.EMPTY":"无实体可选择",
+    "THING.GET.OR.LEAVE":"物品处理",
+    "NO.THING":"无物品",
+    "SELECT.WAT.TO.DO":"请选择方式",
+    "THING.GET":"获取",
+    "THING.LEAVE":"放下"
 }
