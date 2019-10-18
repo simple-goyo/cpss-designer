@@ -1,10 +1,10 @@
-<div class="modal" ng-controller="ServicesPopupCtrl">
+<div class="modal" ng-controller="EventsPopupCtrl">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;
                 </button>
-                <h2 translate>PROPERTY.SERVICES.TITLE</h2>
+                <h2 translate>PROPERTY.EVENTS.TITLE</h2>
             </div>
             <div class="modal-body">
 
@@ -13,19 +13,11 @@
                         <!--<label for="assigneeField">{{'PROPERTY.SERVICES.SOURCE' | translate}}</label>-->
                         <!--<input type="text" id="assigneeField" class="form-control" ng-model="assignment.assignee"-->
                         <!--placeholder="{{'PROPERTY.ASSIGNMENT.SOURCE_PLACEHOLDER' | translate}}"/>-->
-                        <label>{{'PROPERTY.SERVICES.FUNCTION' | translate}}</label>
-                        <select class="form-control" ng-model="selectedFunc" ng-change="changeData()">
-                            <option value=""  selected="selected">---请选择---</option>
-                            <option ng-repeat="x in constfunctions" value="{{x.name}}">{{x.name}}</option>
-                        </select>
-                        <div ng-repeat="Service in entity.Services">
-                            <input class="form-control" type="hidden" ng-model="Service.value" />
-<!--                            <input class="form-control" type="text" ng-model="Service.value" />-->
-                            <i class="glyphicon glyphicon-minus clickable-property"
-                               ng-click="removeServiceValue($index)"></i>
-                            <i ng-if="$index == (entity.Services.length - 1)"
-                               class="glyphicon glyphicon-plus clickable-property"
-                               ng-click="addServiceValue($index)"></i>
+                        <label for="function">{{'PROPERTY.EVENTS.LISTENER' | translate}}</label>
+                        <div ng-repeat="listener in entity.listeners">
+                            <input id="function" class="form-control" type="text" ng-model="listener.value" />
+                            <i class="glyphicon glyphicon-minus clickable-property" ng-click="removeListenerValue($index)"></i>
+                            <i ng-if="$index == (entity.listeners.length - 1)" class="glyphicon glyphicon-plus clickable-property" ng-click="addListenerValue($index)"></i>
                         </div>
                     </div>
                 </div>

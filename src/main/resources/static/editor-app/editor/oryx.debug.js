@@ -4789,9 +4789,11 @@ ORYX.Core.SVG.Label = Clazz.extend({
 							break;
 						case 'top':
 							dy = index * (fontSize);
-							dy += fontSize;
+							dy += fontSize+7;
+							x += 5;
 							break;
 					}
+					// 设置文字位置
 					tspan.setAttributeNS(null, 'dy', Math.floor(dy));
 					
 					tspan.setAttributeNS(null, 'x', x);
@@ -10108,11 +10110,11 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
 		
 		// Create 2 svg-elements in the svg-container
 		this.columnHightlight1 = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-				['rect', {x: 0, width: ORYX.CONFIG.FORM_ROW_WIDTH + 35, height: "100%", style: "fill: #fff6d5", visibility: "hidden"}]);
+				['rect', {x: 0, width: ORYX.CONFIG.FORM_ROW_WIDTH , height: "100%", style: "fill: #fff6d5", visibility: "true"}]);
 		
 		this.columnHightlight2 = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-				['rect', {x: ORYX.CONFIG.FORM_ROW_WIDTH + 35, width: ORYX.CONFIG.FORM_ROW_WIDTH + 25, height: "100%", style: "fill: #fff6d5", visibility: "hidden"}]);
-		
+				['rect', {x: ORYX.CONFIG.FORM_ROW_WIDTH , width: options.width - ORYX.CONFIG.FORM_ROW_WIDTH , height: "100%", style: "fill: #CFFFF7", visibility: "hidden"}]);
+
 		this.node = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.rootNode,
 			['g', {},
 				['g', {"class": "stencils"},
@@ -20166,7 +20168,10 @@ ORYX.Plugins.DragDropResize = ORYX.Plugins.AbstractPlugin.extend({
 	 *
 	 */
 	afterDrag: function(){
-				
+		// 判断一个Worker是否拖动到一个实体附近
+		// 如果是，则弹出带有服务选项对话框，服务选项是下拉菜单
+		console.log("afterDrag");
+		console.log(this);
 	},
 
 	/**
