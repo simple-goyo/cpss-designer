@@ -22,7 +22,7 @@ angular.module('activitiModeler')
     .controller('StencilController', ['$rootScope', '$scope', '$http', '$modal', '$timeout', '$compile', function ($rootScope, $scope, $http, $modal, $timeout, $compile) {
 
         // Property window toggle state
-        $scope.propertyWindowState = {'collapsed': false};
+        $scope.propertyWindowState = {'collapsed': true};
 
         // Add reference to global header-config
         $scope.headerConfig = KISBPM.HEADER_CONFIG;
@@ -243,6 +243,7 @@ angular.module('activitiModeler')
                 }
             });
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEUP, function (event) {
+                if ($scope.selectedItem.title === ""){return;}// 选都没选，直接返回
                 if ($scope.inputStatus) {
                     $scope.outputStatus = [];
                     var userShape = undefined;
@@ -282,7 +283,7 @@ angular.module('activitiModeler')
                             }
                         }
                         var shapePosition = shape.bounds.center();
-                        if (!inOutputStatus && Math.abs(position.y - shapePosition.y) <= height && Math.abs(position.x - shapePosition.x) <= width)
+                        if (!inOutputStatus && Math.abs(position.y - shapePosition.y) <= 2*height && Math.abs(position.x - shapePosition.x) <= 2*width)
                             $scope.neibor[$scope.neibor.length] = {
                                 "id": shape.id,
                                 "type": shape.properties["oryx-type"],
@@ -297,6 +298,15 @@ angular.module('activitiModeler')
                         scope: $scope
                     };
                     $modal(opts);
+
+                    // Config for the modal window
+                    var opts2 = {
+                        template: 'editor-app/configuration/properties/services-popup_new.html',
+                        scope: $scope
+                    };
+
+                    // Open the dialog
+                    $modal(opts2);
                 }
             });
 
@@ -741,15 +751,15 @@ angular.module('activitiModeler')
                 for (var i = 0; i < shapes.length; i++) {
                     if (shapes[i].properties["oryx-activityelement"] && shapes[i].properties["oryx-activityelement"].id === $scope.editor.getSelection()[0].id) {
                         shapeToRemove = shapes[i];
-                        //break;
+                        break;
 
-                        $scope.editor.deleteShape(shapeToRemove);
-                        KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
+                        // $scope.editor.deleteShape(shapeToRemove);
+                        // KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
                     }
 
                 }
-                // $scope.editor.deleteShape(shapeToRemove);
-                // KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
+                $scope.editor.deleteShape(shapeToRemove);
+                KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
             };
 
             $scope.quickAddItem = function (newItemId) {

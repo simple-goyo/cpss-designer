@@ -62,7 +62,7 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
     } else {
         $scope.entity = {};
     }
-
+    //$scope.entity = {};
     if ($scope.entity.Services == undefined || $scope.entity.Services.length == 0) {
         $scope.entity.Services = [{value: ''}];
     }
@@ -79,7 +79,7 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
 
     $scope.save = function () {
         handleEntityInput($scope);
-        if (!$scope.property.value) {
+        if ($scope.property.value===undefined||!$scope.property.value) {
             $scope.property.value = {"id": "", "function": ""};
         }
 

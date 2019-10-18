@@ -771,7 +771,8 @@ pre code {
   padding-left: 15px;
 }
 .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {
-  float: left;
+  /*float: left;*/
+  float: right;
 }
 .col-xs-12 {
   width: 100%;
@@ -783,7 +784,7 @@ pre code {
   width: 83.33333333%;
 }
 .col-xs-9 {
-  width: 75%;
+  width: 80%;
 }
 .col-xs-8 {
   width: 66.66666667%;
@@ -801,7 +802,7 @@ pre code {
   width: 33.33333333%;
 }
 .col-xs-3 {
-  width: 25%;
+  width: 20%;
 }
 .col-xs-2 {
   width: 16.66666667%;
