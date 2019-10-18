@@ -60,7 +60,7 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
     ];
 
     // Put json representing entity on scope
-    if ($scope.property.value !== undefined && $scope.property.value !== null
+    if ($scope.property !== undefined && $scope.property.value !== undefined && $scope.property.value !== null
         && $scope.property.value.length > 0) {
         $scope.entity = {};
         $scope.entity.Services = [];
@@ -70,6 +70,7 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
 
     } else {
         $scope.entity = {};
+        $scope.property = {};
     }
 
     if ($scope.entity.Services === undefined || $scope.entity.Services.length === 0) {
@@ -160,7 +161,7 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
                 $scope.editor.getCanvas().update();
                 $scope.editor.updateSelection();
                 // $scope.updatePropertyInModel($scope.property, shapeId);
-                if ($scope.entity.Services[i].value === 'Web点餐服务') {
+                if ($scope.entity.Services[i].value === '点咖啡服务') {
                     $scope.createResource($scope, shape, "CyberObject");
                     $scope.editor.getSelection()[0].setProperty("oryx-name", "订单");
                     $scope.editor.getCanvas().update();
