@@ -52,9 +52,10 @@ var KisBpmServicesPopupCtrl = ['$scope', function ($scope) {
 var ServicesPopupCtrl = ['$scope', function ($scope) {
     var ActivityElement;
     $scope.constfunctions = [
-        {name : "获取水杯", url : "http://www.google.com"},
-        {name : "获取咖啡", url : "http://www.runoob.com"},
-        {name : "递交物品", url : "http://www.taobao.com"}
+        {name: "获取水杯", url: "http://www.google.com"},
+        {name: "获取咖啡", url: "http://www.runoob.com"},
+        {name: "递交物品", url: "http://www.taobao.com"},
+        {name: "Web点餐服务", url: ""}
     ];
 
     // Put json representing entity on scope
@@ -86,7 +87,7 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
 
     $scope.save = function () {
         handleEntityInput($scope);
-        if ($scope.property.value===undefined||!$scope.property.value) {
+        if ($scope.property.value === undefined || !$scope.property.value) {
             $scope.property.value = {"id": "", "function": ""};
         }
 
@@ -111,8 +112,8 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
             // $scope.updatePropertyInModel($scope.property);
             // $scope.close();
             // return;
-        }else{
-            $scope.entity.Services[$scope.entity.Services.length] = {value:$scope.selectedFunc};
+        } else {
+            $scope.entity.Services[$scope.entity.Services.length] = {value: $scope.selectedFunc};
         }
         var indexToRemove = [];
         var hasRemoveNum = 0;
@@ -158,9 +159,46 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
                 $scope.editor.getCanvas().update();
                 $scope.editor.updateSelection();
                 // $scope.updatePropertyInModel($scope.property, shapeId);
+                if ($scope.entity.Services[i].value === 'Web点餐服务') {
+                    $scope.createResource($scope, shape, "CyberObject");
+                    $scope.editor.getSelection()[0].setProperty("oryx-name", "订单");
+                    $scope.editor.getCanvas().update();
+                    $scope.editor.updateSelection();
+                }
             }
         }
         $scope.close();
+    };
+
+    $scope.createResource = function ($scope, shape, resourceId) {
+        var resource = undefined;
+        var stencilSets = $scope.editor.getStencilSets().values();
+        for (var i = 0; i < stencilSets.length; i++) {
+            var stencilSet = stencilSets[i];
+            var nodes = stencilSet.nodes();
+            for (var j = 0; j < nodes.length; j++) {
+                if (nodes[j].idWithoutNs() === resourceId) {
+                    resource = nodes[j];
+                    break;
+                }
+            }
+        }
+        if (!resource)
+            return undefined;
+
+        var resourceOption = {type: 'set', x: shape.bounds.center().x + 50, y: shape.bounds.center().y};
+
+        var option = {
+            type: shape.getStencil().namespace() + resourceId,
+            namespace: shape.getStencil().namespace(),
+            parent: shape.parent,
+            containedStencil: resource,
+            positionController: resourceOption
+        };
+
+        var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
+
+        $scope.editor.executeCommands([command]);
     };
 
     $scope.createAction = function ($scope, actionName) {
@@ -182,7 +220,7 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
         if (!action) return;
 
         var nodes = [$scope.editor.getCanvas()][0].children;
-        var positionOffset = {x: 180, y: 0};
+        var positionOffset = {type: 'offsetY', x: 0, y: 0};
         for (var i = 0; i < nodes.length; i++) {
             if (nodes[i].properties["oryx-activityelement"]) {
                 if (positionOffset.y < nodes[i].bounds.center().y) {
@@ -190,8 +228,8 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
                 }
             }
         }
-        //if (positionOffset.y !== 0) {
-            positionOffset.y += 30;
+        //if (positionController.y !== 0) {
+        positionOffset.y += 30;
         //}
 
         var option = {
@@ -199,7 +237,7 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
             namespace: selectItem.getStencil().namespace(),
             parent: selectItem.parent,
             containedStencil: action,
-            positionOffset: positionOffset
+            positionController: positionOffset
         };
 
         var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
@@ -238,7 +276,7 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
         }
     };
 
-    $scope.changeData = function(){
+    $scope.changeData = function () {
         console.log("datachanged!")
     };
 

@@ -1419,7 +1419,7 @@
     },
     {
       "type": "node",
-      "id": "CyberObject ",
+      "id": "CyberObject",
       "title": "信息对象",
       "description": "信息对象",
       "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\" m4.454545,7.909091l-3.454545,0l0,27.636364c0,1.9 1.554545,3.454545 3.454545,3.454545l27.636364,0l0,-3.454545l-27.636364,0l0,-27.636364zm19,17.272727l3.454545,0l0,-17.272727l-6.909091,0l0,3.454545l3.454545,0l0,13.818182zm12.090909,-24.181818l-24.181818,0c-1.9,0 -3.454545,1.554545 -3.454545,3.454545l0,24.181818c0,1.9 1.554545,3.454545 3.454545,3.454545l24.181818,0c1.9,0 3.454545,-1.554545 3.454545,-3.454545l0,-24.181818c0,-1.9 -1.554545,-3.454545 -3.454545,-3.454545zm0,27.636364l-24.181818,0l0,-24.181818l24.181818,0l0,24.181818z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",

@@ -6,6 +6,9 @@ var ThingGetOrLeaveController = ['$scope', '$modal', function ($scope, $modal) {
     for (var i = 0; i < $scope.outputStatus.length; i++) {
         if ($scope.outputStatus[i].type !== "用户" && $scope.outputStatus[i].type !== "工人") {
             $scope.thingCanLeave[$scope.thingCanLeave.length] = $scope.outputStatus[i];
+            if ($scope.thingCanLeave[$scope.thingCanLeave.length - 1].name === '咖啡机') {
+                $scope.thingCanLeave[$scope.thingCanLeave.length - 1].name = '咖啡';
+            }
         } else {
             userShape = $scope.getShapeById($scope.outputStatus[i].id);
         }
@@ -15,6 +18,9 @@ var ThingGetOrLeaveController = ['$scope', '$modal', function ($scope, $modal) {
     for (var i = 0; i < $scope.neibor.length; i++) {
         if ($scope.neibor[i].type !== "用户" && $scope.neibor[i].type !== "工人") {
             $scope.thingCanGet[$scope.thingCanGet.length] = $scope.neibor[i];
+            if ($scope.thingCanGet[$scope.thingCanGet.length - 1].name === '咖啡机') {
+                $scope.thingCanGet[$scope.thingCanGet.length - 1].name = '咖啡';
+            }
         }
     }
 
@@ -48,12 +54,12 @@ var ThingGetOrLeaveController = ['$scope', '$modal', function ($scope, $modal) {
                     }
                     owners[owners.length] = {id: selectedShapeToGet.id};
                     userShape.setProperty("oryx-owner", owners);
-                    $scope.outputStatus[$scope.outputStatus.length] = {
-                        id: selectedShapeToGet.id,
-                        type: selectedShapeToGet.properties["oryx-type"],
-                        name: selectedShapeToGet.properties["oryx-name"],
-                        position: selectedShapeToGet.bounds.center()
-                    };
+                    // $scope.outputStatus[$scope.outputStatus.length] = {
+                    //     id: selectedShapeToGet.id,
+                    //     type: selectedShapeToGet.properties["oryx-type"],
+                    //     name: selectedShapeToGet.properties["oryx-name"],
+                    //     position: selectedShapeToGet.bounds.center()
+                    // };
                 }
             } else if (userShape && userShape.properties["oryx-owner"]) {
                 for (var i = 0; i < $scope.selectedElements.length; i++) {
@@ -63,7 +69,7 @@ var ThingGetOrLeaveController = ['$scope', '$modal', function ($scope, $modal) {
                     var index = owners.indexOf({id: selectedShapeToLeave.id});
                     owners.splice(index, 1);
                     userShape.setProperty("oryx-owner", owners);
-                    $scope.outputStatus.splice(index, 1);
+                    // $scope.outputStatus.splice(index, 1);
                 }
             }
         }
