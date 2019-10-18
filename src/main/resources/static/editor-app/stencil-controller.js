@@ -218,7 +218,7 @@ angular.module('activitiModeler')
                     $scope.addToInputStatus(selectedShape);
                     var selections = [];
                     for (var i = 0; i < $scope.inputStatus.length; i++) {
-                        if ($scope.inputStatus.name === '咖啡机')
+                        if ($scope.inputStatus[i].name === '咖啡机')
                             continue;
                         selections[selections.length] = $scope.getShapeById($scope.inputStatus[i].id);
                     }
