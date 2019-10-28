@@ -1,8 +1,6 @@
 package com.activiti6.editor.controller;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
+import java.io.*;
 
 import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.engine.ActivitiException;
@@ -54,34 +52,41 @@ public class ModelSaveRestResource implements ModelDataJsonConstants {
           , String json_xml, String svg_xml) {
     try {
       
-      Model model = repositoryService.getModel(modelId);
-      
-      ObjectNode modelJson = (ObjectNode) objectMapper.readTree(model.getMetaInfo());
-      
-      modelJson.put(MODEL_NAME, name);
-      modelJson.put(MODEL_DESCRIPTION, description);
-      model.setMetaInfo(modelJson.toString());
-      model.setName(name);
-      repositoryService.saveModel(model);
-      
-      repositoryService.addModelEditorSource(model.getId(), json_xml.getBytes("utf-8"));
-      
-      InputStream svgStream = new ByteArrayInputStream(svg_xml.getBytes("utf-8"));
-      TranscoderInput input = new TranscoderInput(svgStream);
-      
-      PNGTranscoder transcoder = new PNGTranscoder();
-      // Setup output
-      ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-      TranscoderOutput output = new TranscoderOutput(outStream);
-      
-      // Do the transformation
-      transcoder.transcode(input, output);
-      final byte[] result = outStream.toByteArray();
-      repositoryService.addModelEditorSourceExtra(model.getId(), result);
-      outStream.close();
+        Model model = repositoryService.getModel(modelId);
+
+        ObjectNode modelJson = (ObjectNode) objectMapper.readTree(model.getMetaInfo());
+
+        modelJson.put(MODEL_NAME, name);
+        modelJson.put(MODEL_DESCRIPTION, description);
+        model.setMetaInfo(modelJson.toString());
+        model.setName(name);
+        repositoryService.saveModel(model);
+
+        repositoryService.addModelEditorSource(model.getId(), json_xml.getBytes("utf-8"));
+
+        // 输出到文件,文件名：model.getId()
+        FileOutputStream out = new FileOutputStream(new File("F:\\cpss-designer\\model\\"+model.getId()+".json"));
+        out.write(json_xml.getBytes("utf-8"));
+        out.flush();
+        out.close();
+
+
+        InputStream svgStream = new ByteArrayInputStream(svg_xml.getBytes("utf-8"));
+        TranscoderInput input = new TranscoderInput(svgStream);
+
+        PNGTranscoder transcoder = new PNGTranscoder();
+        // Setup output
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        TranscoderOutput output = new TranscoderOutput(outStream);
+
+        // Do the transformation
+        transcoder.transcode(input, output);
+        final byte[] result = outStream.toByteArray();
+        repositoryService.addModelEditorSourceExtra(model.getId(), result);
+        outStream.close();
     } catch (Exception e) {
-      LOGGER.error("Error saving model", e);
-      throw new ActivitiException("Error saving model", e);
+        LOGGER.error("Error saving model", e);
+        throw new ActivitiException("Error saving model", e);
     }
   }
   

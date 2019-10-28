@@ -74,14 +74,14 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 			$scope.updatePropertyInModel($scope.property);
 			$scope.close();
 
-			$scope.createEvent($scope);
+			$scope.createEvent($scope, $scope.entity.listeners[i].value);
 			$scope.property.value.id = ActivityElement.id
 
 		}
 
     };
 
-	$scope.createEvent = function ($scope) {
+	$scope.createEvent = function ($scope, eventName) {
 		var selectItem = ActivityElement;//$scope.editor.getSelection()[0];
 		var itemId = "actionActivity";
 		var action = undefined;
@@ -99,7 +99,7 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 		if (!action) return;
 
 		var nodes = [$scope.editor.getCanvas()][0].children;
-		var positionOffset = {type: 'offsetY', x: 0, y: 0};;
+		var positionOffset = {type: 'offsetY', x: 0, y: 0};
 		for (var i = 0; i < nodes.length; i++) {
 			if (nodes[i].properties["oryx-activityelement"]) {
 				if (positionOffset.y < nodes[i].bounds.center().y) {
@@ -129,7 +129,8 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 				property.value = $scope.editor.getSelection()[0].id;
 				$scope.updatePropertyInModel(property);
 			} else if (property.title === "名称") {
-				property.value = selectItem.properties["oryx-resources"].events;
+				//property.value = selectItem.properties["oryx-resources"].events;
+				property.value = eventName;
 				$scope.updatePropertyInModel(property);
 
 			} else if (property.title === "活动元素") {

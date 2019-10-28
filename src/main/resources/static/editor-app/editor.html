@@ -1,32 +1,34 @@
 <div ng-controller="StencilController">
     <div class="subheader editor-toolbar" id="editor-header">
-<!--        <div class="btn-group">-->
-<!--            <div class="btn-toolbar pull-left" ng-controller="ToolbarController" ng-cloak>-->
-<!--                <button id="{{item.id}}"-->
-<!--                        title="{{item.title | translate}}"-->
-<!--                        ng-repeat="item in items"-->
-<!--                        ng-switch on="item.type"-->
-<!--                        class="btn btn-inverse" ng-class="{'separator': item.type == 'separator'}"-->
-<!--                        ng-disabled="item.type == 'separator' || item.enabled == false"-->
-<!--                        ng-click="toolbarButtonClicked($index)">-->
-<!--                    <i ng-switch-when="button" ng-class="item.cssClass" class="toolbar-button" data-toggle="tooltip"-->
-<!--                       title="{{item.title | translate}}"></i>-->
-<!--                    <div ng-switch-when="separator" ng-class="item.cssClass"></div>-->
-<!--                </button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="btn-group pull-right" ng-show="!secondaryItems.length">-->
-<!--            <div class="btn-toolbar pull-right" ng-controller="ToolbarController">-->
-<!--                <button title="{{item.title | translate}}" ng-repeat="item in secondaryItems" ng-switch on="item.type"-->
-<!--                        class="btn btn-inverse" ng-class="{'separator': item.type == 'separator'}"-->
-<!--                        ng-disabled="item.type == 'separator'" ng-click="toolbarSecondaryButtonClicked($index)"-->
-<!--                        id="{{item.id}}">-->
-<!--                    <i ng-switch-when="button" ng-class="item.cssClass" class="toolbar-button" data-toggle="tooltip"-->
-<!--                       title="{{item.title | translate}}"></i>-->
-<!--                    <div ng-switch-when="separator" ng-class="item.cssClass"></div>-->
-<!--                </button>-->
-<!--            </div>-->
-<!--        </div>-->
+
+        <div class="btn-group">
+            <div class="btn-toolbar pull-left" ng-controller="ToolbarController" ng-cloak>
+                <button id="{{item.id}}"
+                        title="{{item.title | translate}}"
+                        ng-repeat="item in items"
+                        ng-switch on="item.type"
+                        class="btn btn-inverse" ng-class="{'separator': item.type == 'separator'}"
+                        ng-disabled="item.type == 'separator' || item.enabled == false"
+                        ng-click="toolbarButtonClicked($index)">
+                    <i ng-switch-when="button" ng-class="item.cssClass" class="toolbar-button" data-toggle="tooltip"
+                       title="{{item.title | translate}}"></i>
+                    <div ng-switch-when="separator" ng-class="item.cssClass"></div>
+                </button>
+            </div>
+        </div>
+        <div class="btn-group pull-right" ng-show="!secondaryItems.length">
+            <div class="btn-toolbar pull-right" ng-controller="ToolbarController">
+                <button title="{{item.title | translate}}" ng-repeat="item in secondaryItems" ng-switch on="item.type"
+                        class="btn btn-inverse" ng-class="{'separator': item.type == 'separator'}"
+                        ng-disabled="item.type == 'separator'" ng-click="toolbarSecondaryButtonClicked($index)"
+                        id="{{item.id}}">
+                    <i ng-switch-when="button" ng-class="item.cssClass" class="toolbar-button" data-toggle="tooltip"
+                       title="{{item.title | translate}}"></i>
+                    <div ng-switch-when="separator" ng-class="item.cssClass"></div>
+                </button>
+            </div>
+        </div>
+
     </div>
     <div class="full">
         <div class="row row-no-gutter">
