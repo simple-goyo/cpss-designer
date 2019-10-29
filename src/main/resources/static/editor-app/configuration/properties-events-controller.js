@@ -34,6 +34,8 @@ var KisBPMEventsCtrl = [ '$scope', '$modal', function($scope, $modal) {
 
 var EventsPopupCtrl = [ '$scope', function($scope) {
 	var ActivityElement;
+	var shape = $scope.selectedShape;
+
 	// Put json representing entity on scope
 	if ($scope.property !== undefined && $scope.property.value !== undefined && $scope.property.value !== null
 		&& $scope.property.value.length > 0)
@@ -63,27 +65,85 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
     };
 
     $scope.save = function() {
-		if (!$scope.property.value) {
-			$scope.property.value = {"id": "", "events": ""};
+		if ($scope.property.value === undefined || !$scope.property.value) {
+			$scope.property.value = [{"id": "", "event": ""}];
 		}
 
 		ActivityElement = $scope.editor.getSelection()[0];
-		for(var i=0 ; i<$scope.entity.listeners.length ; i++){
-			$scope.property.value.events = $scope.entity.listeners[i].value;
 
-			$scope.updatePropertyInModel($scope.property);
-			$scope.close();
-
-			$scope.createEvent($scope, $scope.entity.listeners[i].value);
-			$scope.property.value.id = ActivityElement.id
-
+		var events = [];
+		var ids = [];
+		if ($scope.property.value) {
+			for (var i = 0; i < $scope.property.value.length; i++) {
+				events[events.length] = {value: $scope.property.value[i].event};
+				ids[ids.length] = {id: $scope.property.value[i].id};
+			}
+		} else {
+			$scope.property.value = [];
 		}
 
+		// if (!$scope.entity.listeners) {
+		// 	$scope.entity.listeners = [{value: $scope.selectedFunc}];
+		// } else {
+		// 	$scope.entity.listeners[$scope.entity.listeners.length] = {value: $scope.selectedFunc};
+		// }
+
+		var indexToRemove = [];
+		var hasRemoveNum = 0;
+		for (var i = 0; i < events.length; i++) {
+			var index = -1;
+			for (var j = 0; j < $scope.entity.listeners.length; j++) {
+				if (events[i].value === $scope.entity.listeners[j].value) {
+					index = j;
+				}
+			}
+			if (index < 0) {
+				indexToRemove[indexToRemove.length] = i;
+			}
+		}
+		for ( i = 0; i < indexToRemove.length; i++) {
+			index = indexToRemove[i];
+			var shapeToRemove = $scope.getShapeById(ids[index].id);
+			$scope.editor.deleteShape(shapeToRemove);
+			events.splice(index - hasRemoveNum, 1);
+			$scope.property.value.splice(index - hasRemoveNum, 1);
+			hasRemoveNum++;
+		}
+
+
+		for( i=0 ; i<$scope.entity.listeners.length ; i++){
+			index = -1;
+			for (var j = 0; j < events.length; j++) {
+				if (events[j].value === $scope.entity.listeners[i].value) {
+					index = j;
+				}
+			}
+
+			if (index < 0) {
+				$scope.createEvent($scope, $scope.entity.listeners[i].value);
+				$scope.property.value[$scope.property.value.length] = {
+					id: $scope.editor.getSelection()[0].id, event: $scope.entity.listeners[i].value
+				};
+				shape.setProperty("oryx-events", $scope.property.value, true);
+				$scope.editor.getCanvas().update();
+				$scope.editor.updateSelection();
+			}
+
+			// $scope.property.value[i].events = $scope.entity.listeners[i].value;
+			//
+			// $scope.updatePropertyInModel($scope.property);
+			// $scope.close();
+			//
+			// $scope.createEvent($scope, $scope.entity.listeners[i].value);
+			// $scope.property.value[i].id = ActivityElement.id
+
+		}
+		$scope.close();
     };
 
 	$scope.createEvent = function ($scope, eventName) {
 		var selectItem = ActivityElement;//$scope.editor.getSelection()[0];
-		var itemId = "actionActivity";
+		var itemId = "DefaultEvent"; // DefaultEvent 图标用来表示事件
 		var action = undefined;
 		var stencilSets = $scope.editor.getStencilSets().values();
 		for (var i = 0; i < stencilSets.length; i++) {
@@ -129,7 +189,7 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 				property.value = $scope.editor.getSelection()[0].id;
 				$scope.updatePropertyInModel(property);
 			} else if (property.title === "名称") {
-				//property.value = selectItem.properties["oryx-resources"].events;
+				//property.value = selectItem.properties["oryx-events"].events;
 				property.value = eventName;
 				$scope.updatePropertyInModel(property);
 
@@ -212,12 +272,12 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 }];
 
 var EventsDisplayedCtrl = ['$scope', function ($scope) {
-	if ($scope.property.value.id) {
-		var shape = $scope.getShapeById($scope.property.value.id);
+	if ($scope.property.value[0].id) {
+		var shape = $scope.getShapeById($scope.property.value[0].id);
 		if (!shape) {
 			$scope.property.value = {};
 		} else {
-			//$scope.property.value.events = shape.properties["oryx-name"];
+			//$scope.property.value[i].events = shape.properties["oryx-name"];
 		}
 		$scope.updatePropertyInModel($scope.property);
 	}

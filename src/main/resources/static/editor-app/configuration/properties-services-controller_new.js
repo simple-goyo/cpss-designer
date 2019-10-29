@@ -20,6 +20,8 @@
 /*
  * entity
  */
+var selectedShapeFunctionType = undefined;
+
 var KisBpmServicesCtrl = ['$scope', '$modal', function ($scope, $modal) {
 
     // Config for the modal window
@@ -73,12 +75,13 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
         {name: "信息对象", type: "CyberAction"}
     ];
 
-    var selectedShapeFunctionType = undefined;
+    selectedShapeFunctionType = undefined;
     for (var i = 0; i < $scope.resourceToFunctionType.length; i++) {
         if ($scope.resourceToFunctionType[i].name === shape.properties["oryx-type"]) {
             selectedShapeFunctionType = $scope.resourceToFunctionType[i].type;
         }
     }
+
 
     $scope.functions = [];
 
@@ -123,7 +126,7 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
     $scope.save = function () {
         handleEntityInput($scope);
         if ($scope.property.value === undefined || !$scope.property.value) {
-            $scope.property.value = {"id": "", "function": ""};
+            $scope.property.value = [{"id": "", "function": ""}];
         }
 
         ActivityElement = $scope.editor.getSelection()[0];
@@ -183,7 +186,7 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
             if (index < 0) {
                 // var shapeToRemove = $scope.getShapeById($scope.property.value.id);
                 // $scope.editor.deleteShape(shapeToRemove);
-                $scope.createAction($scope, $scope.entity.Services[i].value);
+                $scope.createAction($scope, $scope.entity.Services[i].value, selectedShapeFunctionType);
                 //$scope.createAction($scope,$scope.selectedFunc);
                 $scope.property.value[$scope.property.value.length] = {
                     id: $scope.editor.getSelection()[0].id, function: $scope.entity.Services[i].value
@@ -234,17 +237,19 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
         $scope.editor.executeCommands([command]);
     };
 
-    $scope.createAction = function ($scope, actionName) {
+    $scope.createAction = function ($scope, actionName, FunctionType) {
         var selectItem = ActivityElement;//$scope.editor.getSelection()[0];
         //var itemId = "actionActivity";
-        var itemId = "SocialAction";
-        if ("点咖啡服务" === actionName) {
-            itemId = "CyberAction";
-        } else if ("制作咖啡" === actionName) {
-            itemId = "PhysicalAction";
-        } else {
-            itemId = "SocialAction";
-        }
+        // 机的图标 对应 CyberAction，itemId==类型
+        // var itemId = "SocialAction";
+        // if ("点咖啡服务" === actionName) {
+        //     itemId = "CyberAction";
+        // } else if ("制作咖啡" === actionName) {
+        //     itemId = "PhysicalAction";
+        // } else {
+        //     itemId = "SocialAction";
+        // }
+        var itemId = FunctionType;
         var action = undefined;
         var stencilSets = $scope.editor.getStencilSets().values();
         for (var i = 0; i < stencilSets.length; i++) {
