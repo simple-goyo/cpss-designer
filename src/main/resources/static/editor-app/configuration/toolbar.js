@@ -161,7 +161,14 @@ KISBPM.TOOLBAR_CONFIG = {
     	    "cssClass" : "editor-icon editor-icon-bendpoint-remove",
     	    "action" : "KISBPM.TOOLBAR.ACTIONS.removeBendPoint",
     	    "id" : "remove-bendpoint-button"
-    	}
+    	},
+        {
+            "type" : "button",
+            "title" : "TOOLBAR.ACTION.NEXTNODE.ADD",
+            "cssClass" : "editor-icon editor-icon-add-nextnode",
+            "action" : "KISBPM.TOOLBAR.ACTIONS.addNextNode",
+            "id" : "add- nextnode-button"
+        }
     ],
     
     "secondaryItems" : [

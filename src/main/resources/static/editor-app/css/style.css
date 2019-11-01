@@ -469,6 +469,9 @@ li.x-menu-list-item.x-menu-item-active a {
 .editor-icon-bendpoint-remove:before {
 	content: 'o';
 }
+.editor-icon editor-icon-add-nextnode:before {
+	content: 'n';
+}
 .editor-icon-align-horizontal:before {
 	content: 'p';
 }
