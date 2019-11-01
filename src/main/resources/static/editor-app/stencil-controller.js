@@ -265,6 +265,11 @@ angular.module('activitiModeler')
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEUP, function (event) {
                 // 选都没选中，直接返回
                 if ($scope.selectedItem.title === "") {
+                    if(lastChosenId !== ""){
+                        // 取消高亮
+                        jQuery('#' + lastChosenId + 'bg_frame').attr({"fill":"#f9f9f9"});
+                        lastChosenId = "";
+                    }
                     return;
                 }
                 if ($scope.inputStatus) {
