@@ -21,6 +21,9 @@
 angular.module('activitiModeler')
     .controller('StencilController', ['$rootScope', '$scope', '$http', '$modal', '$timeout', '$compile', function ($rootScope, $scope, $http, $modal, $timeout, $compile) {
 
+        // 上次选中的Action
+        var lastChosenId = "";
+
         // Property window toggle state
         $scope.propertyWindowState = {'collapsed': true};
 
@@ -260,9 +263,10 @@ angular.module('activitiModeler')
             };
 
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEUP, function (event) {
+                // 选都没选中，直接返回
                 if ($scope.selectedItem.title === "") {
                     return;
-                }// 选都没选，直接返回
+                }
                 if ($scope.inputStatus) {
                     $scope.outputStatus = [];
                     var userShape = undefined;
@@ -282,43 +286,68 @@ angular.module('activitiModeler')
                             position: shape.bounds.center()
                         }
                     }
-                    if (!userShape)
-                        return;
-                    var position = userShape.bounds.center();
+                    //  && (shape.properties["oryx-activityelement"]===undefined)
+                    if (userShape){
+                        var position = userShape.bounds.center();
 
-                    if (userOriginPosition.x === position.x && userOriginPosition.y === position.y)
-                        return;
-
-                    var shapes = [$scope.editor.getCanvas()][0].children;
-                    $scope.neibor = [];
-                    var width = Math.abs(userShape.bounds.b.x - userShape.bounds.a.x);
-                    var height = Math.abs(userShape.bounds.b.y - userShape.bounds.a.y);
-                    for (var i = 0; i < shapes.length; i++) {
-                        var shape = shapes[i];
-                        var inOutputStatus = false;
-                        for (var j = 0; j < $scope.outputStatus.length; j++) {
-                            if (shape.id === $scope.outputStatus[j].id) {
-                                inOutputStatus = true;
-                                break;
+                        if (userOriginPosition.x !== position.x || userOriginPosition.y !== position.y){
+                            var shapes = [$scope.editor.getCanvas()][0].children;
+                            $scope.neibor = [];
+                            var width = Math.abs(userShape.bounds.b.x - userShape.bounds.a.x);
+                            var height = Math.abs(userShape.bounds.b.y - userShape.bounds.a.y);
+                            for (var i = 0; i < shapes.length; i++) {
+                                var shape = shapes[i];
+                                var inOutputStatus = false;
+                                for (var j = 0; j < $scope.outputStatus.length; j++) {
+                                    if (shape.id === $scope.outputStatus[j].id) {
+                                        inOutputStatus = true;
+                                        break;
+                                    }
+                                }
+                                var shapePosition = shape.bounds.center();
+                                if (!inOutputStatus && Math.abs(position.y - shapePosition.y) <= 2 * height && Math.abs(position.x - shapePosition.x) <= 2 * width)
+                                    $scope.neibor[$scope.neibor.length] = {
+                                        "id": shape.id,
+                                        "type": shape.properties["oryx-type"],
+                                        "name": shape.properties["oryx-name"],
+                                        "position": shapePosition
+                                    };
+                            }
+                            if ($scope.neibor && $scope.neibor.length !== 0){
+                                var opts = {
+                                    template: "editor-app/configuration/properties/thing-get-or-leave-popup.html",
+                                    scope: $scope
+                                };
+                                $modal(opts);
                             }
                         }
-                        var shapePosition = shape.bounds.center();
-                        if (!inOutputStatus && Math.abs(position.y - shapePosition.y) <= 2 * height && Math.abs(position.x - shapePosition.x) <= 2 * width)
-                            $scope.neibor[$scope.neibor.length] = {
-                                "id": shape.id,
-                                "type": shape.properties["oryx-type"],
-                                "name": shape.properties["oryx-name"],
-                                "position": shapePosition
-                            };
+
+                    } else {
+                        $scope.outputStatus = [];
+                        // 两个阶段的要求
+                        // 1.选中的Action，高亮(被选中元素高亮，未选中元素取消高亮)
+                        // 2.选中的Action，显示当前画布
+                        // 1
+                        if($scope.selectedItem){
+                            var itemId = id;
+                            var lastId = lastChosenId;
+                            // 取消上次高亮
+                            if(lastId !== ""){
+                                jQuery('#' + lastId + 'bg_frame').attr({"fill":"#f9f9f9"});
+                            }
+
+                            // 高亮
+                            jQuery('#' + itemId + 'bg_frame').attr({"fill":"#04FF8E8F"});
+                            console.log(itemId);
+
+                            lastChosenId = id;
+                        }
                     }
-                    if (!$scope.neibor || $scope.neibor.length === 0)
-                        return;
-                    var opts = {
-                        template: "editor-app/configuration/properties/thing-get-or-leave-popup.html",
-                        scope: $scope
-                    };
-                    $modal(opts);
-                } else $scope.outputStatus = [];
+                }
+
+
+
+
             });
 
 
