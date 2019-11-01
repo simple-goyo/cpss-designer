@@ -30,5 +30,10 @@ KISBPM.URL = {
 
     putModel: function(modelId) {
         return ACTIVITI.CONFIG.contextRoot + '/model/' + modelId + '/save';
+    },
+
+    getResources: function(){
+        return ACTIVITI.CONFIG.contextRoot + '/resources?version=' + Date.now();
     }
+
 };

@@ -51,7 +51,7 @@ var KisBpmServicesPopupCtrl = ['$scope', function ($scope) {
     };
 }];
 
-var ServicesPopupCtrl = ['$scope', function ($scope) {
+var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
     var ActivityElement;
 
     var shape = $scope.selectedShape;
@@ -74,6 +74,16 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
         {name: "嵌入式应用", type: "CyberAction"},
         {name: "信息对象", type: "CyberAction"}
     ];
+
+    $http({method: 'GET', url: KISBPM.URL.getResources()}).success(function (data, status, headers, config) {
+        console.log(JSON.stringify(data));
+        // 初始化$scope.resourceToFunctionType和$scope.constfunctions
+        // $scope.resourceToFunctionType表示资源的人机物类别
+        // $scope.constfunctions 表示动作对应的人机物类别
+
+    }).error(function (data, status, headers, config) {
+        console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
+    });
 
     selectedShapeFunctionType = undefined;
     for (var i = 0; i < $scope.resourceToFunctionType.length; i++) {

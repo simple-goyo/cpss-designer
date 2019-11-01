@@ -218,6 +218,8 @@ KISBPM.TOOLBAR = {
             }
         },
 
+
+
         /**
          * Helper method: fetches the Oryx Edit plugin from the provided scope,
          * if not on the scope, it is created and put on the scope for further use.
@@ -308,6 +310,8 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
     $scope.saveDialog = saveDialog;
     
     var json = $scope.editor.getJSON();
+    json["properties"]["name"] = modelMetaData.name;
+    json["properties"]["documentation"] = description;
     json = JSON.stringify(json);
 
     var params = {
@@ -376,6 +380,23 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
         };
 
         // Update
+        $http({
+            method: 'POST',
+            ignoreErrors: true,
+            headers: {'Accept': 'application/json',
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            data:json,
+            url:"http://192.168.1.114:5001/save_app_class"
+
+        })
+        .success(function(data){
+            console.log("模型保存成功!")
+        })
+        .error(function(data){
+            console.log("模型保存失败!")
+        });
+
         $http({    method: 'PUT',
             data: params,
             ignoreErrors: true,

@@ -49,7 +49,7 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 		$scope.property = {};
 	}
 
-    if ($scope.entity.listeners == undefined || $scope.entity.listeners.length == 0)
+    if ($scope.entity.listeners === undefined || $scope.entity.listeners.length === 0)
     {
     	$scope.entity.listeners = [{value: ''}];
     }
@@ -272,7 +272,7 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 }];
 
 var EventsDisplayedCtrl = ['$scope', function ($scope) {
-	if ($scope.property.value[0].id) {
+	if ($scope.property.value) {
 		var shape = $scope.getShapeById($scope.property.value[0].id);
 		if (!shape) {
 			$scope.property.value = {};

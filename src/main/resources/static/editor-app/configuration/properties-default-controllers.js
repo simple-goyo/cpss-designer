@@ -114,6 +114,8 @@ var KisBpmTextPropertyPopupCtrl = ['$scope', function($scope) {
     };
 }];
 var propertyInitPopupController= [ '$scope', '$modal', function($scope, $modal) {
+    // 设置是否弹窗
+    console.log($scope.nameProperty);
 
     var opts = {
         template:  'editor-app/configuration/properties/propertyInitPopup.html?version=' + Date.now(),

@@ -65,7 +65,11 @@ public class ModelSaveRestResource implements ModelDataJsonConstants {
         repositoryService.addModelEditorSource(model.getId(), json_xml.getBytes("utf-8"));
 
         // 输出到文件,文件名：model.getId()
-        FileOutputStream out = new FileOutputStream(new File("F:\\cpss-designer\\model\\"+model.getId()+".json"));
+        File directory = new File("");
+        String courseFile = directory.getCanonicalPath(); // 项目目录
+        // System.out.println(courseFile);
+
+        FileOutputStream out = new FileOutputStream(new File(courseFile+"\\model\\"+model.getId()+".json"));
         out.write(json_xml.getBytes("utf-8"));
         out.flush();
         out.close();
