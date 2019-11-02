@@ -209,13 +209,24 @@ KISBPM.TOOLBAR = {
             dockerPlugin.setEnableRemove(enableRemove);
             if (enableRemove)
             {
-            	dockerPlugin.setEnableAdd(false);
-            	document.body.style.cursor = 'pointer';
+                dockerPlugin.setEnableAdd(false);
+                document.body.style.cursor = 'pointer';
             }
             else
             {
-            	document.body.style.cursor = 'default';
+                document.body.style.cursor = 'default';
             }
+        },
+
+        addNextNode: function (services) {
+
+            var modal = services.$modal({
+                backdrop: true,
+                keyboard: true,
+                template: 'editor-app/popups/save-model.html?version=' + Date.now(),
+                scope: services.$scope
+            });
+
         },
 
 
