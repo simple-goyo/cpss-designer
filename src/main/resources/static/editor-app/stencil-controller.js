@@ -21,8 +21,9 @@
 angular.module('activitiModeler')
     .controller('StencilController', ['$rootScope', '$scope', '$http', '$modal', '$timeout', '$compile', function ($rootScope, $scope, $http, $modal, $timeout, $compile) {
 
-        // 上次选中的Action
-        var lastChosenId = "";
+        // 上次高亮的Action的ID和项
+        var lastHighlightedId = "";
+        var HilghlightedItem;
 
         // Property window toggle state
         $scope.propertyWindowState = {'collapsed': true};
@@ -262,13 +263,39 @@ angular.module('activitiModeler')
                 }
             };
 
+            // $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_DBLCLICK, function (event) {
+            //     // 双击高亮
+            //     // 两个阶段的要求
+            //     // 1.选中的Action，高亮(被选中元素高亮，未选中元素取消高亮)
+            //     // 2.选中的Action，显示当前画布
+            //     // 阶段1
+            //     if($scope.selectedItem){
+            //         var itemId = $scope.selectedItem.properties[0].value;
+            //         var lastId = lastHighlightedId;
+            //         // 取消上次高亮
+            //         if(lastId !== ""){
+            //             jQuery('#' + lastId + 'bg_frame').attr({"fill":"#f9f9f9"});
+            //         }
+            //
+            //         // 只有Action才会被高亮
+            //         if(($scope.selectedItem.properties["oryx-activityelement"] !== undefined)){
+            //             // 高亮
+            //             jQuery('#' + itemId + 'bg_frame').attr({"fill":"#04FF8E8F"});
+            //             console.log(itemId);
+            //
+            //             lastHighlightedId = itemId;
+            //             HilghlightedItem = $scope.selectedItem;
+            //         }
+            //     }
+            // });
+            
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEUP, function (event) {
                 // 选都没选中，直接返回
-                if ($scope.selectedItem.title === "") {
-                    if(lastChosenId !== ""){
+                if ($scope.selectedItem.auditData !== undefined) {
+                    if(lastHighlightedId !== ""){
                         // 取消高亮
-                        jQuery('#' + lastChosenId + 'bg_frame').attr({"fill":"#f9f9f9"});
-                        lastChosenId = "";
+                        jQuery('#' + lastHighlightedId + 'bg_frame').attr({"fill":"#f9f9f9"});
+                        lastHighlightedId = "";
                     }
                     return;
                 }
@@ -333,9 +360,14 @@ angular.module('activitiModeler')
                         // 1.选中的Action，高亮(被选中元素高亮，未选中元素取消高亮)
                         // 2.选中的Action，显示当前画布
                         // 1
-                        if($scope.selectedItem){
+                        shape = $scope.selectedItem;
+                        for(i = shape.properties.length; i>0; i--){
+                            if(shape.properties[i-1].key === "oryx-activityelement") break;
+                        }
+
+                        if(shape && i>0){
                             var itemId = id;
-                            var lastId = lastChosenId;
+                            var lastId = lastHighlightedId;
                             // 取消上次高亮
                             if(lastId !== ""){
                                 jQuery('#' + lastId + 'bg_frame').attr({"fill":"#f9f9f9"});
@@ -345,13 +377,11 @@ angular.module('activitiModeler')
                             jQuery('#' + itemId + 'bg_frame').attr({"fill":"#04FF8E8F"});
                             console.log(itemId);
 
-                            lastChosenId = id;
+                            lastHighlightedId = id;
+                            HilghlightedItem = shape;
                         }
                     }
                 }
-
-
-
 
             });
 
@@ -493,7 +523,6 @@ angular.module('activitiModeler')
             });
 
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_SELECTION_CHANGED, function (event) {
-
                 KISBPM.eventBus.dispatch(KISBPM.eventBus.EVENT_TYPE_HIDE_SHAPE_BUTTONS);
                 var shapes = event.elements;
 
@@ -556,6 +585,7 @@ angular.module('activitiModeler')
                         x -= 24;
                     }
 
+                    // 如果没有Shapes就不显示切换Shapes按钮
                     if (morphShapes && morphShapes.length > 0) {
                         // In case the element is not wide enough, start the 2 bottom-buttons more to the left
                         // to prevent overflow in the right-menu
@@ -575,7 +605,11 @@ angular.module('activitiModeler')
                         var quickButtonX = shapeXY.x + bounds.width() + 5;
                         var quickButtonY = shapeXY.y;
                         jQuery('.Oryx_button').each(function (i, obj) {
-                            if (obj.id !== 'morph-button' && obj.id != 'delete-button') {
+                            // 如果是Action则过滤掉服务、事件等。即显示delete-button，morph-button，play-button和SequenceFlow
+                            // 如果是资源则过滤掉箭头和morph-button。即显示delete-button，service-button，event-button
+                            // to do
+                            console.log(obj.id);
+                            if (obj.id !== 'morph-button' && obj.id !== 'delete-button') {
                                 quickButtonCounter++;
                                 if (quickButtonCounter > 3) {
                                     quickButtonX = shapeXY.x + bounds.width() + 5;
@@ -754,9 +788,8 @@ angular.module('activitiModeler')
             };
             $scope.morphShape = function () {
                 $scope.safeApply(function () {
-
                     var shapes = $rootScope.editor.getSelection();
-                    if (shapes && shapes.length == 1) {
+                    if (shapes && shapes.length === 1) {
                         $rootScope.currentSelectedShape = shapes.first();
                         var stencilItem = $scope.getStencilItemById($rootScope.currentSelectedShape.getStencil().idWithoutNs());
                         var morphShapes = [];
