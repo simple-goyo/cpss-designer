@@ -220,12 +220,19 @@ KISBPM.TOOLBAR = {
 
         addNextNode: function (services) {
 
+/*            var opts = {
+                template: 'editor-app/configuration/properties/services-popup_new.html?version=' + Date.now(),
+                scope: services.$scope
+            };
+            $modal(opts);*/
             var modal = services.$modal({
                 backdrop: true,
                 keyboard: true,
-                template: 'editor-app/popups/save-model.html?version=' + Date.now(),
+                template: 'editor-app/configuration/properties/services-popup_new.html?version=' + Date.now(),
                 scope: services.$scope
             });
+
+
 
         },
 
