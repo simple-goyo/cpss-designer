@@ -167,7 +167,7 @@ KISBPM.TOOLBAR_CONFIG = {
             "title" : "TOOLBAR.ACTION.NEXTNODE.ADD",
             "cssClass" : "editor-icon editor-icon-add-nextnode",
             "action" : "KISBPM.TOOLBAR.ACTIONS.addNextNode",
-            "id" : "add- nextnode-button"
+            "id" : "add-nextnode-button"
         }
     ],
     

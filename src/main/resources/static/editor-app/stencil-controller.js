@@ -837,6 +837,10 @@ angular.module('activitiModeler')
                 return undefined;
             };
 
+            $scope.getHighlightedShape = function(){
+                return $scope.getShapeById(lastHighlightedId);
+            };
+
             $scope.deleteShape = function () {
                 var shapes = [$scope.editor.getCanvas()][0].children;
                 var shapeToRemove = undefined;

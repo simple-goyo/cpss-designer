@@ -225,14 +225,17 @@ KISBPM.TOOLBAR = {
                 scope: services.$scope
             };
             $modal(opts);*/
-            var modal = services.$modal({
-                backdrop: true,
-                keyboard: true,
-                template: 'editor-app/configuration/properties/services-popup_new.html?version=' + Date.now(),
-                scope: services.$scope
-            });
+            // var modal = services.$modal({
+            //     backdrop: true,
+            //     keyboard: true,
+            //     template: 'editor-app/configuration/properties/services-popup_new.html?version=' + Date.now(),
+            //     scope: services.$scope
+            // });
 
-
+            // to do
+            // 如果画布上已经有未定义Action，则不添加新的Action
+            // if(...) return;
+            _createAction(services.$rootScope, services.$scope);
 
         },
 
@@ -308,6 +311,61 @@ KISBPM.TOOLBAR = {
             }
             return $scope.oryxDockerPlugin;
         }
+    }
+};
+
+var _createAction = function($rootScope, $scope){
+    var itemId = "UndefinedAction";
+
+    var shapes = $rootScope.editor.getSelection();
+    if (shapes && shapes.length === 1) {
+        $rootScope.currentSelectedShape = shapes.first();
+
+        var containedStencil = undefined;
+        var stencilSets = $scope.editor.getStencilSets().values();
+        for (var i = 0; i < stencilSets.length; i++) {
+            var stencilSet = stencilSets[i];
+            var nodes = stencilSet.nodes();
+            for (var j = 0; j < nodes.length; j++) {
+                if (nodes[j].idWithoutNs() === itemId) {
+                    containedStencil = nodes[j];
+                    break;
+                }
+            }
+        }
+
+        if (!containedStencil) return;
+
+        var positionOffset = {type: 'offsetY', x: 0, y: 0};
+        var node = $rootScope.currentSelectedShape;
+        if (node.properties["oryx-activityelement"]||node.properties["oryx-events"] !== undefined) {
+            if (positionOffset.y < node.bounds.center().y) {
+                positionOffset.y = node.bounds.center().y;
+            }
+        }
+
+        var option = {
+            type: $scope.currentSelectedShape.getStencil().namespace() + itemId,
+            namespace: $scope.currentSelectedShape.getStencil().namespace(),
+            positionController: positionOffset,
+            connectedShape:$rootScope.currentSelectedShape,
+            parent:$rootScope.currentSelectedShape.parent,
+            containedStencil:containedStencil
+        };
+        // option['connectedShape'] = $rootScope.currentSelectedShape;
+        // option['parent'] = $rootScope.currentSelectedShape.parent;
+        // option['containedStencil'] = containedStencil;
+
+        var args = {sourceShape: $rootScope.currentSelectedShape, targetStencil: containedStencil};
+        var targetStencil = $scope.editor.getRules().connectMorph(args);
+        if (!targetStencil) {
+            return;
+        }// Check if there can be a target shape
+        option['connectingType'] = targetStencil.id();
+
+        var command = new KISBPM.CreateCommand(option, undefined, undefined, $rootScope.editor);
+
+        $scope.editor.executeCommands([command]);
     }
 };
 
