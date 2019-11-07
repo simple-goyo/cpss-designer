@@ -215,6 +215,10 @@ angular.module('activitiModeler')
                 console.log('Something went wrong when fetching stencil items:' + JSON.stringify(data));
             });
 
+            // 初始化完成,自动生成开始按钮
+            // console.log("StartNoneEvent");
+            _createAction($rootScope, $scope, "StartNoneEvent");
+
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEDOWN, function (event) {
                 var shapes = $scope.editor.getSelection();
                 if (shapes && shapes.length > 0) {
@@ -292,8 +296,9 @@ angular.module('activitiModeler')
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEUP, function (event) {
                 // 选都没选中，直接返回
                 if ($scope.selectedItem.auditData !== undefined) {
-                    if(lastHighlightedId !== ""){
+                    if(lastHighlightedId !== "" && event.clientX < 375 ){
                         // 取消高亮
+                        // 只有鼠标在中间的时候,才取消高亮
                         jQuery('#' + lastHighlightedId + 'bg_frame').attr({"fill":"#f9f9f9"});
                         lastHighlightedId = "";
                     }
@@ -839,6 +844,18 @@ angular.module('activitiModeler')
 
             $scope.getHighlightedShape = function(){
                 return $scope.getShapeById(lastHighlightedId);
+            };
+
+            $scope.getHighlightedShapeId = function(){
+                return lastHighlightedId;
+            };
+
+            $scope.setHighlightedShape = function(newId){
+                if(newId !== undefined && newId !== ""){
+                    lastHighlightedId = newId;
+                    HilghlightedItem = $scope.getShapeById(newId);
+                }
+
             };
 
             $scope.deleteShape = function () {

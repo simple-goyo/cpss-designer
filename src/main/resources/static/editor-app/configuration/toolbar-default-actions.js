@@ -235,7 +235,7 @@ KISBPM.TOOLBAR = {
             // to do
             // 如果画布上已经有未定义Action，则不添加新的Action
             // if(...) return;
-            _createAction(services.$rootScope, services.$scope);
+            _createAction(services.$rootScope, services.$scope, "UndefinedAction");
 
         },
 
@@ -314,7 +314,46 @@ KISBPM.TOOLBAR = {
     }
 };
 
-var _createAction = function($rootScope, $scope){
+
+var _createAction = function($rootScope, $scope, ItemId){
+  if(ItemId === "UndefinedAction"){
+      return __createNormalAction($rootScope, $scope);
+  }else if(ItemId === "StartNoneEvent"){
+      return __createStartNode($rootScope, $scope);
+  }
+};
+
+var __createStartNode = function($rootScope, $scope){
+    var itemId = "StartNoneEvent";
+    var containedStencil = undefined;
+    var stencilSets = $scope.editor.getStencilSets().values();
+    for (var i = 0; i < stencilSets.length; i++) {
+        var stencilSet = stencilSets[i];
+        var nodes = stencilSet.nodes();
+        for (var j = 0; j < nodes.length; j++) {
+            if (nodes[j].idWithoutNs() === itemId) {
+                containedStencil = nodes[j];
+                break;
+            }
+        }
+    }
+
+    if (!containedStencil) return;
+
+    var positionOffset = { x: 180, y: 30};
+
+    var option = {
+        type: "http://b3mn.org/stencilset/bpmn2.0#" + itemId,
+        namespace: "http://b3mn.org/stencilset/bpmn2.0#",
+        positionController: positionOffset,
+        containedStencil: containedStencil
+    };
+    var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
+    $scope.editor.executeCommands([command]);
+
+};
+
+var __createNormalAction = function($rootScope, $scope){
     var itemId = "UndefinedAction";
 
     var shapes = $rootScope.editor.getSelection();
@@ -364,8 +403,16 @@ var _createAction = function($rootScope, $scope){
         option['connectingType'] = targetStencil.id();
 
         var command = new KISBPM.CreateCommand(option, undefined, undefined, $rootScope.editor);
-
         $scope.editor.executeCommands([command]);
+
+        // 取消之前的高亮
+        var oldShapeId = $scope.getHighlightedShapeId();
+        jQuery('#' + oldShapeId + 'bg_frame').attr({"fill":"#f9f9f9"}); //高亮显示
+
+        // 高亮
+        var newShapeId = $scope.editor.getSelection()[0].id;
+        $scope.setHighlightedShape(newShapeId);
+        jQuery('#' + newShapeId + 'bg_frame').attr({"fill":"#04FF8E8F"}); //高亮显示
     }
 };
 

@@ -92,7 +92,6 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
         }
     }
 
-
     $scope.functions = [];
 
     if (selectedShapeFunctionType) {
@@ -113,7 +112,6 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
         for (var i = 0; i < $scope.property.value.length; i++) {
             $scope.entity.Services[$scope.entity.Services.length] = {value: $scope.property.value[i].function};
         }
-
     } else {
         $scope.entity = {};
         $scope.property = {};
@@ -339,8 +337,8 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
         var selectItem = $scope.editor.getSelection()[0];
         var stencil = undefined;
         var stencilSets = $scope.editor.getStencilSets().values();
-
         var stencilId = FunctionType;
+        var newShapeId = "";
 
         for (var i = 0; i < stencilSets.length; i++)
         {
@@ -367,6 +365,7 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
             var property = actionActivity.properties[i];
             if (property.title === "Id") {
                 property.value = $scope.editor.getSelection()[0].id;
+                newShapeId = property.value;
                 $scope.updatePropertyInModel(property);
             } else if (property.title === "名称") {
                 property.value = actionName;
@@ -388,6 +387,8 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
                 $scope.updatePropertyInModel(property);
             }
         }
+        $scope.setHighlightedShape(newShapeId);
+        jQuery('#' + newShapeId + 'bg_frame').attr({"fill":"#04FF8E8F"}); //高亮显示
 
         //$scope.close();
     };
