@@ -180,7 +180,7 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 
 		$scope.editor.executeCommands([command]);
 
-		console.log($scope.editor.getSelection()[0].bounds);
+		//console.log($scope.editor.getSelection()[0].bounds);
 
 		var actionActivity = $scope.selectedItem;
 		for (var i = 0; i < actionActivity.properties.length; i++) {

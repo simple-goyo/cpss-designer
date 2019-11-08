@@ -2002,6 +2002,7 @@ ORYX.CONFIG.EVENT_GLOSSARY_SHOW =			"glossary.show.info";
 ORYX.CONFIG.EVENT_GLOSSARY_NEW =			"glossary.show.new";
 ORYX.CONFIG.EVENT_DOCKERDRAG = 				"dragTheDocker";
 ORYX.CONFIG.EVENT_CANVAS_SCROLL = 			"canvas.scroll";
+ORYX.CONFIG.EVENT_CANVAS_SWITCH_SCENE = 	"canvas.switchscene";
 	
 ORYX.CONFIG.EVENT_SHOW_PROPERTYWINDOW =		"propertywindow.show";
 ORYX.CONFIG.EVENT_ABOUT_TO_SAVE = "file.aboutToSave";
@@ -12252,7 +12253,7 @@ ORYX.Editor = {
 		// get canvas.
 		var canvas = this.getCanvas();
 		// Try to get the focus
-		canvas.focus()
+		canvas.focus();
 	
 		// find the shape that is responsible for this element's id.
 		var element = event.currentTarget;
@@ -12294,8 +12295,8 @@ ORYX.Editor = {
 			&& !currentIsSelected) {
 				
 			var newSelection = this.selection.clone();
-			newSelection.push(elementController)
-			this.setSelection(newSelection)
+			newSelection.push(elementController);
+			this.setSelection(newSelection);
 
 			ORYX.Log.trace("Rule #4 applied for mouse down on %0", element.id);
 
@@ -12304,7 +12305,7 @@ ORYX.Editor = {
 			modifierKeyPressed) {
 
 			var newSelection = this.selection.clone();
-			this.setSelection(newSelection.without(elementController))
+			this.setSelection(newSelection.without(elementController));
 
 			ORYX.Log.trace("Rule #6 applied for mouse down on %0", elementController.id);
 
@@ -12400,7 +12401,7 @@ ORYX.Editor = {
                 //IE 10 and below
                 var zoom = Math.round((screen.deviceXDPI / screen.logicalXDPI) * 100);
                 if (zoom !== 100) {
-                    additionalIEZoom = zoom / 100
+                    additionalIEZoom = zoom / 100;
                 }
             }
         }
@@ -12429,7 +12430,7 @@ ORYX.Editor = {
                 //IE 10 and below
                 var zoom = Math.round((screen.deviceXDPI / screen.logicalXDPI) * 100);
                 if (zoom !== 100) {
-                    additionalIEZoom = zoom / 100
+                    additionalIEZoom = zoom / 100;
                 }
             }
         }
@@ -12643,9 +12644,9 @@ ORYX.Editor.setMissingClasses = function() {
 ORYX.Editor.checkClassType = function( classInst, classType ) {
 	
 	if( ORYX.Editor.SVGClassElementsAreAvailable ){
-		return classInst instanceof classType
+		return classInst instanceof classType;
 	} else {
-		return classInst == classType
+		return classInst == classType;
 	}
 };
 /*

@@ -296,7 +296,7 @@ angular.module('activitiModeler')
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEUP, function (event) {
                 // 选都没选中，直接返回
                 if ($scope.selectedItem.auditData !== undefined) {
-                    if(lastHighlightedId !== "" && event.clientX < 375 ){
+                    if(lastHighlightedId !== "" && event.clientX < document.documentElement.clientWidth*0.2745 ){ //375
                         // 取消高亮
                         // 只有鼠标在中间的时候,才取消高亮
                         jQuery('#' + lastHighlightedId + 'bg_frame').attr({"fill":"#f9f9f9"});
@@ -914,6 +914,18 @@ angular.module('activitiModeler')
                         $scope.editor.executeCommands([command]);
                     }
                 });
+            };
+
+            var resourceStack = {};
+
+            $scope.switchScene = function(oldShapeId, newShapeId){
+                // 切换场景
+                // 从旧场景切换到新场景：
+                // 1.如果新场景是UndefinedAction，则只需要保存当前页面资源；
+                // 2.如果新场景是其他Action，除了需要保存当前资源之外，还需要从内存中取出其他Action的资源
+
+
+
             };
 
         }); // end of $scope.editorFactory.promise block

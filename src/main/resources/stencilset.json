@@ -197,6 +197,18 @@
           "popular": true
         }
       ]
+    },{
+      "name": "currentscenepackage",
+      "properties": [
+        {
+          "id": "currentscene",
+          "type": "Complex",
+          "title": "场景资源",
+          "value": "",
+          "description": "保存当前场景中的所有资源",
+          "popular": true
+        }
+      ]
     },
     {
       "name": "namepackage",
@@ -1477,7 +1489,8 @@
         "activityelementpackage",
         "inputpackage",
         "outputpackage",
-        "animatedirectionpackage"
+        "animatedirectionpackage",
+        "currentscenepackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1507,7 +1520,8 @@
         "activityelementpackage",
         "inputpackage",
         "outputpackage",
-        "animatedirectionpackage"
+        "animatedirectionpackage",
+        "currentscenepackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1537,7 +1551,8 @@
         "activityelementpackage",
         "inputpackage",
         "outputpackage",
-        "animatedirectionpackage"
+        "animatedirectionpackage",
+        "currentscenepackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1566,7 +1581,8 @@
         "initiatorpackage",
         "formkeydefinitionpackage",
         "formpropertiespackage",
-        "resourcespackage"
+        "resourcespackage",
+        "currentscenepackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1701,7 +1717,8 @@
         "activityelementpackage",
         "inputpackage",
         "outputpackage",
-        "animatedirectionpackage"
+        "animatedirectionpackage",
+        "currentscenepackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1731,7 +1748,8 @@
         "activityelementpackage",
         "inputpackage",
         "outputpackage",
-        "animatedirectionpackage"
+        "animatedirectionpackage",
+        "currentscenepackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
