@@ -612,8 +612,13 @@ angular.module('activitiModeler')
                         jQuery('.Oryx_button').each(function (i, obj) {
                             // 如果是Action则过滤掉服务、事件等。即显示delete-button，morph-button，play-button和SequenceFlow
                             // 如果是资源则过滤掉箭头和morph-button。即显示delete-button，service-button，event-button
-                            // to do
-                            console.log(obj.id);
+                            //
+                            //console.log($scope.selectedItem.title);
+                            var whichItem = $scope.selectedItem;
+                            for(var i=0;i<whichItem.properties.length;i++){
+                                if (whichItem.properties[i].key === "oryx-activityelement" || whichItem.properties[i].key === "oryx-startevent") return;
+                            }
+
                             if (obj.id !== 'morph-button' && obj.id !== 'delete-button') {
                                 quickButtonCounter++;
                                 if (quickButtonCounter > 3) {
@@ -817,6 +822,7 @@ angular.module('activitiModeler')
                     }
                 });
             };
+
             $scope.setService = function () {
                 var opts = {
                     template: 'editor-app/configuration/properties/services-popup_new.html?version=' + Date.now(),
@@ -824,7 +830,16 @@ angular.module('activitiModeler')
                 };
                 $modal(opts);
             };
+
             $scope.setEvent = function () {
+                var opts = {
+                    template: 'editor-app/configuration/properties/events-popup.html?version=' + Date.now(),
+                    scope: $scope
+                };
+                $modal(opts);
+            };
+
+            $scope.addResource = function () {
                 var opts = {
                     template: 'editor-app/configuration/properties/events-popup.html?version=' + Date.now(),
                     scope: $scope

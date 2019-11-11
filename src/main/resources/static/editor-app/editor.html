@@ -115,6 +115,13 @@
                         <img src="editor-app/images/event.png"/>
                     </div>
                     <div class="Oryx_button"
+                         id="resource-button"
+                         title="添加资源"
+                         ng-click="addResource()"
+                         style="display:none">
+                        <img src="editor-app/images/event.png"/>
+                    </div>
+                    <div class="Oryx_button"
                          ng-repeat="item in quickMenuItems"
                          id="{{item.id}}"
                          title="{{item.description}}"

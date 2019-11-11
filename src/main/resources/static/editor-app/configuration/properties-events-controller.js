@@ -197,7 +197,6 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 				//property.value = selectItem.properties["oryx-events"].events;
 				property.value = eventName;
 				$scope.updatePropertyInModel(property);
-
 			} else if (property.title === "活动元素") {
 				property.value = {
 					"id": selectItem.properties["oryx-overrideid"],
@@ -205,7 +204,12 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 					"type": selectItem.properties["oryx-type"]
 				};
 				$scope.updatePropertyInModel(property);
+			}else if(property.title === "输入"){
+				console.log("此处设置输入参数");
+			}else if(property.title === "输出"){
+				console.log("此处设置输出参数");
 			}
+
 			// else if (property.title === "输入") {
 			// 	property.mode = 'set';
 			// }
