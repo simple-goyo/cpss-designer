@@ -377,7 +377,7 @@ var __createNormalAction = function($rootScope, $scope){
 
         var positionOffset = {type: 'offsetY', x: 0, y: 0};
         var node = $rootScope.currentSelectedShape;
-        if (node.properties["oryx-activityelement"]||node.properties["oryx-events"] !== undefined) {
+        if (node.properties["oryx-activityelement"]||node.properties["oryx-startevent"] !== undefined) {
             if (positionOffset.y < node.bounds.center().y) {
                 positionOffset.y = node.bounds.center().y;
             }
@@ -412,7 +412,7 @@ var __createNormalAction = function($rootScope, $scope){
         // 高亮
         var newShapeId = $scope.editor.getSelection()[0].id;
         $scope.setHighlightedShape(newShapeId);
-        jQuery('#' + newShapeId + 'bg_frame').attr({"fill":"#04FF8E8F"}); //高亮显示
+        jQuery('#' + newShapeId + 'bg_frame').attr({"fill":"#04FF8E"}); //高亮显示
     }
 };
 
@@ -510,7 +510,7 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
                 'Content-Type': 'application/json;charset=utf-8'
             },
             data:json,
-            url:"http://192.168.1.114:5001/save_app_class"
+            url:"http://192.168.1.117:5001/save_app_class"
 
         })
         .success(function(data){

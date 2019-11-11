@@ -30,6 +30,19 @@
       ]
     },
     {
+      "name": "starteventpackage",
+      "properties": [
+        {
+          "id": "startevent",
+          "type": "String",
+          "title": "开始标记",
+          "value": "",
+          "description": "开始标记",
+          "popular": true
+        }
+      ]
+    },
+    {
       "name": "animatedirectionpackage",
       "properties": [
         {
@@ -1582,6 +1595,7 @@
         "formkeydefinitionpackage",
         "formpropertiespackage",
         "resourcespackage",
+        "starteventpackage",
         "currentscenepackage"
       ],
       "hiddenPropertyPackages": [],

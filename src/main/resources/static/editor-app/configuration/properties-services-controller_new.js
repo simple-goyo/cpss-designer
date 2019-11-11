@@ -388,7 +388,7 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
             }
         }
         $scope.setHighlightedShape(newShapeId);
-        jQuery('#' + newShapeId + 'bg_frame').attr({"fill":"#04FF8E8F"}); //高亮显示
+        jQuery('#' + newShapeId + 'bg_frame').attr({"fill":"#04FF8E"}); //高亮显示
 
         //$scope.close();
     };

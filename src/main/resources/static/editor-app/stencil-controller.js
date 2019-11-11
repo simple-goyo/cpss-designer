@@ -379,7 +379,7 @@ angular.module('activitiModeler')
                             }
 
                             // 高亮
-                            jQuery('#' + itemId + 'bg_frame').attr({"fill":"#04FF8E8F"});
+                            jQuery('#' + itemId + 'bg_frame').attr({"fill":"#04FF8E"});
                             console.log(itemId);
 
                             lastHighlightedId = id;
@@ -662,8 +662,8 @@ angular.module('activitiModeler')
 
             /* Click handler for clicking an Action */
             $scope.playShape = function () {
-                console.log("clicked!");
-                console.log($scope);
+                setResource();
+                return;
 
                 // ----new----
                 // get res from prop
@@ -781,7 +781,6 @@ angular.module('activitiModeler')
                         jQuery('#' + shapeId).parent().parent().attr("display", "none");
                     }
                 }
-
 
                 //让内容全部显示
                 setTimeout(function () {
@@ -916,14 +915,90 @@ angular.module('activitiModeler')
                 });
             };
 
-            var resourceStack = {};
+            // 资源堆，保存除高亮Action之外的其他Action中的资源
+            var resourceHeap = {};
+
+            var getResourceIdbyType = function(type){
+                var resourceToFunctionType = [
+                    {name: "设备", type: "PhysicalAction"},
+                    {name: "物品", type: "PhysicalAction"},
+                    {name: "机器人", type: "PhysicalAction"},
+                    {name: "用户", type: "SocialAction"},
+                    {name: "工人", type: "SocialAction"},
+                    {name: "云应用", type: "CyberAction"},
+                    {name: "移动应用", type: "CyberAction"},
+                    {name: "嵌入式应用", type: "CyberAction"},
+                    {name: "信息对象", type: "CyberAction"}
+                ];
+
+                for(var i=0;i<resourceToFunctionType.length;i++){
+                    if(type === resourceToFunctionType[i].name){
+                        return resourceToFunctionType[i].type;
+                    }
+                }
+
+                return "";
+            };
+            var getResource = function(){
+                // 获取资源
+                // 遍历页面上的资源元素
+                var shapes = $scope.editor.getCanvas();
+                var resources = {};
+                var k=0;
+                for(var i=0; i < shapes.nodes.length; i++){
+                    if(shapes.nodes[i].properties["oryx-startevent"] === undefined && shapes.nodes[i].properties["oryx-activityelement"] === undefined){
+                        // 如果确实是资源，则保存shape
+                        resources[k] = {shape:shapes.nodes[i], resourceId:getResourceIdbyType(shapes.nodes[i].properties["oryx-type"])};
+                        k++;
+                    }
+                }
+
+                return resources;
+            };
+
+
+            var setResource = function(shapes){
+              // 设置资源
+                var resources = getResource();
+                createResource($scope, resources[0].shape, resources[0].resourceId);
+            };
+
+            var createResource = function ($scope, shape, resourceId) {
+                var resource = undefined;
+                var stencilSets = $scope.editor.getStencilSets().values();
+                for (var i = 0; i < stencilSets.length; i++) {
+                    var stencilSet = stencilSets[i];
+                    var nodes = stencilSet.nodes();
+                    for (var j = 0; j < nodes.length; j++) {
+                        if (nodes[j].idWithoutNs() === resourceId) {
+                            resource = nodes[j];
+                            break;
+                        }
+                    }
+                }
+                if (!resource)
+                    return undefined;
+
+                var resourceOption = {type: 'set', x: shape.bounds.center().x + 50, y: shape.bounds.center().y};
+                var option = {
+                    shape:shape,
+                    type: shape.getStencil().namespace() + resourceId,
+                    namespace: shape.getStencil().namespace(),
+                    parent: shape.parent,
+                    containedStencil: resource,
+                    positionController: resourceOption
+                };
+
+                var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
+                $scope.editor.executeCommands([command]);
+            };
 
             $scope.switchScene = function(oldShapeId, newShapeId){
                 // 切换场景
                 // 从旧场景切换到新场景：
                 // 1.如果新场景是UndefinedAction，则只需要保存当前页面资源；
-                // 2.如果新场景是其他Action，除了需要保存当前资源之外，还需要从内存中取出其他Action的资源
-
+                // 2.如果新场景是其他Action，除了需要保存当前资源之外，还需要从资源堆中取出其他Action的资源
+                // to do
 
 
             };
@@ -1830,7 +1905,7 @@ KISBPM.CreateCommand = ORYX.Core.Command.extend({
         this.containedStencil = option.containedStencil;
         this.parent = option.parent;
         this.positionController = option.positionController;
-        this.currentReference = currentReference;
+        this.shape = option.shape;
         this.shapeOptions = option.shapeOptions;
     },
     execute: function () {

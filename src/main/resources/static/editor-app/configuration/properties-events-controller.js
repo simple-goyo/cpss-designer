@@ -35,6 +35,10 @@ var KisBPMEventsCtrl = [ '$scope', '$modal', function($scope, $modal) {
 var EventsPopupCtrl = [ '$scope', function($scope) {
 	var ActivityElement;
 	var shape = $scope.selectedShape;
+	var HighlightedShape = $scope.getHighlightedShape();
+
+	var selectedShapeFunctionType = "DefaultEvent";
+
 
 	// Put json representing entity on scope
 	if ($scope.property !== undefined && $scope.property.value !== undefined && $scope.property.value !== null
@@ -120,7 +124,8 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 			}
 
 			if (index < 0) {
-				$scope.createEvent($scope, $scope.entity.listeners[i].value);
+				//$scope.createEvent($scope, $scope.entity.listeners[i].value);
+				$scope.replaceAction($scope, $scope.entity.listeners[i].value, selectedShapeFunctionType);
 				$scope.property.value[$scope.property.value.length] = {
 					id: $scope.editor.getSelection()[0].id, event: $scope.entity.listeners[i].value
 				};
@@ -207,7 +212,70 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 		}
 	};
 
-    // Close button handler
+	// 替换Action
+	$scope.replaceAction = function($scope, actionName, FunctionType) {
+		if(HighlightedShape === undefined) return;// 如果没有高亮，直接返回
+
+		var selectItem = $scope.editor.getSelection()[0];
+		var stencil = undefined;
+		var stencilSets = $scope.editor.getStencilSets().values();
+		var stencilId = FunctionType;
+		var newShapeId = "";
+
+		for (var i = 0; i < stencilSets.length; i++)
+		{
+			var stencilSet = stencilSets[i];
+			var nodes = stencilSet.nodes();
+			for (var j = 0; j < nodes.length; j++)
+			{
+				if (nodes[j].idWithoutNs() === stencilId)
+				{
+					stencil = nodes[j];
+					break;
+				}
+			}
+		}
+
+		if (!stencil) return;
+
+		// Create and execute command (for undo/redo)
+		var command = new MorphTo(HighlightedShape, stencil, $scope.editor);
+		$scope.editor.executeCommands([command]);
+
+		var actionActivity = $scope.selectedItem;
+		for (var i = 0; i < actionActivity.properties.length; i++) {
+			var property = actionActivity.properties[i];
+			if (property.title === "Id") {
+				property.value = $scope.editor.getSelection()[0].id;
+				newShapeId = property.value;
+				$scope.updatePropertyInModel(property);
+			} else if (property.title === "名称") {
+				property.value = actionName;
+				$scope.updatePropertyInModel(property);
+			} else if (property.title === "活动元素") {
+				property.value = {
+					"id": selectItem.properties["oryx-overrideid"],
+					"name": selectItem.properties["oryx-name"],
+					"type": selectItem.properties["oryx-type"]
+				};
+				$scope.updatePropertyInModel(property);
+			} else if (property.title === "动作输入状态") {
+				property.value = $scope.inputStatus;
+				$scope.inputStatus = [];
+				$scope.updatePropertyInModel(property);
+			} else if (property.title === "动作输出状态") {
+				property.value = $scope.outputStatus;
+				$scope.outputStatus = [];
+				$scope.updatePropertyInModel(property);
+			}
+		}
+		$scope.setHighlightedShape(newShapeId);
+		jQuery('#' + newShapeId + 'bg_frame').attr({"fill":"#04FF8E"}); //高亮显示
+
+		//$scope.close();
+	};
+
+	// Close button handler
     $scope.close = function() {
     	handleAssignmentInput($scope);
     	$scope.property.mode = 'read';

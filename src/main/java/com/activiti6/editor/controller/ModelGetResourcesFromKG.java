@@ -24,6 +24,10 @@ public class ModelGetResourcesFromKG {
     @RequestMapping(value="/resources", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
     public String getResources() throws UnsupportedEncodingException {
+
+
+
+
         JSONArray resourceToFunctionType = new JSONArray("[{\"name\":\"设备\",\"type\":\"PhysicalAction\"},{\"name\":\"机器人\",\"type\":\"PhysicalAction\"}]");
 
         InputStream stencilsetStream = this.getClass().getClassLoader().getResourceAsStream("stencilset.json");
