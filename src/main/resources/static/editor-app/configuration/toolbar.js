@@ -168,6 +168,25 @@ KISBPM.TOOLBAR_CONFIG = {
             "cssClass" : "editor-icon editor-icon-add-nextnode",
             "action" : "KISBPM.TOOLBAR.ACTIONS.addNextNode",
             "id" : "add-nextnode-button"
+        },
+        {
+            "type" : "separator",
+            "title" : "TOOLBAR.ACTION.SAVE",
+            "cssClass" : "toolbar-separator"
+        },
+        {
+            "type" : "button",
+            "title" : "TOOLBAR.ACTION.RESOURE.ADD",
+            "cssClass" : "editor-icon editor-icon-add-resource",
+            "action" : "KISBPM.TOOLBAR.ACTIONS.addResource",
+            "id" : "add-resource-button"
+        },
+        {
+            "type" : "button",
+            "title" : "TOOLBAR.ACTION.RESOURE.REMOVE",
+            "cssClass" : "editor-icon editor-icon-remove-resource",
+            "action" : "KISBPM.TOOLBAR.ACTIONS.removeResource",
+            "id" : "remove-resource-button"
         }
     ],
     

@@ -1,16 +1,17 @@
 var InputWriteCtrl = ['$scope', '$modal', '$timeout', '$translate', function ($scope, $modal, $timeout, $translate) {
+
     // Config for the modal window
     var opts = {
         template: 'editor-app/configuration/properties/input-popup.html?version=' + Date.now(),
         scope: $scope
     };
+
     // Open the dialog
     $modal(opts);
 }];
 
 var InputPopupController = ['$scope', '$modal', function ($scope, $modal) {
     var temp = [$scope.editor.getCanvas()][0].children;
-    // 列表中显示的entity
     $scope.entities = [];
     $scope.entities[0] = {"id": "none", "name": "请选择输入实体", "type": "none"};
     for (var i = 0; i < temp.length; i++) {
@@ -21,20 +22,6 @@ var InputPopupController = ['$scope', '$modal', function ($scope, $modal) {
                 "type": temp[i].properties["oryx-type"]
             };
     }
-
-    if ($scope.entity.resources === undefined || $scope.entity.resources.length === 0)
-    {
-        $scope.entity.resources = [{value: ''}];
-    }
-
-    $scope.addResourceValue = function(index){
-        $scope.entity.resources.splice(index + 1, 0, {value: ''});
-    };
-
-    $scope.removeResourceValue = function(index){
-        $scope.entity.resources.splice(index, 1);
-    };
-
     $scope.save = function () {
 
         if ($scope.property.input.name === "请选择输入实体") {
@@ -72,7 +59,7 @@ var InputPopupController = ['$scope', '$modal', function ($scope, $modal) {
 
     // Close button handler
     $scope.close = function () {
-        //$scope.property.mode = 'read';
+        $scope.property.mode = 'read';
         $scope.$hide();
     };
 }];

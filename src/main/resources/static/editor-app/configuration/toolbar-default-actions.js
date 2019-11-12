@@ -239,6 +239,24 @@ KISBPM.TOOLBAR = {
 
         },
 
+        addResource: function (services){
+            var modal = services.$modal({
+                backdrop: true,
+                keyboard: true,
+                template: 'editor-app/configuration/properties/input-popup.html?version=' + Date.now(),
+                scope: services.$scope
+            });
+        },
+
+        removeResource: function (services){
+            var modal = services.$modal({
+                backdrop: true,
+                keyboard: true,
+                template: 'editor-app/configuration/properties/input-popup.html?version=' + Date.now(),
+                scope: services.$scope
+            });
+        },
+
 
 
         /**

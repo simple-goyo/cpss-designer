@@ -840,13 +840,13 @@ angular.module('activitiModeler')
                 $modal(opts);
             };
 
-            $scope.addResource = function () {
-                var opts = {
-                    template: 'editor-app/configuration/properties/input-popup.html?version=' + Date.now(),
-                    scope: $scope
-                };
-                $modal(opts);
-            };
+            // $scope.addResource = function () {
+            //     var opts = {
+            //         template: 'editor-app/configuration/properties/input-popup.html?version=' + Date.now(),
+            //         scope: $scope
+            //     };
+            //     $modal(opts);
+            // };
 
             // $scope.delResource = function () {
             //     var opts = {

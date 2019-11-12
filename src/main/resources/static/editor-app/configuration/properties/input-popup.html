@@ -11,6 +11,14 @@
                         ng-options="entity.name for entity in entities"
                         ng-if="entities.length>1" class="form-control"></select>
                 <h3 ng-if="entities.length<=1" translate>PROPERTY.SELECT.EMPTY</h3>
+                <div ng-repeat="resource in entity.resources">
+                    <input class="form-control" type="hidden" ng-model="resource.value"/>
+                    <i class="glyphicon glyphicon-minus clickable-property"
+                       ng-click="removeresourceValue($index)"></i>
+                    <i ng-if="$index == (entity.resources.length - 1)"
+                       class="glyphicon glyphicon-plus clickable-property"
+                       ng-click="addresourceValue($index)"></i>
+                </div>
             </div>
             <div class="modal-footer">
                 <button ng-click="save()" class="btn btn-primary" translate>ACTION.SAVE</button>
