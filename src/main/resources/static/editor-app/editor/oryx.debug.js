@@ -10902,6 +10902,7 @@ function init() {
    @name ORYX
 */
 if(!ORYX) {var ORYX = {};}
+var _loadContentFinished = false;
 
 /**
  * The Editor class.
@@ -10991,9 +10992,11 @@ ORYX.Editor = {
 
 		// LOAD the content of the current editor instance
 		window.setTimeout(function(){
+			//debugger;
             this.loadSerialized(model, true); // Request the meta data as well
             this.getCanvas().update();
 			loadContentFinished = true;
+			_loadContentFinished = true;
 			initFinished();
 		}.bind(this), 200);
 	},
@@ -11435,7 +11438,7 @@ ORYX.Editor = {
 				this.loadSerialized = loadSerializedCB;
 			},			
 			execute: function(){
-				
+				//debugger;
 				if (!this.shapes) {
 					// Import the shapes out of the serialization		
 					this.shapes	= this.loadSerialized( this.jsonObject );		
@@ -12746,6 +12749,7 @@ new function(){
 			this.edges 		= $H({});
 		},
 		execute: function(){
+			//debugger;
 			if (this.changes) {
 				this.executeAgain();
 				return;
@@ -17276,7 +17280,7 @@ ORYX.Plugins.AbstractPlugin = Clazz.extend({
 				
 			},
 			execute: function(){
-				
+				//debugger;
 				if (this.changes){
 					this.executeAgain();
 					return;
@@ -18469,6 +18473,7 @@ ORYX.Plugins.CanvasResize = Clazz.extend({
 				this.facade = facade;
 			},			
 			execute: function(){
+				debugger;
 				resizeCanvas(this.position, this.extentionSize, this.facade);
 			},
 			rollback: function(){
@@ -18775,6 +18780,7 @@ ORYX.Plugins.RenameShapes = Clazz.extend({
 						this.facade = facade;
 					},
 					execute: function(){
+						debugger;
 						this.el.setProperty(this.propId, this.newValue);
 						//this.el.update();
 						this.facade.setSelection([this.el]);

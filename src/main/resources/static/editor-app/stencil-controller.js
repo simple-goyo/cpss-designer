@@ -215,10 +215,6 @@ angular.module('activitiModeler')
                 console.log('Something went wrong when fetching stencil items:' + JSON.stringify(data));
             });
 
-            // 初始化完成,自动生成开始按钮
-            // console.log("StartNoneEvent");
-            _createAction($rootScope, $scope, "StartNoneEvent");
-
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEDOWN, function (event) {
                 var shapes = $scope.editor.getSelection();
                 if (shapes && shapes.length > 0) {
@@ -505,7 +501,7 @@ angular.module('activitiModeler')
 
                             if (currentProperty.value === undefined
                                 || currentProperty.value === null
-                                || currentProperty.value.length == 0) {
+                                || currentProperty.value.length === 0) {
                                 currentProperty.noValue = true;
                             }
 
@@ -531,7 +527,7 @@ angular.module('activitiModeler')
                 KISBPM.eventBus.dispatch(KISBPM.eventBus.EVENT_TYPE_HIDE_SHAPE_BUTTONS);
                 var shapes = event.elements;
 
-                if (shapes && shapes.length == 1) {
+                if (shapes && shapes.length === 1) {
 
                     var selectedShape = shapes.first();
 
@@ -660,6 +656,11 @@ angular.module('activitiModeler')
                             || event.property.value === null
                             || event.property.value.length == 0);
                     }
+                });
+
+                KISBPM.eventBus.addListener(KISBPM.eventBus.EVENT_TYPE_EDITOR_READY,function(event){
+                    debugger;
+                    console.log(event);
                 });
 
                 $rootScope.stencilInitialized = true;
@@ -841,11 +842,19 @@ angular.module('activitiModeler')
 
             $scope.addResource = function () {
                 var opts = {
-                    template: 'editor-app/configuration/properties/events-popup.html?version=' + Date.now(),
+                    template: 'editor-app/configuration/properties/input-popup.html?version=' + Date.now(),
                     scope: $scope
                 };
                 $modal(opts);
             };
+
+            // $scope.delResource = function () {
+            //     var opts = {
+            //         template: 'editor-app/configuration/properties/input-popup.html?version=' + Date.now(),
+            //         scope: $scope
+            //     };
+            //     $modal(opts);
+            // };
 
             $scope.getShapeById = function (id) {
                 var shapes = [$scope.editor.getCanvas()][0].children;
@@ -971,7 +980,6 @@ angular.module('activitiModeler')
                 return resources;
             };
 
-
             var setResource = function(shapes){
               // 设置资源
                 var resources = getResource();
@@ -1071,6 +1079,7 @@ angular.module('activitiModeler')
                         this.facade = $scope.editor;
                     },
                     execute: function () {
+                        //debugger;
                         this.shape.setProperty(this.key, this.newValue);
                         this.facade.getCanvas().update();
                         this.facade.updateSelection();
@@ -1476,6 +1485,7 @@ angular.module('activitiModeler')
                             this.canAttach = canAttach;
                         },
                         execute: function () {
+                            //debugger;
                             if (!this.shape) {
                                 this.shape = this.facade.createShape(option);
                                 this.parent = this.shape.parent;
@@ -1892,8 +1902,34 @@ angular.module('activitiModeler')
                     elements: [candidate],
                     color: isValid ? ORYX.CONFIG.SELECTION_VALID_COLOR : ORYX.CONFIG.SELECTION_INVALID_COLOR
                 });
+
             }
         };
+
+        new Promise(function (resolve, reject) {
+            setTimeout(function () {
+                resolve('200 OK');
+            }, 1200);
+        }).then(function (result) {
+            console.log(window._loadContentFinished);
+            // 初始化完成,自动生成开始按钮
+            // console.log("StartNoneEvent");
+            // 注意：只有在加载完流程之后并且界面上没有StartNoneEvent时，才会生成。
+            var hasStartEventShape = function(){
+                //debugger;
+                var shapes = $scope.editor.getCanvas().nodes;
+                for(var i=0;i<shapes.length;i++){
+                    if(shapes[i].properties["oryx-startevent"] !== undefined){
+                        return true;
+                    }
+                }
+                return false;
+            };
+
+            if(!hasStartEventShape()){
+                _createAction($rootScope, $scope, "StartNoneEvent");
+            }
+        });
 
     }]);
 
@@ -1924,7 +1960,7 @@ KISBPM.CreateCommand = ORYX.Core.Command.extend({
         this.shapeOptions = option.shapeOptions;
     },
     execute: function () {
-
+        //debugger;
         if (this.shape) {
             if (this.shape instanceof ORYX.Core.Node) {
                 this.parent.add(this.shape);
