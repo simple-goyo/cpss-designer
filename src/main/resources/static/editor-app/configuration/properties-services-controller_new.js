@@ -207,6 +207,7 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
                 if ($scope.entity.Services[i].value === '点咖啡服务') {
                     $scope.createResource($scope, shape, "CyberObject");
                     $scope.editor.getSelection()[0].setProperty("oryx-name", "订单");
+                    $scope.editor.getSelection()[0].setProperty("oryx-type", "信息对象");
                     $scope.editor.getCanvas().update();
                     $scope.editor.updateSelection();
                 }
