@@ -183,7 +183,6 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
             hasRemoveNum++;
         }
 
-
         for (var i = 0; i < $scope.entity.Services.length; i++) {
             index = -1;
             for (var j = 0; j < functions.length; j++) {
@@ -441,15 +440,6 @@ var ServicesDisplayedCtrl = ['$scope', function ($scope) {
         }
         $scope.updatePropertyInModel($scope.property);
     }
-    // if ($scope.property.value.id) {
-    //     var shape = $scope.getShapeById($scope.property.value.id);
-    //     if (!shape) {
-    //         $scope.property.value = {};
-    //     } else {
-    //         //$scope.property.value.function = shape.properties["oryx-name"];
-    //     }
-    //     $scope.updatePropertyInModel($scope.property);
-    // }
 }];
 
 var MorphTo = ORYX.Core.Command.extend({
@@ -468,7 +458,7 @@ var MorphTo = ORYX.Core.Command.extend({
         stencil.properties().each((function(prop) {
             if(prop.readonly()) {
                 serialized = serialized.reject(function(serProp) {
-                    return serProp.name==prop.id();
+                    return serProp.name === prop.id();
                 });
             }
         }).bind(this));

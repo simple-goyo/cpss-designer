@@ -439,7 +439,7 @@ angular.module('activitiModeler')
                     var properties = stencil.properties();
                     for (var i = 0; i < properties.length; i++) {
                         var property = properties[i];
-                        if (property.popular() == false) continue;
+                        if (property.popular() === false) continue;
                         var key = property.prefix() + "-" + property.id();
 
                         if (key === 'oryx-name') {
@@ -1053,7 +1053,7 @@ angular.module('activitiModeler')
             // Some updates may happen when selected shape is already changed, so when an additional
             // shapeId is supplied, we need to make sure the correct shape is updated (current or previous)
             if (shapeId) {
-                if (shape.id != shapeId && $scope.previousSelectedShape && $scope.previousSelectedShape.id == shapeId) {
+                if (shape.id !== shapeId && $scope.previousSelectedShape && $scope.previousSelectedShape.id === shapeId) {
                     shape = $scope.previousSelectedShape;
                 } else {
                     shape = null;
