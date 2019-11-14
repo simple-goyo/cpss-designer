@@ -117,7 +117,7 @@ public class HttpClientHelper {
 
             return res;
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+            // TO DO Auto-generated catch block
             e.printStackTrace();
         }
         return "error"; // 自定义错误信息
