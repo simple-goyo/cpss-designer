@@ -131,5 +131,9 @@ KISBPM.PROPERTY_CONFIG =
         "oryx-actionoutputstatus-complex": {
             "readModeTemplateUrl": null,
             "writeModeTemplateUrl": null
+        },
+        "oryx-resourceline-complex": {
+            "readModeTemplateUrl": null,
+            "writeModeTemplateUrl": null
         }
     };

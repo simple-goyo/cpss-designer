@@ -17,6 +17,19 @@
       ]
     },
     {
+      "name": "resourcelinepackage",
+      "properties": [
+        {
+          "id": "resourceline",
+          "type":"complex",
+          "title":"资源连线",
+          "value":"",
+          "description":"Action中资源的关系",
+          "popular":true
+        }
+      ]
+    },
+    {
       "name": "animationpackage",
       "properties": [
         {
@@ -210,7 +223,8 @@
           "popular": true
         }
       ]
-    },{
+    },
+    {
       "name": "currentscenepackage",
       "properties": [
         {
@@ -1116,7 +1130,8 @@
           "popular": true
         }
       ]
-    },{
+    },
+    {
       "name": "entityeventspackage",
       "properties": [
         {
@@ -1222,6 +1237,8 @@
       "hiddenPropertyPackages": [],
       "roles": [
         "sequence_start",
+        "message_start",
+        "message_end",
         "Startevents_all",
         "StartEventsMorph",
         "all"
@@ -1251,6 +1268,8 @@
       "hiddenPropertyPackages": [],
       "roles": [
         "sequence_start",
+        "message_start",
+        "message_end",
         "Startevents_all",
         "StartEventsMorph",
         "all"
@@ -1279,6 +1298,8 @@
       "hiddenPropertyPackages": [],
       "roles": [
         "sequence_start",
+        "message_start",
+        "message_end",
         "Startevents_all",
         "StartEventsMorph",
         "all"
@@ -1308,6 +1329,8 @@
       "hiddenPropertyPackages": [],
       "roles": [
         "sequence_start",
+        "message_start",
+        "message_end",
         "Startevents_all",
         "StartEventsMorph",
         "all"
@@ -1337,6 +1360,8 @@
       "hiddenPropertyPackages": [],
       "roles": [
         "sequence_start",
+        "message_start",
+        "message_end",
         "Startevents_all",
         "StartEventsMorph",
         "all"
@@ -1366,6 +1391,8 @@
       "hiddenPropertyPackages": [],
       "roles": [
         "sequence_start",
+        "message_start",
+        "message_end",
         "Startevents_all",
         "StartEventsMorph",
         "all"
@@ -1394,6 +1421,8 @@
       "hiddenPropertyPackages": [],
       "roles": [
         "sequence_start",
+        "message_start",
+        "message_end",
         "Startevents_all",
         "StartEventsMorph",
         "all"
@@ -1422,6 +1451,8 @@
       "hiddenPropertyPackages": [],
       "roles": [
         "sequence_start",
+        "message_start",
+        "message_end",
         "Startevents_all",
         "StartEventsMorph",
         "all"
@@ -1450,6 +1481,8 @@
       "hiddenPropertyPackages": [],
       "roles": [
         "sequence_start",
+        "message_start",
+        "message_end",
         "Startevents_all",
         "StartEventsMorph",
         "all"
@@ -1478,6 +1511,8 @@
       "hiddenPropertyPackages": [],
       "roles": [
         "sequence_start",
+        "message_start",
+        "message_end",
         "Startevents_all",
         "StartEventsMorph",
         "all"
@@ -1503,7 +1538,8 @@
         "inputpackage",
         "outputpackage",
         "animatedirectionpackage",
-        "currentscenepackage"
+        "currentscenepackage",
+        "resourcelinepackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1534,7 +1570,8 @@
         "inputpackage",
         "outputpackage",
         "animatedirectionpackage",
-        "currentscenepackage"
+        "currentscenepackage",
+        "resourcelinepackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1565,7 +1602,8 @@
         "inputpackage",
         "outputpackage",
         "animatedirectionpackage",
-        "currentscenepackage"
+        "currentscenepackage",
+        "resourcelinepackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1732,7 +1770,8 @@
         "inputpackage",
         "outputpackage",
         "animatedirectionpackage",
-        "currentscenepackage"
+        "currentscenepackage",
+        "resourcelinepackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -2877,6 +2916,16 @@
             "from": "sequence_start",
             "to": [
               "sequence_end"
+            ]
+          }
+        ]
+      },{
+        "role":"MessageFlow",
+        "connects":[
+          {
+            "from":"message_start",
+            "to":[
+              "message_end"
             ]
           }
         ]
