@@ -395,6 +395,9 @@ angular.module('activitiModeler')
                 }
             });
 
+            /**
+             * 在Action切换后，更新对应的资源连线————删除上一个Action的资源连线，创建当前Action的资源连线
+             * */
             $scope.toDoAboutResourceLineAfterChangingAction = function () {
 
                 $scope.deleteConnectedLines();
@@ -406,7 +409,9 @@ angular.module('activitiModeler')
 
             };
 
-            //用于切换action时生成对应Action的资源连线
+            /**
+             * 用于切换action时生成对应Action的资源连线
+             * */
             $scope.createConnectedLines = function (resourceConnect) {
                 for (var i = 0; i < resourceConnect.length; i++) {
                     var line = resourceConnect[i];
@@ -422,7 +427,9 @@ angular.module('activitiModeler')
                 }
             };
 
-            //用于切换action时删除上一个Action的资源连线
+            /**
+             * 用于切换action时删除上一个Action的资源连线
+             * */
             $scope.deleteConnectedLines = function () {
                 for (var i = 0; i < $scope.connectedLines.length; i++) {
                     var id = $scope.connectedLines[i];
@@ -434,7 +441,9 @@ angular.module('activitiModeler')
                 }
             };
 
-            //根据给定的from和to创建连线
+            /**
+             * 根据给定的from和to创建连线
+             * */
             $scope.connectResource = function (from, to) {
                 var sset = ORYX.Core.StencilSet.stencilSet(from.getStencil().namespace());
 
@@ -962,7 +971,10 @@ angular.module('activitiModeler')
             };
 
 
-            //创建一个在资源下方的messageFlow
+            /**
+             * 该方法是用于创建一个在选中的资源下方的messageFlow，并记录messageFlow的id
+             * 具体实现方式为：利用command创建一个与选中资源相同的临时资源，然后将选中资源与其连线，然后删除临时资源
+             * */
             $scope.createConnectLine = function () {
                 var HighlightedShape = $scope.getHighlightedShape();
                 if (HighlightedShape === undefined) return;
