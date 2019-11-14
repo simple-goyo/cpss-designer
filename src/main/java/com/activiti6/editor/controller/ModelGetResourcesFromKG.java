@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
+import static com.activiti6.utils.HttpClientHelper.postJSON;
+
 /**
  * 从知识图谱中获取资源信息
  * FigoHu 2019年11月1日
@@ -24,9 +26,14 @@ public class ModelGetResourcesFromKG {
     @RequestMapping(value="/resources", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
     public String getResources() throws UnsupportedEncodingException {
+        final String KGURL = "http://47.100.34.166:21910/KG201910/getResourceDetails";
+        final String filePath = "/root/activiti/hct_Ontology.ttl";
+        String resName = "Eleme";
+        //String reqParam = "{\"resourceType\":\""+resName+"\",\"filePath\":\""+filePath+"\"}";
+        String reqParam = "?resourceType="+resName+"&filePath="+filePath;
 
-
-
+        String retnStr = postJSON( KGURL+reqParam,"");
+        System.out.println(retnStr);
 
         JSONArray resourceToFunctionType = new JSONArray("[{\"name\":\"设备\",\"type\":\"PhysicalAction\"},{\"name\":\"机器人\",\"type\":\"PhysicalAction\"}]");
 

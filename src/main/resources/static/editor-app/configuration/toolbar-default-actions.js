@@ -489,8 +489,9 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
         modelMetaData.description = $scope.saveDialog.description;
 
         var json = $scope.editor.getJSON();
+        json["properties"]["name"] = modelMetaData.name;// add diagram name
         json = JSON.stringify(json);
-        
+
         var selection = $scope.editor.getSelection();
         $scope.editor.setSelection([]);
         

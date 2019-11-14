@@ -1412,7 +1412,7 @@ angular.module('activitiModeler')
 
                 if ($scope.quickMenu) {
                     var shapes = $scope.editor.getSelection();
-                    if (shapes && shapes.length == 1) {
+                    if (shapes && shapes.length === 1) {
                         var currentSelectedShape = shapes.first();
 
                         var option = {};
@@ -1443,6 +1443,7 @@ angular.module('activitiModeler')
                         if (containedStencil.idWithoutNs() !== 'SequenceFlow' && containedStencil.idWithoutNs() !== 'Association' &&
                             containedStencil.idWithoutNs() !== 'MessageFlow' && containedStencil.idWithoutNs() !== 'DataAssociation') {
                             var args = {sourceShape: currentSelectedShape, targetStencil: containedStencil};
+                            debugger;
                             var targetStencil = $scope.editor.getRules().connectMorph(args);
                             if (!targetStencil) {
                                 return;
@@ -1553,7 +1554,7 @@ angular.module('activitiModeler')
                     var entities = [$scope.editor.getCanvas()][0].children;
                     property.value = entities[entities.length - 1].id;
                     $scope.updatePropertyInModel(property);
-                } else if (property.title === "类型") {
+                } else if (property.title === "类型" && item.name !== undefined) {
                     property.value = item.name;
                     $scope.updatePropertyInModel(property);
                 }
@@ -1589,7 +1590,7 @@ angular.module('activitiModeler')
 
         $scope.dragCallback = function (event, ui) {
 
-            if ($scope.dragModeOver != false) {
+            if ($scope.dragModeOver !== false) {
 
                 var coord = $scope.editor.eventCoordinatesXY(event.pageX, event.pageY);
 

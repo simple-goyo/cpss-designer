@@ -79,7 +79,7 @@ var InputPopupController = ['$scope', '$modal', function ($scope, $modal) {
     $scope.updateAction = function(){
         if(HighlightedShape === undefined) return;// 如果没有高亮，直接返回
 
-        var actionActivity = $scope.editor.getSelection()[0];
+        var actionActivity = HighlightedShape;//$scope.editor.getSelection()[0];
         if(actionActivity.properties["oryx-input"] !== undefined){
             var stringSelItems = $scope.selectedItems;
             var jsonSelItems = [];
@@ -106,7 +106,6 @@ var InputPopupController = ['$scope', '$modal', function ($scope, $modal) {
             $scope.updatePropertyInModel(property_in_pattern);
             $scope.updatePropertyInModel(property_out_pattern);
         }
-        debugger;
     };
 
     // Close button handler
