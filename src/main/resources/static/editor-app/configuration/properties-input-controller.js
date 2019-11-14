@@ -80,7 +80,7 @@ var InputPopupController = ['$scope', '$modal', function ($scope, $modal) {
         if(HighlightedShape === undefined) return;// 如果没有高亮，直接返回
 
         var actionActivity = HighlightedShape;//$scope.editor.getSelection()[0];
-        if(actionActivity.properties["oryx-input"] !== undefined){
+        if(actionActivity.properties["oryx-input"] !== undefined && actionActivity.properties["oryx-output"] !== undefined){
             var stringSelItems = $scope.selectedItems;
             var jsonSelItems = [];
             for(var i=0;i<stringSelItems.length;i++){

@@ -521,6 +521,7 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
             description: $scope.saveDialog.description
         };
 
+        var url = "http://192.168.31.52:5001/save_app_class";
         // Update
         $http({
             method: 'POST',
@@ -529,7 +530,7 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
                 'Content-Type': 'application/json;charset=utf-8'
             },
             data:json,
-            url:"http://192.168.1.117:5001/save_app_class"
+            url:url
 
         })
         .success(function(data){

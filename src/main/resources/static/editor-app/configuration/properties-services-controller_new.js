@@ -56,14 +56,20 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
     var shape = $scope.selectedShape;
     var HighlightedShape = $scope.getHighlightedShape();
 
-    $scope.constfunctions = [
+    // 资源执行主体所拥有的功能，数据从知识图谱中获得
+    $scope.resourceFunctions = [
         {name: "获取水杯", type: "SocialAction"},
         {name: "获取咖啡", type: "SocialAction"},
         {name: "递交物品", type: "SocialAction"},
         {name: "制作咖啡", type: "PhysicalAction"},
         {name: "点咖啡服务", type: "CyberAction"}
     ];
-    $scope.resourceToFunctionType = [
+
+    // 资源执行主体所有的输出，数据从知识图谱中获得
+    $scope.resourceOutputs = [];
+
+    // 资源与人机物三种Action的对应（固定不变）
+    $scope.constTypeOfResource = [
         {name: "设备", type: "PhysicalAction"},
         {name: "物品", type: "PhysicalAction"},
         {name: "机器人", type: "PhysicalAction"},
@@ -77,31 +83,31 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
 
     $http({method: 'GET', url: KISBPM.URL.getResources()}).success(function (data, status, headers, config) {
         console.log(JSON.stringify(data));
-        // 初始化$scope.resourceToFunctionType和$scope.constfunctions
-        // $scope.resourceToFunctionType表示资源的人机物类别
-        // $scope.constfunctions 表示动作对应的人机物类别
+        // 初始化$scope.constTypeOfResource和$scope.resourceFunctions
+        // $scope.constTypeOfResource表示资源的人机物类别
+        // $scope.resourceFunctions 表示动作对应的人机物类别
 
     }).error(function (data, status, headers, config) {
         console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
     });
 
     var selectedShapeFunctionType = undefined;
-    for (var i = 0; i < $scope.resourceToFunctionType.length; i++) {
-        if ($scope.resourceToFunctionType[i].name === shape.properties["oryx-type"]) {
-            selectedShapeFunctionType = $scope.resourceToFunctionType[i].type;
+    for (var i = 0; i < $scope.constTypeOfResource.length; i++) {
+        if ($scope.constTypeOfResource[i].name === shape.properties["oryx-type"]) {
+            selectedShapeFunctionType = $scope.constTypeOfResource[i].type;
         }
     }
 
     $scope.functions = [];
 
     if (selectedShapeFunctionType) {
-        for (var i = 0; i < $scope.constfunctions.length; i++) {
-            if ($scope.constfunctions[i].type === selectedShapeFunctionType) {
-                $scope.functions[$scope.functions.length] = {name: $scope.constfunctions[i].name};
+        for (var i = 0; i < $scope.resourceFunctions.length; i++) {
+            if ($scope.resourceFunctions[i].type === selectedShapeFunctionType) {
+                $scope.functions[$scope.functions.length] = {name: $scope.resourceFunctions[i].name};
             }
         }
     } else {
-        $scope.functions = $scope.constfunctions;
+        $scope.functions = $scope.resourceFunctions;
     }
 
     // Put json representing entity on scope

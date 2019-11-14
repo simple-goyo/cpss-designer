@@ -654,7 +654,7 @@ angular.module('activitiModeler')
                         // Update "no value" flag
                         event.property.noValue = (event.property.value === undefined
                             || event.property.value === null
-                            || event.property.value.length == 0);
+                            || event.property.value.length === 0);
                     }
                 });
 
@@ -943,7 +943,8 @@ angular.module('activitiModeler')
             var resourceHeap = {};
 
             var getResourceIdbyType = function(type){
-                var resourceToFunctionType = [
+                // 资源与人机物三种Action的对应（固定不变）
+                var constTypeOfResource = [
                     {name: "设备", type: "PhysicalAction"},
                     {name: "物品", type: "PhysicalAction"},
                     {name: "机器人", type: "PhysicalAction"},
@@ -955,9 +956,9 @@ angular.module('activitiModeler')
                     {name: "信息对象", type: "CyberAction"}
                 ];
 
-                for(var i=0;i<resourceToFunctionType.length;i++){
-                    if(type === resourceToFunctionType[i].name){
-                        return resourceToFunctionType[i].type;
+                for(var i=0;i<constTypeOfResource.length;i++){
+                    if(type === constTypeOfResource[i].name){
+                        return constTypeOfResource[i].type;
                     }
                 }
 
@@ -1443,7 +1444,6 @@ angular.module('activitiModeler')
                         if (containedStencil.idWithoutNs() !== 'SequenceFlow' && containedStencil.idWithoutNs() !== 'Association' &&
                             containedStencil.idWithoutNs() !== 'MessageFlow' && containedStencil.idWithoutNs() !== 'DataAssociation') {
                             var args = {sourceShape: currentSelectedShape, targetStencil: containedStencil};
-                            debugger;
                             var targetStencil = $scope.editor.getRules().connectMorph(args);
                             if (!targetStencil) {
                                 return;
@@ -1486,7 +1486,6 @@ angular.module('activitiModeler')
                             this.canAttach = canAttach;
                         },
                         execute: function () {
-                            //debugger;
                             if (!this.shape) {
                                 this.shape = this.facade.createShape(option);
                                 this.parent = this.shape.parent;
@@ -1554,7 +1553,7 @@ angular.module('activitiModeler')
                     var entities = [$scope.editor.getCanvas()][0].children;
                     property.value = entities[entities.length - 1].id;
                     $scope.updatePropertyInModel(property);
-                } else if (property.title === "类型" && item.name !== undefined) {
+                } else if (property.title === "类型" && item !== undefined) {
                     property.value = item.name;
                     $scope.updatePropertyInModel(property);
                 }

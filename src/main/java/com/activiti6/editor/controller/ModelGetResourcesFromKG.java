@@ -13,6 +13,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 import static com.activiti6.utils.HttpClientHelper.postJSON;
 
@@ -23,16 +27,14 @@ import static com.activiti6.utils.HttpClientHelper.postJSON;
 @RestController
 @RequestMapping("service")
 public class ModelGetResourcesFromKG {
+    final String filePath = "/root/activiti/hct_Ontology.ttl";
     @RequestMapping(value="/resources", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
     public String getResources() throws UnsupportedEncodingException {
-        final String KGURL = "http://47.100.34.166:21910/KG201910/getResourceDetails";
-        final String filePath = "/root/activiti/hct_Ontology.ttl";
-        String resName = "Eleme";
-        //String reqParam = "{\"resourceType\":\""+resName+"\",\"filePath\":\""+filePath+"\"}";
-        String reqParam = "?resourceType="+resName+"&filePath="+filePath;
+        String resList = getResourceList();
+        String retnStr = getResourceType("Eleme");
 
-        String retnStr = postJSON( KGURL+reqParam,"");
+        System.out.println(resList.toString());
         System.out.println(retnStr);
 
         JSONArray resourceToFunctionType = new JSONArray("[{\"name\":\"设备\",\"type\":\"PhysicalAction\"},{\"name\":\"机器人\",\"type\":\"PhysicalAction\"}]");
@@ -48,4 +50,69 @@ public class ModelGetResourcesFromKG {
         }
     }
 
+    private String getResourceType(String resName) {
+        final String KGURL = "http://47.100.34.166:21910/KG201910/getResourceDetails";
+        // String resName = "Eleme";
+        String reqParam = "?resourceType="+resName+"&filePath="+filePath;
+        try{
+            return postJSON( KGURL+reqParam,"");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    private String getResourceList(){
+        final String KGURL = "http://47.100.34.166:21910/KG201910/getResourceTypes";
+        String reqParam = "?filePath="+filePath;
+        String retn;
+        JSONArray retnJSON = new JSONArray();
+        try{
+            retn = postJSON( KGURL+reqParam,"");
+        }catch (Exception e){
+            e.printStackTrace();
+            retn = "";
+        }
+
+        // 建立JSONArray
+        JSONObject ps = parseString(retn);
+        JSONArray ja = new JSONArray();
+
+        JSONArray cyberResources = ps.getJSONArray("cyberResourceTypes");
+        JSONArray physicalResources = ps.getJSONArray("physicalResourceTypes");
+
+//        for (String cyberResource : cyberResources) {
+//            String job = "{\"name\":" + (String) cyberResource + ",\"type\":\"CyberAction\"}";
+//            ja.put(job);
+//        }
+//
+//        for (String physicalResource : physicalResources) {
+//            String job = "{\"name\":" + (String) physicalResource + ",\"type\":\"PhysicalAction\"}";
+//            ja.put(job);
+//        }
+
+        System.out.println(cyberResources);
+        return retn;
+        // return new JSONArray("[{\"name\":\"设备\",\"type\":\"PhysicalAction\"},{\"name\":\"机器人\",\"type\":\"PhysicalAction\"}]");
+    }
+
+    private JSONObject parseString(String str){
+        // 将返回值中的"['foo1','foo2']"字符串转换成JSON格式{'foo1','foo2'}
+        JSONObject jb= new JSONObject(str);
+        // System.out.println(jb.toString());
+        Iterator<String> it =jb.keys();
+        while(it.hasNext()){
+            String key = it.next();
+            String val = jb.getString(key);
+            String v   = val.substring(1, val.length()-2);
+
+            String[] splitedStr = v.split(",");
+//            System.out.println(splitedStr[0]);
+            List<String> tmp=new ArrayList<>();
+            Collections.addAll(tmp, splitedStr);
+            jb.put(key, tmp);
+        }
+
+        return jb;
+    }
 }
