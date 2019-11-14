@@ -397,41 +397,44 @@ angular.module('activitiModeler')
 
             $scope.toDoAboutResourceLineAfterChangingAction = function () {
 
-                $scope.hideConnectedLines();
+                $scope.deleteConnectedLines();
                 $scope.connectedLines = [];
                 var action = $scope.getHighlightedShape();
                 var resourceConnect = action.properties['oryx-resourceline'];
                 if (!resourceConnect) return;
-                $scope.displayResourceConnect(resourceConnect);
+                $scope.createConnectedLines(resourceConnect);
 
             };
 
-            $scope.displayResourceConnect = function (resourceConnect) {
+            //用于切换action时生成对应Action的资源连线
+            $scope.createConnectedLines = function (resourceConnect) {
                 for (var i = 0; i < resourceConnect.length; i++) {
                     var line = resourceConnect[i];
-                    // var from = $scope.getShapeById(line['from']);
-                    // var to = $scope.getShapeById(line['to']);
-                    var id = line['edge'];
-                    var edge = $scope.getShapeById(id);
-                    if (edge) {
-                        jQuery("#" + id).parent().parent().parent().parent().attr("display", "");
-                        $scope.connectedLines[$scope.connectedLines.length] = id;
-                    }
-                    // $scope.connectResource(from, to);
+                    var from = $scope.getShapeById(line['from']);
+                    var to = $scope.getShapeById(line['to']);
+                    // var id = line['edge'];
+                    // var edge = $scope.getShapeById(id);
+                    // if (edge) {
+                    //     jQuery("#" + id).parent().parent().parent().parent().attr("display", "");
+                    //     $scope.connectedLines[$scope.connectedLines.length] = id;
+                    // }
+                    $scope.connectResource(from, to);
                 }
             };
 
-            $scope.hideConnectedLines = function () {
+            //用于切换action时删除上一个Action的资源连线
+            $scope.deleteConnectedLines = function () {
                 for (var i = 0; i < $scope.connectedLines.length; i++) {
                     var id = $scope.connectedLines[i];
                     var edge = $scope.getShapeById(id);
                     if (edge) {
-                        jQuery("#" + id).parent().parent().parent().parent().attr("display", "none");
-                        // $scope.editor.deleteShape(edge);
+                        // jQuery("#" + id).parent().parent().parent().parent().attr("display", "none");
+                        $scope.editor.deleteShape(edge);
                     }
                 }
             };
 
+            //根据给定的from和to创建连线
             $scope.connectResource = function (from, to) {
                 var sset = ORYX.Core.StencilSet.stencilSet(from.getStencil().namespace());
 
@@ -447,6 +450,7 @@ angular.module('activitiModeler')
                 var ePoint = magnet ? magnet.bounds.center() : to.bounds.midPoint();
                 edge.dockers.last().setReferencePoint(ePoint);
                 $scope.editor._canvas.add(edge);
+                $scope.editor.getCanvas().update();
                 $scope.connectedLines[$scope.connectedLines.length] = edge.id;
             };
             /*
@@ -958,6 +962,7 @@ angular.module('activitiModeler')
             };
 
 
+            //创建一个在资源下方的messageFlow
             $scope.createConnectLine = function () {
                 var HighlightedShape = $scope.getHighlightedShape();
                 if (HighlightedShape === undefined) return;
@@ -991,8 +996,8 @@ angular.module('activitiModeler')
                         var to = edge.outgoing[0] ? edge.outgoing[0].id : null;
                         resourceConnect[resourceConnect.length] = {
                             from: from,
-                            to: to,
-                            edge: id
+                            to: to
+                            // edge: id
                         };
 
                     }
