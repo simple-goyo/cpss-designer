@@ -7,12 +7,15 @@
                 <h2 translate>PROPERTY.INPUT.SELECT</h2>
             </div>
             <div class="modal-body">
-                <select ng-init="property.input=entities[0]" ng-model="property.input"
-                        ng-options="entity.name for entity in entities"
-                        ng-if="entities.length>1" class="form-control"></select>
-                <h3 ng-if="entities.length<=1" translate>PROPERTY.SELECT.EMPTY</h3>
+                <select ng-multiple="true" ui-select2 ng-model="selectedItems" multiple data-placeholder="-- 请选择 --"
+                        style="height:200px" class="form-control">
+                    <optgroup data-ng-repeat="a in items" label="{{a.name}}">
+                        <option data-ng-repeat="b in a.specialties" value="{{b}}">{{b.name}}</option>
+                    </optgroup>
+                </select>
             </div>
             <div class="modal-footer">
+                <button ng-click="close()" class="btn btn-primary" translate>ACTION.CANCEL</button>
                 <button ng-click="save()" class="btn btn-primary" translate>ACTION.SAVE</button>
             </div>
         </div>

@@ -222,7 +222,7 @@ div.canvas-wrapper {
 
 
 div.propertySection {
-	height: 250px;
+	height: 0px;
     background-color: #e8edf1;
 	margin-bottom: 0px;
 }
@@ -314,7 +314,7 @@ div.propertySection {
 
 .propertySection.collapsed {
 	max-height: 50px;
-	height: 50px;
+	height: 0px;
 	overflow: hidden;
 }
 
@@ -466,6 +466,18 @@ li.x-menu-list-item.x-menu-item-active a {
 .editor-icon-bendpoint-remove:before {
 	content: 'o';
 }
+.editor-icon-add-nextnode:before {
+	content: url('../fonts/add.png');
+}
+
+.editor-icon-add-resource:before {
+	content: url('../fonts/resource_add.png');
+}
+
+.editor-icon-remove-resource:before {
+	content: url('../fonts/resource_del.png');
+ }
+
 .editor-icon-align-horizontal:before {
 	content: 'p';
 }

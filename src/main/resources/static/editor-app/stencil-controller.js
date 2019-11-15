@@ -21,6 +21,12 @@
 angular.module('activitiModeler')
     .controller('StencilController', ['$rootScope', '$scope', '$http', '$modal', '$timeout', '$compile', function ($rootScope, $scope, $http, $modal, $timeout, $compile) {
 
+        // 上次高亮的Action的ID和项
+        var lastHighlightedId = "";
+        var HilghlightedItem;
+
+        $scope.connectedLines = [];
+
         // Property window toggle state
         $scope.propertyWindowState = {'collapsed': true};
 
@@ -63,9 +69,10 @@ angular.module('activitiModeler')
              StencilSet items
              */
             $http({method: 'GET', url: KISBPM.URL.getStencilSet()}).success(function (data, status, headers, config) {
-                var quickMenuDefinition = ['UserTask', 'EndNoneEvent', 'ExclusiveGateway',
-                    'CatchTimerEvent', 'ThrowNoneEvent', 'TextAnnotation',
-                    'SequenceFlow', 'Association'];
+                // var quickMenuDefinition = ['UserTask', 'EndNoneEvent', 'ExclusiveGateway',
+                //     'CatchTimerEvent', 'ThrowNoneEvent', 'TextAnnotation',
+                //     'SequenceFlow', 'Association'];
+                var quickMenuDefinition = ['SequenceFlow'];
                 var ignoreForPaletteDefinition = ['SequenceFlow', 'MessageFlow', 'Association', 'DataAssociation', 'DataStore', 'SendTask'];
                 var quickMenuItems = [];
 
@@ -149,9 +156,9 @@ angular.module('activitiModeler')
 
                     for (var i = 0; i < data.stencils[stencilIndex].roles.length; i++) {
                         var stencilRole = data.stencils[stencilIndex].roles[i];
-                        if (stencilRole === 'sequence_start') {
+                        if (stencilRole === 'sequence_start' || 'message_start') {
                             stencilItem.canConnect = true;
-                        } else if (stencilRole === 'sequence_end') {
+                        } else if (stencilRole === 'sequence_end' || 'message_end') {
                             stencilItem.canConnectTo = true;
                         }
 
@@ -216,10 +223,18 @@ angular.module('activitiModeler')
                     var selectedShape = shapes.first();
                     $scope.addToInputStatus(selectedShape);
                     var selections = [];
+                    var coffeeMachines = [];
                     for (var i = 0; i < $scope.inputStatus.length; i++) {
+                        if ($scope.inputStatus[i].name === '咖啡机') {
+                            coffeeMachines[coffeeMachines.length] = $scope.getShapeById($scope.inputStatus[i].id);
+                            continue;
+                        }
                         selections[selections.length] = $scope.getShapeById($scope.inputStatus[i].id);
                     }
-                    $scope.editor.setSelection(selections);
+                    if (selections.length === 0)
+                        $scope.editor.setSelection(coffeeMachines);
+                    else
+                        $scope.editor.setSelection(selections);
                     $scope.editor.getCanvas().update();
                 } else $scope.inputStatus = [];
             });
@@ -250,8 +265,49 @@ angular.module('activitiModeler')
                 }
             };
 
+            // $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_DBLCLICK, function (event) {
+            //     // 双击高亮
+            //     // 两个阶段的要求
+            //     // 1.选中的Action，高亮(被选中元素高亮，未选中元素取消高亮)
+            //     // 2.选中的Action，显示当前画布
+            //     // 阶段1
+            //     if($scope.selectedItem){
+            //         var itemId = $scope.selectedItem.properties[0].value;
+            //         var lastId = lastHighlightedId;
+            //         // 取消上次高亮
+            //         if(lastId !== ""){
+            //             jQuery('#' + lastId + 'bg_frame').attr({"fill":"#f9f9f9"});
+            //         }
+            //
+            //         // 只有Action才会被高亮
+            //         if(($scope.selectedItem.properties["oryx-activityelement"] !== undefined)){
+            //             // 高亮
+            //             jQuery('#' + itemId + 'bg_frame').attr({"fill":"#04FF8E8F"});
+            //             console.log(itemId);
+            //
+            //             lastHighlightedId = itemId;
+            //             HilghlightedItem = $scope.selectedItem;
+            //         }
+            //     }
+            // });
+
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEUP, function (event) {
-                if ($scope.selectedItem.title === ""){return;}// 选都没选，直接返回
+                //更新动作的资源关系
+                var action = $scope.getHighlightedShape();
+                if (action) {
+                    action.setProperty("oryx-resourceline", $scope.getResourceConnect());
+                }
+
+                // 选都没选中，直接返回
+                if ($scope.selectedItem.auditData !== undefined) {
+                    if (lastHighlightedId !== "" && event.clientX < document.documentElement.clientWidth * 0.2745) { //375
+                        // 取消高亮
+                        // 只有鼠标在中间的时候,才取消高亮
+                        jQuery('#' + lastHighlightedId + 'bg_frame').attr({"fill": "#f9f9f9"});
+                        lastHighlightedId = "";
+                    }
+                    return;
+                }
                 if ($scope.inputStatus) {
                     $scope.outputStatus = [];
                     var userShape = undefined;
@@ -271,46 +327,141 @@ angular.module('activitiModeler')
                             position: shape.bounds.center()
                         }
                     }
-                    if (!userShape)
-                        return;
-                    var position = userShape.bounds.center();
+                    //  && (shape.properties["oryx-activityelement"]===undefined)
+                    if (userShape) {
+                        var position = userShape.bounds.center();
 
-                    if (userOriginPosition.x === position.x && userOriginPosition.y === position.y)
-                        return;
-
-                    var shapes = [$scope.editor.getCanvas()][0].children;
-                    $scope.neibor = [];
-                    var width = Math.abs(userShape.bounds.b.x - userShape.bounds.a.x);
-                    var height = Math.abs(userShape.bounds.b.y - userShape.bounds.a.y);
-                    for (var i = 0; i < shapes.length; i++) {
-                        var shape = shapes[i];
-                        var inOutputStatus = false;
-                        for (var j = 0; j < $scope.outputStatus.length; j++) {
-                            if (shape.id === $scope.outputStatus[j].id) {
-                                inOutputStatus = true;
-                                break;
+                        if (userOriginPosition.x !== position.x || userOriginPosition.y !== position.y) {
+                            var shapes = [$scope.editor.getCanvas()][0].children;
+                            $scope.neibor = [];
+                            var width = Math.abs(userShape.bounds.b.x - userShape.bounds.a.x);
+                            var height = Math.abs(userShape.bounds.b.y - userShape.bounds.a.y);
+                            for (var i = 0; i < shapes.length; i++) {
+                                var shape = shapes[i];
+                                var inOutputStatus = false;
+                                for (var j = 0; j < $scope.outputStatus.length; j++) {
+                                    if (shape.id === $scope.outputStatus[j].id) {
+                                        inOutputStatus = true;
+                                        break;
+                                    }
+                                }
+                                var shapePosition = shape.bounds.center();
+                                if (!inOutputStatus && Math.abs(position.y - shapePosition.y) <= 2 * height && Math.abs(position.x - shapePosition.x) <= 2 * width)
+                                    $scope.neibor[$scope.neibor.length] = {
+                                        "id": shape.id,
+                                        "type": shape.properties["oryx-type"],
+                                        "name": shape.properties["oryx-name"],
+                                        "position": shapePosition
+                                    };
+                            }
+                            if ($scope.neibor && $scope.neibor.length !== 0) {
+                                var opts = {
+                                    template: "editor-app/configuration/properties/thing-get-or-leave-popup.html",
+                                    scope: $scope
+                                };
+                                $modal(opts);
                             }
                         }
-                        var shapePosition = shape.bounds.center();
-                        if (!inOutputStatus && Math.abs(position.y - shapePosition.y) <= 2*height && Math.abs(position.x - shapePosition.x) <= 2*width)
-                            $scope.neibor[$scope.neibor.length] = {
-                                "id": shape.id,
-                                "type": shape.properties["oryx-type"],
-                                "name": shape.properties["oryx-name"],
-                                "position": shapePosition
-                            };
+
+                    } else {
+                        $scope.outputStatus = [];
+                        // 两个阶段的要求
+                        // 1.选中的Action，高亮(被选中元素高亮，未选中元素取消高亮)
+                        // 2.选中的Action，显示当前画布
+                        // 1
+                        shape = $scope.selectedItem;
+                        for (i = shape.properties.length; i > 0; i--) {
+                            if (shape.properties[i - 1].key === "oryx-activityelement") break;
+                        }
+
+                        if (shape && i > 0) {
+                            var itemId = id;
+                            var lastId = lastHighlightedId;
+                            // 取消上次高亮
+                            if (lastId !== "") {
+                                jQuery('#' + lastId + 'bg_frame').attr({"fill": "#f9f9f9"});
+                            }
+
+                            // 高亮
+                            jQuery('#' + itemId + 'bg_frame').attr({"fill": "#04FF8E"});
+                            console.log(itemId);
+
+                            lastHighlightedId = id;
+                            HilghlightedItem = shape;
+
+                            $scope.toDoAboutResourceLineAfterChangingAction();
+                        }
                     }
-                    if (!$scope.neibor || $scope.neibor.length === 0)
-                        return;
-                    var opts = {
-                        template: "editor-app/configuration/properties/thing-get-or-leave-popup.html",
-                        scope: $scope
-                    };
-                    $modal(opts);
-                } else $scope.outputStatus = [];
+                }
             });
 
+            /**
+             * 在Action切换后，更新对应的资源连线————删除上一个Action的资源连线，创建当前Action的资源连线
+             * */
+            $scope.toDoAboutResourceLineAfterChangingAction = function () {
 
+                $scope.deleteConnectedLines();
+                $scope.connectedLines = [];
+                var action = $scope.getHighlightedShape();
+                var resourceConnect = action.properties['oryx-resourceline'];
+                if (!resourceConnect) return;
+                $scope.createConnectedLines(resourceConnect);
+
+            };
+
+            /**
+             * 用于切换action时生成对应Action的资源连线
+             * */
+            $scope.createConnectedLines = function (resourceConnect) {
+                for (var i = 0; i < resourceConnect.length; i++) {
+                    var line = resourceConnect[i];
+                    var from = $scope.getShapeById(line['from']);
+                    var to = $scope.getShapeById(line['to']);
+                    // var id = line['edge'];
+                    // var edge = $scope.getShapeById(id);
+                    // if (edge) {
+                    //     jQuery("#" + id).parent().parent().parent().parent().attr("display", "");
+                    //     $scope.connectedLines[$scope.connectedLines.length] = id;
+                    // }
+                    $scope.connectResource(from, to);
+                }
+            };
+
+            /**
+             * 用于切换action时删除上一个Action的资源连线
+             * */
+            $scope.deleteConnectedLines = function () {
+                for (var i = 0; i < $scope.connectedLines.length; i++) {
+                    var id = $scope.connectedLines[i];
+                    var edge = $scope.getShapeById(id);
+                    if (edge) {
+                        // jQuery("#" + id).parent().parent().parent().parent().attr("display", "none");
+                        $scope.editor.deleteShape(edge);
+                    }
+                }
+            };
+
+            /**
+             * 根据给定的from和to创建连线
+             * */
+            $scope.connectResource = function (from, to) {
+                var sset = ORYX.Core.StencilSet.stencilSet(from.getStencil().namespace());
+
+                var edge = new ORYX.Core.Edge({'eventHandlerCallback': $scope.editor.handleEvents.bind($scope.editor)},
+                    sset.stencil(from.getStencil().namespace() + "MessageFlow"));
+                edge.dockers.first().setDockedShape(from);
+
+                var magnet = from.getDefaultMagnet();
+                var cPoint = magnet ? magnet.bounds.center() : from.bounds.midPoint();
+                edge.dockers.first().setReferencePoint(cPoint);
+                edge.dockers.last().setDockedShape(to);
+                magnet = to.getDefaultMagnet();
+                var ePoint = magnet ? magnet.bounds.center() : to.bounds.midPoint();
+                edge.dockers.last().setReferencePoint(ePoint);
+                $scope.editor._canvas.add(edge);
+                $scope.editor.getCanvas().update();
+                $scope.connectedLines[$scope.connectedLines.length] = edge.id;
+            };
             /*
              * Listen to selection change events: show properties
              */
@@ -363,7 +514,7 @@ angular.module('activitiModeler')
                     var properties = stencil.properties();
                     for (var i = 0; i < properties.length; i++) {
                         var property = properties[i];
-                        if (property.popular() == false) continue;
+                        if (property.popular() === false) continue;
                         var key = property.prefix() + "-" + property.id();
 
                         if (key === 'oryx-name') {
@@ -425,7 +576,7 @@ angular.module('activitiModeler')
 
                             if (currentProperty.value === undefined
                                 || currentProperty.value === null
-                                || currentProperty.value.length == 0) {
+                                || currentProperty.value.length === 0) {
                                 currentProperty.noValue = true;
                             }
 
@@ -448,11 +599,10 @@ angular.module('activitiModeler')
             });
 
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_SELECTION_CHANGED, function (event) {
-
                 KISBPM.eventBus.dispatch(KISBPM.eventBus.EVENT_TYPE_HIDE_SHAPE_BUTTONS);
                 var shapes = event.elements;
 
-                if (shapes && shapes.length == 1) {
+                if (shapes && shapes.length === 1) {
 
                     var selectedShape = shapes.first();
 
@@ -511,6 +661,7 @@ angular.module('activitiModeler')
                         x -= 24;
                     }
 
+                    // 如果没有Shapes就不显示切换Shapes按钮
                     if (morphShapes && morphShapes.length > 0) {
                         // In case the element is not wide enough, start the 2 bottom-buttons more to the left
                         // to prevent overflow in the right-menu
@@ -530,7 +681,16 @@ angular.module('activitiModeler')
                         var quickButtonX = shapeXY.x + bounds.width() + 5;
                         var quickButtonY = shapeXY.y;
                         jQuery('.Oryx_button').each(function (i, obj) {
-                            if (obj.id !== 'morph-button' && obj.id != 'delete-button') {
+                            // 如果是Action则过滤掉服务、事件等。即显示delete-button，morph-button，play-button和SequenceFlow
+                            // 如果是资源则过滤掉箭头和morph-button。即显示delete-button，service-button，event-button
+                            //
+                            //console.log($scope.selectedItem.title);
+                            var whichItem = $scope.selectedItem;
+                            for (var i = 0; i < whichItem.properties.length; i++) {
+                                if (whichItem.properties[i].key === "oryx-activityelement" || whichItem.properties[i].key === "oryx-startevent") return;
+                            }
+
+                            if (obj.id !== 'morph-button' && obj.id !== 'delete-button') {
                                 quickButtonCounter++;
                                 if (quickButtonCounter > 3) {
                                     quickButtonX = shapeXY.x + bounds.width() + 5;
@@ -569,8 +729,13 @@ angular.module('activitiModeler')
                         // Update "no value" flag
                         event.property.noValue = (event.property.value === undefined
                             || event.property.value === null
-                            || event.property.value.length == 0);
+                            || event.property.value.length === 0);
                     }
+                });
+
+                KISBPM.eventBus.addListener(KISBPM.eventBus.EVENT_TYPE_EDITOR_READY, function (event) {
+                    debugger;
+                    console.log(event);
                 });
 
                 $rootScope.stencilInitialized = true;
@@ -578,8 +743,8 @@ angular.module('activitiModeler')
 
             /* Click handler for clicking an Action */
             $scope.playShape = function () {
-                console.log("clicked!");
-                console.log($scope);
+                setResource();
+                return;
 
                 // ----new----
                 // get res from prop
@@ -698,7 +863,6 @@ angular.module('activitiModeler')
                     }
                 }
 
-
                 //让内容全部显示
                 setTimeout(function () {
                     for (var i = 0; i < shapes.length; i++) {
@@ -709,9 +873,8 @@ angular.module('activitiModeler')
             };
             $scope.morphShape = function () {
                 $scope.safeApply(function () {
-
                     var shapes = $rootScope.editor.getSelection();
-                    if (shapes && shapes.length == 1) {
+                    if (shapes && shapes.length === 1) {
                         $rootScope.currentSelectedShape = shapes.first();
                         var stencilItem = $scope.getStencilItemById($rootScope.currentSelectedShape.getStencil().idWithoutNs());
                         var morphShapes = [];
@@ -736,6 +899,38 @@ angular.module('activitiModeler')
                 });
             };
 
+            $scope.setService = function () {
+                var opts = {
+                    template: 'editor-app/configuration/properties/services-popup_new.html?version=' + Date.now(),
+                    scope: $scope
+                };
+                $modal(opts);
+            };
+
+            $scope.setEvent = function () {
+                var opts = {
+                    template: 'editor-app/configuration/properties/events-popup.html?version=' + Date.now(),
+                    scope: $scope
+                };
+                $modal(opts);
+            };
+
+            // $scope.addResource = function () {
+            //     var opts = {
+            //         template: 'editor-app/configuration/properties/input-popup.html?version=' + Date.now(),
+            //         scope: $scope
+            //     };
+            //     $modal(opts);
+            // };
+
+            // $scope.delResource = function () {
+            //     var opts = {
+            //         template: 'editor-app/configuration/properties/input-popup.html?version=' + Date.now(),
+            //         scope: $scope
+            //     };
+            //     $modal(opts);
+            // };
+
             $scope.getShapeById = function (id) {
                 var shapes = [$scope.editor.getCanvas()][0].children;
                 for (var i = 0; i < shapes.length; i++) {
@@ -743,6 +938,22 @@ angular.module('activitiModeler')
                         return shapes[i];
                 }
                 return undefined;
+            };
+
+            $scope.getHighlightedShape = function () {
+                return $scope.getShapeById(lastHighlightedId);
+            };
+
+            $scope.getHighlightedShapeId = function () {
+                return lastHighlightedId;
+            };
+
+            $scope.setHighlightedShape = function (newId) {
+                if (newId !== undefined && newId !== "") {
+                    lastHighlightedId = newId;
+                    HilghlightedItem = $scope.getShapeById(newId);
+                }
+
             };
 
             $scope.deleteShape = function () {
@@ -757,6 +968,53 @@ angular.module('activitiModeler')
                 KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
                 // $scope.editor.deleteShape(shapeToRemove);
                 // KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
+            };
+
+
+            /**
+             * 该方法是用于创建一个在选中的资源下方的messageFlow，并记录messageFlow的id
+             * 具体实现方式为：利用command创建一个与选中资源相同的临时资源，然后将选中资源与其连线，然后删除临时资源
+             * */
+            $scope.createConnectLine = function () {
+                var HighlightedShape = $scope.getHighlightedShape();
+                if (HighlightedShape === undefined) return;
+
+                var connectedShape = $scope.editor.getSelection()[0];
+
+                var stencil = connectedShape.getStencil();
+                var option = {
+                    type: stencil._jsonStencil["id"],
+                    namespace: stencil.namespace(),
+                    connectedShape: connectedShape,
+                    parent: connectedShape.parent,
+                    containedStencil: stencil,
+                    connectingType: stencil.namespace() + "MessageFlow"
+                };
+                var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
+                $scope.editor.executeCommands(command);
+                KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
+                $scope.editor.setSelection(connectedShape);
+                $scope.editor.getCanvas().update();
+                $scope.connectedLines[$scope.connectedLines.length] = connectedShape.getOutgoingShapes().last().id;
+            };
+
+            $scope.getResourceConnect = function () {
+                var resourceConnect = [];
+                for (var i = 0; i < $scope.connectedLines.length; i++) {
+                    var id = $scope.connectedLines[i];
+                    var edge = $scope.getShapeById(id);
+                    if (edge) {
+                        var from = edge.incoming[0] ? edge.incoming[0].id : null;
+                        var to = edge.outgoing[0] ? edge.outgoing[0].id : null;
+                        resourceConnect[resourceConnect.length] = {
+                            from: from,
+                            to: to
+                            // edge: id
+                        };
+
+                    }
+                }
+                return resourceConnect;
             };
 
             $scope.quickAddItem = function (newItemId) {
@@ -803,6 +1061,97 @@ angular.module('activitiModeler')
                 });
             };
 
+            // 资源堆，保存除高亮Action之外的其他Action中的资源
+            var resourceHeap = {};
+
+            var getResourceIdbyType = function(type){
+                // 资源与人机物三种Action的对应（固定不变）
+                var constTypeOfResource = [
+                    {name: "设备", type: "PhysicalAction"},
+                    {name: "物品", type: "PhysicalAction"},
+                    {name: "机器人", type: "PhysicalAction"},
+                    {name: "用户", type: "SocialAction"},
+                    {name: "工人", type: "SocialAction"},
+                    {name: "云应用", type: "CyberAction"},
+                    {name: "移动应用", type: "CyberAction"},
+                    {name: "嵌入式应用", type: "CyberAction"},
+                    {name: "信息对象", type: "CyberAction"}
+                ];
+
+                for(var i=0;i<constTypeOfResource.length;i++){
+                    if(type === constTypeOfResource[i].name){
+                        return constTypeOfResource[i].type;
+                    }
+                }
+
+                return "";
+            };
+            var getResource = function () {
+                // 获取资源
+                // 遍历页面上的资源元素
+                var shapes = $scope.editor.getCanvas();
+                var resources = {};
+                var k = 0;
+                for (var i = 0; i < shapes.nodes.length; i++) {
+                    if (shapes.nodes[i].properties["oryx-startevent"] === undefined && shapes.nodes[i].properties["oryx-activityelement"] === undefined) {
+                        // 如果确实是资源，则保存shape
+                        resources[k] = {
+                            shape: shapes.nodes[i],
+                            resourceId: getResourceIdbyType(shapes.nodes[i].properties["oryx-type"])
+                        };
+                        k++;
+                    }
+                }
+
+                return resources;
+            };
+
+            var setResource = function (shapes) {
+                // 设置资源
+                var resources = getResource();
+                createResource($scope, resources[0].shape, resources[0].resourceId);
+            };
+
+            var createResource = function ($scope, shape, resourceId) {
+                var resource = undefined;
+                var stencilSets = $scope.editor.getStencilSets().values();
+                for (var i = 0; i < stencilSets.length; i++) {
+                    var stencilSet = stencilSets[i];
+                    var nodes = stencilSet.nodes();
+                    for (var j = 0; j < nodes.length; j++) {
+                        if (nodes[j].idWithoutNs() === resourceId) {
+                            resource = nodes[j];
+                            break;
+                        }
+                    }
+                }
+                if (!resource)
+                    return undefined;
+
+                var resourceOption = {type: 'set', x: shape.bounds.center().x + 50, y: shape.bounds.center().y};
+                var option = {
+                    shape: shape,
+                    type: shape.getStencil().namespace() + resourceId,
+                    namespace: shape.getStencil().namespace(),
+                    parent: shape.parent,
+                    containedStencil: resource,
+                    positionController: resourceOption
+                };
+
+                var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
+                $scope.editor.executeCommands([command]);
+            };
+
+            $scope.switchScene = function (oldShapeId, newShapeId) {
+                // 切换场景
+                // 从旧场景切换到新场景：
+                // 1.如果新场景是UndefinedAction，则只需要保存当前页面资源；
+                // 2.如果新场景是其他Action，除了需要保存当前资源之外，还需要从资源堆中取出其他Action的资源
+                // to do
+
+
+            };
+
         }); // end of $scope.editorFactory.promise block
 
         /* Click handler for clicking a property */
@@ -830,7 +1179,7 @@ angular.module('activitiModeler')
             // Some updates may happen when selected shape is already changed, so when an additional
             // shapeId is supplied, we need to make sure the correct shape is updated (current or previous)
             if (shapeId) {
-                if (shape.id != shapeId && $scope.previousSelectedShape && $scope.previousSelectedShape.id == shapeId) {
+                if (shape.id !== shapeId && $scope.previousSelectedShape && $scope.previousSelectedShape.id === shapeId) {
                     shape = $scope.previousSelectedShape;
                 } else {
                     shape = null;
@@ -856,6 +1205,7 @@ angular.module('activitiModeler')
                         this.facade = $scope.editor;
                     },
                     execute: function () {
+                        //debugger;
                         this.shape.setProperty(this.key, this.newValue);
                         this.facade.getCanvas().update();
                         this.facade.updateSelection();
@@ -1188,7 +1538,7 @@ angular.module('activitiModeler')
 
                 if ($scope.quickMenu) {
                     var shapes = $scope.editor.getSelection();
-                    if (shapes && shapes.length == 1) {
+                    if (shapes && shapes.length === 1) {
                         var currentSelectedShape = shapes.first();
 
                         var option = {};
@@ -1219,6 +1569,7 @@ angular.module('activitiModeler')
                         if (containedStencil.idWithoutNs() !== 'SequenceFlow' && containedStencil.idWithoutNs() !== 'Association' &&
                             containedStencil.idWithoutNs() !== 'MessageFlow' && containedStencil.idWithoutNs() !== 'DataAssociation') {
                             var args = {sourceShape: currentSelectedShape, targetStencil: containedStencil};
+                            debugger;
                             var targetStencil = $scope.editor.getRules().connectMorph(args);
                             if (!targetStencil) {
                                 return;
@@ -1261,6 +1612,7 @@ angular.module('activitiModeler')
                             this.canAttach = canAttach;
                         },
                         execute: function () {
+                            //debugger;
                             if (!this.shape) {
                                 this.shape = this.facade.createShape(option);
                                 this.parent = this.shape.parent;
@@ -1328,7 +1680,7 @@ angular.module('activitiModeler')
                     var entities = [$scope.editor.getCanvas()][0].children;
                     property.value = entities[entities.length - 1].id;
                     $scope.updatePropertyInModel(property);
-                } else if (property.title === "类型") {
+                } else if (property.title === "类型" && item.name !== undefined) {
                     property.value = item.name;
                     $scope.updatePropertyInModel(property);
                 }
@@ -1364,7 +1716,7 @@ angular.module('activitiModeler')
 
         $scope.dragCallback = function (event, ui) {
 
-            if ($scope.dragModeOver != false) {
+            if ($scope.dragModeOver !== false) {
 
                 var coord = $scope.editor.eventCoordinatesXY(event.pageX, event.pageY);
 
@@ -1677,8 +2029,34 @@ angular.module('activitiModeler')
                     elements: [candidate],
                     color: isValid ? ORYX.CONFIG.SELECTION_VALID_COLOR : ORYX.CONFIG.SELECTION_INVALID_COLOR
                 });
+
             }
         };
+
+        new Promise(function (resolve, reject) {
+            setTimeout(function () {
+                resolve('200 OK');
+            }, 1800);
+        }).then(function (result) {
+            console.log(window._loadContentFinished);
+            // 初始化完成,自动生成开始按钮
+            // console.log("StartNoneEvent");
+            // 注意：只有在加载完流程之后并且界面上没有StartNoneEvent时，才会生成。
+            var hasStartEventShape = function () {
+                //debugger;
+                var shapes = $scope.editor.getCanvas().nodes;
+                for (var i = 0; i < shapes.length; i++) {
+                    if (shapes[i].properties["oryx-startevent"] !== undefined) {
+                        return true;
+                    }
+                }
+                return false;
+            };
+
+            if (!hasStartEventShape()) {
+                _createAction($rootScope, $scope, "StartNoneEvent");
+            }
+        });
 
     }]);
 
@@ -1704,12 +2082,12 @@ KISBPM.CreateCommand = ORYX.Core.Command.extend({
         this.type = option.type;
         this.containedStencil = option.containedStencil;
         this.parent = option.parent;
-        this.positionOffset = option.positionOffset;
-        this.currentReference = currentReference;
+        this.positionController = option.positionController;
+        this.shape = option.shape;
         this.shapeOptions = option.shapeOptions;
     },
     execute: function () {
-
+        //debugger;
         if (this.shape) {
             if (this.shape instanceof ORYX.Core.Node) {
                 this.parent.add(this.shape);
@@ -1792,9 +2170,17 @@ KISBPM.CreateCommand = ORYX.Core.Command.extend({
                     pos.x += (bc.width() / 2) + ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.width() / 2);
                 }
             } else {
-                pos = this.positionOffset;
-                pos.x = ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
-                pos.y += ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.height() / 2);
+                pos = {x: this.positionController.x, y: this.positionController.y};//this.positionController.type==='set'
+                if (this.positionController.type === 'offsetY') {
+                    pos.x = ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
+                    pos.y += ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.height() / 2);
+                } else if (this.positionController.type === 'offsetX') {
+                    pos.x += ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
+                    pos.y = ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.height() / 2);
+                } else if (this.positionController.type === 'offset') {
+                    pos.x += ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET_CORNER + (bs.width() / 2);
+                    pos.y += ORYX.CONFIG.SHAPEMENU_CREATE_OFFSET + (bs.height() / 2);
+                }
             }
 
             // Move shape to the new position

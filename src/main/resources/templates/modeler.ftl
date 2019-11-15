@@ -24,7 +24,7 @@
 
 	<link rel="stylesheet" href="editor-app/css/style-common.css">
     <link rel="stylesheet" href="editor-app/css/style-editor.css">
-
+	<link rel="stylesheet" href="editor-app/css/bootstrap-select.min.css" type="text/css"/>
 	<link rel="stylesheet" href="editor-app/css/animate.css" type="text/css"/>
 
 </head>
@@ -91,7 +91,7 @@
 	<script src="editor-app/libs/path_parser.js" type="text/javascript"></script>
 	
 	<script src="editor-app/libs/angular-scroll_0.5.7/angular-scroll.min.js" type="text/javascript"></script>
-	
+	<script src="editor-app/libs/bootstrap-select/bootstrap-select.min.js" type="text/javascript"></script>
 	<!-- Configuration -->
 	<script src="editor-app/app-cfg.js?v=1"></script>
 	<script src="editor-app/editor-config.js" type="text/javascript"></script>

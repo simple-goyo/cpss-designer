@@ -186,12 +186,14 @@ public class ModelerController{
 		Model modelData = repositoryService.getModel(modelId);
 		if(null != modelData){
 			try {
-			   ProcessInstance pi = runtimeService.createProcessInstanceQuery().processDefinitionKey(modelData.getKey()).singleResult();
-			   if(null != pi) {
-				   runtimeService.deleteProcessInstance(pi.getId(), "");
-				   historyService.deleteHistoricProcessInstance(pi.getId());
-			   }
-				map.put("code", "SUCCESS");
+					repositoryService.deleteModel(modelId); // 之前缺少这行代码，导致删不掉模型
+
+					ProcessInstance pi = runtimeService.createProcessInstanceQuery().processDefinitionKey(modelData.getKey()).singleResult();
+					if(null != pi) {
+					   runtimeService.deleteProcessInstance(pi.getId(), "");
+					   historyService.deleteHistoricProcessInstance(pi.getId());
+					}
+					map.put("code", "SUCCESS");
 			} catch (Exception e) {
 				logger.error("删除流程实例服务异常：{}",e);
 				map.put("code", "FAILURE");

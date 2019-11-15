@@ -92,6 +92,12 @@ angular.module('activitiModeler')
             return false;
         });
 
+        Mousetrap.bind(['command+s', 'ctrl+s'], function(e) {
+            var services = { '$scope' : $scope, '$rootScope' : $rootScope, '$http' : $http, '$modal' : $modal, '$q' : $q, '$translate' : $translate};
+            KISBPM.TOOLBAR.ACTIONS.saveModel(services);
+            return false;
+        });
+
         /* Undo logic */
 
         $scope.undoStack = [];

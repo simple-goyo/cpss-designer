@@ -2002,6 +2002,7 @@ ORYX.CONFIG.EVENT_GLOSSARY_SHOW =			"glossary.show.info";
 ORYX.CONFIG.EVENT_GLOSSARY_NEW =			"glossary.show.new";
 ORYX.CONFIG.EVENT_DOCKERDRAG = 				"dragTheDocker";
 ORYX.CONFIG.EVENT_CANVAS_SCROLL = 			"canvas.scroll";
+ORYX.CONFIG.EVENT_CANVAS_SWITCH_SCENE = 	"canvas.switchscene";
 	
 ORYX.CONFIG.EVENT_SHOW_PROPERTYWINDOW =		"propertywindow.show";
 ORYX.CONFIG.EVENT_ABOUT_TO_SAVE = "file.aboutToSave";
@@ -5996,7 +5997,8 @@ ORYX.Core.StencilSet.Stencil = {
 	
 	defaultAlign: function() {
 		if(!this._jsonStencil.defaultAlign)
-			return "north";
+			//return "north";
+		    return "south";
 		return this._jsonStencil.defaultAlign;
 	},
 
@@ -10109,11 +10111,57 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
 				['svg', {id: "underlay-container"}]);
 		
 		// Create 2 svg-elements in the svg-container
+        // 分割左右两块区域
 		this.columnHightlight1 = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-				['rect', {x: 0, width: ORYX.CONFIG.FORM_ROW_WIDTH , height: "100%", style: "fill: #fff6d5", visibility: "true"}]);
+				['rect', {x: 0, width: ORYX.CONFIG.FORM_ROW_WIDTH , height: "100%", style: "fill: #DBFFE7;z-index:-2", visibility: "visible"}]); //#fff6d5
 		
-		this.columnHightlight2 = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-				['rect', {x: ORYX.CONFIG.FORM_ROW_WIDTH , width: options.width - ORYX.CONFIG.FORM_ROW_WIDTH , height: "100%", style: "fill: #CFFFF7", visibility: "hidden"}]);
+		// this.columnHightlight2 = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+		// 		['rect', {x: ORYX.CONFIG.FORM_ROW_WIDTH , width: options.width - ORYX.CONFIG.FORM_ROW_WIDTH , height: "100%", style: "fill: #CFFFF7;z-index:-2", visibility: "visible"}]);
+
+		// 增加一块区域位于第二块分割区域中间
+		// <line x1="0" y1="0" x2="300" y2="300" style="stroke:rgb(99,99,99);stroke-width:2"/>
+        // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+        //    ['rect', {x:ORYX.CONFIG.FORM_ROW_WIDTH + 60, y:200, width:options.width - ORYX.CONFIG.FORM_ROW_WIDTH - 186 - 60, height:300, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:2;stroke:#000000;z-index:-1", visibility: "visible"}]);
+
+        // 四根线,表示现实空间
+		var X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1 ;
+		var X2 = options.width - 186 - 30 + 1;
+		var Y1 = 170;
+		var Y2 = 540;
+
+		ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+			['line', {x1:X1, y1:Y1, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
+		ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+			['line', {x1:X1, y1:Y1, x2:X2, y2:Y1, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
+		ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+			['line', {x1:X2, y1:Y1, x2:X2, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
+		ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+			['line', {x1:X2, y1:Y2, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
+
+		this.RealWord = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+			['text', {'font-size':'24', 'x':X1+5, 'y':Y1+30, 'style': "font-family: Times New Roman;"}]);
+		this.RealWord.textContent = "现实世界";
+
+		// 四根线，表示虚拟空间
+		X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1 ;
+		X2 = options.width - 186 - 30 + 1;
+		Y1 = 20;
+		Y2 = 150;
+
+		ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+			['line', {x1:X1, y1:Y1, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
+		ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+			['line', {x1:X1, y1:Y1, x2:X2, y2:Y1, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
+		ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+			['line', {x1:X2, y1:Y1, x2:X2, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
+		ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+			['line', {x1:X2, y1:Y2, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
+
+
+		this.CyberWord = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+			['text', {'font-size':'24', 'x':X1+5, 'y':Y1+30, 'style': "font-family: Times New Roman;"}]);
+		this.CyberWord.textContent = "虚拟世界";
+
 
 		this.node = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.rootNode,
 			['g', {},
@@ -10854,6 +10902,7 @@ function init() {
    @name ORYX
 */
 if(!ORYX) {var ORYX = {};}
+var _loadContentFinished = false;
 
 /**
  * The Editor class.
@@ -10943,9 +10992,11 @@ ORYX.Editor = {
 
 		// LOAD the content of the current editor instance
 		window.setTimeout(function(){
+			//debugger;
             this.loadSerialized(model, true); // Request the meta data as well
             this.getCanvas().update();
 			loadContentFinished = true;
+			_loadContentFinished = true;
 			initFinished();
 		}.bind(this), 200);
 	},
@@ -11387,7 +11438,7 @@ ORYX.Editor = {
 				this.loadSerialized = loadSerializedCB;
 			},			
 			execute: function(){
-				
+				//debugger;
 				if (!this.shapes) {
 					// Import the shapes out of the serialization		
 					this.shapes	= this.loadSerialized( this.jsonObject );		
@@ -12205,7 +12256,7 @@ ORYX.Editor = {
 		// get canvas.
 		var canvas = this.getCanvas();
 		// Try to get the focus
-		canvas.focus()
+		canvas.focus();
 	
 		// find the shape that is responsible for this element's id.
 		var element = event.currentTarget;
@@ -12247,8 +12298,8 @@ ORYX.Editor = {
 			&& !currentIsSelected) {
 				
 			var newSelection = this.selection.clone();
-			newSelection.push(elementController)
-			this.setSelection(newSelection)
+			newSelection.push(elementController);
+			this.setSelection(newSelection);
 
 			ORYX.Log.trace("Rule #4 applied for mouse down on %0", element.id);
 
@@ -12257,7 +12308,7 @@ ORYX.Editor = {
 			modifierKeyPressed) {
 
 			var newSelection = this.selection.clone();
-			this.setSelection(newSelection.without(elementController))
+			this.setSelection(newSelection.without(elementController));
 
 			ORYX.Log.trace("Rule #6 applied for mouse down on %0", elementController.id);
 
@@ -12353,7 +12404,7 @@ ORYX.Editor = {
                 //IE 10 and below
                 var zoom = Math.round((screen.deviceXDPI / screen.logicalXDPI) * 100);
                 if (zoom !== 100) {
-                    additionalIEZoom = zoom / 100
+                    additionalIEZoom = zoom / 100;
                 }
             }
         }
@@ -12382,7 +12433,7 @@ ORYX.Editor = {
                 //IE 10 and below
                 var zoom = Math.round((screen.deviceXDPI / screen.logicalXDPI) * 100);
                 if (zoom !== 100) {
-                    additionalIEZoom = zoom / 100
+                    additionalIEZoom = zoom / 100;
                 }
             }
         }
@@ -12411,7 +12462,7 @@ ORYX.Editor.createByUrl = function(modelUrl){
         new ORYX.Editor(editorConfig);
       }.bind(this)
     });
-}
+};
 
 // TODO Implement namespace awareness on attribute level.
 /**
@@ -12596,9 +12647,9 @@ ORYX.Editor.setMissingClasses = function() {
 ORYX.Editor.checkClassType = function( classInst, classType ) {
 	
 	if( ORYX.Editor.SVGClassElementsAreAvailable ){
-		return classInst instanceof classType
+		return classInst instanceof classType;
 	} else {
-		return classInst == classType
+		return classInst == classType;
 	}
 };
 /*
@@ -12698,6 +12749,7 @@ new function(){
 			this.edges 		= $H({});
 		},
 		execute: function(){
+			//debugger;
 			if (this.changes) {
 				this.executeAgain();
 				return;
@@ -17228,7 +17280,7 @@ ORYX.Plugins.AbstractPlugin = Clazz.extend({
 				
 			},
 			execute: function(){
-				
+				//debugger;
 				if (this.changes){
 					this.executeAgain();
 					return;
@@ -18421,6 +18473,7 @@ ORYX.Plugins.CanvasResize = Clazz.extend({
 				this.facade = facade;
 			},			
 			execute: function(){
+				debugger;
 				resizeCanvas(this.position, this.extentionSize, this.facade);
 			},
 			rollback: function(){
@@ -18727,6 +18780,7 @@ ORYX.Plugins.RenameShapes = Clazz.extend({
 						this.facade = facade;
 					},
 					execute: function(){
+						debugger;
 						this.el.setProperty(this.propId, this.newValue);
 						//this.el.update();
 						this.facade.setSelection([this.el]);

@@ -7,20 +7,15 @@
                 <h2 translate>PROPERTY.SERVICES.TITLE</h2>
             </div>
             <div class="modal-body">
-
                 <div class="row row-no-gutter">
                     <div class="form-group">
-                        <!--<label for="assigneeField">{{'PROPERTY.SERVICES.SOURCE' | translate}}</label>-->
-                        <!--<input type="text" id="assigneeField" class="form-control" ng-model="assignment.assignee"-->
-                        <!--placeholder="{{'PROPERTY.ASSIGNMENT.SOURCE_PLACEHOLDER' | translate}}"/>-->
-                        <label>{{'PROPERTY.SERVICES.FUNCTION' | translate}}</label>
-                        <select class="form-control" ng-model="selectedFunc" ng-change="changeData()">
-                            <option value=""  selected="selected">---请选择---</option>
-                            <option ng-repeat="x in constfunctions" value="{{x.name}}">{{x.name}}</option>
+                        <label>{{'PROPERTY.SERVICES.FUNCTION.VALUE' | translate}}</label>
+                        <select class="form-control" ng-model="selectedFunc">
+                            <option value="" selected="selected">---请选择服务---</option>
+                            <option ng-repeat="x in functions" value="{{x.name}}">{{x.name}}</option>
                         </select>
                         <div ng-repeat="Service in entity.Services">
-                            <input class="form-control" type="hidden" ng-model="Service.value" />
-<!--                            <input class="form-control" type="text" ng-model="Service.value" />-->
+                            <input class="form-control" type="hidden" ng-model="Service.value"/>
                             <i class="glyphicon glyphicon-minus clickable-property"
                                ng-click="removeServiceValue($index)"></i>
                             <i ng-if="$index == (entity.Services.length - 1)"
@@ -29,18 +24,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!--<div class="row row-no-gutter">-->
-                <!--<div class="form-group">-->
-                <!--<label for="userField">{{'PROPERTY.SERVICES.FUNCTION' | translate}}</label>-->
-                <!--<div ng-repeat="candidateUser in assignment.candidateUsers">-->
-                <!--<input id="userField" class="form-control" type="text" ng-model="candidateUser.value"/>-->
-                <!--<i class="glyphicon glyphicon-minus clickable-property" ng-click="removeCandidateUserValue($index)"></i>-->
-                <!--<i ng-if="$index == (assignment.candidateUsers.length - 1)" class="glyphicon glyphicon-plus clickable-property" ng-click="addCandidateUserValue($index)"></i>-->
-                <!--</div>-->
-                <!--</div>-->
-                <!--</div>-->
-
             </div>
             <div class="modal-footer">
                 <button ng-click="close()" class="btn btn-primary" translate>ACTION.CANCEL</button>

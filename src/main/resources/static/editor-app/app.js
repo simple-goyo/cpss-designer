@@ -54,7 +54,7 @@ activitiModeler
         $translateProvider.useCookieStorage();
         
   }])
-  .run(['$rootScope', '$timeout', '$modal', '$translate', '$location', '$window', '$http', '$q',
+  .run(['$rootScope','$timeout', '$modal', '$translate', '$location', '$window', '$http', '$q',
         function($rootScope, $timeout, $modal, $translate, $location, $window, $http, $q) {
 	  
 			  $rootScope.config = ACTIVITI.CONFIG;
@@ -107,7 +107,6 @@ activitiModeler
                       console.log('Error loading model with id ' + modelId + ' ' + data);
                     });
             }
-
 
             function initScrollHandling() {
                 var canvasSection = jQuery('#canvasSection');
@@ -238,7 +237,7 @@ activitiModeler
 	        	            }
 	                	}
 
-	                    var totalAvailable = jQuery(window).height() - offset.top - mainHeader.height() - 21;
+	                    var totalAvailable = jQuery(window).height();//隐藏属性界面// - offset.top - mainHeader.height() - 21;
 	                    canvas.height(totalAvailable - propSectionHeight);
 	                    jQuery('#paletteSection').height(totalAvailable);
 
@@ -320,7 +319,7 @@ activitiModeler
 	                
 	                // Always needed, cause the DOM element on which the scroll event listeners are attached are changed for every new model
 	                initScrollHandling();
-	                
+
 	                $rootScope.editorInitialized = true;
 	            }
             });
@@ -413,6 +412,27 @@ activitiModeler
                     });
                 }
             };
+            //
+            // $rootScope.editorFactory.promise.then(function(){
+            //     // 初始化完成,自动生成开始按钮
+            //     // console.log("StartNoneEvent");
+            //     // 注意：只有在加载完流程之后并且界面上没有StartNoneEvent时，才会生成。
+            //     var hasStartEventShape = function(){
+            //         debugger;
+            //         var shapes = $rootScope.editor.getCanvas().nodes;
+            //         for(var i=0;i<shapes.length;i++){
+            //             if(shapes[i].Id === "StartNoneEvent"){
+            //                 return true;
+            //             }
+            //         }
+            //         return false;
+            //     };
+            //
+            //     if(!hasStartEventShape()){
+            //         debugger;
+            //         _createAction($rootScope, $rootScope, "StartNoneEvent");
+            //     }
+            // })
           
         }
   ])

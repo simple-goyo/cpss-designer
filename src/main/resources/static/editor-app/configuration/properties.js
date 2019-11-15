@@ -100,7 +100,7 @@ KISBPM.PROPERTY_CONFIG =
             "readModeTemplateUrl": "editor-app/configuration/properties/services-display-template.html",
             "writeModeTemplateUrl": "editor-app/configuration/properties/services-write-template.html"
         },
-        "oryx-resources-complex": {
+        "oryx-events-complex": {
             "readModeTemplateUrl": "editor-app/configuration/properties/events-display-template.html",
             "writeModeTemplateUrl": "editor-app/configuration/properties/events-write-template.html"
         },
@@ -129,6 +129,10 @@ KISBPM.PROPERTY_CONFIG =
             "writeModeTemplateUrl": null
         },
         "oryx-actionoutputstatus-complex": {
+            "readModeTemplateUrl": null,
+            "writeModeTemplateUrl": null
+        },
+        "oryx-resourceline-complex": {
             "readModeTemplateUrl": null,
             "writeModeTemplateUrl": null
         }

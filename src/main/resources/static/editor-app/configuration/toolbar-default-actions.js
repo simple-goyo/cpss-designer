@@ -209,14 +209,55 @@ KISBPM.TOOLBAR = {
             dockerPlugin.setEnableRemove(enableRemove);
             if (enableRemove)
             {
-            	dockerPlugin.setEnableAdd(false);
-            	document.body.style.cursor = 'pointer';
+                dockerPlugin.setEnableAdd(false);
+                document.body.style.cursor = 'pointer';
             }
             else
             {
-            	document.body.style.cursor = 'default';
+                document.body.style.cursor = 'default';
             }
         },
+
+        addNextNode: function (services) {
+
+/*            var opts = {
+                template: 'editor-app/configuration/properties/services-popup_new.html?version=' + Date.now(),
+                scope: services.$scope
+            };
+            $modal(opts);*/
+            // var modal = services.$modal({
+            //     backdrop: true,
+            //     keyboard: true,
+            //     template: 'editor-app/configuration/properties/services-popup_new.html?version=' + Date.now(),
+            //     scope: services.$scope
+            // });
+
+            // to do
+            // 如果画布上已经有未定义Action，则不添加新的Action
+            // if(...) return;
+            _createAction(services.$rootScope, services.$scope, "UndefinedAction");
+
+        },
+
+        addResource: function (services){
+            var modal = services.$modal({
+                backdrop: true,
+                keyboard: true,
+                template: 'editor-app/configuration/properties/input-popup.html?version=' + Date.now(),
+                scope: services.$scope
+            });
+        },
+
+        removeResource: function (services){
+            var modal = services.$modal({
+                backdrop: true,
+                keyboard: true,
+                template: 'editor-app/configuration/properties/input-popup.html?version=' + Date.now(),
+                scope: services.$scope
+            });
+        },
+
+
 
         /**
          * Helper method: fetches the Oryx Edit plugin from the provided scope,
@@ -291,6 +332,108 @@ KISBPM.TOOLBAR = {
     }
 };
 
+
+var _createAction = function($rootScope, $scope, ItemId){
+  if(ItemId === "UndefinedAction"){
+      return __createNormalAction($rootScope, $scope);
+  }else if(ItemId === "StartNoneEvent"){
+      return __createStartNode($rootScope, $scope);
+  }
+};
+
+var __createStartNode = function($rootScope, $scope){
+    var itemId = "StartNoneEvent";
+    var containedStencil = undefined;
+    var stencilSets = $scope.editor.getStencilSets().values();
+    for (var i = 0; i < stencilSets.length; i++) {
+        var stencilSet = stencilSets[i];
+        var nodes = stencilSet.nodes();
+        for (var j = 0; j < nodes.length; j++) {
+            if (nodes[j].idWithoutNs() === itemId) {
+                containedStencil = nodes[j];
+                break;
+            }
+        }
+    }
+
+    if (!containedStencil) return;
+
+    var positionOffset = { x: 180, y: 30};
+
+    var option = {
+        type: "http://b3mn.org/stencilset/bpmn2.0#" + itemId,
+        namespace: "http://b3mn.org/stencilset/bpmn2.0#",
+        positionController: positionOffset,
+        containedStencil: containedStencil
+    };
+    var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
+    $scope.editor.executeCommands([command]);
+
+};
+
+var __createNormalAction = function($rootScope, $scope){
+    var itemId = "UndefinedAction";
+
+    var shapes = $rootScope.editor.getSelection();
+    if (shapes && shapes.length === 1) {
+        $rootScope.currentSelectedShape = shapes.first();
+
+        var containedStencil = undefined;
+        var stencilSets = $scope.editor.getStencilSets().values();
+        for (var i = 0; i < stencilSets.length; i++) {
+            var stencilSet = stencilSets[i];
+            var nodes = stencilSet.nodes();
+            for (var j = 0; j < nodes.length; j++) {
+                if (nodes[j].idWithoutNs() === itemId) {
+                    containedStencil = nodes[j];
+                    break;
+                }
+            }
+        }
+
+        if (!containedStencil) return;
+
+        var positionOffset = {type: 'offsetY', x: 0, y: 0};
+        var node = $rootScope.currentSelectedShape;
+        if (node.properties["oryx-activityelement"]||node.properties["oryx-startevent"] !== undefined) {
+            if (positionOffset.y < node.bounds.center().y) {
+                positionOffset.y = node.bounds.center().y;
+            }
+        }
+
+        var option = {
+            type: $scope.currentSelectedShape.getStencil().namespace() + itemId,
+            namespace: $scope.currentSelectedShape.getStencil().namespace(),
+            positionController: positionOffset,
+            connectedShape:$rootScope.currentSelectedShape,
+            parent:$rootScope.currentSelectedShape.parent,
+            containedStencil:containedStencil
+        };
+        // option['connectedShape'] = $rootScope.currentSelectedShape;
+        // option['parent'] = $rootScope.currentSelectedShape.parent;
+        // option['containedStencil'] = containedStencil;
+
+        var args = {sourceShape: $rootScope.currentSelectedShape, targetStencil: containedStencil};
+        var targetStencil = $scope.editor.getRules().connectMorph(args);
+        if (!targetStencil) {
+            return;
+        }// Check if there can be a target shape
+        option['connectingType'] = targetStencil.id();
+
+        var command = new KISBPM.CreateCommand(option, undefined, undefined, $rootScope.editor);
+        $scope.editor.executeCommands([command]);
+
+        // 取消之前的高亮
+        var oldShapeId = $scope.getHighlightedShapeId();
+        jQuery('#' + oldShapeId + 'bg_frame').attr({"fill":"#f9f9f9"}); //高亮显示
+
+        // 高亮
+        var newShapeId = $scope.editor.getSelection()[0].id;
+        $scope.setHighlightedShape(newShapeId);
+        jQuery('#' + newShapeId + 'bg_frame').attr({"fill":"#04FF8E"}); //高亮显示
+    }
+};
+
 /** Custom controller for the save dialog */
 var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
     function ($rootScope, $scope, $http, $route, $location) {
@@ -308,6 +451,8 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
     $scope.saveDialog = saveDialog;
     
     var json = $scope.editor.getJSON();
+    json["properties"]["name"] = modelMetaData.name;
+    json["properties"]["documentation"] = description;
     json = JSON.stringify(json);
 
     var params = {
@@ -326,7 +471,7 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
 
     $scope.saveAndClose = function () {
     	$scope.save(function() {
-    		window.location.href = "./";
+    		window.location.href = "./index";
     	});
     };
     $scope.save = function (successCallback) {
@@ -344,8 +489,9 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
         modelMetaData.description = $scope.saveDialog.description;
 
         var json = $scope.editor.getJSON();
+        json["properties"]["name"] = modelMetaData.name;// add diagram name
         json = JSON.stringify(json);
-        
+
         var selection = $scope.editor.getSelection();
         $scope.editor.setSelection([]);
         
@@ -375,7 +521,25 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
             description: $scope.saveDialog.description
         };
 
+        var url = "http://192.168.31.52:5001/save_app_class";
         // Update
+        $http({
+            method: 'POST',
+            ignoreErrors: true,
+            headers: {'Accept': 'application/json',
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            data:json,
+            url:url
+
+        })
+        .success(function(data){
+            console.log("模型保存成功!")
+        })
+        .error(function(data){
+            console.log("模型保存失败!")
+        });
+
         $http({    method: 'PUT',
             data: params,
             ignoreErrors: true,

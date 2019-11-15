@@ -20,6 +20,8 @@
 /*
  * entity
  */
+var selectedShapeFunctionType = undefined;
+
 var KisBpmServicesCtrl = ['$scope', '$modal', function ($scope, $modal) {
 
     // Config for the modal window
@@ -49,25 +51,76 @@ var KisBpmServicesPopupCtrl = ['$scope', function ($scope) {
     };
 }];
 
-var ServicesPopupCtrl = ['$scope', function ($scope) {
+var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
     var ActivityElement;
-    $scope.constfunctions = [
-        {name : "获取水杯", url : "http://www.google.com"},
-        {name : "获取咖啡", url : "http://www.runoob.com"},
-        {name : "递交物品", url : "http://www.taobao.com"}
+    var shape = $scope.selectedShape;
+    var HighlightedShape = $scope.getHighlightedShape();
+
+    // 资源执行主体所拥有的功能，数据从知识图谱中获得
+    $scope.resourceFunctions = [
+        {name: "获取水杯", type: "SocialAction"},
+        {name: "获取咖啡", type: "SocialAction"},
+        {name: "递交物品", type: "SocialAction"},
+        {name: "制作咖啡", type: "PhysicalAction"},
+        {name: "点咖啡服务", type: "CyberAction"}
     ];
 
+    // 资源执行主体所有的输出，数据从知识图谱中获得
+    $scope.resourceOutputs = [];
+
+    // 资源与人机物三种Action的对应（固定不变）
+    $scope.constTypeOfResource = [
+        {name: "设备", type: "PhysicalAction"},
+        {name: "物品", type: "PhysicalAction"},
+        {name: "机器人", type: "PhysicalAction"},
+        {name: "用户", type: "SocialAction"},
+        {name: "工人", type: "SocialAction"},
+        {name: "云应用", type: "CyberAction"},
+        {name: "移动应用", type: "CyberAction"},
+        {name: "嵌入式应用", type: "CyberAction"},
+        {name: "信息对象", type: "CyberAction"}
+    ];
+
+    $http({method: 'GET', url: KISBPM.URL.getResources()}).success(function (data, status, headers, config) {
+        console.log(JSON.stringify(data));
+        // 初始化$scope.constTypeOfResource和$scope.resourceFunctions
+        // $scope.constTypeOfResource表示资源的人机物类别
+        // $scope.resourceFunctions 表示动作对应的人机物类别
+
+    }).error(function (data, status, headers, config) {
+        console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
+    });
+
+    var selectedShapeFunctionType = undefined;
+    for (var i = 0; i < $scope.constTypeOfResource.length; i++) {
+        if ($scope.constTypeOfResource[i].name === shape.properties["oryx-type"]) {
+            selectedShapeFunctionType = $scope.constTypeOfResource[i].type;
+        }
+    }
+
+    $scope.functions = [];
+
+    if (selectedShapeFunctionType) {
+        for (var i = 0; i < $scope.resourceFunctions.length; i++) {
+            if ($scope.resourceFunctions[i].type === selectedShapeFunctionType) {
+                $scope.functions[$scope.functions.length] = {name: $scope.resourceFunctions[i].name};
+            }
+        }
+    } else {
+        $scope.functions = $scope.resourceFunctions;
+    }
+
     // Put json representing entity on scope
-    if ($scope.property.value !== undefined && $scope.property.value !== null
+    if ($scope.property !== undefined && $scope.property.value !== undefined && $scope.property.value !== null
         && $scope.property.value.length > 0) {
         $scope.entity = {};
         $scope.entity.Services = [];
         for (var i = 0; i < $scope.property.value.length; i++) {
             $scope.entity.Services[$scope.entity.Services.length] = {value: $scope.property.value[i].function};
         }
-
     } else {
         $scope.entity = {};
+        $scope.property = {};
     }
 
     if ($scope.entity.Services === undefined || $scope.entity.Services.length === 0) {
@@ -86,8 +139,8 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
 
     $scope.save = function () {
         handleEntityInput($scope);
-        if ($scope.property.value===undefined||!$scope.property.value) {
-            $scope.property.value = {"id": "", "function": ""};
+        if ($scope.property.value === undefined || !$scope.property.value) {
+            $scope.property.value = [{"id": "", "function": ""}];
         }
 
         ActivityElement = $scope.editor.getSelection()[0];
@@ -111,8 +164,8 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
             // $scope.updatePropertyInModel($scope.property);
             // $scope.close();
             // return;
-        }else{
-            $scope.entity.Services[$scope.entity.Services.length] = {value:$scope.selectedFunc};
+        } else {
+            $scope.entity.Services[$scope.entity.Services.length] = {value: $scope.selectedFunc};
         }
         var indexToRemove = [];
         var hasRemoveNum = 0;
@@ -136,9 +189,6 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
             hasRemoveNum++;
         }
 
-
-        var shape = $scope.selectedShape;
-
         for (var i = 0; i < $scope.entity.Services.length; i++) {
             index = -1;
             for (var j = 0; j < functions.length; j++) {
@@ -149,7 +199,8 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
             if (index < 0) {
                 // var shapeToRemove = $scope.getShapeById($scope.property.value.id);
                 // $scope.editor.deleteShape(shapeToRemove);
-                $scope.createAction($scope, $scope.entity.Services[i].value);
+                //$scope.createAction($scope, $scope.entity.Services[i].value, selectedShapeFunctionType);
+                $scope.replaceAction($scope, $scope.entity.Services[i].value, selectedShapeFunctionType);
                 //$scope.createAction($scope,$scope.selectedFunc);
                 $scope.property.value[$scope.property.value.length] = {
                     id: $scope.editor.getSelection()[0].id, function: $scope.entity.Services[i].value
@@ -158,15 +209,63 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
                 $scope.editor.getCanvas().update();
                 $scope.editor.updateSelection();
                 // $scope.updatePropertyInModel($scope.property, shapeId);
+                if ($scope.entity.Services[i].value === '点咖啡服务') {
+                    $scope.createResource($scope, shape, "CyberObject");
+                    $scope.editor.getSelection()[0].setProperty("oryx-overrideid", ORYX.Editor.provideId());
+                    $scope.editor.getSelection()[0].setProperty("oryx-name", "订单");
+                    $scope.editor.getSelection()[0].setProperty("oryx-type", "信息对象");
+                    $scope.editor.getCanvas().update();
+                    $scope.editor.updateSelection();
+                }
             }
         }
         $scope.close();
     };
 
-    $scope.createAction = function ($scope, actionName) {
+    $scope.createResource = function ($scope, shape, resourceId) {
+        var resource = undefined;
+        var stencilSets = $scope.editor.getStencilSets().values();
+        for (var i = 0; i < stencilSets.length; i++) {
+            var stencilSet = stencilSets[i];
+            var nodes = stencilSet.nodes();
+            for (var j = 0; j < nodes.length; j++) {
+                if (nodes[j].idWithoutNs() === resourceId) {
+                    resource = nodes[j];
+                    break;
+                }
+            }
+        }
+        if (!resource)
+            return undefined;
+
+        var resourceOption = {type: 'set', x: shape.bounds.center().x + 50, y: shape.bounds.center().y};
+
+        var option = {
+            type: shape.getStencil().namespace() + resourceId,
+            namespace: shape.getStencil().namespace(),
+            parent: shape.parent,
+            containedStencil: resource,
+            positionController: resourceOption
+        };
+
+        var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
+
+        $scope.editor.executeCommands([command]);
+    };
+
+    $scope.createAction = function ($scope, actionName, FunctionType) {
         var selectItem = ActivityElement;//$scope.editor.getSelection()[0];
         //var itemId = "actionActivity";
-        var itemId = "SocialAction";
+        // 机的图标 对应 CyberAction，itemId==类型
+        // var itemId = "SocialAction";
+        // if ("点咖啡服务" === actionName) {
+        //     itemId = "CyberAction";
+        // } else if ("制作咖啡" === actionName) {
+        //     itemId = "PhysicalAction";
+        // } else {
+        //     itemId = "SocialAction";
+        // }
+        var itemId = FunctionType;
         var action = undefined;
         var stencilSets = $scope.editor.getStencilSets().values();
         for (var i = 0; i < stencilSets.length; i++) {
@@ -182,7 +281,7 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
         if (!action) return;
 
         var nodes = [$scope.editor.getCanvas()][0].children;
-        var positionOffset = {x: 180, y: 0};
+        var positionOffset = {type: 'offsetY', x: 0, y: 0};
         for (var i = 0; i < nodes.length; i++) {
             if (nodes[i].properties["oryx-activityelement"]) {
                 if (positionOffset.y < nodes[i].bounds.center().y) {
@@ -190,8 +289,8 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
                 }
             }
         }
-        //if (positionOffset.y !== 0) {
-            positionOffset.y += 30;
+        //if (positionController.y !== 0) {
+        // positionOffset.y += 30;
         //}
 
         var option = {
@@ -199,7 +298,7 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
             namespace: selectItem.getStencil().namespace(),
             parent: selectItem.parent,
             containedStencil: action,
-            positionOffset: positionOffset
+            positionController: positionOffset
         };
 
         var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
@@ -238,10 +337,68 @@ var ServicesPopupCtrl = ['$scope', function ($scope) {
         }
     };
 
-    $scope.changeData = function(){
-        console.log("datachanged!")
-    };
+    // 替换未定义Action
+    $scope.replaceAction = function($scope, actionName, FunctionType) {
+        if(HighlightedShape === undefined) return;// 如果没有高亮，直接返回
 
+        var selectItem = $scope.editor.getSelection()[0];
+        var stencil = undefined;
+        var stencilSets = $scope.editor.getStencilSets().values();
+        var stencilId = FunctionType;
+        var newShapeId = "";
+
+        for (var i = 0; i < stencilSets.length; i++)
+        {
+            var stencilSet = stencilSets[i];
+            var nodes = stencilSet.nodes();
+            for (var j = 0; j < nodes.length; j++)
+            {
+                if (nodes[j].idWithoutNs() === stencilId)
+                {
+                    stencil = nodes[j];
+                    break;
+                }
+            }
+        }
+
+        if (!stencil) return;
+
+        // Create and execute command (for undo/redo)
+        var command = new MorphTo(HighlightedShape, stencil, $scope.editor);
+        $scope.editor.executeCommands([command]);
+
+        var actionActivity = $scope.selectedItem;
+        for (var i = 0; i < actionActivity.properties.length; i++) {
+            var property = actionActivity.properties[i];
+            if (property.title === "Id") {
+                property.value = $scope.editor.getSelection()[0].id;
+                newShapeId = property.value;
+                $scope.updatePropertyInModel(property);
+            } else if (property.title === "名称") {
+                property.value = actionName;
+                $scope.updatePropertyInModel(property);
+            } else if (property.title === "活动元素") {
+                property.value = {
+                    "id": selectItem.properties["oryx-overrideid"],
+                    "name": selectItem.properties["oryx-name"],
+                    "type": selectItem.properties["oryx-type"]
+                };
+                $scope.updatePropertyInModel(property);
+            } else if (property.title === "动作输入状态") {
+                property.value = $scope.inputStatus;
+                $scope.inputStatus = [];
+                $scope.updatePropertyInModel(property);
+            } else if (property.title === "动作输出状态") {
+                property.value = $scope.outputStatus;
+                $scope.outputStatus = [];
+                $scope.updatePropertyInModel(property);
+            }
+        }
+        $scope.setHighlightedShape(newShapeId);
+        jQuery('#' + newShapeId + 'bg_frame').attr({"fill":"#04FF8E"}); //高亮显示
+
+        //$scope.close();
+    };
     // Close button handler
     $scope.close = function () {
         //handleEntityInput($scope);
@@ -290,13 +447,218 @@ var ServicesDisplayedCtrl = ['$scope', function ($scope) {
         }
         $scope.updatePropertyInModel($scope.property);
     }
-    // if ($scope.property.value.id) {
-    //     var shape = $scope.getShapeById($scope.property.value.id);
-    //     if (!shape) {
-    //         $scope.property.value = {};
-    //     } else {
-    //         //$scope.property.value.function = shape.properties["oryx-name"];
-    //     }
-    //     $scope.updatePropertyInModel($scope.property);
-    // }
 }];
+
+var MorphTo = ORYX.Core.Command.extend({
+    construct: function(shape, stencil, facade){
+        this.shape = shape;
+        this.stencil = stencil;
+        this.facade = facade;
+    },
+    execute: function(){
+        var shape = this.shape;
+        var stencil = this.stencil;
+        var resourceId = shape.resourceId;
+
+        // Serialize all attributes
+        var serialized = shape.serialize();
+        stencil.properties().each((function(prop) {
+            if(prop.readonly()) {
+                serialized = serialized.reject(function(serProp) {
+                    return serProp.name === prop.id();
+                });
+            }
+        }).bind(this));
+
+        // Get shape if already created, otherwise create a new shape
+        if (this.newShape){
+            newShape = this.newShape;
+            this.facade.getCanvas().add(newShape);
+        } else {
+            newShape = this.facade.createShape({
+                type: stencil.id(),
+                namespace: stencil.namespace(),
+                resourceId: resourceId
+            });
+        }
+
+        // calculate new bounds using old shape's upperLeft and new shape's width/height
+        var boundsObj = serialized.find(function(serProp){
+            return (serProp.prefix === "oryx" && serProp.name === "bounds");
+        });
+
+        var changedBounds = null;
+
+        if (!this.facade.getRules().preserveBounds(shape.getStencil())) {
+
+            var bounds = boundsObj.value.split(",");
+            if (parseInt(bounds[0], 10) > parseInt(bounds[2], 10)) { // if lowerRight comes first, swap array items
+                var tmp = bounds[0];
+                bounds[0] = bounds[2];
+                bounds[2] = tmp;
+                tmp = bounds[1];
+                bounds[1] = bounds[3];
+                bounds[3] = tmp;
+            }
+            bounds[2] = parseInt(bounds[0], 10) + newShape.bounds.width();
+            bounds[3] = parseInt(bounds[1], 10) + newShape.bounds.height();
+            boundsObj.value = bounds.join(",");
+
+        }  else {
+
+            var height = shape.bounds.height();
+            var width  = shape.bounds.width();
+
+            // consider the minimum and maximum size of
+            // the new shape
+
+            if (newShape.minimumSize) {
+                if (shape.bounds.height() < newShape.minimumSize.height) {
+                    height = newShape.minimumSize.height;
+                }
+
+
+                if (shape.bounds.width() < newShape.minimumSize.width) {
+                    width = newShape.minimumSize.width;
+                }
+            }
+
+            if(newShape.maximumSize) {
+                if(shape.bounds.height() > newShape.maximumSize.height) {
+                    height = newShape.maximumSize.height;
+                }
+
+                if(shape.bounds.width() > newShape.maximumSize.width) {
+                    width = newShape.maximumSize.width;
+                }
+            }
+
+            changedBounds = {
+                a : {
+                    x: shape.bounds.a.x,
+                    y: shape.bounds.a.y
+                },
+                b : {
+                    x: shape.bounds.a.x + width,
+                    y: shape.bounds.a.y + height
+                }
+            };
+
+        }
+
+        var oPos = shape.bounds.center();
+        if(changedBounds !== null) {
+            newShape.bounds.set(changedBounds);
+        }
+
+        // Set all related dockers
+        this.setRelatedDockers(shape, newShape);
+
+        // store DOM position of old shape
+        var parentNode = shape.node.parentNode;
+        var nextSibling = shape.node.nextSibling;
+
+        // Delete the old shape
+        this.facade.deleteShape(shape);
+
+        // Deserialize the new shape - Set all attributes
+        newShape.deserialize(serialized);
+        /*
+         * Change color to default if unchanged
+         * 23.04.2010
+         */
+        if(shape.getStencil().property("oryx-bgcolor")
+            && shape.properties["oryx-bgcolor"]
+            && shape.getStencil().property("oryx-bgcolor").value().toUpperCase()== shape.properties["oryx-bgcolor"].toUpperCase()){
+            if(newShape.getStencil().property("oryx-bgcolor")){
+                newShape.setProperty("oryx-bgcolor", newShape.getStencil().property("oryx-bgcolor").value());
+            }
+        }
+        if(changedBounds !== null) {
+            newShape.bounds.set(changedBounds);
+        }
+
+        if(newShape.getStencil().type()==="edge" || (newShape.dockers.length==0 || !newShape.dockers[0].getDockedShape())) {
+            newShape.bounds.centerMoveTo(oPos);
+        }
+
+        if(newShape.getStencil().type()==="node" && (newShape.dockers.length==0 || !newShape.dockers[0].getDockedShape())) {
+            this.setRelatedDockers(newShape, newShape);
+
+        }
+
+        // place at the DOM position of the old shape
+        if(nextSibling) parentNode.insertBefore(newShape.node, nextSibling);
+        else parentNode.appendChild(newShape.node);
+
+        // Set selection
+        this.facade.setSelection([newShape]);
+        this.facade.getCanvas().update();
+        this.facade.updateSelection();
+        this.newShape = newShape;
+
+    },
+    rollback: function(){
+
+        if (!this.shape || !this.newShape || !this.newShape.parent) {return;}
+
+        // Append shape to the parent
+        this.newShape.parent.add(this.shape);
+        // Set dockers
+        this.setRelatedDockers(this.newShape, this.shape);
+        // Delete new shape
+        this.facade.deleteShape(this.newShape);
+        // Set selection
+        this.facade.setSelection([this.shape]);
+        // Update
+        this.facade.getCanvas().update();
+        this.facade.updateSelection();
+    },
+
+    /**
+     * Set all incoming and outgoing edges from the shape to the new shape
+     * @param {Shape} shape
+     * @param {Shape} newShape
+     */
+    setRelatedDockers: function(shape, newShape){
+        if(shape.getStencil().type()==="node") {
+            (shape.incoming||[]).concat(shape.outgoing||[])
+                .each(function(i) {
+                    i.dockers.each(function(docker) {
+                        if (docker.getDockedShape() == shape) {
+                            var rPoint = Object.clone(docker.referencePoint);
+                            // Move reference point per percent
+
+                            var rPointNew = {
+                                x: rPoint.x*newShape.bounds.width()/shape.bounds.width(),
+                                y: rPoint.y*newShape.bounds.height()/shape.bounds.height()
+                            };
+
+                            docker.setDockedShape(newShape);
+                            // Set reference point and center to new position
+                            docker.setReferencePoint(rPointNew);
+                            if(i instanceof ORYX.Core.Edge) {
+                                docker.bounds.centerMoveTo(rPointNew);
+                            } else {
+                                var absXY = shape.absoluteXY();
+                                docker.bounds.centerMoveTo({x:rPointNew.x+absXY.x, y:rPointNew.y+absXY.y});
+                                //docker.bounds.moveBy({x:rPointNew.x-rPoint.x, y:rPointNew.y-rPoint.y});
+                            }
+                        }
+                    });
+                });
+
+            // for attached events
+            if(shape.dockers.length>0&&shape.dockers.first().getDockedShape()) {
+                newShape.dockers.first().setDockedShape(shape.dockers.first().getDockedShape());
+                newShape.dockers.first().setReferencePoint(Object.clone(shape.dockers.first().referencePoint));
+            }
+
+        } else { // is edge
+            newShape.dockers.first().setDockedShape(shape.dockers.first().getDockedShape());
+            newShape.dockers.first().setReferencePoint(shape.dockers.first().referencePoint);
+            newShape.dockers.last().setDockedShape(shape.dockers.last().getDockedShape());
+            newShape.dockers.last().setReferencePoint(shape.dockers.last().referencePoint);
+        }
+    }
+});

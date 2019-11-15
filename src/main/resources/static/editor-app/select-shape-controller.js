@@ -59,7 +59,7 @@ var KisBpmShapeSelectionCtrl = [ '$rootScope', '$scope', '$timeout', '$translate
     				this.facade = facade;
     			},
     			execute: function(){
-    				
+    				//debugger;
     				var shape = this.shape;
     				var stencil = this.stencil;
     				var resourceId = shape.resourceId;

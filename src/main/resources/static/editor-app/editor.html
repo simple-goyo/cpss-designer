@@ -1,5 +1,6 @@
 <div ng-controller="StencilController">
     <div class="subheader editor-toolbar" id="editor-header">
+
         <div class="btn-group">
             <div class="btn-toolbar pull-left" ng-controller="ToolbarController" ng-cloak>
                 <button id="{{item.id}}"
@@ -27,6 +28,7 @@
                 </button>
             </div>
         </div>
+
     </div>
     <div class="full">
         <div class="row row-no-gutter">
@@ -99,6 +101,41 @@
                         <img src="editor-app/images/play.png"/>
                     </div>
                     <div class="Oryx_button"
+                         id="service-button"
+                         title="设置服务"
+                         ng-click="setService()"
+                         style="display:none">
+                        <img src="editor-app/images/service.png"/>
+                    </div>
+                    <div class="Oryx_button"
+                         id="event-button"
+                         title="设置事件"
+                         ng-click="setEvent()"
+                         style="display:none">
+                        <img src="editor-app/images/event.png"/>
+                    </div>
+                    <div class="Oryx_button"
+                         id="resource-line-button"
+                         title="资源连线"
+                         ng-click="createConnectLine()"
+                         style="display:none">
+                        <img src="editor-app/stencilsets/bpmn2.0/icons/connector/messageflow.png"/>
+                    </div>
+<!--                    <div class="Oryx_button"-->
+<!--                         id="addResource-button"-->
+<!--                         title="添加输入资源"-->
+<!--                         ng-click="addResource()"-->
+<!--                         style="display:none">-->
+<!--                        <img src="editor-app/images/event.png"/>-->
+<!--                    </div>-->
+<!--                    <div class="Oryx_button"-->
+<!--                         id="delResource-button"-->
+<!--                         title="移除输入资源"-->
+<!--                         ng-click="delResource()"-->
+<!--                         style="display:none">-->
+<!--                        <img src="editor-app/images/event.png"/>-->
+<!--                    </div>-->
+                    <div class="Oryx_button"
                          ng-repeat="item in quickMenuItems"
                          id="{{item.id}}"
                          title="{{item.description}}"
@@ -112,7 +149,7 @@
                     </div>
                 </div>
             </div>
-            <div id="propertiesHelpWrapper" class="col-xs-9" display="hidden">
+            <div id="propertiesHelpWrapper" class="col-xs-9" style="display: none">
                 <div class="propertySection" id="propertySection"
                      ng-class="{collapsed: propertyWindowState.collapsed}">
                     <div class="selected-item-section">
