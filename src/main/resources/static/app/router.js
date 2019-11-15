@@ -19,7 +19,7 @@ angular.module('myApp')
                 console.log($scope.$parent.adaptiveDisplay);
             }]
         }).state('thing3d', {
-            url: '/thing3d',
+            url: '/3d',
             templateUrl: 'tpl/thing3d.html'
         }).state('page4', {
             url: '/page4',
