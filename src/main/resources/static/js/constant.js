@@ -1,4 +1,4 @@
-var APP_BACK_END_IP = "127.0.01";//142,148给前端返回IP地址
+var APP_BACK_END_IP = "47.100.34.166";//142,148给前端返回IP地址
 var APP_BACK_END_PORT = "5001";
 var APP_BACK_END_SERVICE = {
     "GET_APP_INSTANCE" : "get_all_app_instance_introduction",
