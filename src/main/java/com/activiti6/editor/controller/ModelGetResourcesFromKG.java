@@ -31,11 +31,11 @@ public class ModelGetResourcesFromKG {
     @RequestMapping(value="/resources", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
     public String getResources() throws UnsupportedEncodingException {
-        String resList = getResourceList();
-        String retnStr = getResourceType("Eleme");
-
-        System.out.println(resList.toString());
-        System.out.println(retnStr);
+//        String resList = getResourceList();
+//        String retnStr = getResourceType("Eleme");
+//
+//        System.out.println(resList.toString());
+//        System.out.println(retnStr);
 
         JSONArray resourceToFunctionType = new JSONArray("[{\"name\":\"设备\",\"type\":\"PhysicalAction\"},{\"name\":\"机器人\",\"type\":\"PhysicalAction\"}]");
 

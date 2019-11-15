@@ -144,6 +144,9 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 
 		}
 		$scope.close();
+
+		// 播放动画
+		$scope.newPlayShape();
     };
 
 	$scope.createEvent = function ($scope, eventName) {

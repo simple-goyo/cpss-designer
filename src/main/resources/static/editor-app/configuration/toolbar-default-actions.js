@@ -431,6 +431,8 @@ var __createNormalAction = function($rootScope, $scope){
         var newShapeId = $scope.editor.getSelection()[0].id;
         $scope.setHighlightedShape(newShapeId);
         jQuery('#' + newShapeId + 'bg_frame').attr({"fill":"#04FF8E"}); //高亮显示
+
+        $scope.toDoAboutResourceLineAfterChangingAction();
     }
 };
 
@@ -469,14 +471,37 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
     	$scope.$hide();
     };
 
+    $scope.updateModel = function(){
+        var url = "http://192.168.31.52:5001/save_app_class";
+        // Update
+        $http({
+            method: 'POST',
+            ignoreErrors: true,
+            headers: {'Accept': 'application/json',
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            data:saveJSON,
+            url:url
+
+        }).success(function(data){
+                console.log("模型保存成功!")
+            })
+            .error(function(data){
+                console.log("模型保存失败!")
+            });
+
+    };
+
     $scope.saveAndClose = function () {
     	$scope.save(function() {
+            $scope.updateModel();
     		window.location.href = "./index";
     	});
     };
-    $scope.save = function (successCallback) {
 
-        if (!$scope.saveDialog.name || $scope.saveDialog.name.length == 0) {
+    var saveJSON;
+    $scope.save = function (successCallback) {
+        if (!$scope.saveDialog.name || $scope.saveDialog.name.length === 0) {
             return;
         }
 
@@ -521,24 +546,6 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
             description: $scope.saveDialog.description
         };
 
-        var url = "http://192.168.31.52:5001/save_app_class";
-        // Update
-        $http({
-            method: 'POST',
-            ignoreErrors: true,
-            headers: {'Accept': 'application/json',
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            data:json,
-            url:url
-
-        })
-        .success(function(data){
-            console.log("模型保存成功!")
-        })
-        .error(function(data){
-            console.log("模型保存失败!")
-        });
 
         $http({    method: 'PUT',
             data: params,
