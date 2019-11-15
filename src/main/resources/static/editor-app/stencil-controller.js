@@ -72,7 +72,7 @@ angular.module('activitiModeler')
                 // var quickMenuDefinition = ['UserTask', 'EndNoneEvent', 'ExclusiveGateway',
                 //     'CatchTimerEvent', 'ThrowNoneEvent', 'TextAnnotation',
                 //     'SequenceFlow', 'Association'];
-                var quickMenuDefinition = ['SequenceFlow'];
+                var quickMenuDefinition = [];
                 var ignoreForPaletteDefinition = ['SequenceFlow', 'MessageFlow', 'Association', 'DataAssociation', 'DataStore', 'SendTask'];
                 var quickMenuItems = [];
 
@@ -319,7 +319,7 @@ angular.module('activitiModeler')
                             userShape = shape;
                             userOriginPosition = $scope.inputStatus[i].position;
                         }
-                        console.log(shape);
+                        //console.log(shape);
                         $scope.outputStatus[$scope.outputStatus.length] = {
                             id: id,
                             type: shape.properties["oryx-type"],
@@ -399,14 +399,12 @@ angular.module('activitiModeler')
              * 在Action切换后，更新对应的资源连线————删除上一个Action的资源连线，创建当前Action的资源连线
              * */
             $scope.toDoAboutResourceLineAfterChangingAction = function () {
-
                 $scope.deleteConnectedLines();
                 $scope.connectedLines = [];
                 var action = $scope.getHighlightedShape();
                 var resourceConnect = action.properties['oryx-resourceline'];
                 if (!resourceConnect) return;
                 $scope.createConnectedLines(resourceConnect);
-
             };
 
             /**
@@ -764,7 +762,7 @@ angular.module('activitiModeler')
                 var pos_input = $scope.getPositionbyselector(inputPropSel);
                 var pos_output = $scope.getPositionbyselector(outputPropSel);
                 var pos_AE = $scope.getPositionbyselector(AEPropSel);
-
+                var cssRuleName;
                 // play
                 // ----new----
                 var playTime = 0;
@@ -773,20 +771,20 @@ angular.module('activitiModeler')
 
                         if (inputPropSel.length !== 0) {
                             setTimeout(function () {
-                                $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
-                                $scope.stopAnimation(inputPropSel, 1500);
+                                cssRuleName = $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
+                                $scope.stopAnimation(inputPropSel, 1500, cssRuleName);
                             }, playTime);
                             playTime += 1000;
                         }
                         setTimeout(function () {
-                            $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
-                            $scope.stopAnimation(AEPropSel, 1500);
+                            cssRuleName = $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
+                            $scope.stopAnimation(inputPropSel, 1500, cssRuleName);
                         }, playTime);
                         playTime += 1500;
                         if (outputPropSel.length !== 0) {
                             setTimeout(function () {
-                                $scope.playAnimation(outputPropSel, "linear", "1", pos_AE, pos_output);
-                                $scope.stopAnimation(outputPropSel, 1500);
+                                cssRuleName = $scope.playAnimation(outputPropSel, "linear", "1", pos_AE, pos_output);
+                                $scope.stopAnimation(inputPropSel, 1500, cssRuleName);
                             }, playTime);
 
                         }
@@ -798,20 +796,20 @@ angular.module('activitiModeler')
                         // 0.订单输入？,1.人闪两下,2.人前往目标位置，3.人取东西；4.人携带东西回到原来位置
                         // AE: 人；    input：指令；    output： 取的东西
                         // step0
-                        $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
+                        cssRuleName = $scope.playAnimation(inputPropSel, "linear", "0", pos_AE, pos_input);
                         $scope.stopAnimation(inputPropSel, 1500);
                         // step1
-                        $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
+                        cssRuleName = $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
                         $scope.stopAnimation(AEPropSel, 1500);
                         // step2
                         setTimeout(function () {
-                            $scope.playAnimation(AEPropSel, "linear2", "0", pos_output, pos_AE);
+                            cssRuleName = $scope.playAnimation(AEPropSel, "linear2", "0", pos_output, pos_AE);
                             $scope.stopAnimation(AEPropSel, 1500);
                         }, 2000);
 
                         // step3
                         setTimeout(function () {
-                            $scope.playAnimation(outputPropSel, "flash", "0", pos_output, pos_output);
+                            cssRuleName = $scope.playAnimation(outputPropSel, "flash", "0", pos_output, pos_output);
                             $scope.stopAnimation(outputPropSel, 1500);
                         }, 3000);
 
@@ -823,26 +821,26 @@ angular.module('activitiModeler')
                                 obj_pos_output.x -= 40;
                                 obj_pos_AE.x -= 40;
                             }
-                            $scope.playAnimation(AEPropSel, "linear", "1", pos_output, pos_AE);
-                            $scope.playAnimation(outputPropSel, "linear", "1", obj_pos_output, obj_pos_AE);
+                            var cssRuleName1 = $scope.playAnimation(AEPropSel, "linear", "1", pos_output, pos_AE);
+                            var cssRuleName2 = $scope.playAnimation(outputPropSel, "linear", "1", obj_pos_output, obj_pos_AE);
 
-                            $scope.stopAnimation(AEPropSel, 2000);
-                            $scope.stopAnimation(outputPropSel, 2000);
+                            $scope.stopAnimation(AEPropSel, 2000, cssRuleName1);
+                            $scope.stopAnimation(outputPropSel, 2000, cssRuleName2);
                         }, 5500);
                     } else {
                         // 众包送东西
                         // 1. 人闪两下；2.人携带东西到目标位置
                         // step1
                         setTimeout(function () {
-                            $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
-                            $scope.stopAnimation(AEPropSel, 1500);
+                            cssRuleName = $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
+                            $scope.stopAnimation(AEPropSel, 1500, cssRuleName);
                         }, playTime);
                         playTime += 2000;
 
                         // step2
                         setTimeout(function () {
-                            $scope.playAnimation(AEPropSel, "linear2", "0", pos_output, pos_AE);
-                            $scope.stopAnimation(AEPropSel, 1500);
+                            cssRuleName = $scope.playAnimation(AEPropSel, "linear2", "0", pos_output, pos_AE);
+                            $scope.stopAnimation(AEPropSel, 1500, cssRuleName);
                         }, playTime);
 
                     }
@@ -871,6 +869,20 @@ angular.module('activitiModeler')
                 }, 9000);
 
             };
+
+            $scope.newPlayShape = function(){
+                // var propertylist = $scope.selectedItem.properties;
+                var propertylist = $scope.getHighlightedShape().properties;
+                var AEProp = $scope.getPropertybyKey(propertylist, "oryx-activityelement");
+                var AEPropSel = jQuery("#" + AEProp.id).parent().parent();
+
+                var pos_AE = $scope.getPositionbyselector(AEPropSel);
+                setTimeout(function () {
+                    var cssRuleName = $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
+                    $scope.stopAnimation(AEPropSel, 1500, cssRuleName);
+                }, 100);
+            };
+
             $scope.morphShape = function () {
                 $scope.safeApply(function () {
                     var shapes = $rootScope.editor.getSelection();
@@ -1309,8 +1321,11 @@ angular.module('activitiModeler')
 
         $scope.getPropertybyKey = function (propertylist, key) {
             console.log(propertylist);
+            if(propertylist[0] === undefined){
+                return propertylist[key];
+            }
             for (var i = 0; i < propertylist.length; i++) {
-                if (propertylist[i].key == key) {
+                if (propertylist[i].key === key) {
                     return propertylist[i].value;
                 }
             }
@@ -1417,9 +1432,11 @@ angular.module('activitiModeler')
             style.insertRule(CSSStyleRule);
 
             selector.attr("class", "stencils animated slow " + cssRuleName + " infinite");
+
+            return cssRuleName;
         };
 
-        $scope.stopAnimation = function (selector, delay) {
+        $scope.stopAnimation = function (selector, delay, cssRuleName) {
             var style = document.styleSheets[7]; // 7==animate.css
             setTimeout(function () {
                 selector.attr("class", "stencils");

@@ -82,7 +82,7 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
     ];
 
     $http({method: 'GET', url: KISBPM.URL.getResources()}).success(function (data, status, headers, config) {
-        console.log(JSON.stringify(data));
+        // console.log(JSON.stringify(data));
         // 初始化$scope.constTypeOfResource和$scope.resourceFunctions
         // $scope.constTypeOfResource表示资源的人机物类别
         // $scope.resourceFunctions 表示动作对应的人机物类别
@@ -220,6 +220,9 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
             }
         }
         $scope.close();
+
+        // 播放动画
+        $scope.newPlayShape();
     };
 
     $scope.createResource = function ($scope, shape, resourceId) {
