@@ -68,6 +68,7 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
         {name: "开启空气净化", type: "PhysicalAction"},
         {name: "获取当前空气状态", type: "PhysicalAction"},
         {name: "获取体重数据", type: "PhysicalAction"},
+        {name: "播放语音通知", type: "PhysicalAction"},
 
         {name: "获取头条新闻", type: "CyberAction"},
         {name: "获取推荐菜", type: "CyberAction"},
