@@ -471,6 +471,7 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
     	$scope.$hide();
     };
 
+    var saveJSON;
     $scope.updateModel = function(){
         // var url = "http://192.168.31.52:5001/save_app_class";
         var url = "https://www.cpss2019.fun:5001/save_app_class";
@@ -500,7 +501,7 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
     	});
     };
 
-    var saveJSON;
+
     $scope.save = function (successCallback) {
         if (!$scope.saveDialog.name || $scope.saveDialog.name.length === 0) {
             return;
@@ -517,6 +518,7 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
         var json = $scope.editor.getJSON();
         json["properties"]["name"] = modelMetaData.name;// add diagram name
         json = JSON.stringify(json);
+        saveJSON = json;
 
         var selection = $scope.editor.getSelection();
         $scope.editor.setSelection([]);
