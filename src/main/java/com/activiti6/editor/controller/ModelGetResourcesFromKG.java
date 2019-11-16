@@ -1,8 +1,9 @@
 package com.activiti6.editor.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.activiti.engine.ActivitiException;
-import org.activiti.engine.impl.util.json.JSONArray;
-import org.activiti.engine.impl.util.json.JSONObject;
 import org.apache.commons.io.IOUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,10 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import static com.activiti6.utils.HttpClientHelper.postJSON;
 
@@ -37,7 +35,7 @@ public class ModelGetResourcesFromKG {
 //        System.out.println(resList.toString());
 //        System.out.println(retnStr);
 
-        JSONArray resourceToFunctionType = new JSONArray("[{\"name\":\"设备\",\"type\":\"PhysicalAction\"},{\"name\":\"机器人\",\"type\":\"PhysicalAction\"}]");
+        JSONArray resourceToFunctionType = JSON.parseArray("[{\"name\":\"设备\",\"type\":\"PhysicalAction\"},{\"name\":\"机器人\",\"type\":\"PhysicalAction\"}]");
 
         InputStream stencilsetStream = this.getClass().getClassLoader().getResourceAsStream("stencilset.json");
 //      从知识图谱中获取资源的动作（包括URI）以及参数值，如：咖啡机制作咖啡，参数为咖啡
@@ -63,7 +61,7 @@ public class ModelGetResourcesFromKG {
     }
 
     private String getResourceList(){
-        final String KGURL = "http://47.100.34.166:21910/KG201910/getResourceTypes";
+        final String KGURL = "http://www.cpss2019.fun:21910/KG201910/getResourceTypes";
         String reqParam = "?filePath="+filePath;
         String retn;
         JSONArray retnJSON = new JSONArray();
@@ -78,7 +76,7 @@ public class ModelGetResourcesFromKG {
         JSONObject ps = parseString(retn);
         JSONArray ja = new JSONArray();
 
-        JSONArray cyberResources = ps.getJSONArray("cyberResourceTypes");
+        JSONArray  cyberResources = ps.getJSONArray("cyberResourceTypes");
         JSONArray physicalResources = ps.getJSONArray("physicalResourceTypes");
 
 //        for (String cyberResource : cyberResources) {
@@ -98,21 +96,37 @@ public class ModelGetResourcesFromKG {
 
     private JSONObject parseString(String str){
         // 将返回值中的"['foo1','foo2']"字符串转换成JSON格式{'foo1','foo2'}
-        JSONObject jb= new JSONObject(str);
-        // System.out.println(jb.toString());
-        Iterator<String> it =jb.keys();
-        while(it.hasNext()){
-            String key = it.next();
-            String val = jb.getString(key);
+        JSONObject jb= JSON.parseObject(str);
+        JSONObject retnObj = new JSONObject();
+
+        for (Map.Entry<String, Object> entry : jb.entrySet()) {
+            String key = entry.getKey();
+            String val = (String) entry.getValue();
             String v   = val.substring(1, val.length()-2);
+            String[] splitedStrs = v.split(",");
 
-            String[] splitedStr = v.split(",");
-//            System.out.println(splitedStr[0]);
-            List<String> tmp=new ArrayList<>();
-            Collections.addAll(tmp, splitedStr);
-            jb.put(key, tmp);
+            List<String> tmp = new ArrayList<>();
+            Collections.addAll(tmp,splitedStrs);
+            retnObj.put(key, tmp);
         }
+//
+//
+//        Iterator<String> it =jb.keys();
+//        while(it.hasNext()){
+//            String key = it.next();
+//            String val = jb.getString(key);
+//            String v   = val.substring(1, val.length()-2);
+//
+//            String[] splitedStrs = v.split(",");
+//            //List<String> tmp=new ArrayList<>();
+//            JSONArray tmp = new JSONArray();
+//            for (String splitedStr : splitedStrs) {
+//                tmp.put(splitedStr);
+//            }
+//            //Collections.addAll(tmp, splitedStr);
+//            retnObj.put(key, tmp);
+//        }
 
-        return jb;
+        return retnObj;
     }
 }
