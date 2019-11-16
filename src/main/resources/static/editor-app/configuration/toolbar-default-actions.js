@@ -452,16 +452,16 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
     
     $scope.saveDialog = saveDialog;
     
-    var json = $scope.editor.getJSON();
-    json["properties"]["name"] = modelMetaData.name;
-    json["properties"]["documentation"] = description;
-    json = JSON.stringify(json);
-
-    var params = {
-        modeltype: modelMetaData.model.modelType,
-        json_xml: json,
-        name: 'model'
-    };
+    // var json = $scope.editor.getJSON();
+    // json["properties"]["name"] = modelMetaData.name;
+    // json["properties"]["documentation"] = description;
+    // json = JSON.stringify(json);
+    //
+    // var params = {
+    //     modeltype: modelMetaData.model.modelType,
+    //     json_xml: json,
+    //     name: 'model'
+    // };
 
     $scope.status = {
         loading: false
@@ -471,32 +471,37 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
     	$scope.$hide();
     };
 
-    var saveJSON;
+    var saveJSON = undefined;
     $scope.updateModel = function(){
         // var url = "http://192.168.31.52:5001/save_app_class";
         var url = "https://www.cpss2019.fun:5001/save_app_class";
+        var json = $scope.editor.getJSON();
+        json["properties"]["name"] = modelMetaData.name;// add diagram name
+        json["properties"]["documentation"] = description;
+        json = JSON.stringify(json);
         // Update
         $http({
             method: 'POST',
-            ignoreErrors: true,
+            ignoreErrors: false,
             headers: {'Accept': 'application/json',
                 'Content-Type': 'application/json;charset=utf-8'
             },
-            data:saveJSON,
+            data:json,
             url:url
 
         }).success(function(data){
                 console.log("模型保存成功!")
-            })
-            .error(function(data){
+        })
+        .error(function(data){
                 console.log("模型保存失败!")
-            });
+        });
 
     };
 
     $scope.saveAndClose = function () {
+        $scope.updateModel();
     	$scope.save(function() {
-            $scope.updateModel();
+            //$scope.updateModel();
     		window.location.href = "./index";
     	});
     };
@@ -517,6 +522,7 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
 
         var json = $scope.editor.getJSON();
         json["properties"]["name"] = modelMetaData.name;// add diagram name
+        json["properties"]["documentation"] = description;
         json = JSON.stringify(json);
         saveJSON = json;
 
