@@ -472,7 +472,8 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
     };
 
     $scope.updateModel = function(){
-        var url = "http://192.168.31.52:5001/save_app_class";
+        // var url = "http://192.168.31.52:5001/save_app_class";
+        var url = "https://www.cpss2019.fun:5001/save_app_class";
         // Update
         $http({
             method: 'POST',
