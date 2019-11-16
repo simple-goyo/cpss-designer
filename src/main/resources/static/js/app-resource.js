@@ -13,7 +13,7 @@ function getAppInstance() {
         function (data) //回调函数
         {
             $("#ongoing_service_list").empty();
-            $.each(data.app_classes_introduction, function (i, item) {
+            $.each(data.app_instance_introduction, function (i, item) {
                 //显示应用进程
                 $("#ongoing_service_list").append('<a class="weui-cell weui-cell_access weui-cell_example" id="' + item._id + '" onclick="getServiceWorkflow(this)">\n' +
                     '                <div class="weui-cell__hd"><img src="../img/' + item.user_id + '.png" alt="" style="width:20px;margin-right:16px;display:block"></div>\n' +
