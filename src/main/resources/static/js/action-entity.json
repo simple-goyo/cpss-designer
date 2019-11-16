@@ -1,8 +1,9 @@
 {
-  "resourceId" : "500011",
+  "_id" : ObjectId("5dce01c24a92a38e79c530c8"),
+  "resourceId" : "77501",
   "properties" : {
     "process_id" : "process",
-    "name" : "喝咖啡-简化",
+    "name" : "简易喝咖啡",
     "documentation" : "",
     "type" : "",
     "process_author" : "",
@@ -18,7 +19,7 @@
   },
   "childShapes" : [
     {
-      "resourceId" : "sid-25B07A6F-5FC8-4791-8C43-B38C1A5CB",
+      "resourceId" : "sid-5C49F63D-981A-484E-8FDA-460F875CAF5D",
       "properties" : {
         "overrideid" : "",
         "name" : "",
@@ -35,9 +36,11 @@
         "id" : "StartNoneEvent"
       },
       "childShapes" : [],
-      "outgoing" : [{
-        "resourceId" : "sid-EA933EB4-0315-455A-912E-69B71253B"
-      }],
+      "outgoing" : [
+        {
+          "resourceId" : "sid-7A71A4BE-BF85-4339-A705-40932A28DFDB"
+        }
+      ],
       "bounds" : {
         "lowerRight" : {
           "x" : 195,
@@ -51,7 +54,7 @@
       "dockers" : []
     },
     {
-      "resourceId" : "sid-EA933EB4-0315-455A-912E-69B71253B",
+      "resourceId" : "sid-7A71A4BE-BF85-4339-A705-40932A28DFDB",
       "properties" : {
         "overrideid" : "",
         "name" : "",
@@ -67,91 +70,7 @@
       "childShapes" : [],
       "outgoing" : [
         {
-          "resourceId" : "sid-0ED1F121-A70E-4EAA-B47B-600F33E17"
-        }
-      ],
-      "bounds" : {
-        "lowerRight" : {
-          "x" : 180,
-          "y" : 214.9375
-        },
-        "upperLeft" : {
-          "x" : 180,
-          "y" : 170.0625
-        }
-      },
-      "dockers" : [
-        {
-          "x" : 50,
-          "y" : 40
-        },
-        {
-          "x" : 50,
-          "y" : 40
-        }
-      ],
-      "target" : {
-        "resourceId" : "sid-0ED1F121-A70E-4EAA-B47B-600F33E17"
-      }
-    },
-    {
-      "resourceId" : "sid-0ED1F121-A70E-4EAA-B47B-600F33E17",
-      "properties" : {
-        "overrideid" : "sid-212BC3B8-E6D0-440D-98F7-81B562F3E",
-        "name" : "制作咖啡",
-        "actioninputstatus" : "",
-        "actionoutputstatus" : "",
-        "documentation" : "",
-        "activityelement" : {
-          "id" : "sid-662C8781-0D5E-4B3C-B562-9D40F1A71",
-          "name" : "咖啡机",
-          "type" : "设备"
-        },
-        "input" : "",
-        "output" : "",
-        "animate_direction" : "0",
-        "currentscene" : "",
-        "type" : "http://b3mn.org/stencilset/bpmn2.0#UndefinedAction"
-      },
-      "stencil" : {
-        "id" : "PhysicalAction"
-      },
-      "childShapes" : [],
-      "outgoing" : [
-        {
-          "resourceId" : "sid-C9864710-3779-4935-B276-EAE086BCC"
-        }
-      ],
-      "bounds" : {
-        "lowerRight" : {
-          "x" : 230,
-          "y" : 295
-        },
-        "upperLeft" : {
-          "x" : 130,
-          "y" : 215
-        }
-      },
-      "dockers" : []
-    },
-    {
-      "resourceId" : "sid-C9864710-3779-4935-B276-EAE086BCC",
-      "properties" : {
-        "overrideid" : "",
-        "name" : "",
-        "documentation" : "",
-        "conditionsequenceflow" : "",
-        "executionlisteners" : "",
-        "condition" : "",
-        "defaultflow" : "false"
-      },
-      "stencil" : {
-        "id" : "SequenceFlow"
-      },
-      "childShapes" : [],
-      "outgoing" : [
-        {
-          "resourceId" : "sid-66D19909-E332-478F-8FDA-4A939E5D5"
+          "resourceId" : "sid-3602ABBD-309E-472B-84B8-A0E918BF78DC"
         }
       ],
       "bounds" : {
@@ -175,50 +94,92 @@
         }
       ],
       "target" : {
-        "resourceId" : "sid-66D19909-E332-478F-8FDA-4A939E5D5"
+        "resourceId" : "sid-3602ABBD-309E-472B-84B8-A0E918BF78DC"
       }
     },
     {
-      "resourceId" : "sid-66D19909-E332-478F-8FDA-4A939E5D5",
+      "resourceId" : "sid-96C2FB9C-AF0B-40C1-A333-8C8A6AF7A27C",
       "properties" : {
-        "overrideid" : "sid-66265690-965D-4890-A3F6-6C48BA621",
-        "name" : "咖啡制作完成",
+        "overrideid" : "sid-6073FE36-655E-462A-A821-7FD84733684D",
+        "name" : "咖啡机",
+        "documentation" : "",
+        "type" : "设备",
+        "ownedbywho" : "",
+        "executionlisteners" : "",
+        "initiator" : "",
+        "events" : [
+          {
+            "id" : "sid-E678F26B-BCA3-4D33-B201-D2B44AD9B1A5",
+            "event" : "咖啡制作完成"
+          }
+        ],
+        "services" : [
+          {
+            "id" : "sid-18B5481D-FEF7-4631-A088-B52ADD613F19",
+            "function" : "制作咖啡"
+          }
+        ]
+      },
+      "stencil" : {
+        "id" : "Device"
+      },
+      "childShapes" : [],
+      "outgoing" : [],
+      "bounds" : {
+        "lowerRight" : {
+          "x" : 868.0759745,
+          "y" : 321.000001
+        },
+        "upperLeft" : {
+          "x" : 833.9240255,
+          "y" : 280.999999
+        }
+      },
+      "dockers" : []
+    },
+    {
+      "resourceId" : "sid-3602ABBD-309E-472B-84B8-A0E918BF78DC",
+      "properties" : {
+        "overrideid" : "sid-18B5481D-FEF7-4631-A088-B52ADD613F19",
+        "name" : "制作咖啡",
         "actioninputstatus" : "",
         "actionoutputstatus" : "",
         "documentation" : "",
         "activityelement" : {
-          "id" : "sid-662C8781-0D5E-4B3C-B562-9D40F1A71",
+          "id" : "sid-6073FE36-655E-462A-A821-7FD84733684D",
           "name" : "咖啡机",
           "type" : "设备"
         },
         "input" : "",
         "output" : "",
         "animate_direction" : "0",
-        "currentscene" : ""
+        "currentscene" : "",
+        "resourceline" : [],
+        "type" : "http://b3mn.org/stencilset/bpmn2.0#UndefinedAction"
       },
       "stencil" : {
-        "id" : "DefaultEvent"
+        "id" : "PhysicalAction"
       },
       "childShapes" : [],
       "outgoing" : [
         {
-          "resourceId" : "sid-251F2D80-C1CA-425A-97AB-20E6C70A9"
+          "resourceId" : "sid-EFBDBD45-15CC-41CA-A2EC-943006FE98BE"
         }
       ],
       "bounds" : {
         "lowerRight" : {
           "x" : 230,
-          "y" : 410
+          "y" : 170
         },
         "upperLeft" : {
           "x" : 130,
-          "y" : 330
+          "y" : 90
         }
       },
       "dockers" : []
     },
     {
-      "resourceId" : "sid-251F2D80-C1CA-425A-97AB-20E6C70A9",
+      "resourceId" : "sid-EFBDBD45-15CC-41CA-A2EC-943006FE98BE",
       "properties" : {
         "overrideid" : "",
         "name" : "",
@@ -234,17 +195,17 @@
       "childShapes" : [],
       "outgoing" : [
         {
-          "resourceId" : "sid-5856D9BC-B932-4AF6-B517-1973590C5"
+          "resourceId" : "sid-75CF55E1-180B-4AC7-9788-229935C9065C"
         }
       ],
       "bounds" : {
         "lowerRight" : {
           "x" : 180,
-          "y" : 329.46875
+          "y" : 209.625
         },
         "upperLeft" : {
           "x" : 180,
-          "y" : 295.53125
+          "y" : 170.375
         }
       },
       "dockers" : [
@@ -258,39 +219,169 @@
         }
       ],
       "target" : {
-        "resourceId" : "sid-5856D9BC-B932-4AF6-B517-1973590C5"
+        "resourceId" : "sid-75CF55E1-180B-4AC7-9788-229935C9065C"
       }
     },
     {
-      "resourceId" : "sid-5856D9BC-B932-4AF6-B517-1973590C5",
+      "resourceId" : "sid-75CF55E1-180B-4AC7-9788-229935C9065C",
       "properties" : {
-        "overrideid" : "sid-B9A574B5-C092-4A69-8DA4-4D4E1DE5A",
-        "name" : "获取咖啡",
-        "actioninputstatus" : [
-          {
-            "id" : "sid-BBD9FB7F-AFB5-494B-872F-542E4DA85",
-            "type" : "工人",
-            "name" : "工人",
-            "position" : {
-              "x" : 535.0000015,
-              "y" : 370
-            }
-          }
-        ],
-        "actionoutputstatus" : [
-          {
-            "id" : "sid-BBD9FB7F-AFB5-494B-872F-542E4DA85",
-            "type" : "工人",
-            "name" : "工人",
-            "position" : {
-              "x" : 844.393971,
-              "y" : 305.000001
-            }
-          }
-        ],
+        "overrideid" : "sid-E678F26B-BCA3-4D33-B201-D2B44AD9B1A5",
+        "name" : "咖啡制作完成",
+        "actioninputstatus" : "",
+        "actionoutputstatus" : "",
         "documentation" : "",
         "activityelement" : {
-          "id" : "sid-BBD9FB7F-AFB5-494B-872F-542E4DA85",
+          "id" : "sid-6073FE36-655E-462A-A821-7FD84733684D",
+          "name" : "咖啡机",
+          "type" : "设备"
+        },
+        "input" : "",
+        "output" : "",
+        "animate_direction" : "0",
+        "currentscene" : "",
+        "resourceline" : [],
+        "type" : "http://b3mn.org/stencilset/bpmn2.0#UndefinedAction"
+      },
+      "stencil" : {
+        "id" : "DefaultEvent"
+      },
+      "childShapes" : [],
+      "outgoing" : [
+        {
+          "resourceId" : "sid-3DE712D4-80E9-40EE-82C1-3CF1D19B0A45"
+        }
+      ],
+      "bounds" : {
+        "lowerRight" : {
+          "x" : 230,
+          "y" : 290
+        },
+        "upperLeft" : {
+          "x" : 130,
+          "y" : 210
+        }
+      },
+      "dockers" : []
+    },
+    {
+      "resourceId" : "sid-324AA163-7CFC-42BA-B968-C2439C92393D",
+      "properties" : {
+        "overrideid" : "sid-9E74D119-5936-4FFE-8083-9098597A7756",
+        "name" : "用户",
+        "documentation" : "",
+        "type" : "用户",
+        "owner" : "",
+        "executionlisteners" : "",
+        "initiator" : "",
+        "events" : "",
+        "services" : ""
+      },
+      "stencil" : {
+        "id" : "Person"
+      },
+      "childShapes" : [],
+      "outgoing" : [],
+      "bounds" : {
+        "lowerRight" : {
+          "x" : 530,
+          "y" : 378
+        },
+        "upperLeft" : {
+          "x" : 500,
+          "y" : 348
+        }
+      },
+      "dockers" : []
+    },
+    {
+      "resourceId" : "sid-76A89EC6-3E28-4467-80E9-DDCE48C4D802",
+      "properties" : {
+        "overrideid" : "sid-A222DD91-4BA4-4055-B064-22DA36C46BB8",
+        "name" : "工人",
+        "documentation" : "",
+        "type" : "工人",
+        "owner" : "",
+        "executionlisteners" : "",
+        "initiator" : "",
+        "events" : "",
+        "services" : [
+          {
+            "id" : "sid-461D63C9-D983-486E-943C-FBDF95F50BCA",
+            "function" : "递交物品"
+          }
+        ]
+      },
+      "stencil" : {
+        "id" : "Person_Worker"
+      },
+      "childShapes" : [],
+      "outgoing" : [],
+      "bounds" : {
+        "lowerRight" : {
+          "x" : 722.393971,
+          "y" : 427.904826
+        },
+        "upperLeft" : {
+          "x" : 683.606029,
+          "y" : 392.095174
+        }
+      },
+      "dockers" : []
+    },
+    {
+      "resourceId" : "sid-3DE712D4-80E9-40EE-82C1-3CF1D19B0A45",
+      "properties" : {
+        "overrideid" : "",
+        "name" : "",
+        "documentation" : "",
+        "conditionsequenceflow" : "",
+        "executionlisteners" : "",
+        "condition" : "",
+        "defaultflow" : "false"
+      },
+      "stencil" : {
+        "id" : "SequenceFlow"
+      },
+      "childShapes" : [],
+      "outgoing" : [
+        {
+          "resourceId" : "sid-6448512B-5539-4D02-9AE6-C040E28BB63D"
+        }
+      ],
+      "bounds" : {
+        "lowerRight" : {
+          "x" : 180,
+          "y" : 329.625
+        },
+        "upperLeft" : {
+          "x" : 180,
+          "y" : 290.375
+        }
+      },
+      "dockers" : [
+        {
+          "x" : 50,
+          "y" : 40
+        },
+        {
+          "x" : 50,
+          "y" : 40
+        }
+      ],
+      "target" : {
+        "resourceId" : "sid-6448512B-5539-4D02-9AE6-C040E28BB63D"
+      }
+    },
+    {
+      "resourceId" : "sid-6448512B-5539-4D02-9AE6-C040E28BB63D",
+      "properties" : {
+        "overrideid" : "sid-461D63C9-D983-486E-943C-FBDF95F50BCA",
+        "name" : "送咖啡",
+        "actioninputstatus" : "",
+        "actionoutputstatus" : "",
+        "documentation" : "",
+        "activityelement" : {
+          "id" : "sid-A222DD91-4BA4-4055-B064-22DA36C46BB8",
           "name" : "工人",
           "type" : "工人"
         },
@@ -298,6 +389,7 @@
         "output" : "",
         "animate_direction" : "0",
         "currentscene" : "",
+        "resourceline" : [],
         "type" : "http://b3mn.org/stencilset/bpmn2.0#UndefinedAction"
       },
       "stencil" : {
@@ -308,11 +400,11 @@
       "bounds" : {
         "lowerRight" : {
           "x" : 230,
-          "y" : 535
+          "y" : 410
         },
         "upperLeft" : {
           "x" : 130,
-          "y" : 455
+          "y" : 330
         }
       },
       "dockers" : []
