@@ -2053,7 +2053,7 @@ angular.module('activitiModeler')
         new Promise(function (resolve, reject) {
             setTimeout(function () {
                 resolve('200 OK');
-            }, 1800);
+            }, 5000);
         }).then(function (result) {
             console.log(window._loadContentFinished);
             // 初始化完成,自动生成开始按钮

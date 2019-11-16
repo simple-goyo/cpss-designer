@@ -62,7 +62,18 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
         {name: "获取咖啡", type: "SocialAction"},
         {name: "递交物品", type: "SocialAction"},
         {name: "制作咖啡", type: "PhysicalAction"},
-        {name: "点咖啡服务", type: "CyberAction"}
+        {name: "点咖啡服务", type: "CyberAction"},
+
+        {name: "烧水", type: "PhysicalAction"},
+        {name: "开启空气净化", type: "PhysicalAction"},
+        {name: "获取当前空气状态", type: "PhysicalAction"},
+        {name: "获取体重数据", type: "PhysicalAction"},
+
+        {name: "获取头条新闻", type: "CyberAction"},
+        {name: "获取推荐菜", type: "CyberAction"},
+        {name: "获取股票列表", type: "CyberAction"},
+        {name: "播放锻炼视频", type: "CyberAction"}
+
     ];
 
     // 资源执行主体所有的输出，数据从知识图谱中获得
