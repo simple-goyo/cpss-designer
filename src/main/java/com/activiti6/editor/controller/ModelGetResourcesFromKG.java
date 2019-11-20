@@ -29,17 +29,20 @@ public class ModelGetResourcesFromKG {
     @RequestMapping(value="/resources", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
     public String getResources() throws UnsupportedEncodingException {
-//        String resList = getResourceList();
+
+        JSONArray resourceList = getResourceList();
+
 //        String retnStr = getResourceType("Eleme");
 //
 //        System.out.println(resList.toString());
 //        System.out.println(retnStr);
 
-        JSONArray resourceToFunctionType = JSON.parseArray("[{\"name\":\"设备\",\"type\":\"PhysicalAction\"},{\"name\":\"机器人\",\"type\":\"PhysicalAction\"}]");
+//        JSONArray resourceToFunctionType = JSON.parseArray("[{\"name\":\"设备\",\"type\":\"PhysicalAction\"},{\"name\":\"机器人\",\"type\":\"PhysicalAction\"}]");
+//
+//        InputStream stencilsetStream = this.getClass().getClassLoader().getResourceAsStream("stencilset.json");
+//
 
-        InputStream stencilsetStream = this.getClass().getClassLoader().getResourceAsStream("stencilset.json");
-//      从知识图谱中获取资源的动作（包括URI）以及参数值，如：咖啡机制作咖啡，参数为咖啡
-        InputStream resourceStream = new ByteArrayInputStream(resourceToFunctionType.toString().getBytes("utf-8"));
+        InputStream resourceStream = new ByteArrayInputStream(resourceList.toString().getBytes("utf-8"));
 
         try {
             return IOUtils.toString(resourceStream, "utf-8");
@@ -48,23 +51,30 @@ public class ModelGetResourcesFromKG {
         }
     }
 
-    private String getResourceType(String resName) {
+    private String getResourceFunc(String resName) {
         final String KGURL = "http://47.100.34.166:21910/KG201910/getResourceDetails";
         // String resName = "Eleme";
         String reqParam = "?resourceType="+resName+"&filePath="+filePath;
+        String retn;
+        JSONObject job;
+        JSONArray retnJSON = new JSONArray();
         try{
-            return postJSON( KGURL+reqParam,"");
+            retn = postJSON( KGURL+reqParam,"");
         }catch (Exception e){
             e.printStackTrace();
+            retn = "";
         }
+        job = JSON.parseObject(retn);
+
         return "";
     }
 
-    private String getResourceList(){
+    private JSONArray getResourceList() {
         final String KGURL = "http://www.cpss2019.fun:21910/KG201910/getResourceTypes";
         String reqParam = "?filePath="+filePath;
         String retn;
         JSONArray retnJSON = new JSONArray();
+        JSONObject job;
         try{
             retn = postJSON( KGURL+reqParam,"");
         }catch (Exception e){
@@ -73,60 +83,34 @@ public class ModelGetResourcesFromKG {
         }
 
         // 建立JSONArray
-        JSONObject ps = parseString(retn);
-        JSONArray ja = new JSONArray();
+        // retn = {"cyberResouceTypes":"[Keep, Eleme]","physicalResouceTypes":"[CoffeeMaker, ElectricKettle, WeighingScale, AirCleaner]"}
 
-        JSONArray  cyberResources = ps.getJSONArray("cyberResourceTypes");
-        JSONArray physicalResources = ps.getJSONArray("physicalResourceTypes");
+        job = JSON.parseObject(retn);
+        List<String> crt = parseString(job.getString("cyberResouceTypes"));
+        List<String> prt = parseString(job.getString("physicalResouceTypes"));
 
-//        for (String cyberResource : cyberResources) {
-//            String job = "{\"name\":" + (String) cyberResource + ",\"type\":\"CyberAction\"}";
-//            ja.put(job);
-//        }
-//
-//        for (String physicalResource : physicalResources) {
-//            String job = "{\"name\":" + (String) physicalResource + ",\"type\":\"PhysicalAction\"}";
-//            ja.put(job);
-//        }
+        // build JSONArray
+        JSONObject tmpJB = new JSONObject();
+        for(String c : crt){
+            retnJSON.add(JSON.parseObject("{\"name\":\""+c+"\",\"type\":\"CyberAction\"}"));
+        }
 
-        System.out.println(cyberResources);
-        return retn;
-        // return new JSONArray("[{\"name\":\"设备\",\"type\":\"PhysicalAction\"},{\"name\":\"机器人\",\"type\":\"PhysicalAction\"}]");
+        for(String p : prt){
+            retnJSON.add(JSON.parseObject("{\"name\":\""+p+"\",\"type\":\"PhysicalAction\"}"));
+        }
+
+        return retnJSON;
     }
 
-    private JSONObject parseString(String str){
+    private List<String> parseString(String str){
         // 将返回值中的"['foo1','foo2']"字符串转换成JSON格式{'foo1','foo2'}
-        JSONObject jb= JSON.parseObject(str);
-        JSONObject retnObj = new JSONObject();
+        List<String> retnList = new ArrayList<>();
 
-        for (Map.Entry<String, Object> entry : jb.entrySet()) {
-            String key = entry.getKey();
-            String val = (String) entry.getValue();
-            String v   = val.substring(1, val.length()-2);
-            String[] splitedStrs = v.split(",");
+        String v   = str.substring(1, str.length()-1);
+        String[] splitedStrs = v.split(", ");
 
-            List<String> tmp = new ArrayList<>();
-            Collections.addAll(tmp,splitedStrs);
-            retnObj.put(key, tmp);
-        }
-//
-//
-//        Iterator<String> it =jb.keys();
-//        while(it.hasNext()){
-//            String key = it.next();
-//            String val = jb.getString(key);
-//            String v   = val.substring(1, val.length()-2);
-//
-//            String[] splitedStrs = v.split(",");
-//            //List<String> tmp=new ArrayList<>();
-//            JSONArray tmp = new JSONArray();
-//            for (String splitedStr : splitedStrs) {
-//                tmp.put(splitedStr);
-//            }
-//            //Collections.addAll(tmp, splitedStr);
-//            retnObj.put(key, tmp);
-//        }
+        Collections.addAll(retnList,splitedStrs);
 
-        return retnObj;
+        return retnList;
     }
 }
