@@ -21,11 +21,11 @@
       "properties": [
         {
           "id": "resourceline",
-          "type":"complex",
-          "title":"资源连线",
-          "value":"",
-          "description":"Action中资源的关系",
-          "popular":true
+          "type": "complex",
+          "title": "资源连线",
+          "value": "",
+          "description": "Action中资源的关系",
+          "popular": true
         }
       ]
     },
@@ -1802,7 +1802,8 @@
         "inputpackage",
         "outputpackage",
         "animatedirectionpackage",
-        "currentscenepackage"
+        "currentscenepackage",
+        "resourcelinepackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -2919,12 +2920,13 @@
             ]
           }
         ]
-      },{
-        "role":"MessageFlow",
-        "connects":[
+      },
+      {
+        "role": "MessageFlow",
+        "connects": [
           {
-            "from":"message_start",
-            "to":[
+            "from": "message_start",
+            "to": [
               "message_end"
             ]
           }

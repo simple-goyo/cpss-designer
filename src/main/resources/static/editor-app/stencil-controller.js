@@ -292,12 +292,6 @@ angular.module('activitiModeler')
             // });
 
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEUP, function (event) {
-                //更新动作的资源关系
-                var action = $scope.getHighlightedShape();
-                if (action) {
-                    action.setProperty("oryx-resourceline", $scope.getResourceConnect());
-                }
-
                 // 选都没选中，直接返回
                 if ($scope.selectedItem.auditData !== undefined) {
                     if (lastHighlightedId !== "" && event.clientX < document.documentElement.clientWidth * 0.2745) { //375
@@ -394,6 +388,97 @@ angular.module('activitiModeler')
                     }
                 }
             });
+
+            /**
+             * 监听资源连线成功事件
+             * options: {
+             *      type: ORYX.CONFIG.EVENT_DRAGDOCKER_DOCKED
+             *      docker: docker
+             *      parent: docker.parent  线
+             *      target: lastUIObj 被连上的资源
+             * }
+             * */
+            $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_DRAGDOCKER_DOCKED, function (options) {
+                var action = $scope.getHighlightedShape();
+                if (action) {
+                    action.setProperty("oryx-resourceline", $scope.getResourceConnect());
+                }
+                var edge = options['parent'];
+                if (!edge)
+                    return;
+                var from = edge.incoming[0];
+                var to = edge.outgoing[0];
+                if (from && to) {
+                    if (from.properties['oryx-type'] === "工人") {
+                        $scope.editor.setSelection(from);
+                    } else
+                        $scope.editor.setSelection(to);
+                    $scope.editor.getCanvas().update();
+                    $scope.setService();
+                }
+            });
+
+            /**
+             * 该方法是用于创建一个在选中的资源下方的messageFlow，并记录messageFlow的id
+             * 具体实现方式为：利用command创建一个与选中资源相同的临时资源，然后将选中资源与其连线，然后删除临时资源
+             * */
+            $scope.createConnectLine = function () {
+                var HighlightedShape = $scope.getHighlightedShape();
+                if (HighlightedShape === undefined) return;
+
+                var connectedShape = $scope.editor.getSelection()[0];
+
+                var stencil = connectedShape.getStencil();
+                var option = {
+                    type: stencil._jsonStencil["id"],
+                    namespace: stencil.namespace(),
+                    connectedShape: connectedShape,
+                    parent: connectedShape.parent,
+                    containedStencil: stencil,
+                    connectingType: stencil.namespace() + "MessageFlow"
+                };
+                var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
+                $scope.editor.executeCommands(command);
+                KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
+                $scope.editor.setSelection(connectedShape);
+                $scope.editor.getCanvas().update();
+                $scope.connectedLines[$scope.connectedLines.length] = connectedShape.getOutgoingShapes().last().id;
+            };
+
+            /**
+             * 获取当前动作的被连线的资源
+             * **/
+            $scope.getResourceConnect = function () {
+                var resourceConnect = [];
+                for (var i = 0; i < $scope.connectedLines.length; i++) {
+                    var id = $scope.connectedLines[i];
+                    var edge = $scope.getShapeById(id);
+                    if (edge) {
+                        var from = edge.incoming[0] ? edge.incoming[0].id : null;
+                        var to = edge.outgoing[0] ? edge.outgoing[0].id : null;
+                        var fromBounds = null;
+                        var toBounds = null;
+                        var bounds = null;
+                        if (from != null) {
+                            bounds = $scope.getShapeById(from).bounds;
+                            fromBounds = {a: {x: bounds.a.x, y: bounds.a.y}, b: {x: bounds.b.x, y: bounds.b.y}};
+                        }
+                        if (to != null) {
+                            bounds = $scope.getShapeById(to).bounds;
+                            toBounds = {a: {x: bounds.a.x, y: bounds.a.y}, b: {x: bounds.b.x, y: bounds.b.y}};
+                        }
+                        resourceConnect[resourceConnect.length] = {
+                            from: from,
+                            fromBounds: fromBounds,
+                            to: to,
+                            toBounds: toBounds
+                            // edge: id
+                        };
+
+                    }
+                }
+                return resourceConnect;
+            };
 
             /**
              * 在Action切换后，更新对应的资源连线————删除上一个Action的资源连线，创建当前Action的资源连线
@@ -1043,68 +1128,6 @@ angular.module('activitiModeler')
                 // KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
             };
 
-
-            /**
-             * 该方法是用于创建一个在选中的资源下方的messageFlow，并记录messageFlow的id
-             * 具体实现方式为：利用command创建一个与选中资源相同的临时资源，然后将选中资源与其连线，然后删除临时资源
-             * */
-            $scope.createConnectLine = function () {
-                var HighlightedShape = $scope.getHighlightedShape();
-                if (HighlightedShape === undefined) return;
-
-                var connectedShape = $scope.editor.getSelection()[0];
-
-                var stencil = connectedShape.getStencil();
-                var option = {
-                    type: stencil._jsonStencil["id"],
-                    namespace: stencil.namespace(),
-                    connectedShape: connectedShape,
-                    parent: connectedShape.parent,
-                    containedStencil: stencil,
-                    connectingType: stencil.namespace() + "MessageFlow"
-                };
-                var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
-                $scope.editor.executeCommands(command);
-                KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
-                $scope.editor.setSelection(connectedShape);
-                $scope.editor.getCanvas().update();
-                $scope.connectedLines[$scope.connectedLines.length] = connectedShape.getOutgoingShapes().last().id;
-            };
-
-            /**
-             * 获取当前动作的被连线的资源
-             * **/
-            $scope.getResourceConnect = function () {
-                var resourceConnect = [];
-                for (var i = 0; i < $scope.connectedLines.length; i++) {
-                    var id = $scope.connectedLines[i];
-                    var edge = $scope.getShapeById(id);
-                    if (edge) {
-                        var from = edge.incoming[0] ? edge.incoming[0].id : null;
-                        var to = edge.outgoing[0] ? edge.outgoing[0].id : null;
-                        var fromBounds = null;
-                        var toBounds = null;
-                        var bounds = null;
-                        if (from != null) {
-                            bounds = $scope.getShapeById(from).bounds;
-                            fromBounds = {a: {x: bounds.a.x, y: bounds.a.y}, b: {x: bounds.b.x, y: bounds.b.y}};
-                        }
-                        if (to != null) {
-                            bounds = $scope.getShapeById(to).bounds;
-                            toBounds = {a: {x: bounds.a.x, y: bounds.a.y}, b: {x: bounds.b.x, y: bounds.b.y}};
-                        }
-                        resourceConnect[resourceConnect.length] = {
-                            from: from,
-                            fromBounds: fromBounds,
-                            to: to,
-                            toBounds: toBounds
-                            // edge: id
-                        };
-
-                    }
-                }
-                return resourceConnect;
-            };
 
             $scope.quickAddItem = function (newItemId) {
                 $scope.safeApply(function () {
