@@ -381,7 +381,7 @@ angular.module('activitiModeler')
                             if (lastId !== "") {
                                 jQuery('#' + lastId + 'bg_frame').attr({"fill": "#f9f9f9"});
                             }
-                            var lastAction = $scope.getHighlightedShape();
+                            var lastSelectedAction = $scope.getHighlightedShape();
                             // 高亮
                             jQuery('#' + itemId + 'bg_frame').attr({"fill": "#04FF8E"});
                             console.log(itemId);
@@ -389,7 +389,7 @@ angular.module('activitiModeler')
                             lastHighlightedId = id;
                             HilghlightedItem = shape;
 
-                            $scope.toDoAboutResourceLineAfterChangingAction(lastAction);
+                            $scope.toDoAboutResourceLineAfterChangingAction(lastSelectedAction);
                         }
                     }
                 }
@@ -398,10 +398,9 @@ angular.module('activitiModeler')
             /**
              * 在Action切换后，更新对应的资源连线————删除上一个Action的资源连线，创建当前Action的资源连线
              * */
-            $scope.toDoAboutResourceLineAfterChangingAction = function (lastAction) {
-                if (!lastAction) return;
+            $scope.toDoAboutResourceLineAfterChangingAction = function (lastSelectedAction) {
                 var action = $scope.getHighlightedShape();
-                if (action === lastAction)
+                if (action === lastSelectedAction)
                     return;
                 $scope.deleteConnectedLines();
                 $scope.connectedLines = [];
@@ -409,10 +408,14 @@ angular.module('activitiModeler')
                 if (resourceConnect) {
                     $scope.createConnectedLines(resourceConnect);
                 }
-                $scope.workerMove(lastAction);
+                var lastAction = $scope.getLastAction(action);
+                if (lastAction)
+                    $scope.workerMove(lastAction);
             };
 
-            //将工人移动到连线指向的资源的右侧
+            /**
+             * 将工人移动到连线指向的资源的右侧
+             * */
             $scope.workerMove = function (lastAction) {
                 var resourceConnect = lastAction.properties['oryx-resourceline'];
                 if (!resourceConnect)
@@ -436,6 +439,19 @@ angular.module('activitiModeler')
                         }
                     }
                 }
+            };
+
+            /**
+             * 获取指定动作的上一个动作，只有一个动作指向该动作的时候保证正确性，对于多个动作指向该动作，取第一个动作指向该动作的动作
+             * */
+            $scope.getLastAction = function (nowAction) {
+                if (!nowAction)
+                    return;
+                var edge = nowAction.incoming[0];
+                if (edge) {
+                    return edge.incoming[0];
+                }
+                return null;
             };
 
             /**
@@ -1055,6 +1071,9 @@ angular.module('activitiModeler')
                 $scope.connectedLines[$scope.connectedLines.length] = connectedShape.getOutgoingShapes().last().id;
             };
 
+            /**
+             * 获取当前动作的被连线的资源
+             * **/
             $scope.getResourceConnect = function () {
                 var resourceConnect = [];
                 for (var i = 0; i < $scope.connectedLines.length; i++) {

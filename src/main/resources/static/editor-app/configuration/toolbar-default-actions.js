@@ -418,13 +418,13 @@ var __createNormalAction = function ($rootScope, $scope) {
         var oldShapeId = $scope.getHighlightedShapeId();
         jQuery('#' + oldShapeId + 'bg_frame').attr({"fill": "#f9f9f9"}); //高亮显示
 
-        var lastAction = $scope.getHighlightedShape();
+        var lastSelectedAction = $scope.getHighlightedShape();
         // 高亮
         var newShapeId = $scope.editor.getSelection()[0].id;
         $scope.setHighlightedShape(newShapeId);
         jQuery('#' + newShapeId + 'bg_frame').attr({"fill": "#04FF8E"}); //高亮显示
 
-        $scope.toDoAboutResourceLineAfterChangingAction(lastAction);
+        $scope.toDoAboutResourceLineAfterChangingAction(lastSelectedAction);
     }
 };
 
