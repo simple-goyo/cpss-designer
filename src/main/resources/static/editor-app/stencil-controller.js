@@ -381,7 +381,7 @@ angular.module('activitiModeler')
                             if (lastId !== "") {
                                 jQuery('#' + lastId + 'bg_frame').attr({"fill": "#f9f9f9"});
                             }
-
+                            var lastAction = $scope.getHighlightedShape();
                             // 高亮
                             jQuery('#' + itemId + 'bg_frame').attr({"fill": "#04FF8E"});
                             console.log(itemId);
@@ -389,7 +389,7 @@ angular.module('activitiModeler')
                             lastHighlightedId = id;
                             HilghlightedItem = shape;
 
-                            $scope.toDoAboutResourceLineAfterChangingAction();
+                            $scope.toDoAboutResourceLineAfterChangingAction(lastAction);
                         }
                     }
                 }
@@ -398,13 +398,44 @@ angular.module('activitiModeler')
             /**
              * 在Action切换后，更新对应的资源连线————删除上一个Action的资源连线，创建当前Action的资源连线
              * */
-            $scope.toDoAboutResourceLineAfterChangingAction = function () {
+            $scope.toDoAboutResourceLineAfterChangingAction = function (lastAction) {
+                if (!lastAction) return;
+                var action = $scope.getHighlightedShape();
+                if (action === lastAction)
+                    return;
                 $scope.deleteConnectedLines();
                 $scope.connectedLines = [];
-                var action = $scope.getHighlightedShape();
                 var resourceConnect = action.properties['oryx-resourceline'];
-                if (!resourceConnect) return;
-                $scope.createConnectedLines(resourceConnect);
+                if (resourceConnect) {
+                    $scope.createConnectedLines(resourceConnect);
+                }
+                $scope.workerMove(lastAction);
+            };
+
+            //将工人移动到连线指向的资源的右侧
+            $scope.workerMove = function (lastAction) {
+                var resourceConnect = lastAction.properties['oryx-resourceline'];
+                if (!resourceConnect)
+                    return;
+                for (var i = 0; i < resourceConnect.length; i++) {
+                    var line = resourceConnect[i];
+                    var from = $scope.getShapeById(line['from']);
+                    var to = $scope.getShapeById(line['to']);
+                    if (from != null && to != null) {
+                        var toBounds = line['toBounds'];
+                        if (from.properties['oryx-type'] && from.properties['oryx-type'] === "工人") {
+                            var width = Math.abs(toBounds.a.x - toBounds.b.x);
+                            var padding = 10;
+                            // var height = Math.abs(toBounds.a.y - toBounds.b.y);
+                            var position = {
+                                x: (toBounds.a.x + toBounds.b.x) / 2.0 + width / 2 + padding,
+                                y: (toBounds.a.y + toBounds.b.y) / 2.0
+                            };
+                            from.bounds.centerMoveTo(position);
+                            $scope.editor.getCanvas().update();
+                        }
+                    }
+                }
             };
 
             /**
@@ -415,6 +446,18 @@ angular.module('activitiModeler')
                     var line = resourceConnect[i];
                     var from = $scope.getShapeById(line['from']);
                     var to = $scope.getShapeById(line['to']);
+                    if (from != null && to != null) {
+                        var fromBounds = line['fromBounds'];
+                        if (from.properties['oryx-type'] && from.properties['oryx-type'] === "工人") {
+                            var position = {
+                                x: (fromBounds.a.x + fromBounds.b.x) / 2.0,
+                                y: (fromBounds.a.y + fromBounds.b.y) / 2.0
+                            };
+                            from.bounds.centerMoveTo(position);
+                            $scope.editor.getCanvas().update();
+                        }
+                    }
+
                     // var id = line['edge'];
                     // var edge = $scope.getShapeById(id);
                     // if (edge) {
@@ -443,6 +486,8 @@ angular.module('activitiModeler')
              * 根据给定的from和to创建连线
              * */
             $scope.connectResource = function (from, to) {
+                if (!from || !to)
+                    return;
                 var sset = ORYX.Core.StencilSet.stencilSet(from.getStencil().namespace());
 
                 var edge = new ORYX.Core.Edge({'eventHandlerCallback': $scope.editor.handleEvents.bind($scope.editor)},
@@ -870,7 +915,7 @@ angular.module('activitiModeler')
 
             };
 
-            $scope.newPlayShape = function(){
+            $scope.newPlayShape = function () {
                 // var propertylist = $scope.selectedItem.properties;
                 var propertylist = $scope.getHighlightedShape().properties;
                 var AEProp = $scope.getPropertybyKey(propertylist, "oryx-activityelement");
@@ -1018,9 +1063,22 @@ angular.module('activitiModeler')
                     if (edge) {
                         var from = edge.incoming[0] ? edge.incoming[0].id : null;
                         var to = edge.outgoing[0] ? edge.outgoing[0].id : null;
+                        var fromBounds = null;
+                        var toBounds = null;
+                        var bounds = null;
+                        if (from != null) {
+                            bounds = $scope.getShapeById(from).bounds;
+                            fromBounds = {a: {x: bounds.a.x, y: bounds.a.y}, b: {x: bounds.b.x, y: bounds.b.y}};
+                        }
+                        if (to != null) {
+                            bounds = $scope.getShapeById(to).bounds;
+                            toBounds = {a: {x: bounds.a.x, y: bounds.a.y}, b: {x: bounds.b.x, y: bounds.b.y}};
+                        }
                         resourceConnect[resourceConnect.length] = {
                             from: from,
-                            to: to
+                            fromBounds: fromBounds,
+                            to: to,
+                            toBounds: toBounds
                             // edge: id
                         };
 
@@ -1076,7 +1134,7 @@ angular.module('activitiModeler')
             // 资源堆，保存除高亮Action之外的其他Action中的资源
             var resourceHeap = {};
 
-            var getResourceIdbyType = function(type){
+            var getResourceIdbyType = function (type) {
                 // 资源与人机物三种Action的对应（固定不变）
                 var constTypeOfResource = [
                     {name: "设备", type: "PhysicalAction"},
@@ -1090,8 +1148,8 @@ angular.module('activitiModeler')
                     {name: "信息对象", type: "CyberAction"}
                 ];
 
-                for(var i=0;i<constTypeOfResource.length;i++){
-                    if(type === constTypeOfResource[i].name){
+                for (var i = 0; i < constTypeOfResource.length; i++) {
+                    if (type === constTypeOfResource[i].name) {
                         return constTypeOfResource[i].type;
                     }
                 }
@@ -1321,7 +1379,7 @@ angular.module('activitiModeler')
 
         $scope.getPropertybyKey = function (propertylist, key) {
             console.log(propertylist);
-            if(propertylist[0] === undefined){
+            if (propertylist[0] === undefined) {
                 return propertylist[key];
             }
             for (var i = 0; i < propertylist.length; i++) {

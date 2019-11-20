@@ -4,29 +4,36 @@
 
 
 var instanceId = "";
+//专门为课题一写的，直接显示对应流程
+var app_instance_id=getQueryVariable("app_instance_id");
 var taskNodeList = new Array();
 var taskEdgeList = new Array();
 var taskNodeStateList = new Array();
 
 //循环读取当前要显示什么应用实例，如果是新的应用实例，就更新
 setInterval(function () {
-    var url = getAppBackEndServiceURL(APP_BACK_END_SERVICE.GET_APP_SHOW);
-    $.ajax({
-        type: "post",
-        url: url,
-        data: {
-            "user_id": "1",
-        },
-        success: function (result) {
-            var app_show_instance_id = result.app_show.instance_id;
-            if (instanceId != app_show_instance_id) {
-                startWorkflow(app_show_instance_id)
+    if (app_instance_id != ""&&(instanceId != app_instance_id)) {
+        startWorkflow(app_instance_id)
+    } else {
+        var url = getAppBackEndServiceURL(APP_BACK_END_SERVICE.GET_APP_SHOW);
+        $.ajax({
+            type: "post",
+            url: url,
+            data: {
+                "user_id": "1",
+            },
+            success: function (result) {
+                var app_show_instance_id = result.app_show.instance_id;
+                if (instanceId != app_show_instance_id) {
+                    startWorkflow(app_show_instance_id)
+                }
+            },
+            error: function (response) {
+                alert(response);
             }
-        },
-        error: function (response) {
-            alert(response);
-        }
-    });
+        });
+    }
+
 }, 3000);
 
 function startWorkflow(id) {
@@ -44,7 +51,7 @@ function startWorkflow(id) {
             if (result == "null") {
                 return;
             }
-            var app_class_name = result.app_class.app_class.properties.name
+            var app_class_name = result.app_class.app_class.properties.name;
             $("#app-instance-title").text(app_class_name);
             var childShapes = result.app_class.app_class.childShapes;
             getTaskNodeList(childShapes);
