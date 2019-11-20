@@ -399,13 +399,19 @@ angular.module('activitiModeler')
              * }
              * */
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_DRAGDOCKER_DOCKED, function (options) {
+                var edge = options['parent'];
+                if (!edge)
+                    return;
+
+                var nameSpace = edge.getStencil().namespace();
+                if (edge.getStencil()._jsonStencil["id"] !== nameSpace + "MessageFlow")
+                    return;
+
                 var action = $scope.getHighlightedShape();
                 if (action) {
                     action.setProperty("oryx-resourceline", $scope.getResourceConnect());
                 }
-                var edge = options['parent'];
-                if (!edge)
-                    return;
+
                 var from = edge.incoming[0];
                 var to = edge.outgoing[0];
                 if (from && to) {
