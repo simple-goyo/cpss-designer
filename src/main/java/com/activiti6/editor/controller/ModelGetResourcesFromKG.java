@@ -22,6 +22,10 @@ import static com.activiti6.utils.HttpClientHelper.postJSON;
  * 从知识图谱中获取资源信息
  * FigoHu 2019年11月1日
  */
+// 知识图谱提供的接口：
+// 1. 查询所有资源实体的子类：如设备类的子类——咖啡机、体重秤等。
+// 返回资源的名称(name)、能力（service）、事件（event）、类（class）、输入输出（input/output）和对外附能（passiveService）
+// 返回格式：[{"name":"coffeeMaker","class":"Device","service":"make_coffee","event":"making_coffee_completed",...},{...}]
 @RestController
 @RequestMapping("service")
 public class ModelGetResourcesFromKG {

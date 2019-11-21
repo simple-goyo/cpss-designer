@@ -10140,7 +10140,7 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
 
 		this.RealWord = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
 			['text', {'font-size':'24', 'x':X1+5, 'y':Y1+30, 'style': "font-family: Times New Roman;"}]);
-		this.RealWord.textContent = "现实世界";
+		this.RealWord.textContent = "社会物理空间";
 
 		// 四根线，表示虚拟空间
 		X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1 ;
@@ -10160,7 +10160,7 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
 
 		this.CyberWord = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
 			['text', {'font-size':'24', 'x':X1+5, 'y':Y1+30, 'style': "font-family: Times New Roman;"}]);
-		this.CyberWord.textContent = "虚拟世界";
+		this.CyberWord.textContent = "信息空间";
 
 
 		this.node = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.rootNode,
