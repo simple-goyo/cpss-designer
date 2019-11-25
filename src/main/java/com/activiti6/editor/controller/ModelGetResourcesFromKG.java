@@ -22,26 +22,19 @@ import static com.activiti6.utils.HttpClientHelper.postJSON;
 // 知识图谱提供的接口：
 // 1. 查询所有资源实体的子类：如设备类的子类——咖啡机、体重秤等。
 // 返回资源的名称(name)、能力（service）、事件（event）、类（class）、输入输出（input/output）和对外附能（passiveService）
-// 返回格式：[{"name":"coffeeMaker","class":"Device","service":"make_coffee","event":"making_coffee_completed",...},{...}]
+// 返回{"name":Eleme, "service":"...", "event":"...","input":...,"output":... ,capability:...}
 @RestController
 @RequestMapping("service")
 public class ModelGetResourcesFromKG {
-    final String filePath = "/root/activiti/kg/hct_Ontology.ttl";
+    final String filePath = "/root/activiti/kg/hct_Ontology_latest.ttl";
     @RequestMapping(value="/resources", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
     public String getResources() throws UnsupportedEncodingException {
-
+        // 返回resourceFunctions结构
         JSONArray resourceList = getResourceList();
 
-//        String retnStr = getResourceType("Eleme");
-//
-//        System.out.println(resList.toString());
-//        System.out.println(retnStr);
+        // 查询服务
 
-//        JSONArray resourceToFunctionType = JSON.parseArray("[{\"name\":\"设备\",\"type\":\"PhysicalAction\"},{\"name\":\"机器人\",\"type\":\"PhysicalAction\"}]");
-//
-//        InputStream stencilsetStream = this.getClass().getClassLoader().getResourceAsStream("stencilset.json");
-//
 
         InputStream resourceStream = new ByteArrayInputStream(resourceList.toString().getBytes("utf-8"));
 
@@ -73,25 +66,48 @@ public class ModelGetResourcesFromKG {
         return "";
     }
 
-
-
-    //
-    private String getResourceFunc(String resName) {
+    @RequestMapping(value="{resName}/funcs", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public String getResourceFunc(@PathVariable String resName) {
         final String KGURL = "http://www.cpss2019.fun:21910/KG201910/getResourceDetails";
-        // String resName = "Eleme";
+        //String resName = "CoffeeMaker";
         String reqParam = "?resourceType="+resName+"&filePath="+filePath;
+        String query;
         String retn;
+
         JSONObject job;
         JSONArray retnJSON = new JSONArray();
         try{
-            retn = postJSON( KGURL+reqParam,"");
+            query = postJSON( KGURL+reqParam,"");
         }catch (Exception e){
             e.printStackTrace();
-            retn = "";
+            query = "";
         }
-        job = JSON.parseObject(retn);
+        job = JSON.parseObject(query);
+        // resourceCapability
+        // resourceEvent
+        // resourceService —— output input name
+        // resourceCategory
 
-        return "";
+        List<String> resCap = parseString(job.getString("resourceCapability"));
+        List<String> resEve = parseString(job.getString("resourceEvent"));
+        List<String> resCat = parseString(job.getString("resourceCategory"));
+        List<String> resServs = parseString(job.getString("resourceService"));
+        JSONObject serv = new JSONObject();
+
+//        for(String resServ:resServs){
+//            serv = JSON.parseObject(resServ);
+//            // serv = {"input":...,"output":...,"name":...}
+//            String input = serv.getString("input");
+//            String output = serv.getString("output");
+//            String name = serv.getString("name");
+//
+//            // 建立结构
+//            // {"name":Eleme, "service":"...", "event":"...","input":...,"output":... ,capability:...}
+//            // retn = "{\"name\":\""+resName+"\",\"service\":\""+name+"\",\"event\":\""+resEve.get(0)+"\"，}";
+//        }
+
+        return "{\"name\":\""+resName+"\",\"service\":"+resServs.toString()+",\"event\":"+resEve.toString()+"，\"capability\":"+resCap.toString()+",\"category\":"+resCat.toString()+"}";
     }
 
     // 获取所有的实体资源（类）
@@ -128,14 +144,15 @@ public class ModelGetResourcesFromKG {
     }
 
     private List<String> parseString(String str){
-        // 将返回值中的"['foo1','foo2']"字符串转换成JSON格式{'foo1','foo2'}
         List<String> retnList = new ArrayList<>();
-
-        String v   = str.substring(1, str.length()-1);
-        String[] splitedStrs = v.split(", ");
-
-        Collections.addAll(retnList,splitedStrs);
-
+        if (str.substring(0, 1).equals("[")) {
+            // 将返回值中的"['foo1','foo2']"字符串转换成JSON格式{'foo1','foo2'}
+            String v   = str.substring(1, str.length()-1);
+            String[] splitedStrs = v.split(", ");
+            Collections.addAll(retnList, splitedStrs);
+        }else{
+            Collections.addAll(retnList, str);
+        }
         return retnList;
     }
 }
