@@ -100,7 +100,7 @@ angular.module('activitiModeler')
                     if (!removed) {
                         // Check if this group already exists. If not, we create a new one
 
-                        if (currentGroupName !== null && currentGroupName !== undefined && currentGroupName.length > 0 ) {
+                        if (currentGroupName !== null && currentGroupName !== undefined && currentGroupName.length > 0) {
 
                             currentGroup = findGroup(currentGroupName, stencilItemGroups); // Find group in root groups array
                             if (currentGroup === null) {
@@ -192,7 +192,7 @@ angular.module('activitiModeler')
                     if (stencilItemGroups[i].paletteItems && stencilItemGroups[i].paletteItems.length === 0) {
                         stencilItemGroups[i].visible = false;
                     }
-                    if (stencilItemGroups[i].name !== "社会实体"&&stencilItemGroups[i].name !== "信息实体"&&stencilItemGroups[i].name !== "物理实体"){
+                    if (stencilItemGroups[i].name !== "社会实体" && stencilItemGroups[i].name !== "信息实体" && stencilItemGroups[i].name !== "物理实体") {
                         stencilItemGroups[i].visible = false;
                     }
                 }
@@ -502,9 +502,61 @@ angular.module('activitiModeler')
                 if (resourceConnect) {
                     $scope.createConnectedLines(resourceConnect);
                 }
+
+                $scope.workerRestore(action);
                 var lastAction = $scope.getLastAction(action);
                 if (lastAction)
                     $scope.workerMove(lastAction);
+            };
+
+            /**
+             * 将工人位置还原为未发生移动之前的位置
+             * */
+            $scope.workerRestore = function (nowAction) {
+                if ($scope.containsWorkerLine(nowAction)) {
+                    var lastAction = $scope.getLastAction(nowAction);
+                    if ($scope.containsWorkerLine(lastAction)) {
+                        $scope.workerRestore(lastAction);
+                    } else {
+                        var resourceConnect = nowAction.properties['oryx-resourceline'];
+                        for (var i = 0; i < resourceConnect.length; i++) {
+                            var line = resourceConnect[i];
+                            var from = $scope.getShapeById(line['from']);
+                            if (from && from.properties['oryx-type'] && from.properties['oryx-type'] === "工人") {
+                                var fromBounds = line['fromBounds'];
+                                var position = {
+                                    x: (fromBounds.a.x + fromBounds.b.x) / 2.0,
+                                    y: (fromBounds.a.y + fromBounds.b.y) / 2.0
+                                };
+                                from.bounds.centerMoveTo(position);
+                                $scope.editor.getCanvas().update();
+                            }
+                        }
+                    }
+                } else {
+                    var nextAction = $scope.getNextAction(nowAction);
+                    if (nextAction)
+                        $scope.workerRestore(nextAction);
+                }
+            };
+
+            /**
+             * 判断动作中是否包含工人的连线
+             * */
+            $scope.containsWorkerLine = function (action) {
+                if (!action)
+                    return false;
+                var resourceConnect = action.properties['oryx-resourceline'];
+                if (!resourceConnect)
+                    return false;
+                for (var i = 0; i < resourceConnect.length; i++) {
+                    var line = resourceConnect[i];
+                    var from = $scope.getShapeById(line['from']);
+                    if (from && from.properties['oryx-type'] && from.properties['oryx-type'] === "工人") {
+                        return true;
+                    }
+                }
+                return false;
             };
 
             /**
@@ -547,6 +599,18 @@ angular.module('activitiModeler')
                 }
                 return null;
             };
+            /**
+             * 获取指定动作的下一个动作，只有一个动作指向该动作的时候保证正确性，对于多个动作指向该动作，取第一个动作指向该动作的动作
+             * */
+            $scope.getNextAction = function (nowAction) {
+                if (!nowAction)
+                    return;
+                var edge = nowAction.outgoing[0];
+                if (edge) {
+                    return edge.outgoing[0];
+                }
+                return null;
+            };
 
             /**
              * 用于切换action时生成对应Action的资源连线
@@ -556,17 +620,17 @@ angular.module('activitiModeler')
                     var line = resourceConnect[i];
                     var from = $scope.getShapeById(line['from']);
                     var to = $scope.getShapeById(line['to']);
-                    if (from != null && to != null) {
-                        var fromBounds = line['fromBounds'];
-                        if (from.properties['oryx-type'] && from.properties['oryx-type'] === "工人") {
-                            var position = {
-                                x: (fromBounds.a.x + fromBounds.b.x) / 2.0,
-                                y: (fromBounds.a.y + fromBounds.b.y) / 2.0
-                            };
-                            from.bounds.centerMoveTo(position);
-                            $scope.editor.getCanvas().update();
-                        }
-                    }
+                    // if (from != null && to != null) {
+                    //     var fromBounds = line['fromBounds'];
+                    //     if (from.properties['oryx-type'] && from.properties['oryx-type'] === "工人") {
+                    //         var position = {
+                    //             x: (fromBounds.a.x + fromBounds.b.x) / 2.0,
+                    //             y: (fromBounds.a.y + fromBounds.b.y) / 2.0
+                    //         };
+                    //         from.bounds.centerMoveTo(position);
+                    //         $scope.editor.getCanvas().update();
+                    //     }
+                    // }
 
                     // var id = line['edge'];
                     // var edge = $scope.getShapeById(id);
