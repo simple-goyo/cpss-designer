@@ -100,7 +100,7 @@ angular.module('activitiModeler')
                     if (!removed) {
                         // Check if this group already exists. If not, we create a new one
 
-                        if (currentGroupName !== null && currentGroupName !== undefined && currentGroupName.length > 0) {
+                        if (currentGroupName !== null && currentGroupName !== undefined && currentGroupName.length > 0 ) {
 
                             currentGroup = findGroup(currentGroupName, stencilItemGroups); // Find group in root groups array
                             if (currentGroup === null) {
@@ -189,7 +189,10 @@ angular.module('activitiModeler')
                 }
 
                 for (var i = 0; i < stencilItemGroups.length; i++) {
-                    if (stencilItemGroups[i].paletteItems && stencilItemGroups[i].paletteItems.length == 0) {
+                    if (stencilItemGroups[i].paletteItems && stencilItemGroups[i].paletteItems.length === 0) {
+                        stencilItemGroups[i].visible = false;
+                    }
+                    if (stencilItemGroups[i].name !== "社会实体"&&stencilItemGroups[i].name !== "信息实体"&&stencilItemGroups[i].name !== "物理实体"){
                         stencilItemGroups[i].visible = false;
                     }
                 }
