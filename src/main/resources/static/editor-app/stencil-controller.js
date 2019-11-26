@@ -295,6 +295,10 @@ angular.module('activitiModeler')
             // });
 
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEUP, function (event) {
+                var action = $scope.getHighlightedShape();
+                if (action) {
+                    action.setProperty("oryx-resourceline", $scope.getResourceConnect());
+                }
                 // 选都没选中，直接返回
                 if ($scope.selectedItem.auditData !== undefined) {
                     if (lastHighlightedId !== "" && event.clientX < document.documentElement.clientWidth * 0.2745) { //375
@@ -473,8 +477,7 @@ angular.module('activitiModeler')
                             fromBounds = {a: {x: bounds.a.x, y: bounds.a.y}, b: {x: bounds.b.x, y: bounds.b.y}};
                         }
                         if (to != null) {
-                            bounds = $scope.getShapeById(to).bounds;
-                            toBounds = {a: {x: bounds.a.x, y: bounds.a.y}, b: {x: bounds.b.x, y: bounds.b.y}};
+                            toBounds = $scope.getShapeById(to).bounds;
                         }
                         resourceConnect[resourceConnect.length] = {
                             from: from,
@@ -574,7 +577,7 @@ angular.module('activitiModeler')
                         var toBounds = line['toBounds'];
                         if (from.properties['oryx-type'] && from.properties['oryx-type'] === "工人") {
                             var width = Math.abs(toBounds.a.x - toBounds.b.x);
-                            var padding = 10;
+                            var padding = 20;
                             // var height = Math.abs(toBounds.a.y - toBounds.b.y);
                             var position = {
                                 x: (toBounds.a.x + toBounds.b.x) / 2.0 + width / 2 + padding,
@@ -586,7 +589,6 @@ angular.module('activitiModeler')
                     }
                 }
             };
-
             /**
              * 获取指定动作的上一个动作，只有一个动作指向该动作的时候保证正确性，对于多个动作指向该动作，取第一个动作指向该动作的动作
              * */
@@ -600,7 +602,7 @@ angular.module('activitiModeler')
                 return null;
             };
             /**
-             * 获取指定动作的下一个动作，只有一个动作指向该动作的时候保证正确性，对于多个动作指向该动作，取第一个动作指向该动作的动作
+             * 获取指定动作的下一个动作，只有该动作指向一个动作的时候保证正确性，对于多个动作指向该动作，取该动作指向的第一个的动作
              * */
             $scope.getNextAction = function (nowAction) {
                 if (!nowAction)
@@ -620,24 +622,6 @@ angular.module('activitiModeler')
                     var line = resourceConnect[i];
                     var from = $scope.getShapeById(line['from']);
                     var to = $scope.getShapeById(line['to']);
-                    // if (from != null && to != null) {
-                    //     var fromBounds = line['fromBounds'];
-                    //     if (from.properties['oryx-type'] && from.properties['oryx-type'] === "工人") {
-                    //         var position = {
-                    //             x: (fromBounds.a.x + fromBounds.b.x) / 2.0,
-                    //             y: (fromBounds.a.y + fromBounds.b.y) / 2.0
-                    //         };
-                    //         from.bounds.centerMoveTo(position);
-                    //         $scope.editor.getCanvas().update();
-                    //     }
-                    // }
-
-                    // var id = line['edge'];
-                    // var edge = $scope.getShapeById(id);
-                    // if (edge) {
-                    //     jQuery("#" + id).parent().parent().parent().parent().attr("display", "");
-                    //     $scope.connectedLines[$scope.connectedLines.length] = id;
-                    // }
                     $scope.connectResource(from, to);
                 }
             };
@@ -650,7 +634,6 @@ angular.module('activitiModeler')
                     var id = $scope.connectedLines[i];
                     var edge = $scope.getShapeById(id);
                     if (edge) {
-                        // jQuery("#" + id).parent().parent().parent().parent().attr("display", "none");
                         $scope.editor.deleteShape(edge);
                     }
                 }
@@ -679,6 +662,7 @@ angular.module('activitiModeler')
                 $scope.editor.getCanvas().update();
                 $scope.connectedLines[$scope.connectedLines.length] = edge.id;
             };
+
             /*
              * Listen to selection change events: show properties
              */
@@ -1200,7 +1184,6 @@ angular.module('activitiModeler')
                 // $scope.editor.deleteShape(shapeToRemove);
                 // KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
             };
-
 
             $scope.quickAddItem = function (newItemId) {
                 $scope.safeApply(function () {
@@ -2248,7 +2231,8 @@ angular.module('activitiModeler')
             }
         });
 
-    }]);
+    }])
+;
 
 
 var KISBPM = KISBPM || {};
