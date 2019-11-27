@@ -73,7 +73,7 @@ angular.module('activitiModeler')
                 //     'CatchTimerEvent', 'ThrowNoneEvent', 'TextAnnotation',
                 //     'SequenceFlow', 'Association'];
                 var quickMenuDefinition = [];
-                var ignoreForPaletteDefinition = ['SequenceFlow', 'MessageFlow', 'Association', 'DataAssociation', 'DataStore', 'SendTask'];
+                var ignoreForPaletteDefinition = ['SequenceFlow', 'SequenceEventFlow', 'MessageFlow', 'Association', 'DataAssociation', 'DataStore', 'SendTask'];
                 var quickMenuItems = [];
 
                 var morphRoles = [];
@@ -1739,7 +1739,7 @@ angular.module('activitiModeler')
 
                         option.position = pos;
 
-                        if (containedStencil.idWithoutNs() !== 'SequenceFlow' && containedStencil.idWithoutNs() !== 'Association' &&
+                        if (containedStencil.idWithoutNs() !== 'SequenceFlow' && containedStencil.idWithoutNs() !== 'SequenceEventFlow' &&containedStencil.idWithoutNs() !== 'Association' &&
                             containedStencil.idWithoutNs() !== 'MessageFlow' && containedStencil.idWithoutNs() !== 'DataAssociation') {
                             var args = {sourceShape: currentSelectedShape, targetStencil: containedStencil};
                             debugger;

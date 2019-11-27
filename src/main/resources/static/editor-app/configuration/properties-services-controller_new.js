@@ -579,6 +579,7 @@ var MorphTo = ORYX.Core.Command.extend({
 
         // Deserialize the new shape - Set all attributes
         newShape.deserialize(serialized);
+        this.facade.setSelection([newShape]);
         /*
          * Change color to default if unchanged
          * 23.04.2010

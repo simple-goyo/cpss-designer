@@ -2951,6 +2951,17 @@
         ]
       },
       {
+        "role": "SequenceEventFlow",
+        "connects": [
+          {
+            "from": "sequence_start",
+            "to": [
+              "sequence_end"
+            ]
+          }
+        ]
+      },
+      {
         "role": "MessageFlow",
         "connects": [
           {
