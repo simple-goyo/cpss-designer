@@ -17,6 +17,19 @@
       ]
     },
     {
+      "name": "workercontainspackage",
+      "properties": [
+        {
+          "id": "workercontains",
+          "type": "complex",
+          "title": "携带的资源",
+          "value": "",
+          "description": "Action中工人携带的资源",
+          "popular": true
+        }
+      ]
+    },
+    {
       "name": "resourcelinepackage",
       "properties": [
         {
@@ -1263,7 +1276,8 @@
         "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
-        "servicespackage"
+        "servicespackage",
+        "workercontainspackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -2737,7 +2751,8 @@
         "canContainArtifacts",
         "all"
       ]
-    },{
+    },
+    {
       "type": "edge",
       "id": "SequenceFlow",
       "title": "顺序流",

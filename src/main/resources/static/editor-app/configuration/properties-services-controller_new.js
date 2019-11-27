@@ -229,6 +229,10 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
                     $scope.editor.getSelection()[0].setProperty("oryx-type", "信息对象");
                     $scope.editor.getCanvas().update();
                     $scope.editor.updateSelection();
+                }else if ($scope.entity.Services[i].value === '获取水杯') {
+                    $scope.workerGetResource($scope.getHighlightedShape(), $scope.latestLine.incoming[0], $scope.latestLine.outgoing[0]);
+                } else if ($scope.entity.Services[i].value === '递交物品') {
+                    $scope.workerResourceEmpty($scope.getHighlightedShape(), shape);
                 }
             }
         }
@@ -412,6 +416,8 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
         }
         $scope.setHighlightedShape(newShapeId);
         jQuery('#' + newShapeId + 'bg_frame').attr({"fill":"#04FF8E"}); //高亮显示
+
+        $scope.workerContainsActionIdUpdate(HighlightedShape.id, newShapeId);
 
         //$scope.close();
     };
