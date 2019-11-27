@@ -430,6 +430,7 @@ angular.module('activitiModeler')
                     } else
                         $scope.editor.setSelection(to);
                     $scope.editor.getCanvas().update();
+                    $scope.latestLine = edge;
                     $scope.setService();
                 }
             });
@@ -1966,7 +1967,7 @@ angular.module('activitiModeler')
 
                         option.position = pos;
 
-                        if (containedStencil.idWithoutNs() !== 'SequenceFlow' && containedStencil.idWithoutNs() !== 'SequenceEventFlow' &&containedStencil.idWithoutNs() !== 'Association' &&
+                        if (containedStencil.idWithoutNs() !== 'SequenceFlow' && containedStencil.idWithoutNs() !== 'SequenceEventFlow' && containedStencil.idWithoutNs() !== 'Association' &&
                             containedStencil.idWithoutNs() !== 'MessageFlow' && containedStencil.idWithoutNs() !== 'DataAssociation') {
                             var args = {sourceShape: currentSelectedShape, targetStencil: containedStencil};
                             debugger;
