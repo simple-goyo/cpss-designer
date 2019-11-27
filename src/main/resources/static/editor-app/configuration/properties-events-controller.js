@@ -388,6 +388,7 @@ var MorphToEvent = ORYX.Core.Command.extend({
 		 	type: "http://b3mn.org/stencilset/bpmn2.0#SequenceEventFlow",
 		 	namespace: "http://b3mn.org/stencilset/bpmn2.0",
 		 	resourceId: oldedge.resourceId,
+			connectedShape: oldedge.incoming[0],
 			connectingType: stencil.id(),
 			containedStencil: stencil
 		});
@@ -411,8 +412,8 @@ var MorphToEvent = ORYX.Core.Command.extend({
 		newEdge.bounds.set(changededgeBounds);
 		this.facade.setSelection([newEdge]);
 		this.facade.getCanvas().update();
-		newEdge.bounds.set(changededgeBounds);
-		this.facade.getCanvas().update();
+		// newEdge.bounds.set(changededgeBounds);
+		// this.facade.getCanvas().update();
 		// Delete the old shape
 		this.facade.deleteShape(oldedge);
 
