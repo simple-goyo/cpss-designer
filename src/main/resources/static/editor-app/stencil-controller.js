@@ -510,7 +510,7 @@ angular.module('activitiModeler')
                     $scope.createConnectedLines(resourceConnect);
                 }
 
-                $scope.workerRestore(action);
+                $scope.workerRestore(action, lastSelectedAction);
                 var lastAction = $scope.getLastAction(action);
                 if (lastAction)
                     $scope.workerMove(lastAction);
@@ -534,17 +534,25 @@ angular.module('activitiModeler')
                 var padding = 30;
                 for (var i = 0; i < workerResource.length; i++) {
                     var element = workerResource[i];
-                    if (element.status !== "toBeGot") {
-                        var resource = $scope.getShapeById(element.resourceId);
-                        if (resource) {
-                            var position = {
+                    var resource = $scope.getShapeById(element.resourceId);
+                    if (resource) {
+                        var position;
+                        if (element.status !== "toBeGot" && element.status !== "putDown") {
+
+                            position = {
                                 x: (workerBounds.a.x + workerBounds.b.x) / 2.0 + width / 2 + padding,
                                 y: (workerBounds.a.y + workerBounds.b.y) / 2.0 + offset
                             };
-                            resource.bounds.centerMoveTo(position);
-                            $scope.editor.getCanvas().update();
                             offset += 30;
+                        } else {
+                            var bounds = element.resourceBounds;
+                            position = {
+                                x: (bounds.a.x + bounds.b.x) / 2.0,
+                                y: (bounds.a.y + bounds.b.y) / 2.0
+                            };
                         }
+                        resource.bounds.centerMoveTo(position);
+                        $scope.editor.getCanvas().update();
                     }
                 }
             };
@@ -556,8 +564,6 @@ angular.module('activitiModeler')
                 var workerContains = worker.properties['oryx-workercontains'];
                 if (!workerContains)
                     return;
-                console.log("BeforeChecked");
-                console.log(workerContains);
                 var lastActionId = lastAction.id;
                 var workerResource = workerContains[lastActionId];
                 var nowActionId = $scope.getHighlightedShapeId();
@@ -582,13 +588,12 @@ angular.module('activitiModeler')
                             nowWorkResourceMap[element.resourceId] = "got";
                         } else if (element.status === "got") {
                             nowWorkResourceMap[element.resourceId] = "got";
+                        } else if (element.status === "putDown") {
+                            nowWorkResourceMap[element.resourceId] = "putDown";
                         }
                     }
                 }
                 for (var resourceId in nowWorkResourceMap) {
-                    if (nowWorkResourceMap[resourceId] === "putDown") {
-                        continue;
-                    }
                     var resource = $scope.getShapeById(resourceId);
                     if (resource) {
                         var bounds = resource.bounds;
@@ -604,18 +609,16 @@ angular.module('activitiModeler')
 
                 workerContains[nowActionId] = newNowWorkerResource;
                 worker.setProperty('oryx-workercontains', workerContains);
-                console.log("AfterChecked");
-                console.log(workerContains);
             };
 
             /**
              * 将工人位置还原为未发生移动之前的位置
              * */
-            $scope.workerRestore = function (nowAction) {
+            $scope.workerRestore = function (nowAction, lastSelectedAction) {
                 if ($scope.containsWorkerLine(nowAction)) {
                     var lastAction = $scope.getLastAction(nowAction);
                     if ($scope.containsWorkerLine(lastAction)) {
-                        $scope.workerRestore(lastAction);
+                        $scope.workerRestore(lastAction, lastSelectedAction);
                     } else {
                         var resourceConnect = nowAction.properties['oryx-resourceline'];
                         for (var i = 0; i < resourceConnect.length; i++) {
@@ -629,29 +632,29 @@ angular.module('activitiModeler')
                                 };
                                 from.bounds.centerMoveTo(position);
                                 $scope.editor.getCanvas().update();
-                                $scope.resourceRestore(nowAction, from);
+                                $scope.resourceRestore(lastSelectedAction, from);
                             }
                         }
                     }
                 } else {
                     var nextAction = $scope.getNextAction(nowAction);
                     if (nextAction)
-                        $scope.workerRestore(nextAction);
+                        $scope.workerRestore(nextAction, lastSelectedAction);
                 }
             };
 
             /**
              * 将工人所携带的资源自当前动作逐一往前回退
              * */
-            $scope.resourceRestore = function (nowAction, worker) {
+            $scope.resourceRestore = function (lastSelectedAction, worker) {
                 if (!worker)
                     return;
                 var contains = worker.properties['oryx-workercontains'];
                 if (!contains)
                     return;
-                if (!nowAction)
+                if (!lastSelectedAction)
                     return;
-                var resources = contains[nowAction.id];
+                var resources = contains[lastSelectedAction.id];
                 if (resources) {
                     for (var i = 0; i < resources.length; i++) {
                         var resource = $scope.getShapeById(resources[i].resourceId);
@@ -666,7 +669,7 @@ angular.module('activitiModeler')
                         }
                     }
                 }
-                $scope.resourceRestore($scope.getLastAction(nowAction), worker);
+                $scope.resourceRestore($scope.getLastAction(lastSelectedAction), worker);
             };
 
             /**
@@ -862,7 +865,8 @@ angular.module('activitiModeler')
                         return;
                     }
                     for (var i = 0; i < actionResource.length; i++) {
-                        actionResource[i].status = "toBePutDown";
+                        if (actionResource[i].status === "got")
+                            actionResource[i].status = "toBePutDown";
                     }
                     worker.setProperty('oryx-workercontains', contains);
                 }
