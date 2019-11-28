@@ -135,5 +135,9 @@ KISBPM.PROPERTY_CONFIG =
         "oryx-resourceline-complex": {
             "readModeTemplateUrl": null,
             "writeModeTemplateUrl": null
+        },
+        "oryx-workercontains-complex": {
+            "readModeTemplateUrl": null,
+            "writeModeTemplateUrl": null
         }
     };

@@ -17,15 +17,28 @@
       ]
     },
     {
+      "name": "workercontainspackage",
+      "properties": [
+        {
+          "id": "workercontains",
+          "type": "complex",
+          "title": "携带的资源",
+          "value": "",
+          "description": "Action中工人携带的资源",
+          "popular": true
+        }
+      ]
+    },
+    {
       "name": "resourcelinepackage",
       "properties": [
         {
           "id": "resourceline",
-          "type":"complex",
-          "title":"资源连线",
-          "value":"",
-          "description":"Action中资源的关系",
-          "popular":true
+          "type": "complex",
+          "title": "资源连线",
+          "value": "",
+          "description": "Action中资源的关系",
+          "popular": true
         }
       ]
     },
@@ -1263,7 +1276,8 @@
         "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
-        "servicespackage"
+        "servicespackage",
+        "workercontainspackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1802,7 +1816,8 @@
         "inputpackage",
         "outputpackage",
         "animatedirectionpackage",
-        "currentscenepackage"
+        "currentscenepackage",
+        "resourcelinepackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -2769,6 +2784,36 @@
     },
     {
       "type": "edge",
+      "id": "SequenceEventFlow",
+      "title": "顺序流",
+      "description": "顺序流定义活动的执行顺序",
+      "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:oryx=\"http://www.b3mn.org/oryx\" version=\"1.0\" oryx:edge=\"edge\">\n\t<defs>\n\t  \t<marker id=\"start\" refX=\"1\" refY=\"5\" markerUnits=\"userSpaceOnUse\" markerWidth=\"17\" markerHeight=\"11\" orient=\"auto\">\n\t  \t\t<circle xmlns=\"http://www.w3.org/2000/svg\" cx=\"6\" cy=\"5.5\" r=\"4.5\" stroke-width=\"2\" id=\"circle\" fill=\"white\" stroke=\"#585858\"/>\n\t\t\t\n\t  \t</marker>\n\t  \t<marker id=\"end\" refX=\"15\" refY=\"6\" markerUnits=\"userSpaceOnUse\" markerWidth=\"15\" markerHeight=\"12\" orient=\"auto\">\n\t  \t\t<path id=\"arrowhead\" d=\"M 0 1 L 15 6 L 0 11z\" fill=\"#585858\" stroke=\"#585858\" stroke-linejoin=\"round\" stroke-width=\"2\"/>\n\t  \t</marker>\n\t</defs>\n\t<g id=\"edge\">\n\t\t<path id=\"bg_frame\" d=\"M10 50 L210 50\" stroke=\"#585858\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" marker-start=\"url(#start)\" marker-end=\"url(#end)\"/>\n\t\t<text id=\"text_name\" x=\"0\" y=\"0\" oryx:edgePosition=\"startTop\"/>\n\t</g>\n</svg>",
+      "icon": "connector/sequenceflow.png",
+      "groups": [
+        "连接对象"
+      ],
+      "layout": [
+        {
+          "type": "layout.bpmn2_0.sequenceflow"
+        }
+      ],
+      "propertyPackages": [
+        "overrideidpackage",
+        "namepackage",
+        "documentationpackage",
+        "conditionsequenceflowpackage",
+        "executionlistenerspackage",
+        "conditionpackage",
+        "defaultflowpackage"
+      ],
+      "hiddenPropertyPackages": [],
+      "roles": [
+        "ConnectingObjectsMorph",
+        "all"
+      ]
+    },
+    {
+      "type": "edge",
       "id": "MessageFlow",
       "title": "消息流",
       "description": "Message flow to connect elements in different pools.",
@@ -2919,12 +2964,24 @@
             ]
           }
         ]
-      },{
-        "role":"MessageFlow",
-        "connects":[
+      },
+      {
+        "role": "SequenceEventFlow",
+        "connects": [
           {
-            "from":"message_start",
-            "to":[
+            "from": "sequence_start",
+            "to": [
+              "sequence_end"
+            ]
+          }
+        ]
+      },
+      {
+        "role": "MessageFlow",
+        "connects": [
+          {
+            "from": "message_start",
+            "to": [
               "message_end"
             ]
           }

@@ -78,7 +78,7 @@ function getTaskEdgeList(childShapes) {
     taskEdgeList = []
     $.each(childShapes, function (i, item) {
         var type = item.stencil.id;
-        if (type == "SequenceFlow") {
+        if (type == "SequenceFlow"||type == "SequenceEventFlow") {
             taskEdgeList.push(item);
         }
     })

@@ -63,6 +63,7 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
         {name: "递交物品", type: "SocialAction"},
         {name: "制作咖啡", type: "PhysicalAction"},
         {name: "点咖啡服务", type: "CyberAction"},
+        {name: "准备订单", type: "PhysicalAction"},
 
         {name: "烧水", type: "PhysicalAction"},
         {name: "开启空气净化", type: "PhysicalAction"},
@@ -228,6 +229,10 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
                     $scope.editor.getSelection()[0].setProperty("oryx-type", "信息对象");
                     $scope.editor.getCanvas().update();
                     $scope.editor.updateSelection();
+                }else if ($scope.entity.Services[i].value === '获取水杯') {
+                    $scope.workerGetResource($scope.getHighlightedShape(), $scope.latestLine.incoming[0], $scope.latestLine.outgoing[0]);
+                } else if ($scope.entity.Services[i].value === '递交物品') {
+                    $scope.workerResourceEmpty($scope.getHighlightedShape(), shape);
                 }
             }
         }
@@ -412,6 +417,8 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
         $scope.setHighlightedShape(newShapeId);
         jQuery('#' + newShapeId + 'bg_frame').attr({"fill":"#04FF8E"}); //高亮显示
 
+        $scope.workerContainsActionIdUpdate(HighlightedShape.id, newShapeId);
+
         //$scope.close();
     };
     // Close button handler
@@ -578,6 +585,7 @@ var MorphTo = ORYX.Core.Command.extend({
 
         // Deserialize the new shape - Set all attributes
         newShape.deserialize(serialized);
+        this.facade.setSelection([newShape]);
         /*
          * Change color to default if unchanged
          * 23.04.2010

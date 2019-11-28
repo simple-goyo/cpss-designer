@@ -25,6 +25,9 @@ angular.module('activitiModeler')
         var lastHighlightedId = "";
         var HilghlightedItem;
 
+        //最新的资源连线
+        $scope.latestLine = undefined;
+
         $scope.connectedLines = [];
 
         // Property window toggle state
@@ -73,7 +76,7 @@ angular.module('activitiModeler')
                 //     'CatchTimerEvent', 'ThrowNoneEvent', 'TextAnnotation',
                 //     'SequenceFlow', 'Association'];
                 var quickMenuDefinition = [];
-                var ignoreForPaletteDefinition = ['SequenceFlow', 'MessageFlow', 'Association', 'DataAssociation', 'DataStore', 'SendTask'];
+                var ignoreForPaletteDefinition = ['SequenceFlow', 'SequenceEventFlow', 'MessageFlow', 'Association', 'DataAssociation', 'DataStore', 'SendTask'];
                 var quickMenuItems = [];
 
                 var morphRoles = [];
@@ -189,7 +192,10 @@ angular.module('activitiModeler')
                 }
 
                 for (var i = 0; i < stencilItemGroups.length; i++) {
-                    if (stencilItemGroups[i].paletteItems && stencilItemGroups[i].paletteItems.length == 0) {
+                    if (stencilItemGroups[i].paletteItems && stencilItemGroups[i].paletteItems.length === 0) {
+                        stencilItemGroups[i].visible = false;
+                    }
+                    if (stencilItemGroups[i].name !== "社会实体" && stencilItemGroups[i].name !== "信息实体" && stencilItemGroups[i].name !== "物理实体") {
                         stencilItemGroups[i].visible = false;
                     }
                 }
@@ -292,12 +298,10 @@ angular.module('activitiModeler')
             // });
 
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEUP, function (event) {
-                //更新动作的资源关系
                 var action = $scope.getHighlightedShape();
                 if (action) {
                     action.setProperty("oryx-resourceline", $scope.getResourceConnect());
                 }
-
                 // 选都没选中，直接返回
                 if ($scope.selectedItem.auditData !== undefined) {
                     if (lastHighlightedId !== "" && event.clientX < document.documentElement.clientWidth * 0.2745) { //375
@@ -381,7 +385,7 @@ angular.module('activitiModeler')
                             if (lastId !== "") {
                                 jQuery('#' + lastId + 'bg_frame').attr({"fill": "#f9f9f9"});
                             }
-
+                            var lastSelectedAction = $scope.getHighlightedShape();
                             // 高亮
                             jQuery('#' + itemId + 'bg_frame').attr({"fill": "#04FF8E"});
                             console.log(itemId);
@@ -389,22 +393,356 @@ angular.module('activitiModeler')
                             lastHighlightedId = id;
                             HilghlightedItem = shape;
 
-                            $scope.toDoAboutResourceLineAfterChangingAction();
+                            $scope.toDoAboutResourceLineAfterChangingAction(lastSelectedAction);
                         }
                     }
                 }
             });
 
             /**
+             * 监听资源连线成功事件
+             * options: {
+             *      type: ORYX.CONFIG.EVENT_DRAGDOCKER_DOCKED
+             *      docker: docker
+             *      parent: docker.parent  线
+             *      target: lastUIObj 被连上的资源
+             * }
+             * */
+            $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_DRAGDOCKER_DOCKED, function (options) {
+                var edge = options['parent'];
+                if (!edge)
+                    return;
+
+                var nameSpace = edge.getStencil().namespace();
+                if (edge.getStencil()._jsonStencil["id"] !== nameSpace + "MessageFlow")
+                    return;
+
+                var action = $scope.getHighlightedShape();
+                if (action) {
+                    action.setProperty("oryx-resourceline", $scope.getResourceConnect());
+                }
+
+                var from = edge.incoming[0];
+                var to = edge.outgoing[0];
+                if (from && to) {
+                    if (from.properties['oryx-type'] === "工人") {
+                        $scope.editor.setSelection(from);
+                    } else
+                        $scope.editor.setSelection(to);
+                    $scope.editor.getCanvas().update();
+                    $scope.latestLine = edge;
+                    $scope.setService();
+                }
+            });
+
+            /**
+             * 该方法是用于创建一个在选中的资源下方的messageFlow，并记录messageFlow的id
+             * 具体实现方式为：利用command创建一个与选中资源相同的临时资源，然后将选中资源与其连线，然后删除临时资源
+             * */
+            $scope.createConnectLine = function () {
+                var HighlightedShape = $scope.getHighlightedShape();
+                if (HighlightedShape === undefined) return;
+
+                var connectedShape = $scope.editor.getSelection()[0];
+
+                var stencil = connectedShape.getStencil();
+                var option = {
+                    type: stencil._jsonStencil["id"],
+                    namespace: stencil.namespace(),
+                    connectedShape: connectedShape,
+                    parent: connectedShape.parent,
+                    containedStencil: stencil,
+                    connectingType: stencil.namespace() + "MessageFlow"
+                };
+                var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
+                $scope.editor.executeCommands(command);
+                KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
+                $scope.editor.setSelection(connectedShape);
+                $scope.editor.getCanvas().update();
+                $scope.connectedLines[$scope.connectedLines.length] = connectedShape.getOutgoingShapes().last().id;
+            };
+
+            /**
+             * 获取当前动作的被连线的资源
+             * **/
+            $scope.getResourceConnect = function () {
+                var resourceConnect = [];
+                for (var i = 0; i < $scope.connectedLines.length; i++) {
+                    var id = $scope.connectedLines[i];
+                    var edge = $scope.getShapeById(id);
+                    if (edge) {
+                        var from = edge.incoming[0] ? edge.incoming[0].id : null;
+                        var to = edge.outgoing[0] ? edge.outgoing[0].id : null;
+                        var fromBounds = null;
+                        var toBounds = null;
+                        var bounds = null;
+                        if (from != null) {
+                            bounds = $scope.getShapeById(from).bounds;
+                            fromBounds = {a: {x: bounds.a.x, y: bounds.a.y}, b: {x: bounds.b.x, y: bounds.b.y}};
+                        }
+                        if (to != null) {
+                            toBounds = $scope.getShapeById(to).bounds;
+                        }
+                        resourceConnect[resourceConnect.length] = {
+                            from: from,
+                            fromBounds: fromBounds,
+                            to: to,
+                            toBounds: toBounds
+                            // edge: id
+                        };
+
+                    }
+                }
+                return resourceConnect;
+            };
+
+            /**
              * 在Action切换后，更新对应的资源连线————删除上一个Action的资源连线，创建当前Action的资源连线
              * */
-            $scope.toDoAboutResourceLineAfterChangingAction = function () {
+            $scope.toDoAboutResourceLineAfterChangingAction = function (lastSelectedAction) {
+                var action = $scope.getHighlightedShape();
+                if (action === lastSelectedAction)
+                    return;
                 $scope.deleteConnectedLines();
                 $scope.connectedLines = [];
-                var action = $scope.getHighlightedShape();
                 var resourceConnect = action.properties['oryx-resourceline'];
-                if (!resourceConnect) return;
-                $scope.createConnectedLines(resourceConnect);
+                if (resourceConnect) {
+                    $scope.createConnectedLines(resourceConnect);
+                }
+
+                $scope.workerRestore(action, lastSelectedAction);
+                var lastAction = $scope.getLastAction(action);
+                if (lastAction)
+                    $scope.workerMove(lastAction);
+            };
+
+            /**
+             * 工人移动时，其携带的资源一同移动
+             * */
+
+            $scope.workerResourceMove = function (lastAction, worker) {
+                var workerContains = worker.properties['oryx-workercontains'];
+                if (!workerContains)
+                    return;
+                var lastActionId = lastAction.id;
+                var workerResource = workerContains[lastActionId];
+                if (!workerResource)
+                    return;
+                var workerBounds = worker.bounds;
+                var width = Math.abs(workerBounds.a.x - workerBounds.b.x);
+                var offset = 0;
+                var padding = 30;
+                for (var i = 0; i < workerResource.length; i++) {
+                    var element = workerResource[i];
+                    var resource = $scope.getShapeById(element.resourceId);
+                    if (resource) {
+                        var position;
+                        if (element.status !== "toBeGot" && element.status !== "putDown") {
+
+                            position = {
+                                x: (workerBounds.a.x + workerBounds.b.x) / 2.0 + width / 2 + padding,
+                                y: (workerBounds.a.y + workerBounds.b.y) / 2.0 + offset
+                            };
+                            offset += 30;
+                        } else {
+                            var bounds = element.resourceBounds;
+                            position = {
+                                x: (bounds.a.x + bounds.b.x) / 2.0,
+                                y: (bounds.a.y + bounds.b.y) / 2.0
+                            };
+                        }
+                        resource.bounds.centerMoveTo(position);
+                        $scope.editor.getCanvas().update();
+                    }
+                }
+            };
+
+            /**
+             * 确定当前场景下，工人携带的物品
+             */
+            $scope.workerResourceCheck = function (lastAction, worker) {
+                var workerContains = worker.properties['oryx-workercontains'];
+                if (!workerContains)
+                    return;
+                var lastActionId = lastAction.id;
+                var workerResource = workerContains[lastActionId];
+                var nowActionId = $scope.getHighlightedShapeId();
+                if (!workerResource) {
+                    return;
+                }
+                var nowWorkResource = workerContains[nowActionId];
+                var nowWorkResourceMap = {};
+                if (nowWorkResource) {
+                    for (var j = 0; j < nowWorkResource.length; j++) {
+                        nowWorkResourceMap[nowWorkResource[j].resourceId] = nowWorkResource[j].status;
+                    }
+                }
+                var newNowWorkerResource = [];
+                for (var i = 0; i < workerResource.length; i++) {
+                    var element = workerResource[i];
+                    if (!nowWorkResourceMap[element.resourceId]
+                        || nowWorkResourceMap[element.resourceId].indexOf("to") === -1) {
+                        if (element.status === "toBePutDown") {
+                            nowWorkResourceMap[element.resourceId] = "putDown";
+                        } else if (element.status === "toBeGot") {
+                            nowWorkResourceMap[element.resourceId] = "got";
+                        } else if (element.status === "got") {
+                            nowWorkResourceMap[element.resourceId] = "got";
+                        } else if (element.status === "putDown") {
+                            nowWorkResourceMap[element.resourceId] = "putDown";
+                        }
+                    }
+                }
+                for (var resourceId in nowWorkResourceMap) {
+                    var resource = $scope.getShapeById(resourceId);
+                    if (resource) {
+                        var bounds = resource.bounds;
+                        var resourceBounds = {a: {x: bounds.a.x, y: bounds.a.y}, b: {x: bounds.b.x, y: bounds.b.y}};
+                        newNowWorkerResource[newNowWorkerResource.length] = {
+                            resourceId: resource.id,
+                            resourceBounds: resourceBounds,
+                            status: nowWorkResourceMap[resourceId]
+                        };
+                    }
+                }
+
+
+                workerContains[nowActionId] = newNowWorkerResource;
+                worker.setProperty('oryx-workercontains', workerContains);
+            };
+
+            /**
+             * 将工人位置还原为未发生移动之前的位置
+             * */
+            $scope.workerRestore = function (nowAction, lastSelectedAction) {
+                if ($scope.containsWorkerLine(nowAction)) {
+                    var lastAction = $scope.getLastAction(nowAction);
+                    if ($scope.containsWorkerLine(lastAction)) {
+                        $scope.workerRestore(lastAction, lastSelectedAction);
+                    } else {
+                        var resourceConnect = nowAction.properties['oryx-resourceline'];
+                        for (var i = 0; i < resourceConnect.length; i++) {
+                            var line = resourceConnect[i];
+                            var from = $scope.getShapeById(line['from']);
+                            if (from && from.properties['oryx-type'] && from.properties['oryx-type'] === "工人") {
+                                var fromBounds = line['fromBounds'];
+                                var position = {
+                                    x: (fromBounds.a.x + fromBounds.b.x) / 2.0,
+                                    y: (fromBounds.a.y + fromBounds.b.y) / 2.0
+                                };
+                                from.bounds.centerMoveTo(position);
+                                $scope.editor.getCanvas().update();
+                                $scope.resourceRestore(lastSelectedAction, from);
+                            }
+                        }
+                    }
+                } else {
+                    var nextAction = $scope.getNextAction(nowAction);
+                    if (nextAction)
+                        $scope.workerRestore(nextAction, lastSelectedAction);
+                }
+            };
+
+            /**
+             * 将工人所携带的资源自当前动作逐一往前回退
+             * */
+            $scope.resourceRestore = function (lastSelectedAction, worker) {
+                if (!worker)
+                    return;
+                var contains = worker.properties['oryx-workercontains'];
+                if (!contains)
+                    return;
+                if (!lastSelectedAction)
+                    return;
+                var resources = contains[lastSelectedAction.id];
+                if (resources) {
+                    for (var i = 0; i < resources.length; i++) {
+                        var resource = $scope.getShapeById(resources[i].resourceId);
+                        if (resource) {
+                            var bounds = resources[i].resourceBounds;
+                            var position = {
+                                x: (bounds.a.x + bounds.b.x) / 2.0,
+                                y: (bounds.a.y + bounds.b.y) / 2.0
+                            };
+                            resource.bounds.centerMoveTo(position);
+                            $scope.editor.getCanvas().update();
+                        }
+                    }
+                }
+                $scope.resourceRestore($scope.getLastAction(lastSelectedAction), worker);
+            };
+
+            /**
+             * 判断动作中是否包含工人的连线
+             * */
+            $scope.containsWorkerLine = function (action) {
+                if (!action)
+                    return false;
+                var resourceConnect = action.properties['oryx-resourceline'];
+                if (!resourceConnect)
+                    return false;
+                for (var i = 0; i < resourceConnect.length; i++) {
+                    var line = resourceConnect[i];
+                    var from = $scope.getShapeById(line['from']);
+                    if (from && from.properties['oryx-type'] && from.properties['oryx-type'] === "工人") {
+                        return true;
+                    }
+                }
+                return false;
+            };
+
+            /**
+             * 将工人移动到连线指向的资源的右侧
+             * */
+            $scope.workerMove = function (lastAction) {
+                var resourceConnect = lastAction.properties['oryx-resourceline'];
+                if (!resourceConnect)
+                    return;
+                for (var i = 0; i < resourceConnect.length; i++) {
+                    var line = resourceConnect[i];
+                    var from = $scope.getShapeById(line['from']);
+                    var to = $scope.getShapeById(line['to']);
+                    if (from != null && to != null) {
+                        var toBounds = line['toBounds'];
+                        if (from.properties['oryx-type'] && from.properties['oryx-type'] === "工人") {
+                            var width = Math.abs(toBounds.a.x - toBounds.b.x);
+                            var padding = 20;
+                            // var height = Math.abs(toBounds.a.y - toBounds.b.y);
+                            var position = {
+                                x: (toBounds.a.x + toBounds.b.x) / 2.0 + width / 2 + padding,
+                                y: (toBounds.a.y + toBounds.b.y) / 2.0
+                            };
+                            from.bounds.centerMoveTo(position);
+                            $scope.editor.getCanvas().update();
+                            $scope.workerResourceMove(lastAction, from);
+                            $scope.workerResourceCheck(lastAction, from);
+                        }
+                    }
+                }
+            };
+            /**
+             * 获取指定动作的上一个动作，只有一个动作指向该动作的时候保证正确性，对于多个动作指向该动作，取第一个动作指向该动作的动作
+             * */
+            $scope.getLastAction = function (nowAction) {
+                if (!nowAction)
+                    return;
+                var edge = nowAction.incoming[0];
+                if (edge) {
+                    return edge.incoming[0];
+                }
+                return null;
+            };
+            /**
+             * 获取指定动作的下一个动作，只有该动作指向一个动作的时候保证正确性，对于多个动作指向该动作，取该动作指向的第一个的动作
+             * */
+            $scope.getNextAction = function (nowAction) {
+                if (!nowAction)
+                    return;
+                var edge = nowAction.outgoing[0];
+                if (edge) {
+                    return edge.outgoing[0];
+                }
+                return null;
             };
 
             /**
@@ -415,12 +753,6 @@ angular.module('activitiModeler')
                     var line = resourceConnect[i];
                     var from = $scope.getShapeById(line['from']);
                     var to = $scope.getShapeById(line['to']);
-                    // var id = line['edge'];
-                    // var edge = $scope.getShapeById(id);
-                    // if (edge) {
-                    //     jQuery("#" + id).parent().parent().parent().parent().attr("display", "");
-                    //     $scope.connectedLines[$scope.connectedLines.length] = id;
-                    // }
                     $scope.connectResource(from, to);
                 }
             };
@@ -433,7 +765,6 @@ angular.module('activitiModeler')
                     var id = $scope.connectedLines[i];
                     var edge = $scope.getShapeById(id);
                     if (edge) {
-                        // jQuery("#" + id).parent().parent().parent().parent().attr("display", "none");
                         $scope.editor.deleteShape(edge);
                     }
                 }
@@ -443,6 +774,8 @@ angular.module('activitiModeler')
              * 根据给定的from和to创建连线
              * */
             $scope.connectResource = function (from, to) {
+                if (!from || !to)
+                    return;
                 var sset = ORYX.Core.StencilSet.stencilSet(from.getStencil().namespace());
 
                 var edge = new ORYX.Core.Edge({'eventHandlerCallback': $scope.editor.handleEvents.bind($scope.editor)},
@@ -460,6 +793,108 @@ angular.module('activitiModeler')
                 $scope.editor.getCanvas().update();
                 $scope.connectedLines[$scope.connectedLines.length] = edge.id;
             };
+
+            /**
+             * 工人携带指定的资源
+             * */
+            $scope.workerGetResource = function (action, worker, resource) {
+                if (action && worker && resource) {
+                    var contains = worker.properties['oryx-workercontains'];
+                    if (!contains)
+                        contains = {};
+                    var actionResource = contains[action.id];
+                    if (!actionResource)
+                        actionResource = [];
+                    var bounds = resource.bounds;
+                    var resourceBounds = {a: {x: bounds.a.x, y: bounds.a.y}, b: {x: bounds.b.x, y: bounds.b.y}};
+                    actionResource[actionResource.length] = {
+                        resourceId: resource.id,
+                        resourceBounds: resourceBounds,
+                        status: "toBeGot"
+                    };
+                    contains[action.id] = actionResource;
+                    worker.setProperty('oryx-workercontains', contains);
+                }
+            };
+
+            /**
+             *工人放下指定资源
+             */
+            $scope.workerPutDownResource = function (action, worker, resourceId) {
+                if (action && worker && resourceId) {
+                    var contains = worker.properties['oryx-workercontains'];
+                    if (!contains) {
+                        contains = {};
+                        contains[action.id] = [];
+                        worker.setProperty('oryx-workercontains', contains);
+                        return;
+                    }
+                    var actionResource = contains[action.id];
+                    if (!actionResource) {
+                        contains[action.id] = [];
+                        worker.setProperty('oryx-workercontains', contains);
+                        return;
+                    }
+                    for (var i = 0; i < actionResource.length; i++) {
+                        var id = actionResource[i].resourceId;
+                        if (id === resourceId) {
+                            actionResource[i].status = "toBePutDown";
+                        }
+                    }
+                    contains[action.id] = actionResource;
+                    worker.setProperty('oryx-workercontains', contains);
+                }
+            };
+
+            /**
+             * 工人递交物品
+             * */
+            $scope.workerResourceEmpty = function (action, worker) {
+                if (action && worker) {
+                    var contains = worker.properties['oryx-workercontains'];
+                    if (!contains) {
+                        contains = {};
+                        contains[action.id] = [];
+                        worker.setProperty('oryx-workercontains', contains);
+                        return;
+                    }
+                    var actionResource = contains[action.id];
+                    if (!actionResource) {
+                        contains[action.id] = [];
+                        worker.setProperty('oryx-workercontains', contains);
+                        return;
+                    }
+                    for (var i = 0; i < actionResource.length; i++) {
+                        if (actionResource[i].status === "got")
+                            actionResource[i].status = "toBePutDown";
+                    }
+                    worker.setProperty('oryx-workercontains', contains);
+                }
+            };
+
+            /**
+             * 更新workerContains中对应的Action的Id
+             * */
+
+            $scope.workerContainsActionIdUpdate = function (oldActionId, newActionId) {
+                var shapes = $scope.editor.getCanvas();
+                for (var i = 0; i < shapes.nodes.length; i++) {
+                    if (shapes.nodes[i].properties["oryx-workercontains"]) {
+                        var worker = shapes.nodes[i];
+                        var contains = worker.properties['oryx-workercontains'];
+                        var newContains = {};
+                        for (var actionId in contains) {
+                            if (actionId !== oldActionId) {
+                                newContains[actionId] = contains[actionId];
+                            } else {
+                                newContains[newActionId] = contains[oldActionId];
+                            }
+                        }
+                        worker.setProperty('oryx-workercontains', newContains);
+                    }
+                }
+            };
+
             /*
              * Listen to selection change events: show properties
              */
@@ -870,7 +1305,7 @@ angular.module('activitiModeler')
 
             };
 
-            $scope.newPlayShape = function(){
+            $scope.newPlayShape = function () {
                 // var propertylist = $scope.selectedItem.properties;
                 var propertylist = $scope.getHighlightedShape().properties;
                 var AEProp = $scope.getPropertybyKey(propertylist, "oryx-activityelement");
@@ -982,53 +1417,6 @@ angular.module('activitiModeler')
                 // KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
             };
 
-
-            /**
-             * 该方法是用于创建一个在选中的资源下方的messageFlow，并记录messageFlow的id
-             * 具体实现方式为：利用command创建一个与选中资源相同的临时资源，然后将选中资源与其连线，然后删除临时资源
-             * */
-            $scope.createConnectLine = function () {
-                var HighlightedShape = $scope.getHighlightedShape();
-                if (HighlightedShape === undefined) return;
-
-                var connectedShape = $scope.editor.getSelection()[0];
-
-                var stencil = connectedShape.getStencil();
-                var option = {
-                    type: stencil._jsonStencil["id"],
-                    namespace: stencil.namespace(),
-                    connectedShape: connectedShape,
-                    parent: connectedShape.parent,
-                    containedStencil: stencil,
-                    connectingType: stencil.namespace() + "MessageFlow"
-                };
-                var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
-                $scope.editor.executeCommands(command);
-                KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
-                $scope.editor.setSelection(connectedShape);
-                $scope.editor.getCanvas().update();
-                $scope.connectedLines[$scope.connectedLines.length] = connectedShape.getOutgoingShapes().last().id;
-            };
-
-            $scope.getResourceConnect = function () {
-                var resourceConnect = [];
-                for (var i = 0; i < $scope.connectedLines.length; i++) {
-                    var id = $scope.connectedLines[i];
-                    var edge = $scope.getShapeById(id);
-                    if (edge) {
-                        var from = edge.incoming[0] ? edge.incoming[0].id : null;
-                        var to = edge.outgoing[0] ? edge.outgoing[0].id : null;
-                        resourceConnect[resourceConnect.length] = {
-                            from: from,
-                            to: to
-                            // edge: id
-                        };
-
-                    }
-                }
-                return resourceConnect;
-            };
-
             $scope.quickAddItem = function (newItemId) {
                 $scope.safeApply(function () {
 
@@ -1076,7 +1464,7 @@ angular.module('activitiModeler')
             // 资源堆，保存除高亮Action之外的其他Action中的资源
             var resourceHeap = {};
 
-            var getResourceIdbyType = function(type){
+            var getResourceIdbyType = function (type) {
                 // 资源与人机物三种Action的对应（固定不变）
                 var constTypeOfResource = [
                     {name: "设备", type: "PhysicalAction"},
@@ -1090,8 +1478,8 @@ angular.module('activitiModeler')
                     {name: "信息对象", type: "CyberAction"}
                 ];
 
-                for(var i=0;i<constTypeOfResource.length;i++){
-                    if(type === constTypeOfResource[i].name){
+                for (var i = 0; i < constTypeOfResource.length; i++) {
+                    if (type === constTypeOfResource[i].name) {
                         return constTypeOfResource[i].type;
                     }
                 }
@@ -1321,7 +1709,7 @@ angular.module('activitiModeler')
 
         $scope.getPropertybyKey = function (propertylist, key) {
             console.log(propertylist);
-            if(propertylist[0] === undefined){
+            if (propertylist[0] === undefined) {
                 return propertylist[key];
             }
             for (var i = 0; i < propertylist.length; i++) {
@@ -1583,7 +1971,7 @@ angular.module('activitiModeler')
 
                         option.position = pos;
 
-                        if (containedStencil.idWithoutNs() !== 'SequenceFlow' && containedStencil.idWithoutNs() !== 'Association' &&
+                        if (containedStencil.idWithoutNs() !== 'SequenceFlow' && containedStencil.idWithoutNs() !== 'SequenceEventFlow' && containedStencil.idWithoutNs() !== 'Association' &&
                             containedStencil.idWithoutNs() !== 'MessageFlow' && containedStencil.idWithoutNs() !== 'DataAssociation') {
                             var args = {sourceShape: currentSelectedShape, targetStencil: containedStencil};
                             debugger;
@@ -2075,7 +2463,8 @@ angular.module('activitiModeler')
             }
         });
 
-    }]);
+    }])
+;
 
 
 var KISBPM = KISBPM || {};
