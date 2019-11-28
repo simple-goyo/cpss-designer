@@ -183,6 +183,9 @@ function showGraph() {
         } else if (state == 2) {
             //完成
             className += " completed";
+        }  else if (state == 3) {
+            //完成
+            className += " error";
         } else {
             description = "未完成";
         }

@@ -87,3 +87,8 @@ text {
 .completed{
     opacity: 0.2 !important;
 }
+
+.error{
+    opacity: 0.2 !important;
+    fill: #e37e7e !important;
+}
