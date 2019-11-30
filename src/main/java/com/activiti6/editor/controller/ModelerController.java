@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.activiti.bpmn.model.BpmnModel;
@@ -19,9 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -51,8 +50,19 @@ public class ModelerController{
 	public ModelAndView index(ModelAndView modelAndView) {
         modelAndView.setViewName("index");
         modelAndView.addObject("modelList", repositoryService.createModelQuery().list());
+        modelAndView.addObject("modelSize", repositoryService.createModelQuery().list().size());
         return modelAndView;
 	}
+//
+//	/**
+//	 * 分页显示某个类别下的商品
+//	 */
+//	@RequestMapping(value = "/category/{urlName}/{page}",method = RequestMethod.GET)
+//	public String listDealsOfDealCategory(@PathVariable String urlName, @PathVariable Integer page, Model model,
+//										  HttpServletRequest request){
+//		model.addAttribute("pagingDealList", pagingResult);
+//		return "/deal/category";
+//	}
 	
     /**
      * 跳转编辑器页面

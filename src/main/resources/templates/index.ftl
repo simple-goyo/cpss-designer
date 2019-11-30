@@ -18,6 +18,9 @@
             <td width="20%">模型key</td>
             <td width="40%">操作</td>
         </tr>
+<#--            <#if modelList??>-->
+<#--                <@paging_macro.paging pagingList=modelList url="/index"/>-->
+<#--            </#if>-->
 	        <#list modelList as model>
 	        <tr>
                 <td width="10%">${model.id}</td>

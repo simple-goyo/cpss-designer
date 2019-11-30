@@ -145,6 +145,9 @@ body {
   /*padding-left: 15px;*/
   /*padding-right: 15px;*/
 }
+section.content.ng-scope {
+  overflow: auto;
+}
 /* H1 - H6 font */
 h1,
 h2,
