@@ -1,5 +1,7 @@
-var APP_BACK_END_IP = "www.cpss2019.fun";//142,148给前端返回IP地址
-var APP_BACK_END_PORT = "5001";
+// var APP_BACK_END_IP = "www.cpss2019.fun";//142,148给前端返回IP地址
+// var APP_BACK_END_PORT = "5001";
+var APP_BACK_END_IP = "app-engine.2018yfb1004800.cn";//142,148给前端返回IP地址
+var APP_BACK_END_PORT = "30081";
 var APP_BACK_END_SERVICE = {
     "GET_APP_INSTANCE" : "get_all_app_instance_introduction",
     "GET_APP_CLASS_BY_INSTANCE_ID" : "get_app_class_by_instance_id",

@@ -1,9 +1,9 @@
 {
-  "_id" : ObjectId("5dcfe456f6169f7f8ded2cb7"),
-  "resourceId" : "97501",
+  "_id" : ObjectId("5dd3e9080a16967b6948e2d5"),
+  "resourceId" : "105001",
   "properties" : {
     "process_id" : "process",
-    "name" : "简易锻炼屋流程",
+    "name" : "简易喝咖啡-通知",
     "documentation" : "",
     "type" : "",
     "process_author" : "",
@@ -19,7 +19,7 @@
   },
   "childShapes" : [
     {
-      "resourceId" : "sid-62DB2442-07DB-492F-BBC3-46D951BA8BF7",
+      "resourceId" : "sid-D87C4D8A-68D3-41A7-8992-2CA9C6753B47",
       "properties" : {
         "overrideid" : "",
         "name" : "",
@@ -38,7 +38,7 @@
       "childShapes" : [],
       "outgoing" : [
         {
-          "resourceId" : "sid-8200C4FF-EC86-43B2-92FE-CBB3D59C740A"
+          "resourceId" : "sid-F5944B98-EF87-4223-B64A-5A636B3FE7F6"
         }
       ],
       "bounds" : {
@@ -54,7 +54,7 @@
       "dockers" : []
     },
     {
-      "resourceId" : "sid-8200C4FF-EC86-43B2-92FE-CBB3D59C740A",
+      "resourceId" : "sid-F5944B98-EF87-4223-B64A-5A636B3FE7F6",
       "properties" : {
         "overrideid" : "",
         "name" : "",
@@ -70,7 +70,7 @@
       "childShapes" : [],
       "outgoing" : [
         {
-          "resourceId" : "sid-6123F3F6-3DD4-4E8B-8317-3AD807E4192E"
+          "resourceId" : "sid-C520D048-E5CA-4E9F-96AB-1BE18F556D24"
         }
       ],
       "bounds" : {
@@ -94,24 +94,29 @@
         }
       ],
       "target" : {
-        "resourceId" : "sid-6123F3F6-3DD4-4E8B-8317-3AD807E4192E"
+        "resourceId" : "sid-C520D048-E5CA-4E9F-96AB-1BE18F556D24"
       }
     },
     {
-      "resourceId" : "sid-DC266093-5690-466F-B2B1-FB37AC1D4FAC",
+      "resourceId" : "sid-CC31404F-44BA-455C-A09D-22589B9B449E",
       "properties" : {
-        "overrideid" : "sid-41776C6A-AB85-494E-82F1-EACB2CFEE963",
-        "name" : "体重秤",
+        "overrideid" : "sid-C7331E42-889C-4E71-ABAA-9C0A3C0C3C6F",
+        "name" : "咖啡机",
         "documentation" : "",
         "type" : "设备",
         "ownedbywho" : "",
         "executionlisteners" : "",
         "initiator" : "",
-        "events" : "",
+        "events" : [
+          {
+            "id" : "sid-0D9A822A-C161-488F-8D79-7779FE1BA493",
+            "event" : "咖啡制作完成"
+          }
+        ],
         "services" : [
           {
-            "id" : "sid-BED34FDC-2036-43D0-999D-41AA8871740F",
-            "function" : "获取体重数据"
+            "id" : "sid-6F72B707-7C54-4A95-9D37-D0BE82E0D470",
+            "function" : "制作咖啡"
           }
         ]
       },
@@ -122,36 +127,27 @@
       "outgoing" : [],
       "bounds" : {
         "lowerRight" : {
-          "x" : 519.0759745,
-          "y" : 385.000001
+          "x" : 572.0759745,
+          "y" : 369.000001
         },
         "upperLeft" : {
-          "x" : 484.9240255,
-          "y" : 344.999999
+          "x" : 537.9240255,
+          "y" : 328.999999
         }
       },
       "dockers" : []
     },
     {
-      "resourceId" : "sid-6123F3F6-3DD4-4E8B-8317-3AD807E4192E",
+      "resourceId" : "sid-C520D048-E5CA-4E9F-96AB-1BE18F556D24",
       "properties" : {
-        "overrideid" : "sid-BED34FDC-2036-43D0-999D-41AA8871740F",
-        "name" : "获取体重数据",
-        "actioninputstatus" : [
-          {
-            "id" : "sid-12DE77AF-1357-43A9-9159-F1A098218203",
-            "name" : "",
-            "position" : {
-              "x" : 180,
-              "y" : 30
-            }
-          }
-        ],
+        "overrideid" : "sid-6F72B707-7C54-4A95-9D37-D0BE82E0D470",
+        "name" : "制作咖啡",
+        "actioninputstatus" : "",
         "actionoutputstatus" : "",
         "documentation" : "",
         "activityelement" : {
-          "id" : "sid-41776C6A-AB85-494E-82F1-EACB2CFEE963",
-          "name" : "体重秤",
+          "id" : "sid-C7331E42-889C-4E71-ABAA-9C0A3C0C3C6F",
+          "name" : "咖啡机",
           "type" : "设备"
         },
         "input" : "",
@@ -167,13 +163,7 @@
       "childShapes" : [],
       "outgoing" : [
         {
-          "resourceId" : "sid-4ADC0916-9406-4865-B358-23CA4624D85B"
-        },
-        {
-          "resourceId" : "sid-4912DDE1-D6D6-4B9C-B6E2-F114D19B297D"
-        },
-        {
-          "resourceId" : "sid-A18AFD06-DE72-45EB-9E29-F1467615FA6D"
+          "resourceId" : "sid-243D9449-EE86-43DB-9F76-0358307188D4"
         }
       ],
       "bounds" : {
@@ -189,7 +179,7 @@
       "dockers" : []
     },
     {
-      "resourceId" : "sid-4ADC0916-9406-4865-B358-23CA4624D85B",
+      "resourceId" : "sid-243D9449-EE86-43DB-9F76-0358307188D4",
       "properties" : {
         "overrideid" : "",
         "name" : "",
@@ -205,17 +195,17 @@
       "childShapes" : [],
       "outgoing" : [
         {
-          "resourceId" : "sid-116EF0F2-736E-43FF-9A3D-DE2EABBF51BF"
+          "resourceId" : "sid-0D726380-FDE9-43A5-B77D-0AEBC424EAB2"
         }
       ],
       "bounds" : {
         "lowerRight" : {
           "x" : 180,
-          "y" : 239.15625
+          "y" : 214.9375
         },
         "upperLeft" : {
-          "x" : 65,
-          "y" : 170.84375
+          "x" : 180,
+          "y" : 170.0625
         }
       },
       "dockers" : [
@@ -224,12 +214,48 @@
           "y" : 40
         },
         {
-          "x" : 180,
-          "y" : 205
-        },
+          "x" : 50,
+          "y" : 40
+        }
+      ],
+      "target" : {
+        "resourceId" : "sid-0D726380-FDE9-43A5-B77D-0AEBC424EAB2"
+      }
+    },
+    {
+      "resourceId" : "sid-570006EA-9510-415C-B056-1056CA88FA8E",
+      "properties" : {
+        "overrideid" : "",
+        "name" : "",
+        "documentation" : "",
+        "conditionsequenceflow" : "",
+        "executionlisteners" : "",
+        "condition" : "",
+        "defaultflow" : "false"
+      },
+      "stencil" : {
+        "id" : "SequenceFlow"
+      },
+      "childShapes" : [],
+      "outgoing" : [
         {
-          "x" : 65,
-          "y" : 205
+          "resourceId" : "sid-AA367F4C-A8D6-4FD1-8079-AFB0C3B22DCE"
+        }
+      ],
+      "bounds" : {
+        "lowerRight" : {
+          "x" : 180,
+          "y" : 339.9375
+        },
+        "upperLeft" : {
+          "x" : 180,
+          "y" : 295.0625
+        }
+      },
+      "dockers" : [
+        {
+          "x" : 50,
+          "y" : 40
         },
         {
           "x" : 50,
@@ -237,55 +263,51 @@
         }
       ],
       "target" : {
-        "resourceId" : "sid-116EF0F2-736E-43FF-9A3D-DE2EABBF51BF"
+        "resourceId" : "sid-AA367F4C-A8D6-4FD1-8079-AFB0C3B22DCE"
       }
     },
     {
-      "resourceId" : "sid-8248FFD4-19B2-45EE-B216-06A1294FB81A",
+      "resourceId" : "sid-278B5986-EDDF-41FF-B795-55E98104C873",
       "properties" : {
-        "overrideid" : "sid-A7AEDBE7-9FCC-40DA-822C-611EFB0C5558",
-        "name" : "Keep应用",
+        "overrideid" : "sid-813B13E3-636A-45C1-BDA2-514C6B509E14",
+        "name" : "小米音箱",
         "documentation" : "",
-        "type" : "移动应用",
+        "type" : "设备",
+        "ownedbywho" : "",
         "executionlisteners" : "",
         "initiator" : "",
         "events" : "",
-        "services" : [
-          {
-            "id" : "sid-5F83D7D1-DE06-458F-99C9-1880B505E760",
-            "function" : "播放锻炼视频"
-          }
-        ]
+        "services" : []
       },
       "stencil" : {
-        "id" : "MobileApp"
+        "id" : "Device"
       },
       "childShapes" : [],
       "outgoing" : [],
       "bounds" : {
         "lowerRight" : {
-          "x" : 568,
-          "y" : 99
+          "x" : 862.0759745,
+          "y" : 321.000001
         },
         "upperLeft" : {
-          "x" : 540,
-          "y" : 61
+          "x" : 827.9240255,
+          "y" : 280.999999
         }
       },
       "dockers" : []
     },
     {
-      "resourceId" : "sid-116EF0F2-736E-43FF-9A3D-DE2EABBF51BF",
+      "resourceId" : "sid-0D726380-FDE9-43A5-B77D-0AEBC424EAB2",
       "properties" : {
-        "overrideid" : "sid-5F83D7D1-DE06-458F-99C9-1880B505E760",
-        "name" : "播放锻炼视频",
-        "actioninputstatus" : "",
+        "overrideid" : "sid-0D9A822A-C161-488F-8D79-7779FE1BA493",
+        "name" : "咖啡制作完成",
+        "actioninputstatus" : [],
         "actionoutputstatus" : "",
         "documentation" : "",
         "activityelement" : {
-          "id" : "sid-A7AEDBE7-9FCC-40DA-822C-611EFB0C5558",
-          "name" : "Keep应用",
-          "type" : "移动应用"
+          "id" : "sid-C7331E42-889C-4E71-ABAA-9C0A3C0C3C6F",
+          "name" : "咖啡机",
+          "type" : "设备"
         },
         "input" : "",
         "output" : "",
@@ -295,125 +317,37 @@
         "type" : "http://b3mn.org/stencilset/bpmn2.0#UndefinedAction"
       },
       "stencil" : {
-        "id" : "CyberAction"
+        "id" : "DefaultEvent"
       },
       "childShapes" : [],
       "outgoing" : [
         {
-          "resourceId" : "sid-34668F23-4E3B-4A66-9701-5066E46FFCFF"
+          "resourceId" : "sid-570006EA-9510-415C-B056-1056CA88FA8E"
         }
       ],
       "bounds" : {
         "lowerRight" : {
-          "x" : 115,
-          "y" : 320
+          "x" : 230,
+          "y" : 295
         },
         "upperLeft" : {
-          "x" : 15,
-          "y" : 240
+          "x" : 130,
+          "y" : 215
         }
       },
       "dockers" : []
     },
     {
-      "resourceId" : "sid-4912DDE1-D6D6-4B9C-B6E2-F114D19B297D",
+      "resourceId" : "sid-AA367F4C-A8D6-4FD1-8079-AFB0C3B22DCE",
       "properties" : {
-        "overrideid" : "",
-        "name" : "",
-        "documentation" : "",
-        "conditionsequenceflow" : "",
-        "executionlisteners" : "",
-        "condition" : "",
-        "defaultflow" : "false"
-      },
-      "stencil" : {
-        "id" : "SequenceFlow"
-      },
-      "childShapes" : [],
-      "outgoing" : [
-        {
-          "resourceId" : "sid-E0D8DB65-52B7-40D6-9310-5DC534D28187"
-        }
-      ],
-      "bounds" : {
-        "lowerRight" : {
-          "x" : 180,
-          "y" : 239.15625
-        },
-        "upperLeft" : {
-          "x" : 180,
-          "y" : 170.84375
-        }
-      },
-      "dockers" : [
-        {
-          "x" : 50,
-          "y" : 40
-        },
-        {
-          "x" : 50,
-          "y" : 40
-        }
-      ],
-      "target" : {
-        "resourceId" : "sid-E0D8DB65-52B7-40D6-9310-5DC534D28187"
-      }
-    },
-    {
-      "resourceId" : "sid-250B0A95-D8C9-48BF-8B09-520FC2910A52",
-      "properties" : {
-        "overrideid" : "sid-374B0792-81FD-4A21-9E90-44F01CAE32E0",
-        "name" : "空气盒子",
-        "documentation" : "",
-        "type" : "设备",
-        "ownedbywho" : "",
-        "executionlisteners" : "",
-        "initiator" : "",
-        "events" : "",
-        "services" : [
-          {
-            "id" : "sid-D066D60C-FDC0-4CCC-A6BD-4010A40B69B4",
-            "function" : "获取当前空气状态"
-          }
-        ]
-      },
-      "stencil" : {
-        "id" : "Device"
-      },
-      "childShapes" : [],
-      "outgoing" : [],
-      "bounds" : {
-        "lowerRight" : {
-          "x" : 761.0759745,
-          "y" : 464.000001
-        },
-        "upperLeft" : {
-          "x" : 726.9240255,
-          "y" : 423.999999
-        }
-      },
-      "dockers" : []
-    },
-    {
-      "resourceId" : "sid-E0D8DB65-52B7-40D6-9310-5DC534D28187",
-      "properties" : {
-        "overrideid" : "sid-D066D60C-FDC0-4CCC-A6BD-4010A40B69B4",
-        "name" : "获取当前空气状态",
-        "actioninputstatus" : [
-          {
-            "id" : "sid-03B516E9-0084-4D28-9EF3-C5580C21446F",
-            "name" : "",
-            "position" : {
-              "x" : 180,
-              "y" : 255
-            }
-          }
-        ],
+        "overrideid" : "sid-D9F83ABE-893F-426B-B2DA-0F6B927C3221",
+        "name" : "播放语音通知",
+        "actioninputstatus" : "",
         "actionoutputstatus" : "",
         "documentation" : "",
         "activityelement" : {
-          "id" : "sid-374B0792-81FD-4A21-9E90-44F01CAE32E0",
-          "name" : "空气盒子",
+          "id" : "sid-813B13E3-636A-45C1-BDA2-514C6B509E14",
+          "name" : "音箱",
           "type" : "设备"
         },
         "input" : "",
@@ -431,269 +365,11 @@
       "bounds" : {
         "lowerRight" : {
           "x" : 230,
-          "y" : 320
+          "y" : 420
         },
         "upperLeft" : {
           "x" : 130,
-          "y" : 240
-        }
-      },
-      "dockers" : []
-    },
-    {
-      "resourceId" : "sid-A18AFD06-DE72-45EB-9E29-F1467615FA6D",
-      "properties" : {
-        "overrideid" : "",
-        "name" : "",
-        "documentation" : "",
-        "conditionsequenceflow" : "",
-        "executionlisteners" : "",
-        "condition" : "",
-        "defaultflow" : "false"
-      },
-      "stencil" : {
-        "id" : "SequenceFlow"
-      },
-      "childShapes" : [],
-      "outgoing" : [
-        {
-          "resourceId" : "sid-848919E6-8E5A-42EE-BC58-10D1CD15B804"
-        }
-      ],
-      "bounds" : {
-        "lowerRight" : {
-          "x" : 290,
-          "y" : 239.15625
-        },
-        "upperLeft" : {
-          "x" : 180,
-          "y" : 170.84375
-        }
-      },
-      "dockers" : [
-        {
-          "x" : 50,
-          "y" : 40
-        },
-        {
-          "x" : 180,
-          "y" : 205
-        },
-        {
-          "x" : 290,
-          "y" : 205
-        },
-        {
-          "x" : 50,
-          "y" : 40
-        }
-      ],
-      "target" : {
-        "resourceId" : "sid-848919E6-8E5A-42EE-BC58-10D1CD15B804"
-      }
-    },
-    {
-      "resourceId" : "sid-09DBA292-02EA-4F8F-B51B-0F8DBA4A3606",
-      "properties" : {
-        "overrideid" : "sid-790B7778-22F2-4A0C-9E2B-EDF814E6A1F6",
-        "name" : "小米空气净化器",
-        "documentation" : "",
-        "type" : "设备",
-        "ownedbywho" : "",
-        "executionlisteners" : "",
-        "initiator" : "",
-        "events" : "",
-        "services" : [
-          {
-            "id" : "sid-544A9E39-E855-45CA-8139-09EDC0D26632",
-            "function" : "开启空气净化"
-          }
-        ]
-      },
-      "stencil" : {
-        "id" : "Device"
-      },
-      "childShapes" : [],
-      "outgoing" : [],
-      "bounds" : {
-        "lowerRight" : {
-          "x" : 896.0759745,
-          "y" : 328.000001
-        },
-        "upperLeft" : {
-          "x" : 861.9240255,
-          "y" : 287.999999
-        }
-      },
-      "dockers" : []
-    },
-    {
-      "resourceId" : "sid-848919E6-8E5A-42EE-BC58-10D1CD15B804",
-      "properties" : {
-        "overrideid" : "sid-544A9E39-E855-45CA-8139-09EDC0D26632",
-        "name" : "开启空气净化",
-        "actioninputstatus" : [
-          {
-            "id" : "sid-68659C7F-A49F-45CB-83AC-D9A8D5F2AD45",
-            "name" : "",
-            "position" : {
-              "x" : 290,
-              "y" : 280
-            }
-          }
-        ],
-        "actionoutputstatus" : "",
-        "documentation" : "",
-        "activityelement" : {
-          "id" : "sid-790B7778-22F2-4A0C-9E2B-EDF814E6A1F6",
-          "name" : "小米空气净化器",
-          "type" : "设备"
-        },
-        "input" : "",
-        "output" : "",
-        "animate_direction" : "0",
-        "currentscene" : "",
-        "resourceline" : [],
-        "type" : "http://b3mn.org/stencilset/bpmn2.0#UndefinedAction"
-      },
-      "stencil" : {
-        "id" : "PhysicalAction"
-      },
-      "childShapes" : [],
-      "outgoing" : [],
-      "bounds" : {
-        "lowerRight" : {
-          "x" : 340,
-          "y" : 320
-        },
-        "upperLeft" : {
-          "x" : 240,
-          "y" : 240
-        }
-      },
-      "dockers" : []
-    },
-    {
-      "resourceId" : "sid-34668F23-4E3B-4A66-9701-5066E46FFCFF",
-      "properties" : {
-        "overrideid" : "",
-        "name" : "",
-        "documentation" : "",
-        "conditionsequenceflow" : "",
-        "executionlisteners" : "",
-        "condition" : "",
-        "defaultflow" : "false"
-      },
-      "stencil" : {
-        "id" : "SequenceFlow"
-      },
-      "childShapes" : [],
-      "outgoing" : [
-        {
-          "resourceId" : "sid-C44AF78A-EE1D-4CD1-BEC9-75E41DE5F665"
-        }
-      ],
-      "bounds" : {
-        "lowerRight" : {
-          "x" : 65,
-          "y" : 364.9375
-        },
-        "upperLeft" : {
-          "x" : 65,
-          "y" : 320.0625
-        }
-      },
-      "dockers" : [
-        {
-          "x" : 50,
-          "y" : 40
-        },
-        {
-          "x" : 50,
-          "y" : 40
-        }
-      ],
-      "target" : {
-        "resourceId" : "sid-C44AF78A-EE1D-4CD1-BEC9-75E41DE5F665"
-      }
-    },
-    {
-      "resourceId" : "sid-CDE20031-BCDD-4374-AA9C-F9D0F28F7E11",
-      "properties" : {
-        "overrideid" : "sid-C14B5E36-E369-4016-996A-FFF9B551D899",
-        "name" : "水壶",
-        "documentation" : "",
-        "type" : "设备",
-        "ownedbywho" : "",
-        "executionlisteners" : "",
-        "initiator" : "",
-        "events" : "",
-        "services" : [
-          {
-            "id" : "sid-E40D4A47-6F84-40FF-9536-9024E90812DD",
-            "function" : "烧水"
-          }
-        ]
-      },
-      "stencil" : {
-        "id" : "Device"
-      },
-      "childShapes" : [],
-      "outgoing" : [],
-      "bounds" : {
-        "lowerRight" : {
-          "x" : 649.0759745,
-          "y" : 287.000001
-        },
-        "upperLeft" : {
-          "x" : 614.9240255,
-          "y" : 246.999999
-        }
-      },
-      "dockers" : []
-    },
-    {
-      "resourceId" : "sid-C44AF78A-EE1D-4CD1-BEC9-75E41DE5F665",
-      "properties" : {
-        "overrideid" : "sid-E40D4A47-6F84-40FF-9536-9024E90812DD",
-        "name" : "烧水",
-        "actioninputstatus" : [
-          {
-            "id" : "sid-5F83D7D1-DE06-458F-99C9-1880B505E760",
-            "name" : "播放锻炼视频",
-            "position" : {
-              "x" : 65,
-              "y" : 280
-            }
-          }
-        ],
-        "actionoutputstatus" : "",
-        "documentation" : "",
-        "activityelement" : {
-          "id" : "sid-C14B5E36-E369-4016-996A-FFF9B551D899",
-          "name" : "水壶",
-          "type" : "设备"
-        },
-        "input" : "",
-        "output" : "",
-        "animate_direction" : "0",
-        "currentscene" : "",
-        "resourceline" : [],
-        "type" : "http://b3mn.org/stencilset/bpmn2.0#UndefinedAction"
-      },
-      "stencil" : {
-        "id" : "PhysicalAction"
-      },
-      "childShapes" : [],
-      "outgoing" : [],
-      "bounds" : {
-        "lowerRight" : {
-          "x" : 115,
-          "y" : 445
-        },
-        "upperLeft" : {
-          "x" : 15,
-          "y" : 365
+          "y" : 340
         }
       },
       "dockers" : []
