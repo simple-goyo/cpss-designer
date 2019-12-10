@@ -57,26 +57,27 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
     var HighlightedShape = $scope.getHighlightedShape();
 
     // 资源执行主体所拥有的功能，数据从知识图谱中获得
-    $scope.resourceFunctions = [
-        {name: "获取水杯", type: "SocialAction"},
-        {name: "获取咖啡", type: "SocialAction"},
-        {name: "递交物品", type: "SocialAction"},
-        {name: "制作咖啡", type: "PhysicalAction"},
-        {name: "点咖啡服务", type: "CyberAction"},
-        {name: "准备订单", type: "PhysicalAction"},
-
-        {name: "烧水", type: "PhysicalAction"},
-        {name: "开启空气净化", type: "PhysicalAction"},
-        {name: "获取当前空气状态", type: "PhysicalAction"},
-        {name: "获取体重数据", type: "PhysicalAction"},
-        {name: "播放语音通知", type: "PhysicalAction"},
-
-        {name: "获取头条新闻", type: "CyberAction"},
-        {name: "获取推荐菜", type: "CyberAction"},
-        {name: "获取股票列表", type: "CyberAction"},
-        {name: "播放锻炼视频", type: "CyberAction"}
-
-    ];
+    $scope.resourceFunctions = [];
+    // $scope.resourceFunctions = [
+    //     {name: "获取水杯", type: "SocialAction"},
+    //     {name: "获取咖啡", type: "SocialAction"},
+    //     {name: "递交物品", type: "SocialAction"},
+    //     {name: "制作咖啡", type: "PhysicalAction"},
+    //     {name: "点咖啡服务", type: "CyberAction"},
+    //     {name: "准备订单", type: "PhysicalAction"},
+    //
+    //     {name: "烧水", type: "PhysicalAction"},
+    //     {name: "开启空气净化", type: "PhysicalAction"},
+    //     {name: "获取当前空气状态", type: "PhysicalAction"},
+    //     {name: "获取体重数据", type: "PhysicalAction"},
+    //     {name: "播放语音通知", type: "PhysicalAction"},
+    //
+    //     {name: "获取头条新闻", type: "CyberAction"},
+    //     {name: "获取推荐菜", type: "CyberAction"},
+    //     {name: "获取股票列表", type: "CyberAction"},
+    //     {name: "播放锻炼视频", type: "CyberAction"}
+    //
+    // ];
 
     // 资源执行主体所有的输出，数据从知识图谱中获得
     $scope.resourceOutputs = [];
@@ -93,17 +94,6 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
         {name: "嵌入式应用", type: "CyberAction"},
         {name: "信息对象", type: "CyberAction"}
     ];
-
-    $http({method: 'GET', url: KISBPM.URL.getResources()}).success(function (data, status, headers, config) {
-        // console.log(JSON.stringify(data));
-        // 初始化$scope.constTypeOfResource和$scope.resourceFunctions
-        // $scope.constTypeOfResource表示资源的人机物类别
-        // $scope.resourceFunctions 表示动作对应的人机物类别
-
-    }).error(function (data, status, headers, config) {
-        console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
-    });
-
     var selectedShapeFunctionType = undefined;
     for (var i = 0; i < $scope.constTypeOfResource.length; i++) {
         if ($scope.constTypeOfResource[i].name === shape.properties["oryx-type"]) {
@@ -112,16 +102,29 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
     }
 
     $scope.functions = [];
+    $http({method: 'GET', url: KISBPM.URL.getResources()}).success(function (data, status, headers, config) {
+        // console.log(JSON.stringify(data));
+        // 初始化$scope.constTypeOfResource和$scope.resourceFunctions
+        // $scope.constTypeOfResource表示资源的人机物类别
+        // $scope.resourceFunctions 表示动作对应的人机物类别
+        $scope.resourceFunctions = data;
 
-    if (selectedShapeFunctionType) {
-        for (var i = 0; i < $scope.resourceFunctions.length; i++) {
-            if ($scope.resourceFunctions[i].type === selectedShapeFunctionType) {
-                $scope.functions[$scope.functions.length] = {name: $scope.resourceFunctions[i].name};
+        if (selectedShapeFunctionType) {
+            for (var i = 0; i < $scope.resourceFunctions.length; i++) {
+                if ($scope.resourceFunctions[i].type === selectedShapeFunctionType) {
+                    $scope.functions[$scope.functions.length] = {name: $scope.resourceFunctions[i].name};
+                }
             }
+        } else {
+            $scope.functions = $scope.resourceFunctions;
         }
-    } else {
-        $scope.functions = $scope.resourceFunctions;
-    }
+
+
+    }).error(function (data, status, headers, config) {
+        console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
+    });
+
+
 
     // Put json representing entity on scope
     if ($scope.property !== undefined && $scope.property.value !== undefined && $scope.property.value !== null
