@@ -75,8 +75,8 @@ angular.module('activitiModeler')
                 // var quickMenuDefinition = ['UserTask', 'EndNoneEvent', 'ExclusiveGateway',
                 //     'CatchTimerEvent', 'ThrowNoneEvent', 'TextAnnotation',
                 //     'SequenceFlow', 'Association'];
-                var quickMenuDefinition = ['SequenceFlow'];
-                var ignoreForPaletteDefinition = ['SequenceFlow','SequenceEventFlow', 'MessageFlow', 'Association', 'DataAssociation', 'DataStore', 'SendTask'];
+                var quickMenuDefinition = [];
+                var ignoreForPaletteDefinition = ['SequenceFlow', 'SequenceEventFlow', 'MessageFlow', 'Association', 'DataAssociation', 'DataStore', 'SendTask'];
                 var quickMenuItems = [];
 
                 var morphRoles = [];
@@ -1118,45 +1118,24 @@ angular.module('activitiModeler')
                             // 如果是资源则过滤掉箭头和morph-button。即显示delete-button，service-button，event-button
                             //
                             //console.log($scope.selectedItem.title);
-                            var actionItem = false;
                             var whichItem = $scope.selectedItem;
-                            for (var j = 0; j < whichItem.properties.length; j++) {
-                                if (whichItem.properties[j].key === "oryx-activityelement" || whichItem.properties[j].key === "oryx-startevent"){
-                                    actionItem = true;
-                                }
+                            for (var i = 0; i < whichItem.properties.length; i++) {
+                                if (whichItem.properties[i].key === "oryx-activityelement" || whichItem.properties[i].key === "oryx-startevent") return;
                             }
 
-                            if (actionItem){
-                                if (obj.id === 'morph-button' || obj.id === 'delete-button' || obj.id === 'SequenceFlow') {
-                                    quickButtonCounter++;
-                                    if (quickButtonCounter > 3) {
-                                        quickButtonX = shapeXY.x + bounds.width() + 5;
-                                        quickButtonY += 24;
-                                        quickButtonCounter = 1;
+                            if (obj.id !== 'morph-button' && obj.id !== 'delete-button') {
+                                quickButtonCounter++;
+                                if (quickButtonCounter > 3) {
+                                    quickButtonX = shapeXY.x + bounds.width() + 5;
+                                    quickButtonY += 24;
+                                    quickButtonCounter = 1;
 
-                                    } else if (quickButtonCounter > 1) {
-                                        quickButtonX += 24;
-                                    }
-                                    obj.style.display = "block";
-                                    obj.style.left = quickButtonX + 'px';
-                                    obj.style.top = quickButtonY + 'px';
+                                } else if (quickButtonCounter > 1) {
+                                    quickButtonX += 24;
                                 }
-
-                            }else{
-                                if (obj.id === 'morph-button' || obj.id === 'service-button' || obj.id === 'event-button') {
-                                    quickButtonCounter++;
-                                    if (quickButtonCounter > 3) {
-                                        quickButtonX = shapeXY.x + bounds.width() + 5;
-                                        quickButtonY += 24;
-                                        quickButtonCounter = 1;
-
-                                    } else if (quickButtonCounter > 1) {
-                                        quickButtonX += 24;
-                                    }
-                                    obj.style.display = "block";
-                                    obj.style.left = quickButtonX + 'px';
-                                    obj.style.top = quickButtonY + 'px';
-                                }
+                                obj.style.display = "block";
+                                obj.style.left = quickButtonX + 'px';
+                                obj.style.top = quickButtonY + 'px';
                             }
                         });
                     }
@@ -2210,7 +2189,7 @@ angular.module('activitiModeler')
                     if (item.type === "node") {
 
                         // check if the draggable is a boundary event and the parent an Activity
-                        var _canContain = true;//false;
+                        var _canContain = false;
                         var parentStencilId = parentCandidate.getStencil().id();
 
                         if ($scope.dragCurrentParentId && $scope.dragCurrentParentId === parentCandidate.id) {
