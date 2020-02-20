@@ -126,9 +126,64 @@ var propertyInitPopupController= [ '$scope', '$modal', function($scope, $modal) 
     $modal(opts);
 }];
 
-var propertyInitController = ['$scope', function ($scope) {
-    console.log($scope);
+var propertyInitController = ['$scope', '$http', function ($scope ,$http) {
+    $scope.resources = []; // 界面显示的资源列表
+
+    //console.log($scope);
+    var shape = $scope.selectedShape;
+
+    // 资源与人机物三种Action的对应（固定不变）
+    $scope.constTypeOfResource = [
+        {name: "设备", type: "PhysicalAction"},
+        {name: "物品", type: "PhysicalAction"},
+        {name: "机器人", type: "PhysicalAction"},
+        {name: "用户", type: "SocialAction"},
+        {name: "工人", type: "SocialAction"},
+        {name: "组织", type: "SocialAction"},
+        {name: "云应用", type: "CyberAction"},
+        {name: "移动应用", type: "CyberAction"},
+        {name: "嵌入式应用", type: "CyberAction"},
+        {name: "信息对象", type: "CyberAction"}
+    ];
+
+    // 获取当前资源的类型：Cyber、Physical or Social
+    var selectedShapeFunctionType = undefined;
+    for (var i = 0; i < $scope.constTypeOfResource.length; i++) {
+        if ($scope.constTypeOfResource[i].name === shape.properties["oryx-type"]) {
+            selectedShapeFunctionType = $scope.constTypeOfResource[i].type;
+        }
+    }
+
+    // 社会资源的名称在不在知识图谱中，需要手动自定义
+    // 还有CyberObject和Item也需要手动自定义
+    if(selectedShapeFunctionType == "SocialAction" || shape.properties["oryx-type"] == "信息对象" || shape.properties["oryx-type"] == "物品"){
+        $scope.isHide=false;
+    }else{
+        $scope.isHide=true;
+    }
+
+    // 请求知识图谱，获取对应的资源，如下单应用、咖啡机等
+    $http({method: 'GET', url: KISBPM.URL.getResources()}).success(function (data, status, headers, config) {
+        var k=0;
+        for(var i=0; i< data.length;i++){
+            if(data[i].type == selectedShapeFunctionType){
+                $scope.resources[k] = data[i];
+                k++;
+            }
+        }
+        // console.log(JSON.stringify($scope.resources));
+    }).error(function (data, status, headers, config) {
+        console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
+    });
+
+
     $scope.save = function () {
+        // 提供一个下拉框，提供开发者选择
+        // console.log($scope.selectedRes);
+        // 社会资源的名称在不在知识图谱中，需要手动自定义
+        if($scope.isHide == true){
+            $scope.nameProperty.value = $scope.selectedRes;        //$scope.selectedRes表示选中的资源
+        }
         $scope.updatePropertyInModel($scope.nameProperty);
         $scope.close();
     };

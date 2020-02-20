@@ -433,6 +433,8 @@ angular.module('activitiModeler')
                     $scope.latestLine = edge;
                     $scope.setService();
                 }
+
+                //
             });
 
             /**

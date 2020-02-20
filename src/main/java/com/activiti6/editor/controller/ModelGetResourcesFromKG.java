@@ -59,11 +59,12 @@ import static com.activiti6.utils.HttpClientHelper.postJSON;
 @RequestMapping("service")
 public class ModelGetResourcesFromKG {
     final String filePath = "/root/activiti/kg/hct_Ontology_latest.ttl";
+
     @RequestMapping(value="/resources", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
     public String getResources() throws UnsupportedEncodingException {
         // 返回resourceFunctions结构
-        //JSONArray resourceList = getResourceList();
+        JSONArray resourceList = getResourceList();
         String resourceFunctions = "[" +
             "{\"name\": \"获取水杯\", \"type\": \"SocialAction\"}, " +
             "{\"name\": \"获取咖啡\", \"type\": \"SocialAction\"}, " +
@@ -90,12 +91,66 @@ public class ModelGetResourcesFromKG {
             "{\"name\": \"医生用药\", \"type\": \"SocialAction\"} " +
         "]";
 
+        //
+//        JSONObject jo = JSON.parseObject("{\"name\": \"获取水杯\", \"type\": \"SocialAction\"}", JSONObject.class);
+//        resourceList.add(jo);
+//        jo = JSON.parseObject("{\"name\": \"获取咖啡\", \"type\": \"SocialAction\"}", JSONObject.class);
+//        resourceList.add(jo);
+//        jo = JSON.parseObject("{\"name\": \"递交物品\", \"type\": \"SocialAction\"}", JSONObject.class);
+//        resourceList.add(jo);
+
         // 查询服务
-        // InputStream resourceStream = new ByteArrayInputStream(resourceList.toString().getBytes("utf-8"));
-        InputStream resourceStream = new ByteArrayInputStream(resourceFunctions.getBytes("utf-8"));
+        InputStream resourceStream = new ByteArrayInputStream(resourceList.toString().getBytes("utf-8"));
+        //InputStream resourceStream = new ByteArrayInputStream(resourceFunctions.getBytes("utf-8"));
 
         try {
             return IOUtils.toString(resourceStream, "utf-8");
+        } catch (Exception e) {
+            throw new ActivitiException("Error while loading resources", e);
+        }
+    }
+
+    @RequestMapping(value="{resName}/funcs", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public String getResourceFunc(@PathVariable String resName) throws UnsupportedEncodingException {
+        final String KGURL = "http://www.cpss2019.fun:21910/KG201910/getResourceDetails";
+        //String resName = "CoffeeMaker";
+        String reqParam = "?resourceType="+resName+"&filePath="+filePath;
+        String query;
+        String retn;
+
+        JSONObject job;
+        JSONArray retnJSON = new JSONArray();
+        try{
+            query = postJSON( KGURL+reqParam,"");
+        }catch (Exception e){
+            e.printStackTrace();
+            query = "";
+        }
+        job = JSON.parseObject(query);
+
+        // 返回参数是一个json格式的列表，有以下几个参数
+        // resourceCapability——被执行某种动作的能力
+        // resourceEvent——事件
+        // resourceService——服务
+        // resourceCategory——目录（CyberEntity）
+        List<String> resCap = parseString(job.getString("resourceCapability"));
+        List<String> resEve = parseString(job.getString("resourceEvent"));
+        List<String> resCat = parseString(job.getString("resourceCategory"));
+        List<String> resServs = parseString(job.getString("resourceService"));
+        JSONObject serv = new JSONObject();
+
+        // resourceService中有以下几个参数
+        //   output——输出
+        //   input——输入
+        //   inputParameter——输入参数名称
+        //   outputParameter——服务参数名称
+        //   descrition——描述
+        String retnList = "{\"name\":\""+resName+"\",\"service\":"+resServs.toString()+",\"event\":"+resEve.toString()+",\"capability\":"+resCap.toString()+",\"category\":"+resCat.toString()+"}";
+        InputStream resourceDetailsStream = new ByteArrayInputStream(retnList.getBytes("utf-8"));
+
+        try {
+            return IOUtils.toString(resourceDetailsStream, "utf-8");
         } catch (Exception e) {
             throw new ActivitiException("Error while loading resources", e);
         }
@@ -122,51 +177,9 @@ public class ModelGetResourcesFromKG {
         return "";
     }
 
-    @RequestMapping(value="{resName}/funcs", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-    @ResponseBody
-    public String getResourceFunc(@PathVariable String resName) {
-        final String KGURL = "http://www.cpss2019.fun:21910/KG201910/getResourceDetails";
-        //String resName = "CoffeeMaker";
-        String reqParam = "?resourceType="+resName+"&filePath="+filePath;
-        String query;
-        String retn;
-
-        JSONObject job;
-        JSONArray retnJSON = new JSONArray();
-        try{
-            query = postJSON( KGURL+reqParam,"");
-        }catch (Exception e){
-            e.printStackTrace();
-            query = "";
-        }
-        job = JSON.parseObject(query);
-        // resourceCapability
-        // resourceEvent
-        // resourceService —— output input name
-        // resourceCategory
-
-        List<String> resCap = parseString(job.getString("resourceCapability"));
-        List<String> resEve = parseString(job.getString("resourceEvent"));
-        List<String> resCat = parseString(job.getString("resourceCategory"));
-        List<String> resServs = parseString(job.getString("resourceService"));
-        JSONObject serv = new JSONObject();
-
-//        for(String resServ:resServs){
-//            serv = JSON.parseObject(resServ);
-//            // serv = {"input":...,"output":...,"name":...}
-//            String input = serv.getString("input");
-//            String output = serv.getString("output");
-//            String name = serv.getString("name");
-//
-//            // 建立结构
-//            // {"name":Eleme, "service":"...", "event":"...","input":...,"output":... ,capability:...}
-//            // retn = "{\"name\":\""+resName+"\",\"service\":\""+name+"\",\"event\":\""+resEve.get(0)+"\"，}";
-//        }
-
-        return "{\"name\":\""+resName+"\",\"service\":"+resServs.toString()+",\"event\":"+resEve.toString()+"，\"capability\":"+resCap.toString()+",\"category\":"+resCat.toString()+"}";
-    }
 
     // 获取所有的实体资源（类）
+    // {"cyberResouceTypes":"[NeteaseNews, Eleme, Meituan, Keep, Orders, DZH]","physicalResouceTypes":"[CoffeeMaker, ElectricKettle, WaterDispenser, WeighingScale, AirCleaner]"}
     private JSONArray getResourceList() {
         final String KGURL = "http://www.cpss2019.fun:21910/KG201910/getResourceTypes";
         String reqParam = "?filePath="+filePath;
@@ -202,12 +215,12 @@ public class ModelGetResourcesFromKG {
     private List<String> parseString(String str){
         List<String> retnList = new ArrayList<>();
         if (str.substring(0, 1).equals("[")) {
-            // 将返回值中的"['foo1','foo2']"字符串转换成JSON格式{'foo1','foo2'}
+            // 将返回值中的"['foo1','foo2']"字符串转换成List格式['foo1','foo2']
             String v   = str.substring(1, str.length()-1);
             String[] splitedStrs = v.split(", ");
             Collections.addAll(retnList, splitedStrs);
         }else{
-            Collections.addAll(retnList, str);
+            Collections.addAll(retnList, "\""+str+"\"");
         }
         return retnList;
     }

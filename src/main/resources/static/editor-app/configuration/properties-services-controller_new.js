@@ -88,17 +88,16 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
         {name: "机器人", type: "PhysicalAction"},
         {name: "用户", type: "SocialAction"},
         {name: "工人", type: "SocialAction"},
+        {name: "组织", type: "SocialAction"},
         {name: "云应用", type: "CyberAction"},
         {name: "移动应用", type: "CyberAction"},
         {name: "嵌入式应用", type: "CyberAction"},
         {name: "信息对象", type: "CyberAction"}
     ];
 
-    $http({method: 'GET', url: KISBPM.URL.getResources()}).success(function (data, status, headers, config) {
-        // console.log(JSON.stringify(data));
-        // 初始化$scope.constTypeOfResource和$scope.resourceFunctions
-        // $scope.constTypeOfResource表示资源的人机物类别
-        // $scope.resourceFunctions 表示动作对应的人机物类别
+    $http({method: 'GET', url: KISBPM.URL.getResourceDetails(shape.properties["oryx-name"])}).success(function (data, status, headers, config) {
+        console.log(JSON.stringify(data));
+        // 解析得到function，包括其中的参数
 
     }).error(function (data, status, headers, config) {
         console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
@@ -222,7 +221,11 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
                 $scope.editor.getCanvas().update();
                 $scope.editor.updateSelection();
                 // $scope.updatePropertyInModel($scope.property, shapeId);
+                // 当选择点咖啡服务时，会生成一个订单对象
+                // 当选择获取水杯服务时，调用工人获取资源方法
+                // 当选择递交物品服务时，调用工人释放取资源方法
                 if ($scope.entity.Services[i].value === '点咖啡服务') {
+
                     $scope.createResource($scope, shape, "CyberObject");
                     $scope.editor.getSelection()[0].setProperty("oryx-overrideid", ORYX.Editor.provideId());
                     $scope.editor.getSelection()[0].setProperty("oryx-name", "订单");

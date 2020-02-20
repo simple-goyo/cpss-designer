@@ -34,6 +34,10 @@ KISBPM.URL = {
 
     getResources: function(){
         return ACTIVITI.CONFIG.contextRoot + '/resources?version=' + Date.now();
+    },
+
+    getResourceDetails: function (resName) {
+        return ACTIVITI.CONFIG.contextRoot + '/'+resName+'/funcs';
     }
 
 };

@@ -33,13 +33,17 @@ var InputPopupController = ['$scope', '$modal', function ($scope, $modal) {
                 "id": temp[i].properties["oryx-overrideid"],
                 "name": temp[i].properties["oryx-name"],
                 "type": temp[i].properties["oryx-type"],
+                "resName": "Resources Name", //temp[i].properties["oryx-resName"],
+                "ServName": "Services Name", //temp[i].properties["oryx-ServiceName"],
                 "in_out":"in"
             };
             $scope.res_output[$scope.res_output.length] = {
                 "id": temp[i].properties["oryx-overrideid"],
                 "name": temp[i].properties["oryx-name"],
                 "type": temp[i].properties["oryx-type"],
-                "in_out":"out"            };
+                "objName":  "Object", //temp[i].properties["oryx-objName"],
+                "in_out":"out"
+            };
         }
     }
 
