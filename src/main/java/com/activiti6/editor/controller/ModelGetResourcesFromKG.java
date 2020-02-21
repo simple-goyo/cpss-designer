@@ -218,7 +218,16 @@ public class ModelGetResourcesFromKG {
             // 将返回值中的"['foo1','foo2']"字符串转换成List格式['foo1','foo2']
             String v   = str.substring(1, str.length()-1);
             String[] splitedStrs = v.split(", ");
-            Collections.addAll(retnList, splitedStrs);
+
+            // [] -> []
+            // [coffee finished] -> ["coffee finished"]
+            // ['foo1','foo2'] -> ['foo1','foo2']
+            if(splitedStrs.length == 1 && !v.isEmpty()){
+                Collections.addAll(retnList, "\""+v+"\"");
+            }else{
+                Collections.addAll(retnList, splitedStrs);
+            }
+
         }else{
             Collections.addAll(retnList, "\""+str+"\"");
         }

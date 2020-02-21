@@ -58,28 +58,35 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
 
     // 资源执行主体所拥有的功能，数据从知识图谱中获得
     $scope.resourceFunctions = [
-        {name: "获取水杯", type: "SocialAction"},
-        {name: "获取咖啡", type: "SocialAction"},
-        {name: "递交物品", type: "SocialAction"},
-        {name: "制作咖啡", type: "PhysicalAction"},
-        {name: "点咖啡服务", type: "CyberAction"},
-        {name: "准备订单", type: "PhysicalAction"},
-
-        {name: "烧水", type: "PhysicalAction"},
-        {name: "开启空气净化", type: "PhysicalAction"},
-        {name: "获取当前空气状态", type: "PhysicalAction"},
-        {name: "获取体重数据", type: "PhysicalAction"},
-        {name: "播放语音通知", type: "PhysicalAction"},
-
-        {name: "获取头条新闻", type: "CyberAction"},
-        {name: "获取推荐菜", type: "CyberAction"},
-        {name: "获取股票列表", type: "CyberAction"},
-        {name: "播放锻炼视频", type: "CyberAction"}
-
+        // {name: "获取水杯", type: "SocialAction"},
+        // {name: "获取咖啡", type: "SocialAction"},
+        // {name: "递交物品", type: "SocialAction"},
+        // {name: "制作咖啡", type: "PhysicalAction"},
+        // {name: "点咖啡服务", type: "CyberAction"},
+        // {name: "准备订单", type: "PhysicalAction"},
+        //
+        // {name: "烧水", type: "PhysicalAction"},
+        // {name: "开启空气净化", type: "PhysicalAction"},
+        // {name: "获取当前空气状态", type: "PhysicalAction"},
+        // {name: "获取体重数据", type: "PhysicalAction"},
+        // {name: "播放语音通知", type: "PhysicalAction"},
+        //
+        // {name: "获取头条新闻", type: "CyberAction"},
+        // {name: "获取推荐菜", type: "CyberAction"},
+        // {name: "获取股票列表", type: "CyberAction"},
+        // {name: "播放锻炼视频", type: "CyberAction"}
     ];
 
-    // 资源执行主体所有的输出，数据从知识图谱中获得
+    // 当前资源服务所有的输入，数据从知识图谱中获得
+    $scope.resourceInputs = [];
+
+    // 当前资源服务所有的输出，数据从知识图谱中获得
     $scope.resourceOutputs = [];
+
+    // 当前资源的输出，决定是否有资源图标生成，数据从知识图谱中获得
+    $scope.output = [];
+
+    $scope.servicesDetails = [];
 
     // 资源与人机物三种Action的对应（固定不变）
     $scope.constTypeOfResource = [
@@ -95,32 +102,50 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
         {name: "信息对象", type: "CyberAction"}
     ];
 
-    $http({method: 'GET', url: KISBPM.URL.getResourceDetails(shape.properties["oryx-name"])}).success(function (data, status, headers, config) {
-        console.log(JSON.stringify(data));
-        // 解析得到function，包括其中的参数
-
-    }).error(function (data, status, headers, config) {
-        console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
-    });
-
-    var selectedShapeFunctionType = undefined;
+     var selectedShapeFunctionType = undefined;
     for (var i = 0; i < $scope.constTypeOfResource.length; i++) {
         if ($scope.constTypeOfResource[i].name === shape.properties["oryx-type"]) {
             selectedShapeFunctionType = $scope.constTypeOfResource[i].type;
         }
     }
-
     $scope.functions = [];
+    // {"name":"Orders","service":"[{\"output\": \"[OnlineOrder]\", \"input\": [], \"inputParameter\": \"[{userId}]\", \"description\": \"order coffee online\", \"outputParameter\": \"[{state, data{action, mode, level, num}}]\"}]","event":"[]","capability":"[]","category":"[\"CyberEntity\"]"}
+    $http({method: 'GET', url: KISBPM.URL.getResourceDetails(shape.properties["oryx-name"])}).success(function (data, status, headers, config) {
+        console.log(JSON.stringify(data));
 
-    if (selectedShapeFunctionType) {
-        for (var i = 0; i < $scope.resourceFunctions.length; i++) {
-            if ($scope.resourceFunctions[i].type === selectedShapeFunctionType) {
-                $scope.functions[$scope.functions.length] = {name: $scope.resourceFunctions[i].name};
-            }
+        // 解析得到function，包括其中的参数
+        for(var i=0;i<data.service.length;i++){
+            // 获取函数名
+            $scope.resourceFunctions[i] = {name:data.service[i].description, type:selectedShapeFunctionType};
+            $scope.functions[$scope.functions.length] = {name: $scope.resourceFunctions[i].name}; // 加入下拉框中
+
+            // 获取函数的参数
+            $scope.resourceInputs[i] = data.service[i].inputParameter;
+            $scope.resourceOutputs[i] = data.service[i].outputParameter;
+
+            // 设置output参数，output决定是否有输出
+            $scope.output[i] = data.service[i].output;
+
+            // 获取函数，包含所有参数
+            $scope.servicesDetails[i] = data.service[i];
         }
-    } else {
-        $scope.functions = $scope.resourceFunctions;
-    }
+
+        console.log($scope.resourceOutputs);
+
+    }).error(function (data, status, headers, config) {
+        console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
+    });
+
+    //
+    // if (selectedShapeFunctionType) {
+    //     for (var i = 0; i < $scope.resourceFunctions.length; i++) {
+    //         if ($scope.resourceFunctions[i].type === selectedShapeFunctionType) {
+    //             $scope.functions[$scope.functions.length] = {name: $scope.resourceFunctions[i].name};
+    //         }
+    //     }
+    // } else {
+    //     $scope.functions = $scope.resourceFunctions;
+    // }
 
     // Put json representing entity on scope
     if ($scope.property !== undefined && $scope.property.value !== undefined && $scope.property.value !== null
@@ -168,14 +193,6 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
         }
         if (!$scope.entity.Services) {
             $scope.entity.Services = [{value: $scope.selectedFunc}];
-            // for (var i = $scope.property.value.length - 1; i >= 0; i--) {
-            //     var remove = $scope.getShapeById($scope.property.value[i].id);
-            //     $scope.editor.deleteShape(remove);
-            // }
-            // $scope.property.value = [];
-            // $scope.updatePropertyInModel($scope.property);
-            // $scope.close();
-            // return;
         } else {
             $scope.entity.Services[$scope.entity.Services.length] = {value: $scope.selectedFunc};
         }
@@ -209,29 +226,36 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
                 }
             }
             if (index < 0) {
-                // var shapeToRemove = $scope.getShapeById($scope.property.value.id);
-                // $scope.editor.deleteShape(shapeToRemove);
-                //$scope.createAction($scope, $scope.entity.Services[i].value, selectedShapeFunctionType);
-                $scope.replaceAction($scope, $scope.entity.Services[i].value, selectedShapeFunctionType);
-                //$scope.createAction($scope,$scope.selectedFunc);
+                var currentService = $scope.entity.Services[i];
+                $scope.replaceAction($scope, currentService.value, selectedShapeFunctionType);
+
                 $scope.property.value[$scope.property.value.length] = {
-                    id: $scope.editor.getSelection()[0].id, function: $scope.entity.Services[i].value
+                    id: $scope.editor.getSelection()[0].id, function: currentService.value
                 };
-                shape.setProperty("oryx-services", $scope.property.value);
+                // 给Action设置属性，
+                // shape.setProperty("oryx-services", $scope.property.value);
+                shape.setProperty("oryx-services", $scope.servicesDetails[i]);
                 $scope.editor.getCanvas().update();
                 $scope.editor.updateSelection();
-                // $scope.updatePropertyInModel($scope.property, shapeId);
+
                 // 当选择点咖啡服务时，会生成一个订单对象
                 // 当选择获取水杯服务时，调用工人获取资源方法
-                // 当选择递交物品服务时，调用工人释放取资源方法
-                if ($scope.entity.Services[i].value === '点咖啡服务') {
+                // 当选择递交物品服务时，调用工人释放资源方法
+                if($scope.output.length > 0){
+                    if ($scope.entity.Services[i].value === 'order coffee online') {
 
-                    $scope.createResource($scope, shape, "CyberObject");
-                    $scope.editor.getSelection()[0].setProperty("oryx-overrideid", ORYX.Editor.provideId());
-                    $scope.editor.getSelection()[0].setProperty("oryx-name", "订单");
-                    $scope.editor.getSelection()[0].setProperty("oryx-type", "信息对象");
-                    $scope.editor.getCanvas().update();
-                    $scope.editor.updateSelection();
+                        $scope.createResource($scope, shape, "CyberObject");
+                        $scope.editor.getSelection()[0].setProperty("oryx-overrideid", ORYX.Editor.provideId());
+                        $scope.editor.getSelection()[0].setProperty("oryx-name", $scope.output[i]);
+                        $scope.editor.getSelection()[0].setProperty("oryx-type", "信息对象");
+
+                        $scope.editor.getSelection()[0].setProperty("oryx-resName", "Resources Name");
+                        $scope.editor.getSelection()[0].setProperty("oryx-ServiceName", "Services Name");
+                        $scope.editor.getSelection()[0].setProperty("oryx-objName", "Object");
+
+                        $scope.editor.getCanvas().update();
+                        $scope.editor.updateSelection();
+                    }
                 }else if ($scope.entity.Services[i].value === '获取水杯') {
                     $scope.workerGetResource($scope.getHighlightedShape(), $scope.latestLine.incoming[0], $scope.latestLine.outgoing[0]);
                 } else if ($scope.entity.Services[i].value === '递交物品') {
@@ -390,6 +414,7 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
         var command = new MorphTo(HighlightedShape, stencil, $scope.editor);
         $scope.editor.executeCommands([command]);
 
+        // 填写Action动作的属性
         var actionActivity = $scope.selectedItem;
         for (var i = 0; i < actionActivity.properties.length; i++) {
             var property = actionActivity.properties[i];
