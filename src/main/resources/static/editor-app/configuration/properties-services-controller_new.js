@@ -218,6 +218,8 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
             hasRemoveNum++;
         }
 
+        // $scope.entity.Services是一个Action对应的服务，通过“+”号增加，通过“-”号减少
+        // 2个以上的服务对应2个以上select下拉选择框，因此需要用for循环处理
         for (var i = 0; i < $scope.entity.Services.length; i++) {
             index = -1;
             for (var j = 0; j < functions.length; j++) {
@@ -225,18 +227,22 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
                     index = j;
                 }
             }
+            // 如果是初次设置Services值
             if (index < 0) {
                 var currentService = $scope.entity.Services[i];
+
+                // 替换当前Action的图标，从泛型到社会、网络、物理特定的类型
                 $scope.replaceAction($scope, currentService.value, selectedShapeFunctionType);
 
                 $scope.property.value[$scope.property.value.length] = {
                     id: $scope.editor.getSelection()[0].id, function: currentService.value
                 };
-                // 给Action设置属性，
-                // shape.setProperty("oryx-services", $scope.property.value);
-                shape.setProperty("oryx-services", $scope.servicesDetails[i]);
-                $scope.editor.getCanvas().update();
-                $scope.editor.updateSelection();
+
+                // 给Action设置属性值( service 以及子参数)
+                $scope.setActionProperty($scope, currentService);
+
+                // 需要自动生成的资源
+                $scope.AutoGenerateResource($scope.output);
 
                 // 当选择点咖啡服务时，会生成一个订单对象
                 // 当选择获取水杯服务时，调用工人获取资源方法
@@ -383,6 +389,16 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
             }
         }
     };
+
+    $scope.setActionProperty = function($scope, currentService){
+
+        // 给Action设置属性，services是Action对应的资源服务。
+        // shape.setProperty("oryx-services", $scope.property.value);
+        shape.setProperty("oryx-services", $scope.servicesDetails[i]);
+        $scope.editor.getCanvas().update();
+        $scope.editor.updateSelection();
+    };
+
 
     // 替换未定义Action
     $scope.replaceAction = function($scope, actionName, FunctionType) {

@@ -10,12 +10,16 @@
                 <div class="row row-no-gutter">
                     <div class="form-group">
                         <label>{{'PROPERTY.SERVICES.FUNCTION.VALUE' | translate}}</label>
-                        <select class="form-control" ng-model="selectedFunc">
-                            <option value="" selected="selected">---请选择服务---</option>
-                            <option ng-repeat="x in functions" value="{{x.name}}">{{x.name}}</option>
-                        </select>
+<!--                        <select class="form-control" ng-model="selectedFunc">-->
+<!--                            <option value="" selected="selected">-&#45;&#45;请选择服务-&#45;&#45;</option>-->
+<!--                            <option ng-repeat="x in functions" value="{{x.name}}">{{x.name}}</option>-->
+<!--                        </select>-->
                         <div ng-repeat="Service in entity.Services">
-                            <input class="form-control" type="hidden" ng-model="Service.value"/>
+<!--                            <input class="form-control" type="hidden" ng-model="Service.value"/>-->
+                            <select class="form-control" ng-model="selectedFunc">
+                                <option value="" selected="selected">---请选择服务---</option>
+                                <option ng-repeat="x in functions" value="{{x.name}}">{{x.name}}</option>
+                            </select>
                             <i class="glyphicon glyphicon-minus clickable-property"
                                ng-click="removeServiceValue($index)"></i>
                             <i ng-if="$index == (entity.Services.length - 1)"
