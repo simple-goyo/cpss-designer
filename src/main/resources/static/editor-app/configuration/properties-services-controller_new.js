@@ -55,6 +55,7 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
     var ActivityElement;
     var shape = $scope.selectedShape;
     var HighlightedShape = $scope.getHighlightedShape();
+    var resProperties = {"oryx-overrideid":"sid-xxx", "oryx-name":"","oryx-type":"", "oryx-resName":"","oryx-ServiceName":"","oryx-objName":""}; //资源属性模板
 
     // 资源执行主体所拥有的功能，数据从知识图谱中获得
     $scope.resourceFunctions = [
@@ -242,27 +243,12 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
                 $scope.setActionProperty($scope, currentService);
 
                 // 需要自动生成的资源
-                $scope.AutoGenerateResource($scope.output);
+                $scope.AutoGenerateResource($scope, $scope.servicesDetails[i].description, $scope.output[i], $scope.resourceOutputs[i]);
 
-                // 当选择点咖啡服务时，会生成一个订单对象
+                // 将工人与物品、水杯这些物理Item绑定
                 // 当选择获取水杯服务时，调用工人获取资源方法
                 // 当选择递交物品服务时，调用工人释放资源方法
-                if($scope.output.length > 0){
-                    if ($scope.entity.Services[i].value === 'order coffee online') {
-
-                        $scope.createResource($scope, shape, "CyberObject");
-                        $scope.editor.getSelection()[0].setProperty("oryx-overrideid", ORYX.Editor.provideId());
-                        $scope.editor.getSelection()[0].setProperty("oryx-name", $scope.output[i]);
-                        $scope.editor.getSelection()[0].setProperty("oryx-type", "信息对象");
-
-                        $scope.editor.getSelection()[0].setProperty("oryx-resName", "Resources Name");
-                        $scope.editor.getSelection()[0].setProperty("oryx-ServiceName", "Services Name");
-                        $scope.editor.getSelection()[0].setProperty("oryx-objName", "Object");
-
-                        $scope.editor.getCanvas().update();
-                        $scope.editor.updateSelection();
-                    }
-                }else if ($scope.entity.Services[i].value === '获取水杯') {
+                if ($scope.entity.Services[i].value === '获取水杯') {
                     $scope.workerGetResource($scope.getHighlightedShape(), $scope.latestLine.incoming[0], $scope.latestLine.outgoing[0]);
                 } else if ($scope.entity.Services[i].value === '递交物品') {
                     $scope.workerResourceEmpty($scope.getHighlightedShape(), shape);
@@ -273,6 +259,39 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
 
         // 播放动画
         $scope.newPlayShape();
+    };
+
+    // 有些信息服务能够自动生成信息对象
+    $scope.AutoGenerateResource = function($scope, serviceName, serviceOutput, serviceOutputDetials){
+        // 服务的output中有值
+        if( serviceOutput.length > 0){   // 当选择点咖啡服务时，会生成一个订单对象.length > 0){
+            // 当选择点咖啡服务时，会生成一个订单对象
+            if (serviceName === 'order coffee online') {
+                $scope.createResource($scope, shape, "CyberObject");
+
+                var resTemp = resProperties;
+                resTemp["oryx-type"] = "信息对象";
+                resTemp["oryx-resName"] = "resName";
+                resTemp["oryx-ServiceName"] = serviceOutputDetials;
+
+                resTemp["oryx-objName"] = "objName";
+                $scope.setResourceProperty($scope, $scope.editor.getSelection()[0], serviceOutput, resTemp);
+            }
+        }
+    };
+
+    $scope.setResourceProperty = function ($scope, selectionElement, serviceOutput, resProps) {
+        // var resProps = {"oryx-overrideid":"sid-xxx", "oryx-name":"","oryx-type":"", "oryx-resName":"","oryx-ServiceName":"","oryx-objName":""};
+        selectionElement.setProperty("oryx-overrideid", ORYX.Editor.provideId());
+        selectionElement.setProperty("oryx-name", serviceOutput);
+        selectionElement.setProperty("oryx-type", resProps["oryx-type"]);
+
+        selectionElement.setProperty("oryx-resName", resProps["oryx-resName"]);
+        selectionElement.setProperty("oryx-ServiceName", resProps["oryx-ServiceName"]);
+        selectionElement.setProperty("oryx-objName", resProps["oryx-objName"]);
+
+        $scope.editor.getCanvas().update();
+        $scope.editor.updateSelection();
     };
 
     $scope.createResource = function ($scope, shape, resourceId) {
@@ -399,7 +418,6 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
         $scope.editor.updateSelection();
     };
 
-
     // 替换未定义Action
     $scope.replaceAction = function($scope, actionName, FunctionType) {
         if(HighlightedShape === undefined) return;// 如果没有高亮，直接返回
@@ -465,6 +483,7 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
 
         //$scope.close();
     };
+
     // Close button handler
     $scope.close = function () {
         //handleEntityInput($scope);
