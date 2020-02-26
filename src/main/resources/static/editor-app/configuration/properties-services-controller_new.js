@@ -103,7 +103,7 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
         {name: "信息对象", type: "CyberAction"}
     ];
 
-     var selectedShapeFunctionType = undefined;
+    var selectedShapeFunctionType = undefined;
     for (var i = 0; i < $scope.constTypeOfResource.length; i++) {
         if ($scope.constTypeOfResource[i].name === shape.properties["oryx-type"]) {
             selectedShapeFunctionType = $scope.constTypeOfResource[i].type;
@@ -192,11 +192,12 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
         } else {
             $scope.property.value = [];
         }
-        if (!$scope.entity.Services) {
-            $scope.entity.Services = [{value: $scope.selectedFunc}];
-        } else {
-            $scope.entity.Services[$scope.entity.Services.length] = {value: $scope.selectedFunc};
-        }
+        // if (!$scope.entity.Services) {
+        //     $scope.entity.Services = [{value: $scope.selectedFunc}];
+        // }
+        // else {
+        //     $scope.entity.Services[$scope.entity.Services.length] = {value: $scope.selectedFunc};
+        // }
         var indexToRemove = [];
         var hasRemoveNum = 0;
         for (var i = 0; i < functions.length; i++) {
@@ -273,7 +274,6 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
                 resTemp["oryx-type"] = "信息对象";
                 resTemp["oryx-resName"] = "resName";
                 resTemp["oryx-ServiceName"] = serviceOutputDetials;
-
                 resTemp["oryx-objName"] = "objName";
                 $scope.setResourceProperty($scope, $scope.editor.getSelection()[0], serviceOutput, resTemp);
             }

@@ -16,7 +16,7 @@
 <!--                        </select>-->
                         <div ng-repeat="Service in entity.Services">
 <!--                            <input class="form-control" type="hidden" ng-model="Service.value"/>-->
-                            <select class="form-control" ng-model="selectedFunc">
+                            <select class="form-control" ng-model="Service.value">
                                 <option value="" selected="selected">---请选择服务---</option>
                                 <option ng-repeat="x in functions" value="{{x.name}}">{{x.name}}</option>
                             </select>
