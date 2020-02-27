@@ -99,10 +99,10 @@ var InputPopupController = ['$scope', '$modal', function ($scope, $modal) {
 
             for(var i=0;i<stringSelItems.length;i++){
                 if(jsonSelItems[i].in_out === "in"){
-                    // input  资源加入
+                    // input  加入选中的资源
                     in_value[in_value.length] = jsonSelItems[i];
                 }else if(jsonSelItems[i].in_out === "out"){
-                    // output 资源加入
+                    // output 加入选中的资源
                     out_value[out_value.length] = jsonSelItems[i];
                 }
             }

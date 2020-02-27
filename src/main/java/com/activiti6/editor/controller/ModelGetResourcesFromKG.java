@@ -121,6 +121,24 @@ public class ModelGetResourcesFromKG {
 
         JSONObject job;
         JSONArray retnJSON = new JSONArray();
+
+        /*
+        *  众包worker的details暂时先写死，处理完直接返回
+        * */
+        //////////////////////////众包///////////////////////////////
+        if( resName.length()>=6 && resName.substring(0,6).equals("worker")){
+
+            retn = "{\"name\":\"CrowdSouring\",\"service\":[{\"output\": \"[]\", \"input\": [], \"inputParameter\": \"[]\", \"description\": \"deliver something\", \"outputParameter\": \"[]\"}],\"event\":\"[]\",\"capability\":\"[]\",\"category\":\"[\\\"SocialEntity\\\"]\"}";
+            InputStream resourceDetailsStream = new ByteArrayInputStream(retn.getBytes("utf-8"));
+
+            try {
+                return IOUtils.toString(resourceDetailsStream, "utf-8");
+            } catch (Exception e) {
+                throw new ActivitiException("Error while loading resources", e);
+            }
+        }
+        //////////////////////////众包///////////////////////////////
+
         try{
             query = postJSON( KGURL+reqParam,"");
         }catch (Exception e){
@@ -214,7 +232,7 @@ public class ModelGetResourcesFromKG {
 
     private List<String> parseString(String str){
         List<String> retnList = new ArrayList<>();
-        if (str.substring(0, 1).equals("[")) {
+        if ( !str.isEmpty() && str.substring(0, 1).equals("[")) {
             // 将返回值中的"['foo1','foo2']"字符串转换成List格式['foo1','foo2']
             String v   = str.substring(1, str.length()-1);
             String[] splitedStrs = v.split(", ");

@@ -1,8 +1,7 @@
 package com.activiti6.editor.controller;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,8 +12,11 @@ import org.activiti.editor.language.json.converter.BpmnJsonConverter;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.impl.persistence.entity.ModelEntity;
+import org.activiti.engine.impl.persistence.entity.ModelEntityImpl;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.Model;
+import org.activiti.engine.repository.ModelQuery;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +51,24 @@ public class ModelerController{
 	@RequestMapping("index")
 	public ModelAndView index(ModelAndView modelAndView) {
         modelAndView.setViewName("index");
-        modelAndView.addObject("modelList", repositoryService.createModelQuery().list());
+
+		List<Model> list = new ArrayList<Model>();
+		list = repositoryService.createModelQuery().list();
+
+//        Collections.sort(list, new Comparator<ModelEntityImpl>() {
+//        	@Override
+//			public int compare(ModelEntity u1, ModelEntity u2) {
+//        		int diff = Integer.parseInt(u1.getId()) - Integer.parseInt(u2.getId());
+//        		if (diff > 0) {
+//        			return 1;
+//        		}else if (diff < 0) {
+//        			return -1;
+//        		}
+//        		return 0;
+//        	}
+//        });
+
+		modelAndView.addObject("modelList", list);
         modelAndView.addObject("modelSize", repositoryService.createModelQuery().list().size());
         return modelAndView;
 	}

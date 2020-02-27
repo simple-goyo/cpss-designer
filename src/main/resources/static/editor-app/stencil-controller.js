@@ -25,8 +25,11 @@ angular.module('activitiModeler')
         var lastHighlightedId = "";
         var HilghlightedItem;
 
-        //最新的资源连线
+        // 最新的资源连线
         $scope.latestLine = undefined;
+
+        // 最新的线两端
+        $scope.latestfromto = {'from':undefined, 'to':undefined};
 
         $scope.connectedLines = [];
 
@@ -431,6 +434,10 @@ angular.module('activitiModeler')
                         $scope.editor.setSelection(to);
                     $scope.editor.getCanvas().update();
                     $scope.latestLine = edge;
+                    $scope.latestfromto['from'] = from;
+                    $scope.latestfromto['to'] = to;
+                    // 设置服务前，将连线的资源输入进去
+                    // 目前的输入默认是连线连进去的资源
                     $scope.setService();
                 }
 

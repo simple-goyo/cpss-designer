@@ -51,7 +51,7 @@ var KisBpmServicesPopupCtrl = ['$scope', function ($scope) {
     };
 }];
 
-var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
+var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
     var ActivityElement;
     var shape = $scope.selectedShape;
     var HighlightedShape = $scope.getHighlightedShape();
@@ -131,11 +131,19 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
             $scope.servicesDetails[i] = data.service[i];
         }
 
-        console.log($scope.resourceOutputs);
+        //console.log($scope.resourceOutputs);
 
     }).error(function (data, status, headers, config) {
         console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
     });
+
+    // 判断连线源头是否为worker，如果是worker则另外处理
+    if ($scope.latestfromto["from"].properties["oryx-type"] === "工人"){
+        console.log('是工人！');
+    }else{
+        console.log('不是工人！');
+    }
+
 
     //
     // if (selectedShapeFunctionType) {
@@ -243,7 +251,7 @@ var ServicesPopupCtrl = ['$scope', '$http',function ($scope, $http) {
                 // 给Action设置属性值( service 以及子参数)
                 $scope.setActionProperty($scope, currentService);
 
-                // 需要自动生成的资源
+                // 服务有Output时，需要自动生成的资源
                 $scope.AutoGenerateResource($scope, $scope.servicesDetails[i].description, $scope.output[i], $scope.resourceOutputs[i]);
 
                 // 将工人与物品、水杯这些物理Item绑定
