@@ -51,6 +51,57 @@ var KisBpmServicesPopupCtrl = ['$scope', function ($scope) {
     };
 }];
 
+// 结合律
+// mode{aaa, bbb, ccc} -> mode.aaa, mode.bbb, mode.ccc
+var associative = function(s){
+    var l = s.indexOf('{');
+    var r = s.indexOf('}');
+    var newList=[];
+
+    var outside = s.substring(0, l);   // mode
+    var inside  = s.substring(l+1, r); // aaa, bbb, ccc
+
+    var insideList = inside.split(', ');
+    for(var i=0;i<insideList.length;i++){
+        newList[i] = outside + '.' + insideList[i];
+    }
+
+    return newList.toString().replace(/,/g, ', ');
+};
+
+var paramParser = function(rawParam){
+    // 将[{state, data{action, mode, level, num}}]，解析为
+    // resource_param——[state, data.action, data.mode, data.level, data.num]
+    /* service_param——[state, action, mode, level, num] (service_param是下一个service的输入参数)*/
+
+    // 测试字符串 [{state, data{action, mode{aaa, bbb{dddd, eeee}, ccc}, level, num{xxx, yyy}}}]
+    var str = "";
+    var oldStr = "";
+    if(rawParam[0] === '['){
+        str = rawParam.substring(1,rawParam.length-1);
+    }else{
+        str = rawParam;
+    }
+
+    if(str === ""){return "";}
+
+    do{
+        oldStr = str;
+        var matchedStrList = oldStr.match(/\w+\{([^\{\}]+)\}/g);
+        for(var i=0; matchedStrList!==null && i < matchedStrList.length; i++){
+            str = oldStr.replace(matchedStrList[i], associative(matchedStrList[i].trim()));
+        }
+
+    }while(oldStr !== str);
+
+    if(str[0] === "{"){
+        str = str.substring(1,str.length-1);
+    }
+    // console.log(str);
+    return str;
+
+};
+
 var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
     var ActivityElement;
     var shape = $scope.selectedShape;
@@ -121,8 +172,8 @@ var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
             $scope.functions[$scope.functions.length] = {name: $scope.resourceFunctions[i].name}; // 加入下拉框中
 
             // 获取函数的参数
-            $scope.resourceInputs[i] = data.service[i].inputParameter;
-            $scope.resourceOutputs[i] = data.service[i].outputParameter;
+            $scope.resourceInputs[i] = paramParser(data.service[i].inputParameter);
+            $scope.resourceOutputs[i] = paramParser(data.service[i].outputParameter);
 
             // 设置output参数，output决定是否有输出
             $scope.output[i] = data.service[i].output;
