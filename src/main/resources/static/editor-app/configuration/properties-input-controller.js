@@ -13,12 +13,14 @@ var InputPopupController = ['$scope', '$modal', function ($scope, $modal) {
     var temp = $scope.editor.getCanvas().nodes;
     var HighlightedShape = $scope.getHighlightedShape();
     var stringSelItems = undefined; // 已选择的项
+    var jsonSelItems = []; // Json 格式的已选择的项
 
     // entities：存放列表中显示的资源
     $scope.entities = [];
     $scope.entities[0] = {"id": "none", "name": "请绑定输入输出资源", "type": "none"};
 
     $scope.selectedItems=[];
+
     $scope.res_input = [];
     $scope.res_output = [];
 
@@ -82,8 +84,12 @@ var InputPopupController = ['$scope', '$modal', function ($scope, $modal) {
         console.log($scope.selectedItems);
         if($scope.selectedItems.length > 0){
             stringSelItems = $scope.selectedItems;
-            $scope.updateAction();
+
+            for(var i=0;i<stringSelItems.length;i++){
+                jsonSelItems[i] = jQuery.parseJSON(stringSelItems[i]);
+            }
             $scope.updataResource();
+            $scope.updateAction();
         }else{
             $scope.property.value = "";
         }
@@ -99,21 +105,14 @@ var InputPopupController = ['$scope', '$modal', function ($scope, $modal) {
         var actionActivity = HighlightedShape;//$scope.editor.getSelection()[0];
         if(actionActivity.properties["oryx-input"] !== undefined && actionActivity.properties["oryx-output"] !== undefined){
 
-            console.log("Action: "+ actionActivity);
-            var jsonSelItems = [];
-            for(var i=0;i<stringSelItems.length;i++){
-                jsonSelItems[i] = jQuery.parseJSON(stringSelItems[i]);
-            }
-
             var in_value  = [];
             var out_value = [];
 
-            // 0: "{"id":"sid-376DA0DD-75FA-458F-BE85-B5BA87DF2586","name":"User","type":"用户","in_out":"in"}"
-            // 1: "{"id":"sid-BD48313E-BD45-4215-B919-AA65A2B88BDB","name":"[OnlineOrder]","type":"信息对象","in_out":"out"}"
+            // 0: "{"id":"sid-B5C3444A-6CA5-45F1-9012-61B0A226009A","name":"User","type":"用户","InParam":"","OutParam":"","in_out":"in"}"
+            // 1: "{"id":"sid-1000718E-C1D0-44D1-AA14-FDAA224512E8","name":"[OnlineOrder]","type":"信息对象","InParam":"state, data.action, data.mode, data.level, data.num","OutParam":"state, data.action, data.mode, data.level, data.num","in_out":"out"}"
             for(var i=0; i<stringSelItems.length; i++){
                 if(jsonSelItems[i].in_out === "in"){
                     // input  加入选中的资源
-
                     in_value[in_value.length] = jsonSelItems[i];
                 }else if(jsonSelItems[i].in_out === "out"){
                     // output 加入选中的资源
@@ -124,14 +123,53 @@ var InputPopupController = ['$scope', '$modal', function ($scope, $modal) {
             var property_in_pattern  = {"key":"oryx-input",  "value":in_value};
             var property_out_pattern = {"key":"oryx-output", "value":out_value};
 
-            $scope.updatePropertyInModel(property_in_pattern);
-            $scope.updatePropertyInModel(property_out_pattern);
+            $scope.updatePropertyInModel(property_in_pattern, actionActivity.id);
+            $scope.updatePropertyInModel(property_out_pattern, actionActivity.id);
         }
     };
 
-    // 更新绑定的资源
+    // 更新绑定的对象
+    // 对象的input绑定实体服务的output
+    // 对象的output绑定实体服务的input
     $scope.updataResource = function(){
+        if(HighlightedShape === undefined) return;// 如果没有高亮，直接返回
 
+        // 从高亮的Action中读取Input和Output，绑定对象
+        var currentActionId = HighlightedShape.properties["oryx-activityelement"].id;
+        var currentAction = $scope.getShapeById(currentActionId);
+
+        debugger;
+        for(var i=0; i<stringSelItems.length; i++){
+            if(jsonSelItems[i].in_out === "out"){
+                // CyberObject.InParam <-- Services.output
+                var output = currentAction.properties["oryx-services"].output;
+                jsonSelItems[i].InParam = output;
+                var resourceId = jsonSelItems[i].id;
+                var currentResource = $scope.getShapeById(resourceId);
+                $scope.updateResourceProperty(currentResource, output, null);
+            }else if(jsonSelItems[i].in_out === "in"){
+                // CyberObject.OutParam <-- Services.input
+                var input = currentAction.properties["oryx-services"].input;
+                jsonSelItems[i].OutParam = input;
+                var resourceId = jsonSelItems[i].id;
+                var currentResource = $scope.getShapeById(resourceId);
+                $scope.updateResourceProperty(currentResource, null, input);
+            }
+
+        }
+
+    };
+
+    $scope.updateResourceProperty = function (resourceShape, serviceOutput, serviceInput) {
+        if(serviceInput !== null){
+            resourceShape.setProperty("oryx-OutParam", serviceInput);
+        }
+        if(serviceOutput !== null){
+            resourceShape.setProperty("oryx-InParam", serviceOutput);
+        }
+
+        $scope.editor.getCanvas().update();
+        $scope.editor.updateSelection();
     };
 
     // Close button handler

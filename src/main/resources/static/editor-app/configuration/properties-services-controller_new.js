@@ -77,6 +77,8 @@ var paramParser = function(rawParam){
     // 测试字符串 [{state, data{action, mode{aaa, bbb{dddd, eeee}, ccc}, level, num{xxx, yyy}}}]
     var str = "";
     var oldStr = "";
+
+    rawParam = rawParam.toString();
     if(rawParam[0] === '['){
         str = rawParam.substring(1,rawParam.length-1);
     }else{
@@ -341,14 +343,15 @@ var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
 
     $scope.setNewResourceProperty = function ($scope, selectionElement, serviceOutput, resProps) {
         // var resProps = {"oryx-overrideid":"sid-xxx", "oryx-name":"","oryx-type":"", "oryx-resName":"","oryx-ServiceName":"","oryx-objName":""};
-        selectionElement.setProperty("oryx-overrideid", ORYX.Editor.provideId());
+        // selectionElement.setProperty("oryx-overrideid", ORYX.Editor.provideId());
+        selectionElement.setProperty("oryx-overrideid", $scope.editor.getSelection()[0].id);
         selectionElement.setProperty("oryx-name", serviceOutput);
         selectionElement.setProperty("oryx-type", resProps["oryx-type"]);
 
         //selectionElement.setProperty("oryx-resName", resProps["oryx-resName"]);
         //selectionElement.setProperty("oryx-objName", resProps["oryx-objName"]);
-        selectionElement.setProperty("oryx-InParam", resProps["oryx-InParam"]);
-        selectionElement.setProperty("oryx-OutParam", resProps["oryx-OutParam"]);
+        // selectionElement.setProperty("oryx-InParam", resProps["oryx-InParam"]);
+        // selectionElement.setProperty("oryx-OutParam", resProps["oryx-OutParam"]);
 
         $scope.editor.getCanvas().update();
         $scope.editor.updateSelection();

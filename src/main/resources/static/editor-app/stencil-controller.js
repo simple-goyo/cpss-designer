@@ -23,7 +23,7 @@ angular.module('activitiModeler')
 
         // 上次高亮的Action的ID和项
         var lastHighlightedId = "";
-        var HilghlightedItem;
+        var HighlightedItem;
 
         // 最新的资源连线
         $scope.latestLine = undefined;
@@ -295,7 +295,7 @@ angular.module('activitiModeler')
             //             console.log(itemId);
             //
             //             lastHighlightedId = itemId;
-            //             HilghlightedItem = $scope.selectedItem;
+            //             HighlightedItem = $scope.selectedItem;
             //         }
             //     }
             // });
@@ -394,7 +394,7 @@ angular.module('activitiModeler')
                             console.log(itemId);
 
                             lastHighlightedId = id;
-                            HilghlightedItem = shape;
+                            HighlightedItem = shape;
 
                             $scope.toDoAboutResourceLineAfterChangingAction(lastSelectedAction);
                         }
@@ -1407,7 +1407,7 @@ angular.module('activitiModeler')
             $scope.setHighlightedShape = function (newId) {
                 if (newId !== undefined && newId !== "") {
                     lastHighlightedId = newId;
-                    HilghlightedItem = $scope.getShapeById(newId);
+                    HighlightedItem = $scope.getShapeById(newId);
                 }
 
             };
@@ -1590,6 +1590,8 @@ angular.module('activitiModeler')
             if (shapeId) {
                 if (shape.id !== shapeId && $scope.previousSelectedShape && $scope.previousSelectedShape.id === shapeId) {
                     shape = $scope.previousSelectedShape;
+                } else if(shapeId === $scope.getHighlightedShapeId()){
+                    shape = $scope.getHighlightedShape();
                 } else {
                     shape = null;
                 }
