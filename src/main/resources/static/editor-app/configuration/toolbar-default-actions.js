@@ -249,6 +249,14 @@ KISBPM.TOOLBAR = {
             });
         },
 
+        updateResource: function (services) {
+            var modal = services.$modal({
+                backdrop: true,
+                keyboard: true,
+                template: 'editor-app/configuration/properties/update-popup.html?version=' + Date.now(),
+                scope: services.$scope
+            });
+        },
 
         /**
          * Helper method: fetches the Oryx Edit plugin from the provided scope,

@@ -137,7 +137,7 @@
 	<script src="editor-app/configuration/properties-resources-controller.js" type="text/javascript"></script>
     <script src="editor-app/configuration/properties-activity-element-controller.js" type="text/javascript"></script>
 	<script src="editor-app/configuration/properties-events-controller.js" type="text/javascript"></script>
-
+	<script src="editor-app/configuration/properties-update-controller.js" type="text/javascript"></script>
     <script src="editor-app/configuration/toolbar.js" type="text/javascript"></script>
 	<script src="editor-app/configuration/toolbar-custom-actions.js" type="text/javascript"></script>
 	
