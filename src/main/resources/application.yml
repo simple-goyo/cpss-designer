@@ -44,7 +44,7 @@ spring:
 #https端口号.
 server.port: 8899
 #证书的路径.
-server.ssl.key-store: classpath:keystore1.p12
+server.ssl.key-store: classpath:keystore.p12
 #证书密码，请修改为您自己证书的密码.
 server.ssl.key-store-password: 123456
 #秘钥库类型
