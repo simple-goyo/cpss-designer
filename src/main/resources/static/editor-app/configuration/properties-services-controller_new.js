@@ -51,11 +51,64 @@ var KisBpmServicesPopupCtrl = ['$scope', function ($scope) {
     };
 }];
 
+// 结合律
+// mode{aaa, bbb, ccc} -> mode.aaa, mode.bbb, mode.ccc
+var associative = function(s){
+    var l = s.indexOf('{');
+    var r = s.indexOf('}');
+    var newList=[];
+
+    var outside = s.substring(0, l);   // mode
+    var inside  = s.substring(l+1, r); // aaa, bbb, ccc
+
+    var insideList = inside.split(', ');
+    for(var i=0;i<insideList.length;i++){
+        newList[i] = outside + '.' + insideList[i];
+    }
+
+    return newList.toString().replace(/,/g, ', ');
+};
+
+var paramParser = function(rawParam){
+    // 将[{state, data{action, mode, level, num}}]，解析为
+    // resource_param——[state, data.action, data.mode, data.level, data.num]
+    /* service_param——[state, action, mode, level, num] (service_param是下一个service的输入参数)*/
+
+    // 测试字符串 [{state, data{action, mode{aaa, bbb{dddd, eeee}, ccc}, level, num{xxx, yyy}}}]
+    var str = "";
+    var oldStr = "";
+
+    rawParam = rawParam.toString();
+    if(rawParam[0] === '['){
+        str = rawParam.substring(1,rawParam.length-1);
+    }else{
+        str = rawParam;
+    }
+
+    if(str === ""){return "";}
+
+    do{
+        oldStr = str;
+        var matchedStrList = oldStr.match(/\w+\{([^\{\}]+)\}/g);
+        for(var i=0; matchedStrList!==null && i < matchedStrList.length; i++){
+            str = oldStr.replace(matchedStrList[i], associative(matchedStrList[i].trim()));
+        }
+
+    }while(oldStr !== str);
+
+    if(str[0] === "{"){
+        str = str.substring(1,str.length-1);
+    }
+    // console.log(str);
+    return str;
+
+};
+
 var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
     var ActivityElement;
     var shape = $scope.selectedShape;
     var HighlightedShape = $scope.getHighlightedShape();
-    var resProperties = {"oryx-overrideid":"sid-xxx", "oryx-name":"","oryx-type":"", "oryx-resName":"","oryx-ServiceName":"","oryx-objName":""}; //资源属性模板
+    var resProperties = {"oryx-overrideid":"sid-xxx", "oryx-name":"","oryx-type":"", "oryx-resName":"","oryx-ServiceName":"","oryx-objName":"","oryx-InParam":"","oryx-OutParam":""}; //资源属性模板
 
     // 资源执行主体所拥有的功能，数据从知识图谱中获得
     $scope.resourceFunctions = [
@@ -121,8 +174,8 @@ var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
             $scope.functions[$scope.functions.length] = {name: $scope.resourceFunctions[i].name}; // 加入下拉框中
 
             // 获取函数的参数
-            $scope.resourceInputs[i] = data.service[i].inputParameter;
-            $scope.resourceOutputs[i] = data.service[i].outputParameter;
+            $scope.resourceInputs[i] = paramParser(data.service[i].inputParameter);
+            $scope.resourceOutputs[i] = paramParser(data.service[i].outputParameter);
 
             // 设置output参数，output决定是否有输出
             $scope.output[i] = data.service[i].output;
@@ -249,7 +302,8 @@ var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
                 };
 
                 // 给Action设置属性值( service 以及子参数)
-                $scope.setActionProperty($scope, currentService);
+                //$scope.setActionProperty($scope, currentService);
+                $scope.setActionProperty($scope, currentService.value, $scope.resourceInputs[i], $scope.resourceOutputs[i]);
 
                 // 服务有Output时，需要自动生成的资源
                 $scope.AutoGenerateResource($scope, $scope.servicesDetails[i].description, $scope.output[i], $scope.resourceOutputs[i]);
@@ -280,23 +334,24 @@ var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
 
                 var resTemp = resProperties;
                 resTemp["oryx-type"] = "信息对象";
-                resTemp["oryx-resName"] = "resName";
-                resTemp["oryx-ServiceName"] = serviceOutputDetials;
-                resTemp["oryx-objName"] = "objName";
-                $scope.setResourceProperty($scope, $scope.editor.getSelection()[0], serviceOutput, resTemp);
+                resTemp["oryx-InParam"] = serviceOutputDetials;
+                resTemp["oryx-OutParam"] = serviceOutputDetials;
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], serviceOutput, resTemp);
             }
         }
     };
 
-    $scope.setResourceProperty = function ($scope, selectionElement, serviceOutput, resProps) {
+    $scope.setNewResourceProperty = function ($scope, selectionElement, serviceOutput, resProps) {
         // var resProps = {"oryx-overrideid":"sid-xxx", "oryx-name":"","oryx-type":"", "oryx-resName":"","oryx-ServiceName":"","oryx-objName":""};
-        selectionElement.setProperty("oryx-overrideid", ORYX.Editor.provideId());
+        // selectionElement.setProperty("oryx-overrideid", ORYX.Editor.provideId());
+        selectionElement.setProperty("oryx-overrideid", $scope.editor.getSelection()[0].id);
         selectionElement.setProperty("oryx-name", serviceOutput);
         selectionElement.setProperty("oryx-type", resProps["oryx-type"]);
 
-        selectionElement.setProperty("oryx-resName", resProps["oryx-resName"]);
-        selectionElement.setProperty("oryx-ServiceName", resProps["oryx-ServiceName"]);
-        selectionElement.setProperty("oryx-objName", resProps["oryx-objName"]);
+        //selectionElement.setProperty("oryx-resName", resProps["oryx-resName"]);
+        //selectionElement.setProperty("oryx-objName", resProps["oryx-objName"]);
+        // selectionElement.setProperty("oryx-InParam", resProps["oryx-InParam"]);
+        // selectionElement.setProperty("oryx-OutParam", resProps["oryx-OutParam"]);
 
         $scope.editor.getCanvas().update();
         $scope.editor.updateSelection();
@@ -417,11 +472,13 @@ var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
         }
     };
 
-    $scope.setActionProperty = function($scope, currentService){
-
+    // 设置action的属性
+    $scope.setActionProperty = function($scope, serviceName, inputParam, outputParam){
         // 给Action设置属性，services是Action对应的资源服务。
         // shape.setProperty("oryx-services", $scope.property.value);
-        shape.setProperty("oryx-services", $scope.servicesDetails[i]);
+        // shape.setProperty("oryx-services", $scope.servicesDetails[i]);
+        var serviceDetail = {"name":serviceName, "input": inputParam, "output":outputParam};
+        shape.setProperty("oryx-services", serviceDetail);
         $scope.editor.getCanvas().update();
         $scope.editor.updateSelection();
     };
