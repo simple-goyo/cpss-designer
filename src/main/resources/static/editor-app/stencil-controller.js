@@ -2459,7 +2459,7 @@ angular.module('activitiModeler')
             // console.log("StartNoneEvent");
             // 注意：只有在加载完流程之后并且界面上没有StartNoneEvent时，才会生成。
             var hasStartEventShape = function () {
-                //debugger;
+                if($scope.editor===undefined) return false;
                 var shapes = $scope.editor.getCanvas().nodes;
                 for (var i = 0; i < shapes.length; i++) {
                     if (shapes[i].properties["oryx-startevent"] !== undefined) {

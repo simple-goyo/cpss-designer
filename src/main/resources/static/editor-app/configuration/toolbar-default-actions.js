@@ -343,6 +343,7 @@ var _createAction = function ($rootScope, $scope, ItemId) {
 var __createStartNode = function ($rootScope, $scope) {
     var itemId = "StartNoneEvent";
     var containedStencil = undefined;
+    if($scope.editor===undefined) return;
     var stencilSets = $scope.editor.getStencilSets().values();
     for (var i = 0; i < stencilSets.length; i++) {
         var stencilSet = stencilSets[i];

@@ -237,7 +237,7 @@ public class ModelGetResourcesFromKG {
             String v   = str.substring(1, str.length()-1);
             String[] splitedStrs = v.split(", ");
 
-            // [] -> []
+            // [foo] -> ['foo']
             // [coffee finished] -> ["coffee finished"]
             // ['foo1','foo2'] -> ['foo1','foo2']
             if(splitedStrs.length == 1 && !v.isEmpty()){

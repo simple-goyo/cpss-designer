@@ -87,11 +87,13 @@
 	<script src="editor-app/libs/mousetrap-1.4.5.min.js" type="text/javascript"></script>
 	<script src="editor-app/libs/jquery.autogrow-textarea.js" type="text/javascript"></script>
 	
-	<script src="editor-app/libs/prototype-1.5.1.js" type="text/javascript"></script>
 	<script src="editor-app/libs/path_parser.js" type="text/javascript"></script>
 	
 	<script src="editor-app/libs/angular-scroll_0.5.7/angular-scroll.min.js" type="text/javascript"></script>
 	<script src="editor-app/libs/bootstrap-select/bootstrap-select.min.js" type="text/javascript"></script>
+
+	<script src="editor-app/libs/prototype-1.5.1.js" type="text/javascript"></script>
+
 	<!-- Configuration -->
 	<script src="editor-app/app-cfg.js?v=1"></script>
 	<script src="editor-app/editor-config.js" type="text/javascript"></script>
@@ -99,21 +101,157 @@
 	
 	<script src="editor-app/editor/i18n/translation_en_us.js" type="text/javascript"></script>
 	<script src="editor-app/editor/i18n/translation_signavio_en_us.js" type="text/javascript"></script>
-	<script src="editor-app/editor/oryx.debug.js" type="text/javascript"></script>
-	
+<#--	<script src="editor-app/editor/oryx.debug.js" type="text/javascript"></script>-->
+	<#--	oryx -->
+	<script src="editor-app/editor/scripts/kickstart.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/clazz.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/config.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/erdfparser.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/datamanager.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/utils.js" type="text/javascript"></script>
+
+	<script src="editor-app/editor/scripts/Core/uiobject.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/abstractPlugin.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/abstractLayouter.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/abstractshape.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/bounds.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/canvas.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/command.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/shape.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/edge.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/node.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/svgDrag.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/main.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/signavio.js" type="text/javascript"></script>
+
+	<script src="editor-app/editor/scripts/Core/Controls/control.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/Controls/docker.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/Controls/magnet.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/Math/math.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/StencilSet/complexpropertyitem.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/StencilSet/property.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/StencilSet/propertyitem.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/StencilSet/rules.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/StencilSet/stencil.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/StencilSet/stencilset.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/StencilSet/stencilsets.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/SVG/editpathhandler.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/SVG/label.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/SVG/minmaxpathhandler.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/SVG/svgmarker.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/SVG/svgshape.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Core/SVG/pointspathhandler.js" type="text/javascript"></script>
+
+	<script src="editor-app/editor/scripts/Plugins/addDocker.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/addssextension.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/addstencilset.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/adHocCC.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/amlSupport.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/arrangement.js" type="text/javascript"></script>
+<#--	<script src="editor-app/editor/scripts/Plugins/autoLayout.js" type="text/javascript"></script>-->
+	<script src="editor-app/editor/scripts/Plugins/bpel2bpmn.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpel4chor2bpelSupport.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpel4chorSupport.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpelLayout.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpelSupport.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmn.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmn11.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmn2bpel.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmn2dtrp-xmi.js" type="text/javascript"></script>
+<#--	<script src="editor-app/editor/scripts/Plugins/bpmn2pn.js" type="text/javascript"></script>-->
+	<script src="editor-app/editor/scripts/Plugins/bpmn2xforms.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmn2xhtml.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmn2xpdl.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmn2xpdl20.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmnClearSodBodHighlights.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmnLayouter.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmnplus2bpel4chor.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmnplusLayout.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmnplusSerialization.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmnResourceAssignment.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmnResourcesBoDAdd.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmnResourcesBoDShow.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmnResourcesSoDAdd.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmnResourcesSoDShow.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/canvasResize.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/cpnsupport.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/cpntoolsSupport.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/desynchronizabilityOverlay.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/dragDocker.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/dragdropresize.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/edit.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/enforceabilityOverlay.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/epc2bpmn.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/epcLayouter.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/epcSupport.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/erdfSupport.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/feedback.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/file.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/fileRepository.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/grouping.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/ibpmn2bpmn.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/jpdlSupport.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/jsonSupport.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/keysMove.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/loading.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/overlay.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/overlayexample.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/petrinet.js" type="text/javascript"></script>
+<#--	<script src="editor-app/editor/scripts/Plugins/petriNetSoundnessChecker.js" type="text/javascript"></script>-->
+	<script src="editor-app/editor/scripts/Plugins/pluginLoader.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/pnmlexport.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/processLink.js" type="text/javascript"></script>
+<#--	<script src="editor-app/editor/scripts/Plugins/propertywindow.js" type="text/javascript"></script>-->
+<#--	<script src="editor-app/editor/scripts/Plugins/queryevaluator.js" type="text/javascript"></script>-->
+	<script src="editor-app/editor/scripts/Plugins/queryResultHighlighter.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/rdfExport.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/renameShapes.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/rowlayouting.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/selectionframe.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/selectssperspective.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/shapeHighlighting.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/shapemenu.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/shaperepository.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/simplepnmlexport.js" type="text/javascript"></script>
+<#--	<script src="editor-app/editor/scripts/Plugins/stepThroughPlugin.js" type="text/javascript"></script>-->
+	<script src="editor-app/editor/scripts/Plugins/syntaxchecker.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/tbpmsupport.js" type="text/javascript"></script>
+<#--	<script src="editor-app/editor/scripts/Plugins/toolbar.js" type="text/javascript"></script>-->
+	<script src="editor-app/editor/scripts/Plugins/transformationDownloadDialog.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/transformationDownloadDialogForBPEL4Chor.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/treeGraphSupport.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/uml.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/undo.js" type="text/javascript"></script>
+<#--	<script src="editor-app/editor/scripts/Plugins/validator.js" type="text/javascript"></script>-->
+	<script src="editor-app/editor/scripts/Plugins/view.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/workflownets.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/xforms.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/xformsexport.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/xformsexportorbeon.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/xformsimport.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmn2.0/bpmn2.0.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmn2.0/bpmn2.0choreography.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmn2.0/bpmn2.0serialization.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/bpmn2.0/bpmn2conversation.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/general/feedbackPlugin.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/Layouter/containerLayouter.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/Plugins/Layouter/edgeLayouter.js" type="text/javascript"></script>
+	<script src="editor-app/editor/scripts/oryx.js" type="text/javascript"></script>
+	<#--	oryx -->
+
 	<script src="editor-app/app.js"></script>
-	
+
 	<script src="editor-app/eventbus.js" type="text/javascript"></script>
-	
+
 	<script src="editor-app/editor-controller.js" type="text/javascript"></script>
 	<script src="editor-app/stencil-controller.js" type="text/javascript"></script>
 	<script src="editor-app/toolbar-controller.js" type="text/javascript"></script>
 	<script src="editor-app/header-controller.js" type="text/javascript"></script>
 	<script src="editor-app/select-shape-controller.js" type="text/javascript"></script>
-	
+
 	<script src="editor-app/editor-utils.js" type="text/javascript"></script>
 	<script src="editor-app/configuration/toolbar-default-actions.js" type="text/javascript"></script>
-	
+
 	<script src="editor-app/configuration/properties-default-controllers.js" type="text/javascript"></script>
 	<script src="editor-app/configuration/properties-execution-listeners-controller.js" type="text/javascript"></script>
 	<script src="editor-app/configuration/properties-event-listeners-controller.js" type="text/javascript"></script>
@@ -140,7 +278,7 @@
 	<script src="editor-app/configuration/properties-update-controller.js" type="text/javascript"></script>
     <script src="editor-app/configuration/toolbar.js" type="text/javascript"></script>
 	<script src="editor-app/configuration/toolbar-custom-actions.js" type="text/javascript"></script>
-	
+
 	<script src="editor-app/configuration/properties.js" type="text/javascript"></script>
 	<script src="editor-app/configuration/properties-custom-controllers.js" type="text/javascript"></script>
 	<script src="editor-app/configuration/thing-get-or-leave-controllers.js" type="text/javascript"></script>

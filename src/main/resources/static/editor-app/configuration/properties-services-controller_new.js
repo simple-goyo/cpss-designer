@@ -191,7 +191,8 @@ var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
     });
 
     // 判断连线源头是否为worker，如果是worker则另外处理
-    if ($scope.latestfromto["from"].properties["oryx-type"] === "工人"){
+    var prop = $scope.latestfromto["from"].properties["oryx-type"];
+    if (prop && prop === "工人"){
         console.log('是工人！');
     }else{
         console.log('不是工人！');
