@@ -358,7 +358,7 @@ var __createStartNode = function ($rootScope, $scope) {
 
     if (!containedStencil) return;
 
-    var positionOffset = {x: 180, y: 30};
+    var positionOffset = {x: 80, y: 640};//初始节点的位置
 
     var option = {
         type: "http://b3mn.org/stencilset/bpmn2.0#" + itemId,
@@ -401,6 +401,7 @@ var __createNormalAction = function ($rootScope, $scope) {
             }
         }
 
+        containedStencil._jsonStencil.defaultAlign="east";//设置动作生成方向为右
         var option = {
             type: $scope.currentSelectedShape.getStencil().namespace() + itemId,
             namespace: $scope.currentSelectedShape.getStencil().namespace(),

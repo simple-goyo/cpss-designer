@@ -237,9 +237,15 @@ activitiModeler
 	        	            }
 	                	}
 
-	                    var totalAvailable = jQuery(window).height();//隐藏属性界面// - offset.top - mainHeader.height() - 21;
-	                    canvas.height(totalAvailable - propSectionHeight);
-	                    jQuery('#paletteSection').height(totalAvailable);
+	                    // var totalAvailable = jQuery(window).height();//隐藏属性界面// - offset.top - mainHeader.height() - 21;
+	                    var totalAvailable = jQuery(window).height() - offset.top - mainHeader.height() - 21;
+	                    // canvas.height(totalAvailable - propSectionHeight);
+                        //属性编辑栏移动至资源实体下方，不影响canvas
+	                    canvas.height(totalAvailable);
+	                    jQuery('#paletteSection').height(totalAvailable/2);
+
+	                    //设置属性编辑栏的高度
+                        jQuery('#propertySection').height(totalAvailable/2);
 
 	                    // Update positions of the resize-markers, according to the canvas
 

@@ -223,7 +223,7 @@ div.canvas-wrapper {
 
 div.propertySection {
 	height: 0px;
-    background-color: #e8edf1;
+    background-color: white;
 	margin-bottom: 0px;
 }
 
@@ -231,7 +231,7 @@ div.propertySection {
     font-size: 25px;
     font-weight: bold;
     padding: 8px 0 8px 8px;
-    border-bottom: 1px solid #a4acb9;
+    border-bottom: 1px solid white;
     cursor: pointer;
 }
 
@@ -258,7 +258,8 @@ div.propertySection {
 
 .selected-item-body .property-row {
 	float: left;
-	width: 50%;
+	/*width: 50%;*/
+	width: 100%;/*属性编辑栏每行一项*/
 	border: 0;
 	margin: 0;
 	padding: 0;
@@ -267,7 +268,7 @@ div.propertySection {
 }
 
 .selected-item-body .property-row:hover {
-	background-color: #d7dfe6;	
+	background-color: #c0c4c4;
 }
 
 .selected-item-body {
@@ -291,7 +292,7 @@ div.propertySection {
 
 .property-row span.value {
 	cursor: pointer;
-	width: 46%;
+	width: 60%;/*属性编辑的宽度*/
 	padding: 0;
 	margin: 0;
 }
@@ -303,18 +304,18 @@ div.propertySection {
 .property-row span.title {
 	font-size: 13px;
 	font-weight: bold;
-	width: 46%;
+	width: 30%;/*属性名对齐*/
 }
 
 .property-row span.title-removed {
 	font-size: 13px;
 	font-weight: normal;
-	width: 46%;
+	width: 30%;/*属性名对齐*/
 }
 
 .propertySection.collapsed {
 	max-height: 50px;
-	height: 0px;
+	height: 50px;
 	overflow: hidden;
 }
 
@@ -402,6 +403,28 @@ li.x-menu-list-item.x-menu-item-active a {
 
 .sequence-flow-order-element {
     margin: 12px 0 12px 0;
+}
+#entityInfoShowStateFlag {
+	top: 0;
+	right: 0;
+	position: fixed;
+	bottom: 0;
+	margin: auto;
+	z-index: 500000;
+	width: 20px;
+	height: 20px;
+	font-size: 20px;
+}
+#sceneShowStateFlag{
+	top: 0;
+	left: 0;
+	position: fixed;
+	bottom: 0;
+	margin: auto;
+	z-index: 500000;
+	width: 20px;
+	height: 20px;
+	font-size: 20px;
 }
 
 /* Editor icon font */

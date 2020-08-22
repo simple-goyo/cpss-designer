@@ -29,12 +29,18 @@ angular.module('activitiModeler')
         $scope.latestLine = undefined;
 
         // 最新的线两端
-        $scope.latestfromto = {'from':undefined, 'to':undefined};
+        $scope.latestfromto = {'from': undefined, 'to': undefined};
 
         $scope.connectedLines = [];
 
         // Property window toggle state
-        $scope.propertyWindowState = {'collapsed': true};
+        $scope.propertyWindowState = {'collapsed': false};
+
+        // scene show toggle state
+        $scope.sceneShowState = {'show': false};
+
+        // entity info show toggle state
+        $scope.entityInfoShowState = {'show': false};
 
         // Add reference to global header-config
         $scope.headerConfig = KISBPM.HEADER_CONFIG;
@@ -46,8 +52,44 @@ angular.module('activitiModeler')
             });
         };
 
+        $scope.sceneShowState.toggle = function () {
+            $scope.sceneShowState.show = !$scope.sceneShowState.show;
+            $scope.canvasShowChange();
+            $timeout(function () {
+                jQuery(window).trigger('resize');
+            });
+        }
+
+        $scope.entityInfoShowState.toggle = function () {
+            $scope.entityInfoShowState.show = !$scope.entityInfoShowState.show;
+            $scope.canvasShowChange();
+            $timeout(function () {
+                jQuery(window).trigger('resize');
+            });
+        }
+
+        $scope.canvasShowChange = function () {
+            // var temp=this.editor.getSelection();
+            // this.editor.setSelection(null);
+            let canvasDiv = jQuery("#canvasHelpWrapper");
+
+            canvasDiv.removeClass("col-xs-6");
+            canvasDiv.removeClass("col-xs-9");
+            canvasDiv.removeClass("col-xs-12");
+
+            if ($scope.sceneShowState.show && $scope.entityInfoShowState.show) {
+                canvasDiv.addClass("col-xs-6");
+            } else if ($scope.sceneShowState.show || $scope.entityInfoShowState.show) {
+                canvasDiv.addClass("col-xs-9");
+            } else
+                canvasDiv.addClass("col-xs-12");
+            this.editor.updateSelection();
+
+        }
+
         // Code that is dependent on an initialised Editor is wrapped in a promise for the editor
         $scope.editorFactory.promise.then(function () {
+            $scope.canvasShowChange();
 
             /* Build stencil item list */
 
@@ -455,6 +497,7 @@ angular.module('activitiModeler')
                 var connectedShape = $scope.editor.getSelection()[0];
 
                 var stencil = connectedShape.getStencil();
+                stencil._jsonStencil.defaultAlign="south";//设置messageFlow在下方生成
                 var option = {
                     type: stencil._jsonStencil["id"],
                     namespace: stencil.namespace(),
@@ -1008,8 +1051,7 @@ angular.module('activitiModeler')
                             if (propertyConfig.templateUrl !== undefined && propertyConfig.templateUrl !== null) {
                                 currentProperty.templateUrl = propertyConfig.templateUrl + '?version=' + $rootScope.staticIncludeVersion;
                                 currentProperty.hasReadWriteMode = false;
-                            }
-                            else {
+                            } else {
                                 currentProperty.hasReadWriteMode = true;
                             }
 
@@ -1590,7 +1632,7 @@ angular.module('activitiModeler')
             if (shapeId) {
                 if (shape.id !== shapeId && $scope.previousSelectedShape && $scope.previousSelectedShape.id === shapeId) {
                     shape = $scope.previousSelectedShape;
-                } else if(shapeId === $scope.getHighlightedShapeId()){
+                } else if (shapeId === $scope.getHighlightedShapeId()) {
                     shape = $scope.getHighlightedShape();
                 } else {
                     shape = null;
@@ -1763,8 +1805,7 @@ angular.module('activitiModeler')
                         ruleFunction = function (from, to, ruleName) {
                             return "@keyframes " + ruleName + " {   0% { opacity: 0; transform: translate(" + from.x + "px, " + from.y + "px); }  100% { opacity: 1; transform: translate(" + to.x + "px, " + to.y + "px); }}";
                         };
-                    }
-                    else {
+                    } else {
                         ruleFunction = function (from, to, ruleName) {
                             return "@keyframes " + ruleName + " {   0% { opacity: 0; transform: translate(" + to.x + "px, " + to.y + "px); }   100% { opacity: 1; transform: translate(" + from.x + "px, " + from.y + "px); }}";
                         };
@@ -1997,8 +2038,7 @@ angular.module('activitiModeler')
 
                         $scope.editor.executeCommands([command]);
                     }
-                }
-                else {
+                } else {
                     var canAttach = false;
                     if (containedStencil.idWithoutNs() === 'BoundaryErrorEvent' || containedStencil.idWithoutNs() === 'BoundaryTimerEvent' ||
                         containedStencil.idWithoutNs() === 'BoundarySignalEvent' || containedStencil.idWithoutNs() === 'BoundaryMessageEvent' ||
@@ -2182,8 +2222,7 @@ angular.module('activitiModeler')
                         highlightId: "shapeRepo.added"
                     });
                     return false;
-                }
-                else {
+                } else {
                     var item = $scope.getStencilItemById(event.target.id);
 
                     var parentCandidate = aShapes.reverse().find(function (candidate) {
@@ -2212,8 +2251,7 @@ angular.module('activitiModeler')
                             if (item.roles.indexOf("IntermediateEventOnActivityBoundary") > -1) {
                                 _canContain = true;
                             }
-                        }
-                        else if (parentCandidate.getStencil().idWithoutNs() === 'Pool') {
+                        } else if (parentCandidate.getStencil().idWithoutNs() === 'Pool') {
                             if (item.id === 'Lane') {
                                 _canContain = true;
                             }
@@ -2232,8 +2270,7 @@ angular.module('activitiModeler')
                                 type: ORYX.CONFIG.EVENT_HIGHLIGHT_HIDE,
                                 highlightId: "shapeRepo.added"
                             });
-                        }
-                        else {
+                        } else {
                             for (var i = 0; i < $scope.containmentRules.length; i++) {
                                 var rule = $scope.containmentRules[i];
                                 if (rule.role === parentItem.id) {
@@ -2409,8 +2446,7 @@ angular.module('activitiModeler')
                             var associationConnect = false;
                             if (stencil.idWithoutNs() === 'Association' && (curCan.getStencil().idWithoutNs() === 'TextAnnotation' || curCan.getStencil().idWithoutNs() === 'BoundaryCompensationEvent')) {
                                 associationConnect = true;
-                            }
-                            else if (stencil.idWithoutNs() === 'DataAssociation' && curCan.getStencil().idWithoutNs() === 'DataStore') {
+                            } else if (stencil.idWithoutNs() === 'DataAssociation' && curCan.getStencil().idWithoutNs() === 'DataStore') {
                                 associationConnect = true;
                             }
 
@@ -2459,7 +2495,7 @@ angular.module('activitiModeler')
             // console.log("StartNoneEvent");
             // 注意：只有在加载完流程之后并且界面上没有StartNoneEvent时，才会生成。
             var hasStartEventShape = function () {
-                if($scope.editor===undefined) return false;
+                if ($scope.editor === undefined) return false;
                 var shapes = $scope.editor.getCanvas().nodes;
                 for (var i = 0; i < shapes.length; i++) {
                     if (shapes[i].properties["oryx-startevent"] !== undefined) {
@@ -2523,8 +2559,7 @@ KISBPM.CreateCommand = ORYX.Core.Command.extend({
                 this.shape.dockers.first().setDockedShape(this.connectedShape);
                 this.shape.dockers.first().setReferencePoint(this.sourceRefPos);
             }
-        }
-        else {
+        } else {
             this.shape = this.facade.createShape(this.option);
             this.edge = (!(this.shape instanceof ORYX.Core.Edge)) ? this.shape.getIncomingShapes().first() : undefined;
         }
@@ -2541,12 +2576,10 @@ KISBPM.CreateCommand = ORYX.Core.Command.extend({
                         midpoint.x = 0;
                         midpoint.y = this.currentReference.bounds.height() / 2;
                         this.shape.dockers.last().setReferencePoint(midpoint);
-                    }
-                    else {
+                    } else {
                         this.shape.dockers.last().setReferencePoint(this.currentReference.bounds.midPoint());
                     }
-                }
-                else {
+                } else {
                     this.shape.dockers.last().bounds.centerMoveTo(this.position);
                 }
                 this.sourceRefPos = this.shape.dockers.first().referencePoint;
