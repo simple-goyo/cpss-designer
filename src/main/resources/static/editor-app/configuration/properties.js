@@ -139,5 +139,9 @@ KISBPM.PROPERTY_CONFIG =
         "oryx-workercontains-complex": {
             "readModeTemplateUrl": null,
             "writeModeTemplateUrl": null
+        },
+        "oryx-nodecondition-complex":{
+            "readModeTemplateUrl": "editor-app/configuration/properties/node-condition-display-template.html",
+            "writeModeTemplateUrl": "editor-app/configuration/properties/node-condition-write-template.html"
         }
     };

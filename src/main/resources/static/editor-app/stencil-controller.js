@@ -236,11 +236,15 @@ angular.module('activitiModeler')
                     }
                 }
 
+                var stencilVisibleGroup=["社会实体","信息实体","物理实体","节点列表"]
                 for (var i = 0; i < stencilItemGroups.length; i++) {
                     if (stencilItemGroups[i].paletteItems && stencilItemGroups[i].paletteItems.length === 0) {
                         stencilItemGroups[i].visible = false;
                     }
-                    if (stencilItemGroups[i].name !== "社会实体" && stencilItemGroups[i].name !== "信息实体" && stencilItemGroups[i].name !== "物理实体") {
+                    // if (stencilItemGroups[i].name !== "社会实体" && stencilItemGroups[i].name !== "信息实体" && stencilItemGroups[i].name !== "物理实体") {
+                    //     stencilItemGroups[i].visible = false;
+                    // }
+                    if (!stencilVisibleGroup.includes(stencilItemGroups[i].name)) {
                         stencilItemGroups[i].visible = false;
                     }
                 }
