@@ -209,12 +209,12 @@ activitiModeler
 
 	                    // Calculate the offset based on the bottom of the module header
 	                    var offset = jQuery("#editor-header").offset();
-	                    var propSectionHeight = jQuery('#propertySection').height();
+	                    // var propSectionHeight = jQuery('#propertySection').height();
 	                    var canvas = jQuery('#canvasSection');
 	                    var mainHeader = jQuery('#main-header');
 
 	                    if (offset == undefined || offset === null
-	                        || propSectionHeight === undefined || propSectionHeight === null
+	                        // || propSectionHeight === undefined || propSectionHeight === null
 	                        || canvas === undefined || canvas === null || mainHeader === null) {
 	                        return;
 	                    }
@@ -246,6 +246,8 @@ activitiModeler
 
 	                    //设置属性编辑栏的高度
                         jQuery('#propertySection').height(totalAvailable/2);
+
+                        jQuery('#sceneSection').height(totalAvailable-100);
 
 	                    // Update positions of the resize-markers, according to the canvas
 

@@ -80,8 +80,7 @@ KISBPM.TOOLBAR = {
                         services.$scope.safeApply(function () {
                             item.enabled = false;
                         });
-                    }
-                    else if (toggleRedo && item.action === 'KISBPM.TOOLBAR.ACTIONS.redo') {
+                    } else if (toggleRedo && item.action === 'KISBPM.TOOLBAR.ACTIONS.redo') {
                         services.$scope.safeApply(function () {
                             item.enabled = true;
                         });
@@ -138,8 +137,7 @@ KISBPM.TOOLBAR = {
                         services.$scope.safeApply(function () {
                             item.enabled = true;
                         });
-                    }
-                    else if (toggleRedo && item.action === 'KISBPM.TOOLBAR.ACTIONS.redo') {
+                    } else if (toggleRedo && item.action === 'KISBPM.TOOLBAR.ACTIONS.redo') {
                         services.$scope.safeApply(function () {
                             item.enabled = false;
                         });
@@ -189,8 +187,7 @@ KISBPM.TOOLBAR = {
             if (enableAdd) {
                 dockerPlugin.setEnableRemove(false);
                 document.body.style.cursor = 'pointer';
-            }
-            else {
+            } else {
                 document.body.style.cursor = 'default';
             }
         },
@@ -204,8 +201,7 @@ KISBPM.TOOLBAR = {
             if (enableRemove) {
                 dockerPlugin.setEnableAdd(false);
                 document.body.style.cursor = 'pointer';
-            }
-            else {
+            } else {
                 document.body.style.cursor = 'default';
             }
         },
@@ -343,7 +339,7 @@ var _createAction = function ($rootScope, $scope, ItemId) {
 var __createStartNode = function ($rootScope, $scope) {
     var itemId = "StartNoneEvent";
     var containedStencil = undefined;
-    if($scope.editor===undefined) return;
+    if ($scope.editor === undefined) return;
     var stencilSets = $scope.editor.getStencilSets().values();
     for (var i = 0; i < stencilSets.length; i++) {
         var stencilSet = stencilSets[i];
@@ -401,7 +397,7 @@ var __createNormalAction = function ($rootScope, $scope) {
             }
         }
 
-        containedStencil._jsonStencil.defaultAlign="east";//设置动作生成方向为右
+        containedStencil._jsonStencil.defaultAlign = "east";//设置动作生成方向为右
         var option = {
             type: $scope.currentSelectedShape.getStencil().namespace() + itemId,
             namespace: $scope.currentSelectedShape.getStencil().namespace(),
@@ -433,6 +429,8 @@ var __createNormalAction = function ($rootScope, $scope) {
         var newShapeId = $scope.editor.getSelection()[0].id;
         $scope.setHighlightedShape(newShapeId);
         jQuery('#' + newShapeId + 'bg_frame').attr({"fill": "#04FF8E"}); //高亮显示
+
+        $scope.editor.getSelection()[0].properties['oryx-overrideid'] = ORYX.Editor.provideId();//为创建的未定义的动作提供id
 
         $scope.toDoAboutResourceLineAfterChangingAction(lastSelectedAction);
     }

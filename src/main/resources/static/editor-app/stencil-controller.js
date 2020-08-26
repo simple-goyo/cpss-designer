@@ -25,6 +25,11 @@ angular.module('activitiModeler')
         var lastHighlightedId = "";
         var HighlightedItem;
 
+        //场景列表
+        $scope.scenes = [];
+
+        $scope.selectedSceneIndex = -1;
+
         // 最新的资源连线
         $scope.latestLine = undefined;
 
@@ -236,7 +241,7 @@ angular.module('activitiModeler')
                     }
                 }
 
-                var stencilVisibleGroup=["社会实体","信息实体","物理实体","节点列表"]
+                var stencilVisibleGroup = ["社会实体", "信息实体", "物理实体", "节点列表"]
                 for (var i = 0; i < stencilItemGroups.length; i++) {
                     if (stencilItemGroups[i].paletteItems && stencilItemGroups[i].paletteItems.length === 0) {
                         stencilItemGroups[i].visible = false;
@@ -437,7 +442,6 @@ angular.module('activitiModeler')
                             var lastSelectedAction = $scope.getHighlightedShape();
                             // 高亮
                             jQuery('#' + itemId + 'bg_frame').attr({"fill": "#04FF8E"});
-                            console.log(itemId);
 
                             lastHighlightedId = id;
                             HighlightedItem = shape;
@@ -501,7 +505,7 @@ angular.module('activitiModeler')
                 var connectedShape = $scope.editor.getSelection()[0];
 
                 var stencil = connectedShape.getStencil();
-                stencil._jsonStencil.defaultAlign="south";//设置messageFlow在下方生成
+                stencil._jsonStencil.defaultAlign = "south";//设置messageFlow在下方生成
                 var option = {
                     type: stencil._jsonStencil["id"],
                     namespace: stencil.namespace(),
@@ -2489,33 +2493,132 @@ angular.module('activitiModeler')
             }
         };
 
-        new Promise(function (resolve, reject) {
-            setTimeout(function () {
-                resolve('200 OK');
-            }, 5000);
-        }).then(function (result) {
-            console.log(window._loadContentFinished);
-            // 初始化完成,自动生成开始按钮
-            // console.log("StartNoneEvent");
-            // 注意：只有在加载完流程之后并且界面上没有StartNoneEvent时，才会生成。
-            var hasStartEventShape = function () {
-                if ($scope.editor === undefined) return false;
-                var shapes = $scope.editor.getCanvas().nodes;
-                for (var i = 0; i < shapes.length; i++) {
-                    if (shapes[i].properties["oryx-startevent"] !== undefined) {
-                        return true;
+        // new Promise(function (resolve, reject) {
+        //     setTimeout(function () {
+        //         resolve('200 OK');
+        //     }, 5000);
+        // }).then(function (result) {
+        //     console.log(window._loadContentFinished);
+        //     // 初始化完成,自动生成开始按钮
+        //     // console.log("StartNoneEvent");
+        //     // 注意：只有在加载完流程之后并且界面上没有StartNoneEvent时，才会生成。
+        //     var hasStartEventShape = function () {
+        //         if ($scope.editor === undefined) return false;
+        //         var shapes = $scope.editor.getCanvas().nodes;
+        //         for (var i = 0; i < shapes.length; i++) {
+        //             if (shapes[i].properties["oryx-startevent"] !== undefined) {
+        //                 return true;
+        //             }
+        //         }
+        //         return false;
+        //     };
+        //
+        //     if (!hasStartEventShape()) {
+        //         _createAction($rootScope, $scope, "StartNoneEvent");
+        //     }
+        // });
+
+        $scope.addScene = function () {
+            var opts = {
+                template: 'editor-app/popups/scene-create.html?version=' + Date.now(),
+                scope: $scope
+            };
+            $modal(opts);
+        }
+        $scope.setSelectedSceneIndex = function (index) {
+            $scope.selectedSceneIndex = index;
+        };
+
+        $scope.changeScene = function (index) {
+            let shapes = [$scope.editor.getCanvas()][0].children;
+            if ($scope.selectedSceneIndex > -1) {
+                $scope.scenes[$scope.selectedSceneIndex].sceneJson = $scope.editor.getJSON();
+                let highlightedShape = $scope.getShapeById(lastHighlightedId);
+                if (highlightedShape) {
+                    $scope.scenes[$scope.selectedSceneIndex].lastHighlightedActionId = highlightedShape.properties['oryx-overrideid'];
+                }
+                let selection = $scope.editor.getSelection();
+                if (selection && selection.length >= 1) {
+                    $scope.scenes[$scope.selectedSceneIndex].lastselectionOverrideIds = [];
+                    for (let i = 0; i < selection.length; i++) {
+                        $scope.scenes[$scope.selectedSceneIndex].lastselectionOverrideIds
+                            [$scope.scenes[$scope.selectedSceneIndex].lastselectionOverrideIds.length] = selection[i].properties['oryx-overrideid'];
                     }
                 }
-                return false;
-            };
-
-            if (!hasStartEventShape()) {
-                _createAction($rootScope, $scope, "StartNoneEvent");
             }
-        });
+            if (index !== $scope.selectedSceneIndex) {
+                if ($scope.selectedSceneIndex > -1) {
+                    $scope.takeScreenshot($scope.selectedSceneIndex);
+                }
+                for (let i = 0; i < shapes.length; i++) {
+                    $scope.editor.deleteShape(shapes[i]);
+                }
 
-    }])
-;
+                $scope.setSelectedSceneIndex(index);
+
+                if ($scope.scenes[$scope.selectedSceneIndex].sceneJson) {
+                    $scope.editor.loadSerialized($scope.scenes[$scope.selectedSceneIndex].sceneJson);
+                    $scope.editor.getCanvas().update();
+                    shapes = $scope.scenes[$scope.selectedSceneIndex].sceneJson.childShapes;
+                    if (!shapes || shapes.length === 0) {
+                        _createAction($rootScope, $scope, "StartNoneEvent");
+                    }
+                } else _createAction($rootScope, $scope, "StartNoneEvent");
+
+                let selectionOverrideIds = $scope.scenes[$scope.selectedSceneIndex].lastselectionOverrideIds;
+                if (selectionOverrideIds && selectionOverrideIds.length >= 1) {
+                    let selection = [];
+                    for (let i = 0; i < selectionOverrideIds.length; i++) {
+                        selection[selection.length] = $scope.getShapeByOverrideId(selectionOverrideIds[i]);
+                    }
+                    $scope.editor.setSelection(selection);
+                    $scope.editor.getCanvas().update();
+                }
+                if ($scope.scenes[$scope.selectedSceneIndex].lastHighlightedActionId) {
+                    HighlightedItem = $scope.getShapeByOverrideId($scope.scenes[$scope.selectedSceneIndex].lastHighlightedActionId);
+                    if (HighlightedItem) {
+                        lastHighlightedId = HighlightedItem.id;
+                        jQuery('#' + lastHighlightedId + 'bg_frame').attr({"fill": "#04FF8E"});
+                    }
+                }
+            }
+        }
+
+
+        $scope.isSelectedScene = function (index) {
+            if (index === $scope.selectedSceneIndex) {
+                return "sceneHighlighted";
+            }
+        }
+
+        $scope.getShapeByOverrideId = function (overrideId) {
+            var shapes = [$scope.editor.getCanvas()][0].children;
+            for (let i = 0; i < shapes.length; i++) {
+                if (shapes[i].properties['oryx-overrideid'] === overrideId) {
+                    return shapes[i];
+                }
+            }
+            return null;
+        };
+
+        $scope.takeScreenshot = function (index) {
+            html2canvas(document.getElementById("canvasHelpWrapper"), {
+                onclone: function (html) {
+                    const rects = jQuery(html).find('rect');
+                    const rectStyles = ['stroke-width', 'stroke', 'z-index', 'fill'];
+                    rects.each(function () {
+                        const style = window.getComputedStyle(this);
+                        rectStyles.forEach(item => {
+                            const value = style.getPropertyValue(item);
+                            jQuery(this).css(item, value);
+                        });
+                    });
+                }
+            }).then(function (screenshot) {
+                $scope.scenes[index].img = screenshot.toDataURL("image/jpeg");
+            });
+        }
+    }]);
 
 
 var KISBPM = KISBPM || {};

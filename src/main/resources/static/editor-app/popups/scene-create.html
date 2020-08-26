@@ -1,0 +1,22 @@
+<div class="modal" ng-controller="SceneCreateController">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;
+                </button>
+                <h2>新建场景</h2>
+            </div>
+            <hr>
+            <div class="modal-body" id="sceneSetting">
+                <div class="row">
+                    <label for="sceneName" class="col-xs-2" style="float: left">场景名：</label>
+                    <input id="sceneName" class="col-xs-10" style="border-radius: 5px;float: left" placeholder="请输入场景名称">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button ng-click="close()" class="btn btn-primary" translate>ACTION.CANCEL</button>
+                <button type="submit" ng-click="save()" class="btn btn-primary" translate>ACTION.SAVE</button>
+            </div>
+        </div>
+    </div>
+</div>
