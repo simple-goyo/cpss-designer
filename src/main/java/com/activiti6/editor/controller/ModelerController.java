@@ -38,7 +38,7 @@ public class ModelerController{
 
     private static final Logger logger = LoggerFactory.getLogger(ModelerController.class);
 
-    @Autowired
+	@Autowired
     private RepositoryService repositoryService;
     @Autowired
     private ObjectMapper objectMapper;
@@ -47,7 +47,46 @@ public class ModelerController{
     @Autowired
     private RuntimeService runtimeService;
 
-    
+
+	/**
+	 * 归并排序
+	 *
+	 * @param array
+	 * @return
+	 */
+	public static Model[] MergeSort(Model[] array) {
+		if (array.length < 2) return array;
+		int mid = array.length / 2;
+		Model[] left = Arrays.copyOfRange(array, 0, mid);
+		Model[] right = Arrays.copyOfRange(array, mid, array.length);
+		return merge(MergeSort(left), MergeSort(right));
+	}
+	/**
+	 * 归并排序——将两段排序好的数组结合成一个排序数组
+	 *
+	 * @param left
+	 * @param right
+	 * @return
+	 */
+	public static Model[] merge(Model[] left, Model[] right) {
+		Model[] result = new Model[left.length + right.length];
+
+		for (int index = 0, i = 0, j = 0; index < result.length; index++) {
+			if (i >= left.length)
+				result[index] = right[j++];
+			else if (j >= right.length)
+				result[index] = left[i++];
+			else if (Integer.parseInt(left[i].getId()) > Integer.parseInt(right[j].getId()))
+				{
+					result[index] = right[j++];
+				}
+			else{
+					result[index] = left[i++];
+			}
+		}
+		return result;
+	}
+
 	@RequestMapping("index")
 	public ModelAndView index(ModelAndView modelAndView) {
         modelAndView.setViewName("index");
@@ -55,18 +94,11 @@ public class ModelerController{
 		List<Model> list = new ArrayList<Model>();
 		list = repositoryService.createModelQuery().list();
 
-//        Collections.sort(list, new Comparator<ModelEntityImpl>() {
-//        	@Override
-//			public int compare(ModelEntity u1, ModelEntity u2) {
-//        		int diff = Integer.parseInt(u1.getId()) - Integer.parseInt(u2.getId());
-//        		if (diff > 0) {
-//        			return 1;
-//        		}else if (diff < 0) {
-//        			return -1;
-//        		}
-//        		return 0;
-//        	}
-//        });
+		// list 按照模型id从小到大排序
+		Model[] models = new Model[list.size()];
+		models = list.toArray(models);
+		models = MergeSort(models);
+		list = Arrays.asList(models);
 
 		modelAndView.addObject("modelList", list);
         modelAndView.addObject("modelSize", repositoryService.createModelQuery().list().size());

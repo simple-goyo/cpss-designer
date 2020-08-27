@@ -27,8 +27,10 @@ text * {
     border: none;
     margin:-5px;
     margin-top:0px;
-    width:1200px;
-    height:600px;
+    /*width:1200px;*/
+    /*height:600px;*/
+	width:100%;
+	height:100%;
 }
 
 .icon-large {
