@@ -115,7 +115,7 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
         //     ['line', {x1:X2, y1:Y2, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
 
         ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-            ['rect', {x:X1, y:Y1, width:X2-X1, height:Y2-Y1, rx:5, ry:5, style: "fill:#ffffff;stroke-width:3;stroke:#000000;z-index:-1;", visibility: "visible"}]);
+            ['rect', {x:X1, y:Y1, width:X2-X1, height:Y2-Y1, rx:5, ry:5, "class":"canvasPart", visibility: "visible"}]);
 
         this.StateSpace = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
             ['text', {'font-size':'24', 'x':X1+5, 'y':Y1+30, 'style': "font-family: Times New Roman;"}]);
@@ -135,7 +135,7 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
 		// ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
 		// 	['line', {x1:X2, y1:Y2, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
         ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-            ['rect', {x:X1, y:Y1, width:X2-X1, height:Y2-Y1, rx:5, ry:5, style: "fill:#ffffff;stroke-width:3;stroke:#000000;z-index:-1;", visibility: "visible"}]);
+            ['rect', {x:X1, y:Y1, width:X2-X1, height:Y2-Y1, rx:5, ry:5,"class":"canvasPart", visibility: "visible"}]);
 
 
         this.RealWord = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
@@ -158,7 +158,7 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
 		// 	['line', {x1:X2, y1:Y2, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
 
         ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-            ['rect', {x:X1, y:Y1, width:X2-X1, height:Y2-Y1, rx:5, ry:5, style: "fill:#ffffff;stroke-width:3;stroke:#000000;z-index:-1;", visibility: "visible"}]);
+            ['rect', {x:X1, y:Y1, width:X2-X1, height:Y2-Y1, rx:5, ry:5, "class":"canvasPart", visibility: "visible"}]);
 
 
         this.CyberWord = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,

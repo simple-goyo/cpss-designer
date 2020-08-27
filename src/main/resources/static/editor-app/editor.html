@@ -38,7 +38,7 @@
                 <span ng-show="!entityInfoShowState.show">实体</span>
             </a>
             <a ng-click="sceneShowState.toggle()" id="sceneShowStateFlag">
-                <i  ng-show="sceneShowState.show" class="glyphicon"
+                <i ng-show="sceneShowState.show" class="glyphicon"
                    ng-class="{'glyphicon-chevron-right': !sceneShowState.show, 'glyphicon-chevron-left': sceneShowState.show}"></i>
                 <span ng-show="!sceneShowState.show">场景</span>
             </a>
@@ -215,9 +215,18 @@
                     </div>
                 </div>
             </div>
-            <div id="multipleSceneWrapper" class="col-xs-3" ng-if="sceneShowState.show">
-                <h4 style="text-align: center">场景缩略图</h4>
+            <div id="multipleSceneWrapper" style="text-align: center" class="col-xs-3" ng-if="sceneShowState.show">
+                <h4>场景缩略图</h4>
+                <button ng-click="addScene()" class="btn btn-primary">新建场景</button>
                 <hr>
+                <div id="sceneSection" style="overflow: scroll">
+                    <div ng-if="scenes.length>=1" ng-repeat="scene in scenes" ng-class="isSelectedScene({{$index}})">
+                        <h6>{{scene.name}}</h6>
+                        <img onerror="this.src='static/editor-app/images/logo.png'" alt="{{scene.name}}" id="{{scene.id}}" type="image" class="img-thumbnail" style="width:100px;height:100px"
+                             src="{{scene.img}}" ng-click="changeScene($index)"/>
+                        <hr style="border:1px dashed #eee">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
