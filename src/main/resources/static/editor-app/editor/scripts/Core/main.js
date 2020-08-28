@@ -29,47 +29,6 @@ var ID_PREFIX = "resource";
  * of the document, including all scripts, is completed.
  */
 function init() {
-	//
-	// /* When the blank image url is not set programatically to a local
-	//  * representation, a spacer gif on the site of ext is loaded from the
-	//  * internet. This causes problems when internet or the ext site are not
-	//  * available. */
-	// Ext.BLANK_IMAGE_URL = ORYX.PATH + 'lib/ext-2.0.2/resources/images/default/s.gif';
-	//
-	// ORYX.Log.debug("Querying editor instances");
-	//
-	// // Hack for WebKit to set the SVGElement-Classes
-	// ORYX.Editor.setMissingClasses();
-    //
-    // // If someone wants to create the editor instance himself
-    // if (window.onOryxResourcesLoaded) {
-    //     window.onOryxResourcesLoaded();
-    // }
-    // // Else if this is a newly created model
-    // else if(window.location.pathname.include(ORYX.CONFIG.ORYX_NEW_URL)){
-    //     new ORYX.Editor({
-    //         id: 'oryx-canvas123',
-    //         fullscreen: true,
-    //         stencilset: {
-    //             url: "/oryx" + ORYX.Utils.getParamFromUrl("stencilset")
-    //         }
-    //     });
-    // }
-    // // Else fetch the model from server and display editor
-    // else {
-    //     //HACK for distinguishing between different backends
-	// 	// Backend of 2008 uses /self URL ending
-	//     var modelUrl = window.location.href.replace(/#.*/g, "");
-	// 	if(modelUrl.endsWith("/self")) {
-	// 		modelUrl = modelUrl.replace("/self","/json");
-	// 	} else {
-	// 		modelUrl += "&data";
-	// 	}
-	//
-    //     ORYX.Editor.createByUrl(modelUrl, {
-    //         id: modelUrl
-    //     });
-    // }
 
 	ORYX.Log.debug("Querying editor instances");
 
@@ -237,6 +196,8 @@ ORYX.Editor = {
 		this.getCanvas().setSize({
 			width	: ORYX.CONFIG.CANVAS_WIDTH,
 			height	: ORYX.CONFIG.CANVAS_HEIGHT
+			// width	: '100%',
+			// height	: ORYX.CONFIG.CANVAS_HEIGHT
 		});
 
 	},
