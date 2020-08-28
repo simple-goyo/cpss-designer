@@ -286,6 +286,7 @@
 <script src="editor-app/configuration/thing-get-or-leave-controllers.js" type="text/javascript"></script>
 <script src="editor-app/configuration/properties-node-condition-controller.js" type="text/javascript"></script>
 <script src="editor-app/popups/js/scene-create-controller.js" type="text/javascript"></script>
+<script src="editor-app/configuration/properties-reference-entity-controller.js" type="text/javascript"></script>
 <script src="editor-app/libs/html2canvas.js" type="text/javascript"></script>
 <script type="text/javascript" src="https://unpkg.com/canvg@3.0.4/lib/umd.js"></script>
 </body>
