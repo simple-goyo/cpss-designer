@@ -24,13 +24,17 @@
 /**
  * Init namespaces
  */
-if(!ORYX) {var ORYX = {};}
+if (!ORYX) {
+    var ORYX = {};
+}
 
 /**
-   @namespace Namespace for the Oryx core elements.
-   @name ORYX.Core
-*/
-if(!ORYX.Core) {ORYX.Core = {};}
+ @namespace Namespace for the Oryx core elements.
+ @name ORYX.Core
+ */
+if (!ORYX.Core) {
+    ORYX.Core = {};
+}
 
 /**
  * @class Oryx canvas.
@@ -40,70 +44,70 @@ if(!ORYX.Core) {ORYX.Core = {};}
 ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
     /** @lends ORYX.Core.Canvas.prototype */
 
-	/**
-	 * Defines the current zoom level
-	 */
-	zoomLevel:1,
+    /**
+     * Defines the current zoom level
+     */
+    zoomLevel: 1,
 
-	/**
-	 * Constructor
-	 */
-	construct: function(options, stencil, facade) {
-		arguments.callee.$.construct.apply(this, arguments);
+    /**
+     * Constructor
+     */
+    construct: function (options, stencil, facade) {
+        arguments.callee.$.construct.apply(this, arguments);
 
-		if(!(options && options.width && options.height)) {
+        if (!(options && options.width && options.height)) {
 
-			ORYX.Log.fatal("Canvas is missing mandatory parameters options.width and options.height.");
-			return;
-		}
-		this.facade = facade;
-		//TODO: set document resource id
-		this.resourceId = options.id;
+            ORYX.Log.fatal("Canvas is missing mandatory parameters options.width and options.height.");
+            return;
+        }
+        this.facade = facade;
+        //TODO: set document resource id
+        this.resourceId = options.id;
 
-		this.nodes = [];
+        this.nodes = [];
 
-		this.edges = [];
+        this.edges = [];
 
-		// Row highlighting states
-		this.colHighlightState = 0;
+        // Row highlighting states
+        this.colHighlightState = 0;
 
-		this.colHighlightEnabled = false;
+        this.colHighlightEnabled = false;
 
-		//init svg document
-		this.rootNode = ORYX.Editor.graft("http://www.w3.org/2000/svg", options.parentNode,
-			['svg', {id: this.id, width: options.width, height: options.height},
-				['defs', {}]
-			]);
+        //init svg document
+        this.rootNode = ORYX.Editor.graft("http://www.w3.org/2000/svg", options.parentNode,
+            ['svg', {id: this.id, width: options.width, height: options.height},
+                ['defs', {}]
+            ]);
 
-		this.rootNode.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
-		this.rootNode.setAttribute("xmlns:svg", "http://www.w3.org/2000/svg");
+        this.rootNode.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+        this.rootNode.setAttribute("xmlns:svg", "http://www.w3.org/2000/svg");
 
-		this._htmlContainer = ORYX.Editor.graft("http://www.w3.org/1999/xhtml", options.parentNode,
-			['div', {id: "oryx_canvas_htmlContainer", style:"position:absolute; top:5px"}]);
+        this._htmlContainer = ORYX.Editor.graft("http://www.w3.org/1999/xhtml", options.parentNode,
+            ['div', {id: "oryx_canvas_htmlContainer", style: "position:absolute; top:5px"}]);
 
-		// Additional SVG-node BELOW the stencils to allow underlays (if that is even a word) by plugins
-		this.underlayNode = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.rootNode,
-			['svg', {id: "underlay-container"}]);
+        // Additional SVG-node BELOW the stencils to allow underlays (if that is even a word) by plugins
+        this.underlayNode = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.rootNode,
+            ['svg', {id: "underlay-container"}]);
 
-		// Create 2 svg-elements in the svg-container
-		// 分割左右两块区域
-		// this.columnHightlight1 = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-		// 	['rect', {x: 0, width: ORYX.CONFIG.FORM_ROW_WIDTH , height: "100%", style: "fill: #DBFFE7;z-index:-2", visibility: "visible"}]); //#fff6d5
+        // Create 2 svg-elements in the svg-container
+        // 分割左右两块区域
+        // this.columnHightlight1 = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+        // 	['rect', {x: 0, width: ORYX.CONFIG.FORM_ROW_WIDTH , height: "100%", style: "fill: #DBFFE7;z-index:-2", visibility: "visible"}]); //#fff6d5
 
-		// this.columnHightlight2 = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-		// 		['rect', {x: ORYX.CONFIG.FORM_ROW_WIDTH , width: options.width - ORYX.CONFIG.FORM_ROW_WIDTH , height: "100%", style: "fill: #CFFFF7;z-index:-2", visibility: "visible"}]);
+        // this.columnHightlight2 = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+        // 		['rect', {x: ORYX.CONFIG.FORM_ROW_WIDTH , width: options.width - ORYX.CONFIG.FORM_ROW_WIDTH , height: "100%", style: "fill: #CFFFF7;z-index:-2", visibility: "visible"}]);
 
-		// 增加一块区域位于第二块分割区域中间
-		// <line x1="0" y1="0" x2="300" y2="300" style="stroke:rgb(99,99,99);stroke-width:2"/>
+        // 增加一块区域位于第二块分割区域中间
+        // <line x1="0" y1="0" x2="300" y2="300" style="stroke:rgb(99,99,99);stroke-width:2"/>
         // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
         //    ['rect', {x:ORYX.CONFIG.FORM_ROW_WIDTH + 60, y:200, width:options.width - ORYX.CONFIG.FORM_ROW_WIDTH - 186 - 60, height:300, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:2;stroke:#000000;z-index:-1", visibility: "visible"}]);
 
         //状态空间
-		let X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1 ;
-	    let X2 = options.width - 30 - 1;
-	    // let X2 = options.width -186 - 30 + 1;
-	    let	Y1 = 560;
-		let Y2 = 720;
+        let X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1;
+        let X2 = options.width - 30 - 1;
+        // let X2 = options.width -186 - 30 + 1;
+        let Y1 = 560;
+        let Y2 = 720;
 
         // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
         //     ['line', {x1:X1, y1:Y1, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
@@ -115,334 +119,361 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
         //     ['line', {x1:X2, y1:Y2, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
 
         ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-            ['rect', {x:X1, y:Y1, width:X2-X1, height:Y2-Y1, rx:5, ry:5, "class":"canvasPart", visibility: "visible"}]);
+            ['rect', {
+                x: X1,
+                y: Y1,
+                width: X2 - X1,
+                height: Y2 - Y1,
+                rx: 5,
+                ry: 5,
+                "class": "canvasPart",
+                visibility: "visible"
+            }]);
 
         this.StateSpace = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-            ['text', {'font-size':'24', 'x':X1+5, 'y':Y1+30, 'style': "font-family: Times New Roman;"}]);
+            ['text', {'font-size': '24', 'x': X1 + 5, 'y': Y1 + 30, 'style': "font-family: Times New Roman;"}]);
         this.StateSpace.textContent = "状态空间";
-		// 现实空间
-		 X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1 ;
-		 X2 = options.width - 30 - 1;
-		 Y1 = 170;
-		 Y2 = 540;
+        // 现实空间
+        X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1;
+        X2 = options.width - 30 - 1;
+        Y1 = 170;
+        Y2 = 540;
 
-		// ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-		// 	['line', {x1:X1, y1:Y1, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
-		// ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-		// 	['line', {x1:X1, y1:Y1, x2:X2, y2:Y1, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
-		// ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-		// 	['line', {x1:X2, y1:Y1, x2:X2, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
-		// ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-		// 	['line', {x1:X2, y1:Y2, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
+        // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+        // 	['line', {x1:X1, y1:Y1, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
+        // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+        // 	['line', {x1:X1, y1:Y1, x2:X2, y2:Y1, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
+        // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+        // 	['line', {x1:X2, y1:Y1, x2:X2, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
+        // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+        // 	['line', {x1:X2, y1:Y2, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
         ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-            ['rect', {x:X1, y:Y1, width:X2-X1, height:Y2-Y1, rx:5, ry:5,"class":"canvasPart", visibility: "visible"}]);
+            ['rect', {
+                x: X1,
+                y: Y1,
+                width: X2 - X1,
+                height: Y2 - Y1,
+                rx: 5,
+                ry: 5,
+                "class": "canvasPart",
+                visibility: "visible"
+            }]);
 
 
         this.RealWord = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-			['text', {'font-size':'24', 'x':X1+5, 'y':Y1+30, 'style': "font-family: Times New Roman;"}]);
-		this.RealWord.textContent = "社会物理空间";
+            ['text', {'font-size': '24', 'x': X1 + 5, 'y': Y1 + 30, 'style': "font-family: Times New Roman;"}]);
+        this.RealWord.textContent = "社会物理空间";
 
-		// 虚拟空间
-		X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1 ;
-		X2 = options.width  - 30 - 1;
-		Y1 = 20;
-		Y2 = 150;
+        // 虚拟空间
+        X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1;
+        X2 = options.width - 30 - 1;
+        Y1 = 20;
+        Y2 = 150;
 
-		// ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-		// 	['line', {x1:X1, y1:Y1, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
-		// ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-		// 	['line', {x1:X1, y1:Y1, x2:X2, y2:Y1, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
-		// ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-		// 	['line', {x1:X2, y1:Y1, x2:X2, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
-		// ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-		// 	['line', {x1:X2, y1:Y2, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
+        // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+        // 	['line', {x1:X1, y1:Y1, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
+        // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+        // 	['line', {x1:X1, y1:Y1, x2:X2, y2:Y1, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
+        // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+        // 	['line', {x1:X2, y1:Y1, x2:X2, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
+        // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
+        // 	['line', {x1:X2, y1:Y2, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
 
         ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-            ['rect', {x:X1, y:Y1, width:X2-X1, height:Y2-Y1, rx:5, ry:5, "class":"canvasPart", visibility: "visible"}]);
+            ['rect', {
+                x: X1,
+                y: Y1,
+                width: X2 - X1,
+                height: Y2 - Y1,
+                rx: 5,
+                ry: 5,
+                "class": "canvasPart",
+                visibility: "visible"
+            }]);
 
 
         this.CyberWord = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-			['text', {'font-size':'24', 'x':X1+5, 'y':Y1+30, 'style': "font-family: Times New Roman;"}]);
-		this.CyberWord.textContent = "信息空间";
+            ['text', {'font-size': '24', 'x': X1 + 5, 'y': Y1 + 30, 'style': "font-family: Times New Roman;"}]);
+        this.CyberWord.textContent = "信息空间";
 
 
-		this.node = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.rootNode,
-			['g', {},
-				['g', {"class": "stencils"},
-					['g', {"class": "me"}],
-					['g', {"class": "children"}],
-					['g', {"class": "edge"}]
-				],
-				['g', {"class":"svgcontainer"}]
-			]);
+        this.node = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.rootNode,
+            ['g', {},
+                ['g', {"class": "stencils"},
+                    ['g', {"class": "me"}],
+                    ['g', {"class": "children"}],
+                    ['g', {"class": "edge"}]
+                ],
+                ['g', {"class": "svgcontainer"}]
+            ]);
 
-		/*
-		var off = 2 * ORYX.CONFIG.GRID_DISTANCE;
-		var size = 3;
-		var d = "";
-		for(var i = 0; i <= options.width; i += off)
-			for(var j = 0; j <= options.height; j += off)
-				d = d + "M" + (i - size) + " " + j + " l" + (2*size) + " 0 m" + (-size) + " " + (-size) + " l0 " + (2*size) + " m0" + (-size) + " ";
+        /*
+        var off = 2 * ORYX.CONFIG.GRID_DISTANCE;
+        var size = 3;
+        var d = "";
+        for(var i = 0; i <= options.width; i += off)
+            for(var j = 0; j <= options.height; j += off)
+                d = d + "M" + (i - size) + " " + j + " l" + (2*size) + " 0 m" + (-size) + " " + (-size) + " l0 " + (2*size) + " m0" + (-size) + " ";
 
-		ORYX.Editor.graft("http://www.w3.org/2000/svg", this.node.firstChild.firstChild,
-			['path', {d:d , stroke:'#000000', 'stroke-width':'0.15px'},]);
-		*/
+        ORYX.Editor.graft("http://www.w3.org/2000/svg", this.node.firstChild.firstChild,
+            ['path', {d:d , stroke:'#000000', 'stroke-width':'0.15px'},]);
+        */
 
-		//Global definition of default font for shapes
-		//Definitions in the SVG definition of a stencil will overwrite these settings for
-		// that stencil.
-		/*if(navigator.platform.indexOf("Mac") > -1) {
-			this.node.setAttributeNS(null, 'stroke', 'black');
-			this.node.setAttributeNS(null, 'stroke-width', '0.5px');
-			this.node.setAttributeNS(null, 'font-family', 'Skia');
-			//this.node.setAttributeNS(null, 'letter-spacing', '2px');
-			this.node.setAttributeNS(null, 'font-size', ORYX.CONFIG.LABEL_DEFAULT_LINE_HEIGHT);
-		} else {
-			this.node.setAttributeNS(null, 'stroke', 'none');
-			this.node.setAttributeNS(null, 'font-family', 'Verdana');
-			this.node.setAttributeNS(null, 'font-size', ORYX.CONFIG.LABEL_DEFAULT_LINE_HEIGHT);
-		}*/
+        //Global definition of default font for shapes
+        //Definitions in the SVG definition of a stencil will overwrite these settings for
+        // that stencil.
+        /*if(navigator.platform.indexOf("Mac") > -1) {
+            this.node.setAttributeNS(null, 'stroke', 'black');
+            this.node.setAttributeNS(null, 'stroke-width', '0.5px');
+            this.node.setAttributeNS(null, 'font-family', 'Skia');
+            //this.node.setAttributeNS(null, 'letter-spacing', '2px');
+            this.node.setAttributeNS(null, 'font-size', ORYX.CONFIG.LABEL_DEFAULT_LINE_HEIGHT);
+        } else {
+            this.node.setAttributeNS(null, 'stroke', 'none');
+            this.node.setAttributeNS(null, 'font-family', 'Verdana');
+            this.node.setAttributeNS(null, 'font-size', ORYX.CONFIG.LABEL_DEFAULT_LINE_HEIGHT);
+        }*/
 
-		this.node.setAttributeNS(null, 'stroke', 'none');
-		this.node.setAttributeNS(null, 'font-family', 'Verdana, sans-serif');
-		this.node.setAttributeNS(null, 'font-size-adjust', 'none');
-		this.node.setAttributeNS(null, 'font-style', 'normal');
-		this.node.setAttributeNS(null, 'font-variant', 'normal');
-		this.node.setAttributeNS(null, 'font-weight', 'normal');
-		this.node.setAttributeNS(null, 'line-heigth', 'normal');
+        this.node.setAttributeNS(null, 'stroke', 'none');
+        this.node.setAttributeNS(null, 'font-family', 'Verdana, sans-serif');
+        this.node.setAttributeNS(null, 'font-size-adjust', 'none');
+        this.node.setAttributeNS(null, 'font-style', 'normal');
+        this.node.setAttributeNS(null, 'font-variant', 'normal');
+        this.node.setAttributeNS(null, 'font-weight', 'normal');
+        this.node.setAttributeNS(null, 'line-heigth', 'normal');
 
-		this.node.setAttributeNS(null, 'font-size', ORYX.CONFIG.LABEL_DEFAULT_LINE_HEIGHT);
+        this.node.setAttributeNS(null, 'font-size', ORYX.CONFIG.LABEL_DEFAULT_LINE_HEIGHT);
 
-		this.bounds.set(0,0,options.width, options.height);
+        this.bounds.set(0, 0, options.width, options.height);
 
-		this.addEventHandlers(this.rootNode.parentNode);
+        this.addEventHandlers(this.rootNode.parentNode);
 
-		//disable context menu
-		this.rootNode.oncontextmenu = function() {return false;};
-	},
+        //disable context menu
+        this.rootNode.oncontextmenu = function () {
+            return false;
+        };
+    },
 
-	focus: function(){
+    focus: function () {
 
-		try {
-			// Get a href
-			if (!this.focusEl)
-			{
-				this.focusEl = jQuery('body').append(jQuery('<a href="#" class="x-grid3-focus x-grid3-focus-canvas"/>'));
-				this.focusEl.swallowEvent("click", true);
-			}
+        try {
+            // Get a href
+            if (!this.focusEl) {
+                this.focusEl = jQuery('body').append(jQuery('<a href="#" class="x-grid3-focus x-grid3-focus-canvas"/>'));
+                this.focusEl.swallowEvent("click", true);
+            }
 
-			// Focus it
-			this.focusEl.focus.defer(1, this.focusEl);
-			this.focusEl.blur.defer(3, this.focusEl);
+            // Focus it
+            this.focusEl.focus.defer(1, this.focusEl);
+            this.focusEl.blur.defer(3, this.focusEl);
 
-		} catch(e){
-			//console.log(e);
-		}
-	},
+        } catch (e) {
+            //console.log(e);
+        }
+    },
 
-	setHightlightState: function(state) {
-		if(this.colHighlightEnabled && this.colHighlightState != state) {
-			if(state === 0) {
-				this.columnHightlight1.setAttribute("visibility", "hidden");
-				this.columnHightlight2.setAttribute("visibility", "hidden");
-			} else if(state === 1) {
-				this.columnHightlight1.setAttribute("visibility", "visible");
-				this.columnHightlight2.setAttribute("visibility", "hidden");
-			} else if(state === 2) {
-				this.columnHightlight1.setAttribute("visibility", "hidden");
-				this.columnHightlight2.setAttribute("visibility", "visible");
-			} else if(state === 3) {
-				this.columnHightlight1.setAttribute("visibility", "visible");
-				this.columnHightlight2.setAttribute("visibility", "visible");
-			}
-			this.colHighlightState = state;
-		}
-	},
+    setHightlightState: function (state) {
+        if (this.colHighlightEnabled && this.colHighlightState != state) {
+            if (state === 0) {
+                this.columnHightlight1.setAttribute("visibility", "hidden");
+                this.columnHightlight2.setAttribute("visibility", "hidden");
+            } else if (state === 1) {
+                this.columnHightlight1.setAttribute("visibility", "visible");
+                this.columnHightlight2.setAttribute("visibility", "hidden");
+            } else if (state === 2) {
+                this.columnHightlight1.setAttribute("visibility", "hidden");
+                this.columnHightlight2.setAttribute("visibility", "visible");
+            } else if (state === 3) {
+                this.columnHightlight1.setAttribute("visibility", "visible");
+                this.columnHightlight2.setAttribute("visibility", "visible");
+            }
+            this.colHighlightState = state;
+        }
+    },
 
-	setHightlightStateBasedOnX : function(x) {
-		if(x > ORYX.CONFIG.FORM_ROW_WIDTH + 30) {
-			this.setHightlightState(2);
-		} else {
-			this.setHightlightState(1);
-		}
-	},
+    setHightlightStateBasedOnX: function (x) {
+        if (x > ORYX.CONFIG.FORM_ROW_WIDTH + 30) {
+            this.setHightlightState(2);
+        } else {
+            this.setHightlightState(1);
+        }
+    },
 
-	update: function() {
+    update: function () {
 
-		this.nodes.each(function(node) {
-			this._traverseForUpdate(node);
-		}.bind(this));
+        this.nodes.each(function (node) {
+            this._traverseForUpdate(node);
+        }.bind(this));
 
-		// call stencil's layout callback
-		// (needed for row layouting of xforms)
-		//this.getStencil().layout(this);
+        // call stencil's layout callback
+        // (needed for row layouting of xforms)
+        //this.getStencil().layout(this);
 
-		var layoutEvents = this.getStencil().layout();
+        var layoutEvents = this.getStencil().layout();
 
-		if(layoutEvents) {
-			layoutEvents.each(function(event) {
+        if (layoutEvents) {
+            layoutEvents.each(function (event) {
 
-				// setup additional attributes
-				event.shape = this;
-				event.forceExecution = true;
-				event.target = this.rootNode;
+                // setup additional attributes
+                event.shape = this;
+                event.forceExecution = true;
+                event.target = this.rootNode;
 
-				// do layouting
+                // do layouting
 
-				this._delegateEvent(event);
-			}.bind(this))
-		}
+                this._delegateEvent(event);
+            }.bind(this))
+        }
 
-		this.nodes.invoke("_update");
+        this.nodes.invoke("_update");
 
-		this.edges.invoke("_update", true);
+        this.edges.invoke("_update", true);
 
-		/*this.children.each(function(child) {
-			child._update();
-		});*/
-	},
+        /*this.children.each(function(child) {
+            child._update();
+        });*/
+    },
 
-	_traverseForUpdate: function(shape) {
-		var childRet = shape.isChanged;
-		shape.getChildNodes(false, function(child) {
-			if(this._traverseForUpdate(child)) {
-				childRet = true;
-			}
-		}.bind(this));
+    _traverseForUpdate: function (shape) {
+        var childRet = shape.isChanged;
+        shape.getChildNodes(false, function (child) {
+            if (this._traverseForUpdate(child)) {
+                childRet = true;
+            }
+        }.bind(this));
 
-		if(childRet) {
-			shape.layout();
-			return true;
-		} else {
-			return false;
-		}
-	},
+        if (childRet) {
+            shape.layout();
+            return true;
+        } else {
+            return false;
+        }
+    },
 
-	layout: function() {
-
+    layout: function () {
 
 
-	},
+    },
 
-	/**
-	 *
-	 * @param {Object} deep
-	 * @param {Object} iterator
-	 */
-	getChildNodes: function(deep, iterator) {
-		if(!deep && !iterator) {
-			return this.nodes.clone();
-		} else {
-			var result = [];
-			this.nodes.each(function(uiObject) {
-				if(iterator) {
-					iterator(uiObject);
-				}
-				result.push(uiObject);
+    /**
+     *
+     * @param {Object} deep
+     * @param {Object} iterator
+     */
+    getChildNodes: function (deep, iterator) {
+        if (!deep && !iterator) {
+            return this.nodes.clone();
+        } else {
+            var result = [];
+            this.nodes.each(function (uiObject) {
+                if (iterator) {
+                    iterator(uiObject);
+                }
+                result.push(uiObject);
 
-				if(deep && uiObject instanceof ORYX.Core.Shape) {
-					result = result.concat(uiObject.getChildNodes(deep, iterator));
-				}
-			});
+                if (deep && uiObject instanceof ORYX.Core.Shape) {
+                    result = result.concat(uiObject.getChildNodes(deep, iterator));
+                }
+            });
 
-			return result;
-		}
-	},
+            return result;
+        }
+    },
 
-	/**
-	 * buggy crap! use base class impl instead!
-	 * @param {Object} iterator
-	 */
-/*	getChildEdges: function(iterator) {
-		if(iterator) {
-			this.edges.each(function(edge) {
-				iterator(edge);
-			});
-		}
+    /**
+     * buggy crap! use base class impl instead!
+     * @param {Object} iterator
+     */
+    /*	getChildEdges: function(iterator) {
+            if(iterator) {
+                this.edges.each(function(edge) {
+                    iterator(edge);
+                });
+            }
 
-		return this.edges.clone();
-	},
-*/
-	/**
-	 * Overrides the UIObject.add method. Adds uiObject to the correct sub node.
-	 * @param {UIObject} uiObject
-	 */
-	add: function(uiObject) {
-		//if uiObject is child of another UIObject, remove it.
-		if(uiObject instanceof ORYX.Core.UIObject) {
-			if (!(this.children.member(uiObject))) {
-				//if uiObject is child of another parent, remove it from that parent.
-				if(uiObject.parent) {
-					uiObject.parent.remove(uiObject);
-				}
+            return this.edges.clone();
+        },
+    */
+    /**
+     * Overrides the UIObject.add method. Adds uiObject to the correct sub node.
+     * @param {UIObject} uiObject
+     */
+    add: function (uiObject) {
+        //if uiObject is child of another UIObject, remove it.
+        if (uiObject instanceof ORYX.Core.UIObject) {
+            if (!(this.children.member(uiObject))) {
+                //if uiObject is child of another parent, remove it from that parent.
+                if (uiObject.parent) {
+                    uiObject.parent.remove(uiObject);
+                }
 
-				//add uiObject to the Canvas
-				this.children.push(uiObject);
+                //add uiObject to the Canvas
+                this.children.push(uiObject);
 
-				//set parent reference
-				uiObject.parent = this;
+                //set parent reference
+                uiObject.parent = this;
 
-				//add uiObject.node to this.node depending on the type of uiObject
-				if(uiObject instanceof ORYX.Core.Shape) {
-					if(uiObject instanceof ORYX.Core.Edge) {
-						uiObject.addMarkers(this.rootNode.getElementsByTagNameNS(NAMESPACE_SVG, "defs")[0]);
-						uiObject.node = this.node.childNodes[0].childNodes[2].appendChild(uiObject.node);
-						this.edges.push(uiObject);
-					} else {
-						uiObject.node = this.node.childNodes[0].childNodes[1].appendChild(uiObject.node);
-						this.nodes.push(uiObject);
-					}
-				} else {	//UIObject
-					uiObject.node = this.node.appendChild(uiObject.node);
-				}
+                //add uiObject.node to this.node depending on the type of uiObject
+                if (uiObject instanceof ORYX.Core.Shape) {
+                    if (uiObject instanceof ORYX.Core.Edge) {
+                        uiObject.addMarkers(this.rootNode.getElementsByTagNameNS(NAMESPACE_SVG, "defs")[0]);
+                        uiObject.node = this.node.childNodes[0].childNodes[2].appendChild(uiObject.node);
+                        this.edges.push(uiObject);
+                    } else {
+                        uiObject.node = this.node.childNodes[0].childNodes[1].appendChild(uiObject.node);
+                        this.nodes.push(uiObject);
+                    }
+                } else {	//UIObject
+                    uiObject.node = this.node.appendChild(uiObject.node);
+                }
 
-				uiObject.bounds.registerCallback(this._changedCallback);
+                uiObject.bounds.registerCallback(this._changedCallback);
 
-				if(this.eventHandlerCallback)
-					this.eventHandlerCallback({type:ORYX.CONFIG.EVENT_SHAPEADDED,shape:uiObject})
-			} else {
+                if (this.eventHandlerCallback)
+                    this.eventHandlerCallback({type: ORYX.CONFIG.EVENT_SHAPEADDED, shape: uiObject})
+            } else {
 
-				ORYX.Log.warn("add: ORYX.Core.UIObject is already a child of this object.");
-			}
-		} else {
+                ORYX.Log.warn("add: ORYX.Core.UIObject is already a child of this object.");
+            }
+        } else {
 
-			ORYX.Log.fatal("add: Parameter is not of type ORYX.Core.UIObject.");
-		}
-	},
+            ORYX.Log.fatal("add: Parameter is not of type ORYX.Core.UIObject.");
+        }
+    },
 
-	/**
-	 * Overrides the UIObject.remove method. Removes uiObject.
-	 * @param {UIObject} uiObject
-	 */
-	remove: function(uiObject) {
-		//if uiObject is a child of this object, remove it.
-		if (this.children.member(uiObject)) {
-			//remove uiObject from children
-			this.children = this.children.without(uiObject);
+    /**
+     * Overrides the UIObject.remove method. Removes uiObject.
+     * @param {UIObject} uiObject
+     */
+    remove: function (uiObject) {
+        //if uiObject is a child of this object, remove it.
+        if (this.children.member(uiObject)) {
+            //remove uiObject from children
+            this.children = this.children.without(uiObject);
 
-			//delete parent reference of uiObject
-			uiObject.parent = undefined;
+            //delete parent reference of uiObject
+            uiObject.parent = undefined;
 
-			//delete uiObject.node from this.node
-			if(uiObject instanceof ORYX.Core.Shape) {
-				if(uiObject instanceof ORYX.Core.Edge) {
-					uiObject.removeMarkers();
-					uiObject.node = this.node.childNodes[0].childNodes[2].removeChild(uiObject.node);
-					this.edges = this.edges.without(uiObject);
-				} else {
-					uiObject.node = this.node.childNodes[0].childNodes[1].removeChild(uiObject.node);
-					this.nodes = this.nodes.without(uiObject);
-				}
-			} else {	//UIObject
-					uiObject.node = this.node.removeChild(uiObject.node);
-			}
+            //delete uiObject.node from this.node
+            if (uiObject instanceof ORYX.Core.Shape) {
+                if (uiObject instanceof ORYX.Core.Edge) {
+                    uiObject.removeMarkers();
+                    uiObject.node = this.node.childNodes[0].childNodes[2].removeChild(uiObject.node);
+                    this.edges = this.edges.without(uiObject);
+                } else {
+                    uiObject.node = this.node.childNodes[0].childNodes[1].removeChild(uiObject.node);
+                    this.nodes = this.nodes.without(uiObject);
+                }
+            } else {	//UIObject
+                uiObject.node = this.node.removeChild(uiObject.node);
+            }
 
-			uiObject.bounds.unregisterCallback(this._changedCallback);
-		} else {
+            uiObject.bounds.unregisterCallback(this._changedCallback);
+        } else {
 
-			ORYX.Log.warn("remove: ORYX.Core.UIObject is not a child of this object.");
-		}
-	},
+            ORYX.Log.warn("remove: ORYX.Core.UIObject is not a child of this object.");
+        }
+    },
 
     /**
      * Creates shapes out of the given collection of shape objects and adds them to the canvas.
@@ -463,8 +494,8 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
      * @return {Array} A collection of ORYX.Core.Shape
      * @methodOf ORYX.Core.Canvas.prototype
      */
-    addShapeObjects: function(shapeObjects, eventHandler){
-        if(!shapeObjects) return;
+    addShapeObjects: function (shapeObjects, eventHandler) {
+        if (!shapeObjects) return;
 
         /*FIXME This implementation is very evil! At first, all shapes are created on
           canvas. In a second step, the attributes are applied. There must be a distinction
@@ -472,17 +503,18 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
           and the creation phase (where the outgoings are evaluated). This must be reflected
           in code to provide a nicer API/ implementation!!! */
 
-        var addShape = function(shape, parent){
+        var addShape = function (shape, parent) {
             // Try to create a new Shape
             try {
                 // Create a new Stencil
-                var stencil = ORYX.Core.StencilSet.stencil(this.getStencil().namespace() + shape.stencil.id );
+                var stencil = ORYX.Core.StencilSet.stencil(this.getStencil().namespace() + shape.stencil.id);
 
                 // Create a new Shape
                 var ShapeClass = (stencil.type() == "node") ? ORYX.Core.Node : ORYX.Core.Edge;
                 var newShape = new ShapeClass(
-                  {'eventHandlerCallback': eventHandler},
-                  stencil);
+                    {'eventHandlerCallback': eventHandler,
+                    shapeId:shape.properties['overrideid']},
+                    stencil);
 
                 // Set the resource id
                 newShape.resourceId = shape.resourceId;
@@ -493,13 +525,13 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
                 shape.parent = "#" + ((shape.parent && shape.parent.resourceId) || parent.resourceId);
 
                 // Add the shape to the canvas
-                this.add( newShape );
+                this.add(newShape);
 
                 return {
-                  json: shape,
-                  object: newShape
+                    json: shape,
+                    object: newShape
                 };
-            } catch(e) {
+            } catch (e) {
                 ORYX.Log.warn("LoadingContent: Stencil could not create.");
             }
         }.bind(this);
@@ -507,18 +539,18 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
         /** Builds up recursively a flatted array of shapes, including a javascript object and json representation
          * @param {Object} shape Any object that has Object#childShapes
          */
-        var addChildShapesRecursively = function(shape){
+        var addChildShapesRecursively = function (shape) {
             var addedShapes = [];
 
-            shape.childShapes.each(function(childShape){
-  			  /*
-  			   *  workaround for Chrome, for some reason an undefined shape is given
-  			   */
-            	var xy=addShape(childShape, shape);
-  			  if(!(typeof xy ==="undefined")){
-  					addedShapes.push(xy);
-  			  }
-              addedShapes = addedShapes.concat(addChildShapesRecursively(childShape));
+            shape.childShapes.each(function (childShape) {
+                /*
+                 *  workaround for Chrome, for some reason an undefined shape is given
+                 */
+                var xy = addShape(childShape, shape);
+                if (!(typeof xy === "undefined")) {
+                    addedShapes.push(xy);
+                }
+                addedShapes = addedShapes.concat(addChildShapesRecursively(childShape));
             });
 
             return addedShapes;
@@ -532,85 +564,85 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
 
         // prepare deserialisation parameter
         shapes.each(
-            function(shape){
-            	var properties = [];
-                for(field in shape.json.properties){
+            function (shape) {
+                var properties = [];
+                for (field in shape.json.properties) {
                     properties.push({
-                      prefix: 'oryx',
-                      name: field,
-                      value: shape.json.properties[field]
+                        prefix: 'oryx',
+                        name: field,
+                        value: shape.json.properties[field]
                     });
-                  }
+                }
 
-                  // Outgoings
-                  shape.json.outgoing.each(function(out){
+                // Outgoings
+                shape.json.outgoing.each(function (out) {
                     properties.push({
-                      prefix: 'raziel',
-                      name: 'outgoing',
-                      value: "#"+out.resourceId
+                        prefix: 'raziel',
+                        name: 'outgoing',
+                        value: "#" + out.resourceId
                     });
-                  });
+                });
 
-                  // Target
-                  // (because of a bug, the first outgoing is taken when there is no target,
-                  // can be removed after some time)
-                  if(shape.object instanceof ORYX.Core.Edge) {
-	                  var target = shape.json.target || shape.json.outgoing[0];
-	                  if(target){
-	                    properties.push({
-	                      prefix: 'raziel',
-	                      name: 'target',
-	                      value: "#"+target.resourceId
-	                    });
-	                  }
-                  }
+                // Target
+                // (because of a bug, the first outgoing is taken when there is no target,
+                // can be removed after some time)
+                if (shape.object instanceof ORYX.Core.Edge) {
+                    var target = shape.json.target || shape.json.outgoing[0];
+                    if (target) {
+                        properties.push({
+                            prefix: 'raziel',
+                            name: 'target',
+                            value: "#" + target.resourceId
+                        });
+                    }
+                }
 
-                  // Bounds
-                  if (shape.json.bounds) {
-                      properties.push({
-                          prefix: 'oryx',
-                          name: 'bounds',
-                          value: shape.json.bounds.upperLeft.x + "," + shape.json.bounds.upperLeft.y + "," + shape.json.bounds.lowerRight.x + "," + shape.json.bounds.lowerRight.y
-                      });
-                  }
-
-                  //Dockers [{x:40, y:50}, {x:30, y:60}] => "40 50 30 60  #"
-                  if(shape.json.dockers){
+                // Bounds
+                if (shape.json.bounds) {
                     properties.push({
-                      prefix: 'oryx',
-                      name: 'dockers',
-                      value: shape.json.dockers.inject("", function(dockersStr, docker){
-                        return dockersStr + docker.x + " " + docker.y + " ";
-                      }) + " #"
+                        prefix: 'oryx',
+                        name: 'bounds',
+                        value: shape.json.bounds.upperLeft.x + "," + shape.json.bounds.upperLeft.y + "," + shape.json.bounds.lowerRight.x + "," + shape.json.bounds.lowerRight.y
                     });
-                  }
+                }
 
-                  //Parent
-                  properties.push({
+                //Dockers [{x:40, y:50}, {x:30, y:60}] => "40 50 30 60  #"
+                if (shape.json.dockers) {
+                    properties.push({
+                        prefix: 'oryx',
+                        name: 'dockers',
+                        value: shape.json.dockers.inject("", function (dockersStr, docker) {
+                            return dockersStr + docker.x + " " + docker.y + " ";
+                        }) + " #"
+                    });
+                }
+
+                //Parent
+                properties.push({
                     prefix: 'raziel',
                     name: 'parent',
                     value: shape.json.parent
-                  });
+                });
 
-                  shape.__properties = properties;
-	         }.bind(this)
+                shape.__properties = properties;
+            }.bind(this)
         );
 
         // Deserialize the properties from the shapes
         // This can't be done earlier because Shape#deserialize expects that all referenced nodes are already there
 
         // first, deserialize all nodes
-        shapes.each(function(shape) {
-        	if(shape.object instanceof ORYX.Core.Node) {
-        		shape.object.deserialize(shape.__properties);
-        	}
+        shapes.each(function (shape) {
+            if (shape.object instanceof ORYX.Core.Node) {
+                shape.object.deserialize(shape.__properties);
+            }
         });
 
         // second, deserialize all edges
-        shapes.each(function(shape) {
-        	if(shape.object instanceof ORYX.Core.Edge) {
-        		shape.object.deserialize(shape.__properties);
-        	}
+        shapes.each(function (shape) {
+            if (shape.object instanceof ORYX.Core.Edge) {
+                shape.object.deserialize(shape.__properties);
+            }
         });
 
         return shapes.pluck("object");
@@ -619,240 +651,251 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
     /**
      * Updates the size of the canvas, regarding to the containg shapes.
      */
-    updateSize: function(){
+    updateSize: function () {
         // Check the size for the canvas
-        var maxWidth    = 0;
-        var maxHeight   = 0;
-        var offset      = 100;
-        this.getChildShapes(true, function(shape){
+        var maxWidth = 0;
+        var maxHeight = 0;
+        var offset = 100;
+        this.getChildShapes(true, function (shape) {
             var b = shape.bounds;
-            maxWidth    = Math.max( maxWidth, b.lowerRight().x + offset)
-            maxHeight   = Math.max( maxHeight, b.lowerRight().y + offset)
+            maxWidth = Math.max(maxWidth, b.lowerRight().x + offset)
+            maxHeight = Math.max(maxHeight, b.lowerRight().y + offset)
         });
 
-        if( this.bounds.width() < maxWidth || this.bounds.height() < maxHeight ){
-            this.setSize({width: Math.max(this.bounds.width(), maxWidth), height: Math.max(this.bounds.height(), maxHeight)})
+        if (this.bounds.width() < maxWidth || this.bounds.height() < maxHeight) {
+            this.setSize({
+                width: Math.max(this.bounds.width(), maxWidth),
+                height: Math.max(this.bounds.height(), maxHeight)
+            })
         }
     },
 
-	getRootNode: function() {
-		return this.rootNode;
-	},
+    getRootNode: function () {
+        return this.rootNode;
+    },
 
-	getSvgContainer: function() {
-		return this.node.childNodes[1];
-	},
+    getSvgContainer: function () {
+        return this.node.childNodes[1];
+    },
 
-	getHTMLContainer: function() {
-		return this._htmlContainer;
-	},
+    getHTMLContainer: function () {
+        return this._htmlContainer;
+    },
 
-	/**
-	 * Return all elements of the same highest level
-	 * @param {Object} elements
-	 */
-	getShapesWithSharedParent: function(elements) {
+    /**
+     * Return all elements of the same highest level
+     * @param {Object} elements
+     */
+    getShapesWithSharedParent: function (elements) {
 
-		// If there is no elements, return []
-		if(!elements || elements.length < 1) { return [] }
-		// If there is one element, return this element
-		if(elements.length == 1) { return elements}
+        // If there is no elements, return []
+        if (!elements || elements.length < 1) {
+            return []
+        }
+        // If there is one element, return this element
+        if (elements.length == 1) {
+            return elements
+        }
 
-		return elements.findAll(function(value){
-			var parentShape = value.parent;
-			while(parentShape){
-				if(elements.member(parentShape)) return false;
-				parentShape = parentShape.parent
-			}
-			return true;
-		});
+        return elements.findAll(function (value) {
+            var parentShape = value.parent;
+            while (parentShape) {
+                if (elements.member(parentShape)) return false;
+                parentShape = parentShape.parent
+            }
+            return true;
+        });
 
-	},
+    },
 
-	setSize: function(size, dontSetBounds) {
-		if(!size || !size.width || !size.height){return}
+    setSize: function (size, dontSetBounds) {
+        if (!size || !size.width || !size.height) {
+            return
+        }
 
-		if(this.rootNode.parentNode){
-			this.rootNode.parentNode.style.width = size.width + 'px';
-			this.rootNode.parentNode.style.height = size.height + 'px';
-		}
+        if (this.rootNode.parentNode) {
+            this.rootNode.parentNode.style.width = size.width + 'px';
+            this.rootNode.parentNode.style.height = size.height + 'px';
+        }
 
-		this.rootNode.setAttributeNS(null, 'width', size.width);
-		this.rootNode.setAttributeNS(null, 'height', size.height);
+        this.rootNode.setAttributeNS(null, 'width', size.width);
+        this.rootNode.setAttributeNS(null, 'height', size.height);
 
-		//this._htmlContainer.style.top = "-" + (size.height + 4) + 'px';
-		if( !dontSetBounds ){
-			this.bounds.set({a:{x:0,y:0},b:{x:size.width/this.zoomLevel,y:size.height/this.zoomLevel}})
-		}
-	},
+        //this._htmlContainer.style.top = "-" + (size.height + 4) + 'px';
+        if (!dontSetBounds) {
+            this.bounds.set({a: {x: 0, y: 0}, b: {x: size.width / this.zoomLevel, y: size.height / this.zoomLevel}})
+        }
+    },
 
-	/**
-	 * Returns an SVG document of the current process.
-	 * @param {Boolean} escapeText Use true, if you want to parse it with an XmlParser,
-	 * 					false, if you want to use the SVG document in browser on client side.
-	 */
-	getSVGRepresentation: function(escapeText) {
-		// Get the serialized svg image source
+    /**
+     * Returns an SVG document of the current process.
+     * @param {Boolean} escapeText Use true, if you want to parse it with an XmlParser,
+     *                    false, if you want to use the SVG document in browser on client side.
+     */
+    getSVGRepresentation: function (escapeText) {
+        // Get the serialized svg image source
         var svgClone = this.getRootNode().cloneNode(true);
 
-		this._removeInvisibleElements(svgClone);
+        this._removeInvisibleElements(svgClone);
 
-		var x1, y1, x2, y2;
-		try {
-			var bb = this.getRootNode().childNodes[1].getBBox();
-			x1 = bb.x;
-			y1 = bb.y;
-			x2 = bb.x + bb.width;
-			y2 = bb.y + bb.height;
-		} catch(e) {
-			this.getChildShapes(true).each(function(shape) {
-				var absBounds = shape.absoluteBounds();
-				var ul = absBounds.upperLeft();
-				var lr = absBounds.lowerRight();
-				if(x1 == undefined) {
-					x1 = ul.x;
-					y1 = ul.y;
-					x2 = lr.x;
-					y2 = lr.y;
-				} else {
-					x1 = Math.min(x1, ul.x);
-					y1 = Math.min(y1, ul.y);
-					x2 = Math.max(x2, lr.x);
-					y2 = Math.max(y2, lr.y);
-				}
-			});
-		}
+        var x1, y1, x2, y2;
+        try {
+            var bb = this.getRootNode().childNodes[1].getBBox();
+            x1 = bb.x;
+            y1 = bb.y;
+            x2 = bb.x + bb.width;
+            y2 = bb.y + bb.height;
+        } catch (e) {
+            this.getChildShapes(true).each(function (shape) {
+                var absBounds = shape.absoluteBounds();
+                var ul = absBounds.upperLeft();
+                var lr = absBounds.lowerRight();
+                if (x1 == undefined) {
+                    x1 = ul.x;
+                    y1 = ul.y;
+                    x2 = lr.x;
+                    y2 = lr.y;
+                } else {
+                    x1 = Math.min(x1, ul.x);
+                    y1 = Math.min(y1, ul.y);
+                    x2 = Math.max(x2, lr.x);
+                    y2 = Math.max(y2, lr.y);
+                }
+            });
+        }
 
-		var margin = 50;
+        var margin = 50;
 
-		var width, height, tx, ty;
-		if(x1 == undefined) {
-			width = 0;
-			height = 0;
-			tx = 0;
-			ty = 0;
-		} else {
-			width = x2 - x1;
-			height = y2 - y1;
-			tx = -x1+margin/2;
-			ty = -y1+margin/2;
-		}
-
+        var width, height, tx, ty;
+        if (x1 == undefined) {
+            width = 0;
+            height = 0;
+            tx = 0;
+            ty = 0;
+        } else {
+            width = x2 - x1;
+            height = y2 - y1;
+            tx = -x1 + margin / 2;
+            ty = -y1 + margin / 2;
+        }
 
 
         // Set the width and height
         svgClone.setAttributeNS(null, 'width', width + margin);
         svgClone.setAttributeNS(null, 'height', height + margin);
 
-		svgClone.childNodes[1].firstChild.setAttributeNS(null, 'transform', 'translate(' + tx + ", " + ty + ')');
+        svgClone.childNodes[1].firstChild.setAttributeNS(null, 'transform', 'translate(' + tx + ", " + ty + ')');
 
-		//remove scale factor
-		svgClone.childNodes[1].removeAttributeNS(null, 'transform');
+        //remove scale factor
+        svgClone.childNodes[1].removeAttributeNS(null, 'transform');
 
-		try{
-			var svgCont = svgClone.childNodes[1].childNodes[1];
-			svgCont.parentNode.removeChild(svgCont);
-		} catch(e) {}
+        try {
+            var svgCont = svgClone.childNodes[1].childNodes[1];
+            svgCont.parentNode.removeChild(svgCont);
+        } catch (e) {
+        }
 
-		if(escapeText) {
-			$A(svgClone.getElementsByTagNameNS(ORYX.CONFIG.NAMESPACE_SVG, 'tspan')).each(function(elem) {
-				elem.textContent = elem.textContent.escapeHTML();
-			});
+        if (escapeText) {
+            $A(svgClone.getElementsByTagNameNS(ORYX.CONFIG.NAMESPACE_SVG, 'tspan')).each(function (elem) {
+                elem.textContent = elem.textContent.escapeHTML();
+            });
 
-			$A(svgClone.getElementsByTagNameNS(ORYX.CONFIG.NAMESPACE_SVG, 'text')).each(function(elem) {
-				if(elem.childNodes.length == 0)
-					elem.textContent = elem.textContent.escapeHTML();
-			});
-		}
+            $A(svgClone.getElementsByTagNameNS(ORYX.CONFIG.NAMESPACE_SVG, 'text')).each(function (elem) {
+                if (elem.childNodes.length == 0)
+                    elem.textContent = elem.textContent.escapeHTML();
+            });
+        }
 
-		// generating absolute urls for the pdf-exporter
-		$A(svgClone.getElementsByTagNameNS(ORYX.CONFIG.NAMESPACE_SVG, 'image')).each(function(elem) {
-			var href = elem.getAttributeNS("http://www.w3.org/1999/xlink","href");
+        // generating absolute urls for the pdf-exporter
+        $A(svgClone.getElementsByTagNameNS(ORYX.CONFIG.NAMESPACE_SVG, 'image')).each(function (elem) {
+            var href = elem.getAttributeNS("http://www.w3.org/1999/xlink", "href");
 
-			if(!href.match("^(http|https)://")) {
-				href = window.location.protocol + "//" + window.location.host + href;
-				elem.setAttributeNS("http://www.w3.org/1999/xlink", "href", href);
-			}
-		});
+            if (!href.match("^(http|https)://")) {
+                href = window.location.protocol + "//" + window.location.host + href;
+                elem.setAttributeNS("http://www.w3.org/1999/xlink", "href", href);
+            }
+        });
 
 
-		// escape all links
-		$A(svgClone.getElementsByTagNameNS(ORYX.CONFIG.NAMESPACE_SVG, 'a')).each(function(elem) {
-			elem.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", (elem.getAttributeNS("http://www.w3.org/1999/xlink","href")||"").escapeHTML());
-		});
+        // escape all links
+        $A(svgClone.getElementsByTagNameNS(ORYX.CONFIG.NAMESPACE_SVG, 'a')).each(function (elem) {
+            elem.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", (elem.getAttributeNS("http://www.w3.org/1999/xlink", "href") || "").escapeHTML());
+        });
 
         return svgClone;
-	},
+    },
 
-	/**
-	* Removes all nodes (and its children) that has the
-	* attribute visibility set to "hidden"
-	*/
-	_removeInvisibleElements: function(element) {
-		var index = 0;
-		while(index < element.childNodes.length) {
-			var child = element.childNodes[index];
-			if(child.getAttributeNS &&
-				child.getAttributeNS(null, "visibility") === "hidden") {
-				element.removeChild(child);
-			} else {
-				this._removeInvisibleElements(child);
-				index++;
-			}
-		}
+    /**
+     * Removes all nodes (and its children) that has the
+     * attribute visibility set to "hidden"
+     */
+    _removeInvisibleElements: function (element) {
+        var index = 0;
+        while (index < element.childNodes.length) {
+            var child = element.childNodes[index];
+            if (child.getAttributeNS &&
+                child.getAttributeNS(null, "visibility") === "hidden") {
+                element.removeChild(child);
+            } else {
+                this._removeInvisibleElements(child);
+                index++;
+            }
+        }
 
-	},
+    },
 
-	/**
-	 * This method checks all shapes on the canvas and removes all shapes that
-	 * contain invalid bounds values or dockers values(NaN)
-	 */
-	/*cleanUp: function(parent) {
-		if (!parent) {
-			parent = this;
-		}
-		parent.getChildShapes().each(function(shape){
-			var a = shape.bounds.a;
-			var b = shape.bounds.b;
-			if (isNaN(a.x) || isNaN(a.y) || isNaN(b.x) || isNaN(b.y)) {
-				parent.remove(shape);
-			}
-			else {
-				shape.getDockers().any(function(docker) {
-					a = docker.bounds.a;
-					b = docker.bounds.b;
-					if (isNaN(a.x) || isNaN(a.y) || isNaN(b.x) || isNaN(b.y)) {
-						parent.remove(shape);
-						return true;
-					}
-					return false;
-				});
-				shape.getMagnets().any(function(magnet) {
-					a = magnet.bounds.a;
-					b = magnet.bounds.b;
-					if (isNaN(a.x) || isNaN(a.y) || isNaN(b.x) || isNaN(b.y)) {
-						parent.remove(shape);
-						return true;
-					}
-					return false;
-				});
-				this.cleanUp(shape);
-			}
-		}.bind(this));
-	},*/
+    /**
+     * This method checks all shapes on the canvas and removes all shapes that
+     * contain invalid bounds values or dockers values(NaN)
+     */
+    /*cleanUp: function(parent) {
+        if (!parent) {
+            parent = this;
+        }
+        parent.getChildShapes().each(function(shape){
+            var a = shape.bounds.a;
+            var b = shape.bounds.b;
+            if (isNaN(a.x) || isNaN(a.y) || isNaN(b.x) || isNaN(b.y)) {
+                parent.remove(shape);
+            }
+            else {
+                shape.getDockers().any(function(docker) {
+                    a = docker.bounds.a;
+                    b = docker.bounds.b;
+                    if (isNaN(a.x) || isNaN(a.y) || isNaN(b.x) || isNaN(b.y)) {
+                        parent.remove(shape);
+                        return true;
+                    }
+                    return false;
+                });
+                shape.getMagnets().any(function(magnet) {
+                    a = magnet.bounds.a;
+                    b = magnet.bounds.b;
+                    if (isNaN(a.x) || isNaN(a.y) || isNaN(b.x) || isNaN(b.y)) {
+                        parent.remove(shape);
+                        return true;
+                    }
+                    return false;
+                });
+                this.cleanUp(shape);
+            }
+        }.bind(this));
+    },*/
 
-	_delegateEvent: function(event) {
-		if(this.eventHandlerCallback && ( event.target == this.rootNode || event.target == this.rootNode.parentNode )) {
-			this.eventHandlerCallback(event, this);
-		}
-	},
+    _delegateEvent: function (event) {
+        if (this.eventHandlerCallback && (event.target == this.rootNode || event.target == this.rootNode.parentNode)) {
+            this.eventHandlerCallback(event, this);
+        }
+    },
 
-	toString: function() { return "Canvas " + this.id },
+    toString: function () {
+        return "Canvas " + this.id
+    },
 
     /**
      * Calls {@link ORYX.Core.AbstractShape#toJSON} and adds some stencil set information.
      */
-    toJSON: function() {
+    toJSON: function () {
         var json = arguments.callee.$.toJSON.apply(this, arguments);
 
 //		if(ORYX.CONFIG.STENCILSET_HANDLER.length > 0) {
@@ -860,13 +903,13 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
 //				url: this.getStencil().stencilSet().namespace()
 //	        };
 //		} else {
-			json.stencilset = {
-				url: this.getStencil().stencilSet().source(),
-				namespace: this.getStencil().stencilSet().namespace()
-	        };
+        json.stencilset = {
+            url: this.getStencil().stencilSet().source(),
+            namespace: this.getStencil().stencilSet().namespace()
+        };
 //		}
 
 
         return json;
     }
- });
+});

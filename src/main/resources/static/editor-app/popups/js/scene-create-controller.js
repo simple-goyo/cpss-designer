@@ -1,4 +1,4 @@
-var SceneCreateController = ['$scope', function ($scope) {
+var SceneCreateController = ['$scope','$rootScope', function ($scope,$rootScope) {
     var properties = ["location"];
     $scope.$watch('$viewContentLoaded', function () {
         $scope.sceneSettingDiv = document.getElementById("sceneSetting");
@@ -28,7 +28,7 @@ var SceneCreateController = ['$scope', function ($scope) {
     $scope.save = function () {
         let newScene = {};
         var nameValue = document.getElementById("sceneName").value;
-        if (!nameValue || nameValue == "") {
+        if (!nameValue || nameValue === "") {
             return;
         }
         newScene.name = nameValue;
@@ -41,8 +41,8 @@ var SceneCreateController = ['$scope', function ($scope) {
             newScene.properties[property] = propertyValue;
         }
         newScene.id = ORYX.Editor.provideId();
-        $scope.scenes[$scope.scenes.length] = newScene;
-        $scope.changeScene($scope.scenes.length-1);
+        $rootScope.scenes[$rootScope.scenes.length] = newScene;
+        $scope.changeScene($rootScope.scenes.length-1);
         $scope.$hide();
     }
     $scope.close = function () {

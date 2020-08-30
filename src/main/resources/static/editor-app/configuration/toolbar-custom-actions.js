@@ -34,14 +34,23 @@ var SaveSceneCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 
         $scope.saveDialog = saveDialog;
 
-        var json = $scope.editor.getJSON();
-        json["properties"]["name"] = modelMetaData.name;
-        json["properties"]["documentation"] = description;
-        json = JSON.stringify(json);
+        // var json = $scope.editor.getJSON();
+        // json["properties"]["name"] = modelMetaData.name;
+        // json["properties"]["documentation"] = description;
+        // json = JSON.stringify(json);
+        // console.log("json:" + json)
+
+        let modelJson = $scope.editor.getJSON();
+        delete modelJson.childShapes;
+        modelJson["properties"]["name"] = modelMetaData.name;
+        modelJson["properties"]["documentation"] = description;
+        modelJson.scenes = $scope.scenes;
+        modelJson.selectedSceneIndex = $scope.selectedSceneIndex;
+        modelJson = JSON.stringify(modelJson);
 
         var params = {
             modeltype: modelMetaData.model.modelType,
-            json_xml: json,
+            json_xml: modelJson,
             name: 'model'
         };
 
@@ -57,10 +66,17 @@ var SaveSceneCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         $scope.updateModel = function () {
             // var url = "http://192.168.31.52:5001/save_app_class";
             var url = "https://www.cpss2019.fun:5001/save_app_class";
-            var json = $scope.editor.getJSON();
-            json["properties"]["name"] = modelMetaData.name;// add diagram name
-            json["properties"]["documentation"] = description;
-            json = JSON.stringify(json);
+            // var json = $scope.editor.getJSON();
+            // json["properties"]["name"] = modelMetaData.name;// add diagram name
+            // json["properties"]["documentation"] = description;
+            // json = JSON.stringify(json);
+            let modelJson = $scope.editor.getJSON();
+            delete modelJson.childShapes;
+            modelJson["properties"]["name"] = modelMetaData.name;
+            modelJson["properties"]["documentation"] = description;
+            modelJson.scenes = $scope.scenes;
+            modelJson.selectedSceneIndex = $scope.selectedSceneIndex;
+            modelJson = JSON.stringify(modelJson);
             // Update
             $http({
                 method: 'POST',
@@ -69,7 +85,7 @@ var SaveSceneCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                     'Accept': 'application/json',
                     'Content-Type': 'application/json;charset=utf-8'
                 },
-                data: json,
+                data: modelJson,
                 url: url
 
             }).success(function (data) {
@@ -103,10 +119,18 @@ var SaveSceneCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             modelMetaData.name = $scope.saveDialog.name;
             modelMetaData.description = $scope.saveDialog.description;
 
-            var json = $scope.editor.getJSON();
-            json["properties"]["name"] = modelMetaData.name;// add diagram name
-            json["properties"]["documentation"] = description;
-            json = JSON.stringify(json);
+            // var json = $scope.editor.getJSON();
+            // json["properties"]["name"] = modelMetaData.name;// add diagram name
+            // json["properties"]["documentation"] = description;
+            // json = JSON.stringify(json);
+
+            let modelJson = $scope.editor.getJSON();
+            delete modelJson.childShapes;
+            modelJson["properties"]["name"] = modelMetaData.name;
+            modelJson["properties"]["documentation"] = description;
+            modelJson.scenes = $scope.scenes;
+            modelJson.selectedSceneIndex = $scope.selectedSceneIndex;
+            modelJson = JSON.stringify(modelJson);
 
             var selection = $scope.editor.getSelection();
             $scope.editor.setSelection([]);
@@ -131,7 +155,7 @@ var SaveSceneCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             var svgDOM = DataManager.serialize(svgClone);
 
             var params = {
-                json_xml: json,
+                json_xml: modelJson,
                 svg_xml: svgDOM,
                 name: $scope.saveDialog.name,
                 description: $scope.saveDialog.description

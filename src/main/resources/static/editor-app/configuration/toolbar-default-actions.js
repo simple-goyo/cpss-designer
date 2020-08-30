@@ -23,7 +23,19 @@ KISBPM.TOOLBAR = {
     ACTIONS: {
 
         saveModel: function (services) {
-
+            services.$scope.scenes[services.$scope.selectedSceneIndex].childShapes=services.$scope.editor.getJSON().childShapes;
+            let highlightedShape = services.$scope.getHighlightedShape();
+            if (highlightedShape) {
+                services.$rootScope.scenes[services.$rootScope.selectedSceneIndex].lastHighlightedActionId = highlightedShape.id;
+            }
+            let selection = services.$scope.editor.getSelection();
+            if (selection && selection.length >= 1) {
+                services.$rootScope.scenes[services.$rootScope.selectedSceneIndex].lastselectionOverrideIds = [];
+                for (let i = 0; i < selection.length; i++) {
+                    services.$rootScope.scenes[services.$rootScope.selectedSceneIndex].lastselectionOverrideIds
+                        [services.$rootScope.scenes[services.$rootScope.selectedSceneIndex].lastselectionOverrideIds.length] = selection[i].id;
+                }
+            }
             var modal = services.$modal({
                 backdrop: true,
                 keyboard: true,
@@ -364,7 +376,7 @@ var __createStartNode = function ($rootScope, $scope) {
     };
     var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
     $scope.editor.executeCommands([command]);
-
+    $scope.editor.getSelection()[0].properties['oryx-overrideid'] = ORYX.Editor.provideId();//为创建的初始化节点提供id
 };
 
 var __createNormalAction = function ($rootScope, $scope) {
@@ -425,6 +437,8 @@ var __createNormalAction = function ($rootScope, $scope) {
         jQuery('#' + oldShapeId + 'bg_frame').attr({"fill": "#f9f9f9"}); //高亮显示
 
         var lastSelectedAction = $scope.getHighlightedShape();
+        jQuery('#' + lastSelectedAction.id + 'bg_frame').attr({"fill": "#f9f9f9"}); //高亮显示
+
         // 高亮
         var newShapeId = $scope.editor.getSelection()[0].id;
         $scope.setHighlightedShape(newShapeId);

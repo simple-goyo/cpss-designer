@@ -10,14 +10,14 @@ var ReferenceEntityWriteCtrl = ['$scope', '$modal', '$timeout', '$translate', fu
     $modal(opts);
 }];
 
-var ReferenceEntityPopupController = ['$scope', '$modal', function ($scope) {
-    let scenes = $scope.scenes;
-    let selectedSceneIndex = $scope.selectedSceneIndex;
+var ReferenceEntityPopupController = ['$rootScope','$scope', function ($rootScope,$scope) {
+    let scenes = $rootScope.scenes;
+    let selectedSceneIndex = $rootScope.selectedSceneIndex;
     $scope.canReferenceEntities = [];
     let nowShape = $scope.editor.getSelection()[0];
     for (let i = 0; i < scenes.length; i++) {
         if (i !== selectedSceneIndex) {
-            let childrenShapes = scenes[i].sceneJson.childShapes;
+            let childrenShapes = scenes[i].childShapes;
             for (let j = 0; j < childrenShapes.length; j++) {
                 let shape = childrenShapes[j];
                 if (nowShape.properties['oryx-type'] === shape.properties['type'] && shape.properties['referenceentity'] === "") {
@@ -47,16 +47,16 @@ var ReferenceEntityPopupController = ['$scope', '$modal', function ($scope) {
 }];
 
 
-var ReferenceEntityDisplayController = ['$scope', function ($scope) {
+var ReferenceEntityDisplayController = ['$scope','$rootScope', function ($scope,$rootScope) {
     $scope.referenceEntityShow = " 未引用实体";
     let id = $scope.property.value;
     if (!id || id === "")
         return;
-    let scenes = $scope.scenes;
+    let scenes = $rootScope.scenes;
     let selectedSceneIndex = $scope.selectedSceneIndex;
     for (let i = 0; i < scenes.length; i++) {
         if (i !== selectedSceneIndex) {
-            let childrenShapes = scenes[i].sceneJson.childShapes;
+            let childrenShapes = scenes[i].childShapes;
             for (let j = 0; j < childrenShapes.length; j++) {
                 if (id === childrenShapes[j].properties['overrideid']) {
                     let name = childrenShapes[j].properties['name'];
