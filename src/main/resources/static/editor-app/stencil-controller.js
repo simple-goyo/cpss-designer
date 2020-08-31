@@ -26,17 +26,15 @@ angular.module('activitiModeler')
         var HighlightedItem;
 
         //场景列表
-        $scope.scenes = [];
+        $rootScope.scenes = [];
 
-        $scope.selectedSceneIndex = -1;
+        $rootScope.selectedSceneIndex = -1;
 
         // 最新的资源连线
         $scope.latestLine = undefined;
 
         // 最新的线两端
         $scope.latestfromto = {'from': undefined, 'to': undefined};
-
-        $scope.connectedLines = [];
 
         // Property window toggle state
         $scope.propertyWindowState = {'collapsed': false};
@@ -433,18 +431,18 @@ angular.module('activitiModeler')
                         }
 
                         if (shape && i > 0) {
-                            var itemId = id;
+                            var item = $scope.editor.getSelection()[0];
                             var lastId = lastHighlightedId;
                             // 取消上次高亮
                             if (lastId !== "") {
-                                jQuery('#' + lastId + 'bg_frame').attr({"fill": "#f9f9f9"});
+                                jQuery('#' + HighlightedItem.id + 'bg_frame').attr({"fill": "#f9f9f9"});
                             }
                             var lastSelectedAction = $scope.getHighlightedShape();
                             // 高亮
-                            jQuery('#' + itemId + 'bg_frame').attr({"fill": "#04FF8E"});
+                            jQuery('#' + item.id + 'bg_frame').attr({"fill": "#04FF8E"});
 
-                            lastHighlightedId = id;
-                            HighlightedItem = shape;
+                            lastHighlightedId = item.id;
+                            HighlightedItem = item;
 
                             $scope.toDoAboutResourceLineAfterChangingAction(lastSelectedAction);
                         }
@@ -519,17 +517,16 @@ angular.module('activitiModeler')
                 KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
                 $scope.editor.setSelection(connectedShape);
                 $scope.editor.getCanvas().update();
-                $scope.connectedLines[$scope.connectedLines.length] = connectedShape.getOutgoingShapes().last().id;
             };
 
             /**
              * 获取当前动作的被连线的资源
              * **/
             $scope.getResourceConnect = function () {
+                let connectedLines = $scope.getConnectedLines();
                 var resourceConnect = [];
-                for (var i = 0; i < $scope.connectedLines.length; i++) {
-                    var id = $scope.connectedLines[i];
-                    var edge = $scope.getShapeById(id);
+                for (var i = 0; i < connectedLines.length; i++) {
+                    let edge = connectedLines[i];
                     if (edge) {
                         var from = edge.incoming[0] ? edge.incoming[0].id : null;
                         var to = edge.outgoing[0] ? edge.outgoing[0].id : null;
@@ -548,7 +545,6 @@ angular.module('activitiModeler')
                             fromBounds: fromBounds,
                             to: to,
                             toBounds: toBounds
-                            // edge: id
                         };
 
                     }
@@ -564,7 +560,6 @@ angular.module('activitiModeler')
                 if (action === lastSelectedAction)
                     return;
                 $scope.deleteConnectedLines();
-                $scope.connectedLines = [];
                 var resourceConnect = action.properties['oryx-resourceline'];
                 if (resourceConnect) {
                     $scope.createConnectedLines(resourceConnect);
@@ -821,14 +816,29 @@ angular.module('activitiModeler')
              * 用于切换action时删除上一个Action的资源连线
              * */
             $scope.deleteConnectedLines = function () {
-                for (var i = 0; i < $scope.connectedLines.length; i++) {
-                    var id = $scope.connectedLines[i];
-                    var edge = $scope.getShapeById(id);
-                    if (edge) {
-                        $scope.editor.deleteShape(edge);
+                let shapes = [$scope.editor.getCanvas()][0].children;
+                for (let i = 0; i < shapes.length; i++) {
+                    let flag = shapes[i]._stencil._namespace + "MessageFlow";
+                    if (flag === shapes[i]._stencil._jsonStencil.id) {
+                        $scope.editor.deleteShape(shapes[i]);
                     }
                 }
             };
+
+            /**
+             * 获取当前action中的资源连线
+             * */
+            $scope.getConnectedLines = function () {
+                let connectedLines = [];
+                let shapes = [$scope.editor.getCanvas()][0].children;
+                for (let i = 0; i < shapes.length; i++) {
+                    let flag = shapes[i]._stencil._namespace + "MessageFlow";
+                    if (flag === shapes[i]._stencil._jsonStencil.id) {
+                        connectedLines[connectedLines.length] = shapes[i];
+                    }
+                }
+                return connectedLines;
+            }
 
             /**
              * 根据给定的from和to创建连线
@@ -851,7 +861,6 @@ angular.module('activitiModeler')
                 edge.dockers.last().setReferencePoint(ePoint);
                 $scope.editor._canvas.add(edge);
                 $scope.editor.getCanvas().update();
-                $scope.connectedLines[$scope.connectedLines.length] = edge.id;
             };
 
             /**
@@ -1471,7 +1480,9 @@ angular.module('activitiModeler')
                         $scope.editor.deleteShape(shapeToRemove);
                     }
                 }
+
                 KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
+                $rootScope.scenes[$rootScope.selectedSceneIndex].childShapes = $scope.editor.getJSON().childShapes;
                 // $scope.editor.deleteShape(shapeToRemove);
                 // KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
             };
@@ -2493,30 +2504,46 @@ angular.module('activitiModeler')
             }
         };
 
-        // new Promise(function (resolve, reject) {
-        //     setTimeout(function () {
-        //         resolve('200 OK');
-        //     }, 5000);
-        // }).then(function (result) {
-        //     console.log(window._loadContentFinished);
-        //     // 初始化完成,自动生成开始按钮
-        //     // console.log("StartNoneEvent");
-        //     // 注意：只有在加载完流程之后并且界面上没有StartNoneEvent时，才会生成。
-        //     var hasStartEventShape = function () {
-        //         if ($scope.editor === undefined) return false;
-        //         var shapes = $scope.editor.getCanvas().nodes;
-        //         for (var i = 0; i < shapes.length; i++) {
-        //             if (shapes[i].properties["oryx-startevent"] !== undefined) {
-        //                 return true;
-        //             }
-        //         }
-        //         return false;
-        //     };
-        //
-        //     if (!hasStartEventShape()) {
-        //         _createAction($rootScope, $scope, "StartNoneEvent");
-        //     }
-        // });
+        new Promise(function (resolve, reject) {
+            setTimeout(function () {
+                resolve('200 OK');
+            }, 5000);
+        }).then(function (result) {
+            //     console.log(window._loadContentFinished);
+            //     // 初始化完成,自动生成开始按钮
+            //     console.log("StartNoneEvent");
+            //     // 注意：只有在加载完流程之后并且界面上没有StartNoneEvent时，才会生成。
+            //     var hasStartEventShape = function () {
+            //         if ($scope.editor === undefined) return false;
+            //         var shapes = $scope.editor.getCanvas().nodes;
+            //         for (var i = 0; i < shapes.length; i++) {
+            //             if (shapes[i].properties["oryx-startevent"] !== undefined) {
+            //                 return true;
+            //             }
+            //         }
+            //         return false;
+            //     };
+            //
+            //     if (!hasStartEventShape()) {
+            //         _createAction($rootScope, $scope, "StartNoneEvent");
+            //     }
+            let selectionOverrideIds = $rootScope.scenes[$rootScope.selectedSceneIndex].lastselectionOverrideIds;
+            if (selectionOverrideIds && selectionOverrideIds.length >= 1) {
+                let selection = [];
+                for (let i = 0; i < selectionOverrideIds.length; i++) {
+                    selection[selection.length] = $scope.getShapeById(selectionOverrideIds[i]);
+                }
+                $scope.editor.setSelection(selection);
+                $scope.editor.getCanvas().update();
+            }
+            if ($rootScope.scenes[$rootScope.selectedSceneIndex].lastHighlightedActionId) {
+                HighlightedItem = $scope.getShapeById($rootScope.scenes[$rootScope.selectedSceneIndex].lastHighlightedActionId);
+                if (HighlightedItem) {
+                    lastHighlightedId = HighlightedItem.id;
+                    jQuery('#' + lastHighlightedId + 'bg_frame').attr({"fill": "#04FF8E"});
+                }
+            }
+        });
 
         $scope.addScene = function () {
             var opts = {
@@ -2571,51 +2598,54 @@ angular.module('activitiModeler')
 
         $scope.changeScene = function (index) {
             let shapes = [$scope.editor.getCanvas()][0].children;
-            if ($scope.selectedSceneIndex > -1) {
-                $scope.scenes[$scope.selectedSceneIndex].sceneJson = $scope.editor.getJSON();
+            if ($rootScope.selectedSceneIndex > -1) {
+                $rootScope.scenes[$rootScope.selectedSceneIndex].childShapes = $scope.editor.getJSON().childShapes;
                 let highlightedShape = $scope.getShapeById(lastHighlightedId);
                 if (highlightedShape) {
-                    $scope.scenes[$scope.selectedSceneIndex].lastHighlightedActionId = highlightedShape.properties['oryx-overrideid'];
+                    $rootScope.scenes[$rootScope.selectedSceneIndex].lastHighlightedActionId = highlightedShape.id;
                 }
                 let selection = $scope.editor.getSelection();
                 if (selection && selection.length >= 1) {
-                    $scope.scenes[$scope.selectedSceneIndex].lastselectionOverrideIds = [];
+                    $rootScope.scenes[$rootScope.selectedSceneIndex].lastselectionOverrideIds = [];
                     for (let i = 0; i < selection.length; i++) {
-                        $scope.scenes[$scope.selectedSceneIndex].lastselectionOverrideIds
-                            [$scope.scenes[$scope.selectedSceneIndex].lastselectionOverrideIds.length] = selection[i].properties['oryx-overrideid'];
+                        $rootScope.scenes[$rootScope.selectedSceneIndex].lastselectionOverrideIds
+                            [$rootScope.scenes[$rootScope.selectedSceneIndex].lastselectionOverrideIds.length] = selection[i].id;
                     }
                 }
             }
-            if (index !== $scope.selectedSceneIndex) {
-                if ($scope.selectedSceneIndex > -1) {
-                    $scope.takeScreenshot($scope.selectedSceneIndex);
+            if (index !== $rootScope.selectedSceneIndex) {
+                if ($rootScope.selectedSceneIndex > -1) {
+                    $scope.takeScreenshot($rootScope.selectedSceneIndex);
                 }
                 for (let i = 0; i < shapes.length; i++) {
                     $scope.editor.deleteShape(shapes[i]);
                 }
 
-                $scope.setSelectedSceneIndex(index);
+                $rootScope.selectedSceneIndex = index;
 
-                if ($scope.scenes[$scope.selectedSceneIndex].sceneJson) {
-                    $scope.editor.loadSerialized($scope.scenes[$scope.selectedSceneIndex].sceneJson);
+                let childShapes = $rootScope.scenes[$rootScope.selectedSceneIndex].childShapes;
+                if (childShapes) {
+                    let serializedJson = $scope.editor.getJSON();
+                    serializedJson.childShapes = childShapes;
+                    $scope.editor.loadSerialized(serializedJson);
                     $scope.editor.getCanvas().update();
-                    shapes = $scope.scenes[$scope.selectedSceneIndex].sceneJson.childShapes;
+                    shapes = childShapes;
                     if (!shapes || shapes.length === 0) {
                         _createAction($rootScope, $scope, "StartNoneEvent");
                     }
                 } else _createAction($rootScope, $scope, "StartNoneEvent");
 
-                let selectionOverrideIds = $scope.scenes[$scope.selectedSceneIndex].lastselectionOverrideIds;
+                let selectionOverrideIds = $rootScope.scenes[$rootScope.selectedSceneIndex].lastselectionOverrideIds;
                 if (selectionOverrideIds && selectionOverrideIds.length >= 1) {
                     let selection = [];
                     for (let i = 0; i < selectionOverrideIds.length; i++) {
-                        selection[selection.length] = $scope.getShapeByOverrideId(selectionOverrideIds[i]);
+                        selection[selection.length] = $scope.getShapeById(selectionOverrideIds[i]);
                     }
                     $scope.editor.setSelection(selection);
                     $scope.editor.getCanvas().update();
                 }
-                if ($scope.scenes[$scope.selectedSceneIndex].lastHighlightedActionId) {
-                    HighlightedItem = $scope.getShapeByOverrideId($scope.scenes[$scope.selectedSceneIndex].lastHighlightedActionId);
+                if ($rootScope.scenes[$rootScope.selectedSceneIndex].lastHighlightedActionId) {
+                    HighlightedItem = $scope.getShapeById($rootScope.scenes[$rootScope.selectedSceneIndex].lastHighlightedActionId);
                     if (HighlightedItem) {
                         lastHighlightedId = HighlightedItem.id;
                         jQuery('#' + lastHighlightedId + 'bg_frame').attr({"fill": "#b8ffd8"});
@@ -2626,7 +2656,7 @@ angular.module('activitiModeler')
 
 
         $scope.isSelectedScene = function (index) {
-            if (index === $scope.selectedSceneIndex) {
+            if (index === $rootScope.selectedSceneIndex) {
                 return "sceneHighlighted";
             }
         }
@@ -2655,7 +2685,7 @@ angular.module('activitiModeler')
                     });
                 }
             }).then(function (screenshot) {
-                $scope.scenes[index].img = screenshot.toDataURL("image/jpeg");
+                $rootScope.scenes[index].img = screenshot.toDataURL("image/jpeg");
             });
         }
     }]);

@@ -4,6 +4,19 @@
   "description": "BPMN process editor",
   "propertyPackages": [
     {
+      "name": "referenceentitypackage",
+      "properties": [
+        {
+          "id": "referenceentity",
+          "type": "complex",
+          "title": "引用实体",
+          "value": "",
+          "description": "引用其他场景中的实体的标识",
+          "popular": true
+        }
+      ]
+    },
+    {
       "name": "nodeconditionpackage",
       "properties": [
         {
@@ -1258,7 +1271,8 @@
         "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
-        "servicespackage"
+        "servicespackage",
+        "referenceentitypackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1290,7 +1304,8 @@
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
-        "workercontainspackage"
+        "workercontainspackage",
+        "referenceentitypackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1320,7 +1335,8 @@
         "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
-        "servicespackage"
+        "servicespackage",
+        "referenceentitypackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1351,7 +1367,8 @@
         "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
-        "servicespackage"
+        "servicespackage",
+        "referenceentitypackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1382,7 +1399,8 @@
         "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
-        "servicespackage"
+        "servicespackage",
+        "referenceentitypackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1413,7 +1431,8 @@
         "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
-        "servicespackage"
+        "servicespackage",
+        "referenceentitypackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1443,7 +1462,8 @@
         "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
-        "servicespackage"
+        "servicespackage",
+        "referenceentitypackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1473,7 +1493,8 @@
         "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
-        "servicespackage"
+        "servicespackage",
+        "referenceentitypackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1503,7 +1524,8 @@
         "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
-        "servicespackage"
+        "servicespackage",
+        "referenceentitypackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1533,7 +1555,8 @@
         "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
-        "servicespackage"
+        "servicespackage",
+        "referenceentitypackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [

@@ -143,5 +143,8 @@ KISBPM.PROPERTY_CONFIG =
         "oryx-nodecondition-complex":{
             "readModeTemplateUrl": "editor-app/configuration/properties/node-condition-display-template.html",
             "writeModeTemplateUrl": "editor-app/configuration/properties/node-condition-write-template.html"
+        }, "oryx-referenceentity-complex":{
+            "readModeTemplateUrl": "editor-app/configuration/properties/reference-entity-display-template.html",
+            "writeModeTemplateUrl": "editor-app/configuration/properties/reference-entity-write-template.html"
         }
     };
