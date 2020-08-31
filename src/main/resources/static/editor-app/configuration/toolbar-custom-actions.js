@@ -35,6 +35,7 @@ var SaveSceneCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         $scope.saveDialog = saveDialog;
 
         var json = $scope.editor.getJSON();
+
         json["properties"]["name"] = modelMetaData.name;
         json["properties"]["documentation"] = description;
         json = JSON.stringify(json);
@@ -103,9 +104,9 @@ var SaveSceneCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             modelMetaData.name = $scope.saveDialog.name;
             modelMetaData.description = $scope.saveDialog.description;
 
-            var json = $scope.editor.getJSON();
-            json["properties"]["name"] = modelMetaData.name;// add diagram name
-            json["properties"]["documentation"] = description;
+            //var json = $scope.editor.getJSON();
+            var scene = $scope.getScenes();
+            json = $scope.createModelFile(scene);
             json = JSON.stringify(json);
 
             var selection = $scope.editor.getSelection();
@@ -192,4 +193,28 @@ var SaveSceneCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 });
         };
 
+
+        $scope.createModelFile = function (scene) {
+            let jsonObj = {
+                "id": "",
+                "properties":{
+                    "name":"",
+                    "documentation":""
+                },
+                "scene":[],
+                "action":[]
+            };
+            jsonObj["properties"]["name"] = modelMetaData.name;// add diagram name
+            jsonObj["properties"]["documentation"] = description;
+
+            scene.each(function (s){
+                s.img = "";
+            })
+
+            // 填写模型内容
+            jsonObj["id"] = $scope.editor.getModelId();
+            jsonObj["scene"] = scene;
+            console.log(jsonObj);
+            return scene
+        }
     }];

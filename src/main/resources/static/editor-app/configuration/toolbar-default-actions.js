@@ -338,6 +338,7 @@ var _createAction = function ($rootScope, $scope, ItemId) {
 
 var __createStartNode = function ($rootScope, $scope) {
     var itemId = "StartNoneEvent";
+    var namespace = ORYX.CONFIG.NAMESPACE_STENCILSET;
     var containedStencil = undefined;
     if ($scope.editor === undefined) return;
     var stencilSets = $scope.editor.getStencilSets().values();
@@ -351,14 +352,15 @@ var __createStartNode = function ($rootScope, $scope) {
             }
         }
     }
-
+    ORYX.CONFIG.NAMESPACE_ORYX
     if (!containedStencil) return;
 
     var positionOffset = {x: 80, y: 640};//初始节点的位置
 
     var option = {
-        type: "http://b3mn.org/stencilset/bpmn2.0#" + itemId,
-        namespace: "http://b3mn.org/stencilset/bpmn2.0#",
+        type: namespace + itemId,
+        namespace: namespace,
+
         positionController: positionOffset,
         containedStencil: containedStencil
     };

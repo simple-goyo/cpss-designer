@@ -301,6 +301,7 @@ ORYX.CONFIG.BPMN20_SCHEMA_VALIDATION_ON = true;
 /* Namespaces */
 ORYX.CONFIG.NAMESPACE_ORYX =			"http://www.b3mn.org/oryx";
 ORYX.CONFIG.NAMESPACE_SVG =				"http://www.w3.org/2000/svg";
+ORYX.CONFIG.NAMESPACE_STENCILSET =  	"http://b3mn.org/stencilset/bpmn2.0#";
 
 /* UI */
 ORYX.CONFIG.CANVAS_WIDTH =				1200;

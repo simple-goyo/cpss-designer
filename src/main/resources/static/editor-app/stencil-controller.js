@@ -2525,9 +2525,49 @@ angular.module('activitiModeler')
             };
             $modal(opts);
         }
+
         $scope.setSelectedSceneIndex = function (index) {
             $scope.selectedSceneIndex = index;
         };
+
+        $scope.getSelectedSceneIndex = function() {
+            return $scope.selectedSceneIndex;
+        }
+
+
+        $scope.getScenes = function () {
+            // id: "sid-0ABA3F8C-7725-4D35-8E22-D0CD74494EBC"
+            // lastselectionOverrideIds: [""]
+            // name: "会议室"
+            // properties: {location: "2"}
+            // sceneJson: {resourceId: "382501", properties: {…}, stencil: {…}, childShapes: Array(1), bounds: {…}, …}
+            let currentscene = $scope.getSelectedSceneIndex();
+            $scope.changeScene(currentscene); // 保存画布上的元素到当前scene中
+
+            return $scope.scenes;
+        };
+
+        $scope.updateScene = function() {
+            let index = $scope.getSelectedSceneIndex();
+            let scene = $scope.getScenes();
+
+            if(index === undefined || scene===undefined){return ;}
+
+            scene[index].sceneJson = $scope.editor.getJSON();
+            let highlightedShape = $scope.getShapeById(lastHighlightedId);
+            if(highlightedShape !== undefined){
+                scene[index].lastHighlightedActionId =  highlightedShape.properties['oryx-overrideid'];
+            }
+            let selection = $scope.editor.getSelection();
+            if (selection && selection.length >= 1) {
+                $scope.scenes[$scope.selectedSceneIndex].lastselectionOverrideIds = [];
+                for (let i = 0; i < selection.length; i++) {
+                    $scope.scenes[$scope.selectedSceneIndex].lastselectionOverrideIds
+                        [$scope.scenes[$scope.selectedSceneIndex].lastselectionOverrideIds.length] = selection[i].properties['oryx-overrideid'];
+                }
+            }
+
+        }
 
         $scope.changeScene = function (index) {
             let shapes = [$scope.editor.getCanvas()][0].children;
@@ -2578,7 +2618,7 @@ angular.module('activitiModeler')
                     HighlightedItem = $scope.getShapeByOverrideId($scope.scenes[$scope.selectedSceneIndex].lastHighlightedActionId);
                     if (HighlightedItem) {
                         lastHighlightedId = HighlightedItem.id;
-                        jQuery('#' + lastHighlightedId + 'bg_frame').attr({"fill": "#04FF8E"});
+                        jQuery('#' + lastHighlightedId + 'bg_frame').attr({"fill": "#b8ffd8"});
                     }
                 }
             }

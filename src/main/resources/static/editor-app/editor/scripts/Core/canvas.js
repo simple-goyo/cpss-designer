@@ -98,7 +98,7 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
         // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
         //    ['rect', {x:ORYX.CONFIG.FORM_ROW_WIDTH + 60, y:200, width:options.width - ORYX.CONFIG.FORM_ROW_WIDTH - 186 - 60, height:300, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:2;stroke:#000000;z-index:-1", visibility: "visible"}]);
 
-        //状态空间
+        // 交互序列
 		let X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1 ;
 	    let X2 = options.width - 30 - 1;
 	    // let X2 = options.width -186 - 30 + 1;
@@ -119,7 +119,7 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
 
         this.StateSpace = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
             ['text', {'font-size':'24', 'x':X1+5, 'y':Y1+30, 'style': "font-family: Times New Roman;"}]);
-        this.StateSpace.textContent = "状态空间";
+        this.StateSpace.textContent = "交互序列"; // 原状态空间
 		// 现实空间
 		 X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1 ;
 		 X2 = options.width - 30 - 1;

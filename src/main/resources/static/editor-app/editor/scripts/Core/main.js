@@ -480,7 +480,9 @@ ORYX.Editor = {
 				eventCoordinates:		this.eventCoordinates.bind(this),
 				eventCoordinatesXY:		this.eventCoordinatesXY.bind(this),
 
-				getModelMetaData:		this.getModelMetaData.bind(this)
+				getModelMetaData:		this.getModelMetaData.bind(this),
+
+				getModelId:             this.getModelId.bind(this)
 			};
 
 		// return it.
@@ -1225,6 +1227,10 @@ ORYX.Editor = {
 	 */
 	getModelMetaData: function() {
 		return this.modelMetaData;
+	},
+
+	getModelId: function() {
+		return this.id;
 	},
 
 	/* Event-Handler Methods */

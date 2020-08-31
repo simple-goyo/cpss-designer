@@ -29,6 +29,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import static com.activiti6.constant.StencilsetJson.NAMESPACE_STENCILSET;
+
 /**
  * 流程控制器
  * liuzhize 2019年3月7日下午3:28:14
@@ -159,7 +161,7 @@ public class ModelerController{
          editorNode.put("id", "canvas");
          editorNode.put("resourceId", "canvas");
          ObjectNode stencilSetNode = objectMapper.createObjectNode();
-         stencilSetNode.put("namespace","http://b3mn.org/stencilset/bpmn2.0#");
+         stencilSetNode.put("namespace", NAMESPACE_STENCILSET);
          editorNode.put("stencilset", stencilSetNode);
          try {
 			repositoryService.addModelEditorSource(modelId,editorNode.toString().getBytes("utf-8"));

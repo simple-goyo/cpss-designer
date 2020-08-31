@@ -165,7 +165,7 @@ ORYX.Core.StencilSet.StencilSet = Clazz.extend({
 			}
 
 			var edges = stencils.findAll(function(stencil) {
-				return stencil.type() == "edge";
+				return (stencil.type() === "edge");
 			});
 			result = result.concat(edges);
 
@@ -248,7 +248,7 @@ ORYX.Core.StencilSet.StencilSet = Clazz.extend({
 			if(!(jsonExtension["extends"].endsWith("#")))
 				jsonExtension["extends"] += "#";
 
-			if(jsonExtension["extends"] == this.namespace()) {
+			if(jsonExtension["extends"] === this.namespace()) {
 				this._extensions[jsonExtension.namespace] = jsonExtension;
 
 				var defaultPosition = this._stencils.keys().size();
