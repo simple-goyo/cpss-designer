@@ -532,6 +532,10 @@ li.x-menu-list-item.x-menu-item-active a {
     content: url('../fonts/resource_update.png');
 }
 
+.editor-icon-export:before {
+    content: url('../fonts/export_model.png');
+}
+
 .editor-icon-align-horizontal:before {
     content: 'p';
 }

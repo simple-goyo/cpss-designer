@@ -28,6 +28,12 @@ KISBPM.TOOLBAR_CONFIG = {
             "action" : "KISBPM.TOOLBAR.ACTIONS.saveModel"
         },
         {
+            "type" : "button",
+            "title" : "TOOLBAR.ACTION.EXPORT",
+            "cssClass" : "editor-icon editor-icon-export",
+            "action" : "KISBPM.TOOLBAR.ACTIONS.exportModel"
+        },
+        {
             "type" : "separator",
             "title" : "",
             "cssClass" : "toolbar-separator"

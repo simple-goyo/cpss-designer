@@ -34,11 +34,6 @@ var SaveSceneCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 
         $scope.saveDialog = saveDialog;
 
-        var json = $scope.editor.getJSON();
-
-        json["properties"]["name"] = modelMetaData.name;
-        json["properties"]["documentation"] = description;
-        json = JSON.stringify(json);
 
         let modelJson = $scope.editor.getJSON();
         delete modelJson.childShapes;
@@ -119,12 +114,6 @@ var SaveSceneCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 
             modelMetaData.name = $scope.saveDialog.name;
             modelMetaData.description = $scope.saveDialog.description;
-
-
-            //var json = $scope.editor.getJSON();
-            var scene = $scope.getScenes();
-            json = $scope.createModelFile(scene);
-            json = JSON.stringify(json);
 
             let modelJson = $scope.editor.getJSON();
             delete modelJson.childShapes;
@@ -219,6 +208,46 @@ var SaveSceneCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 });
         };
 
+    }];
+
+var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
+    function ($rootScope, $scope, $http, $route, $location) {
+        var modelMetaData = $scope.editor.getModelMetaData();
+
+        var description = '';
+        if (modelMetaData.description) {
+            description = modelMetaData.description;
+        }
+
+        $scope.exportDialog = {
+                'name': modelMetaData.name,
+                'description': description
+            };
+
+        $scope.close = function () {
+            $scope.$hide();
+        };
+
+        $scope.export = function () {
+            let scene = $scope.getScenes();
+
+            $scope.createModelFile(scene);
+        };
+
+        $scope.getAction = function (scene, patten, exclude){
+            let action = [];
+            scene.each(function (s){
+                let len = s.childShapes.length;
+                if(len){
+                    for(let i=0;i<len;i++)
+                        if(exclude !== s.childShapes[i].stencil.id && patten.test(s.childShapes[i].stencil.id)){
+                            action.push(s.childShapes[i]);
+                        }
+                }
+            })
+
+            return action;
+        };
 
         $scope.createModelFile = function (scene) {
             let jsonObj = {
@@ -228,18 +257,39 @@ var SaveSceneCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                     "documentation":""
                 },
                 "scene":[],
-                "action":[]
+                "action":{
+                    "service":[],
+                    "event":[],
+                    "gateway":[]
+                }
             };
             jsonObj["properties"]["name"] = modelMetaData.name;// add diagram name
             jsonObj["properties"]["documentation"] = description;
 
             scene.each(function (s){
-                s.img = "";
+                delete s.img;
             })
 
-            // 填写模型内容
+            // 填写模型内容（For建模）
             jsonObj["id"] = $scope.editor.getModelId();
             jsonObj["scene"] = scene;
+
+            // 填写action内容（For运行）
+            // service
+            let service = $scope.getAction(scene,/(.*?)Action/,"UndefinedAction");
+
+            jsonObj["action"]["service"] = service;
+
+            // event
+            let event = $scope.getAction(scene,/^(.*?)Event$/, "StartNoneEvent");
+
+            jsonObj["action"]["event"] = event;
+
+            // gateway
+            let gateway = $scope.getAction(scene,/Gateway|EntryPoint|ExitPoint/);
+
+            jsonObj["action"]["gateway"] = gateway;
+
             console.log(jsonObj);
             return scene
         }
