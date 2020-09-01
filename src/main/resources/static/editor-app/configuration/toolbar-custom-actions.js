@@ -260,8 +260,8 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 "action":{
                     "service":[],
                     "event":[],
-                    "gateway":[]
-                }
+                },
+                "gateway":[]
             };
             jsonObj["properties"]["name"] = modelMetaData.name;// add diagram name
             jsonObj["properties"]["documentation"] = description;
@@ -277,7 +277,9 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             // 填写action内容（For运行）
             // service
             let service = $scope.getAction(scene,/(.*?)Action/,"UndefinedAction");
-
+            service.each(function (s){
+                console.log(s);
+            })
             jsonObj["action"]["service"] = service;
 
             // event
@@ -288,9 +290,9 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             // gateway
             let gateway = $scope.getAction(scene,/Gateway|EntryPoint|ExitPoint/);
 
-            jsonObj["action"]["gateway"] = gateway;
+            jsonObj["gateway"] = gateway;
 
-            console.log(jsonObj);
+            //console.log(jsonObj);
             return scene
         }
     }];

@@ -76,16 +76,19 @@ angular.module('activitiModeler')
             // this.editor.setSelection(null);
             let canvasDiv = jQuery("#canvasHelpWrapper");
 
-            canvasDiv.removeClass("col-xs-6");
+            canvasDiv.removeClass("col-xs-7");
             canvasDiv.removeClass("col-xs-9");
+            canvasDiv.removeClass("col-xs-10");
             canvasDiv.removeClass("col-xs-12");
 
             if ($scope.sceneShowState.show && $scope.entityInfoShowState.show) {
-                canvasDiv.addClass("col-xs-6");
-            } else if ($scope.sceneShowState.show || $scope.entityInfoShowState.show) {
-                canvasDiv.addClass("col-xs-9");
+                canvasDiv.addClass("col-xs-7"); // 2 + 7 + 3
+            } else if (!$scope.sceneShowState.show && $scope.entityInfoShowState.show) {
+                canvasDiv.addClass("col-xs-9"); // 9 + 3
+            }else if ($scope.sceneShowState.show && !$scope.entityInfoShowState.show) {
+                canvasDiv.addClass("col-xs-10");// 2 + 10
             } else
-                canvasDiv.addClass("col-xs-12");
+                canvasDiv.addClass("col-xs-12");// 12
             this.editor.updateSelection();
 
         }
@@ -1623,6 +1626,49 @@ angular.module('activitiModeler')
             };
 
         }); // end of $scope.editorFactory.promise block
+
+        $scope.entityHeight = 270;
+        $scope.propertyHeight = 270;
+        $scope.entitystyleObj = {
+            "height": $scope.entityHeight + "px"
+        };
+        $scope.propertystyleObj = {
+            "height": $scope.propertyHeight + "px"
+        };
+        var basePosY = 0;
+        $scope.isClicked = false;
+
+        $scope.clickLine = function(event){
+            basePosY = event.clientY;
+            $scope.isClicked = true;
+        }
+
+        $scope.dragLine = function(event) {
+            // 鼠标指针向对于浏览器页面（或客户区）的垂直坐标
+            let isResize = true;
+            let posY = event.clientY;
+            let offsetY = posY - basePosY;
+
+            if($scope.propertyHeight - offsetY < 0 || $scope.entityHeight + offsetY < 0){
+                isResize = false;
+            }
+
+            if($scope.isClicked && isResize){
+                $scope.entityHeight = $scope.entityHeight + offsetY;
+                $scope.propertyHeight = $scope.propertyHeight - offsetY;
+                $scope.entitystyleObj = {
+                    "height": $scope.entityHeight + "px"
+                }
+                $scope.propertystyleObj = {
+                    "height": $scope.propertyHeight + "px"
+                };
+                $scope.isClicked = false;
+            }
+        }
+
+        $scope.releaseLine = function(event) {
+            $scope.isClicked  = false;
+        }
 
         /* Click handler for clicking a property */
         $scope.propertyClicked = function (index) {

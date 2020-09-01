@@ -108,7 +108,7 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
 	    let X2 = options.width - 30 - 1;
 	    // let X2 = options.width -186 - 30 + 1;
 	    let	Y1 = 560;
-		let Y2 = 720;
+		let Y2 = 680;
 
 
         // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,

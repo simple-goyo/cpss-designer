@@ -8,6 +8,21 @@
     font-weight: normal;
     font-style: normal;
 }
+.line {
+    /*position: absolute;*/
+    padding-top: 0px;
+    padding-down: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    /*top: 0;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    color: #f32917;
+    /*bottom: 0;*/
+    height: 10px;
+    z-index: 200;
+    cursor: ns-resize;
+}
 
 .row-no-gutter .col-xs-9 {
     padding-left: 0px;
@@ -327,7 +342,7 @@ div.propertySection {
 }
 
 .sceneHighlighted {
-    background-color: #5cb85c;
+    background-color: #b3dbff;
 }
 
 .canvasPart {

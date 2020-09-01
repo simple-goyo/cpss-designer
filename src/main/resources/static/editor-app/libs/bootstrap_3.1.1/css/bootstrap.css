@@ -774,6 +774,17 @@ pre code {
   /*float: left;*/
   float: right;
 }
+
+.col-xs-2-custom{
+  position: relative;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+
+  float: left;
+  width: 16.66666667%;
+}
+
 .col-xs-12 {
   width: 100%;
 }

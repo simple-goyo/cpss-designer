@@ -45,8 +45,8 @@
             <div class="col-xs-3" ng-if="entityInfoShowState.show">
                 <h4 style="text-align: center">资源实体</h4>
                 <hr>
-                <div id="paletteHelpWrapper">
-                    <div class="stencils" id="paletteSection">
+                <div id="paletteHelpWrapper" class="top" >
+                    <div class="stencils" id="paletteSection"  style="overflow: auto;" ng-style="entitystyleObj" >
                         <div ng-if="stencilItemGroups.length > 1">
                             <div ng-repeat="group in stencilItemGroups">
 
@@ -85,10 +85,11 @@
                     <!--                    <div ng-controller="">-->
                     <!--                </div>-->
                 </div>
+                <div id="splitLine" class="line"  ng-mousedown="clickLine($event)" ng-mousemove="dragLine($event)" ng-mouseup="releaseLine($event)"></div>
                 <h4 style="text-align: center">实体属性</h4>
                 <hr>
-                <div id="propertiesHelpWrapper">
-                    <div class="propertySection" id="propertySection"
+                <div id="propertiesHelpWrapper" class="bottom">
+                    <div class="propertySection" id="propertySection" ng-style="propertystyleObj"
                          ng-class="{collapsed: propertyWindowState.collapsed}">
                         <div class="selected-item-section">
                             <div class="clearfix">
@@ -138,7 +139,7 @@
                     </div>
                 </div>
             </div>
-            <div id="canvasHelpWrapper" class="col-xs-6">
+            <div id="canvasHelpWrapper" class="col-xs-7">
                 <div class="canvas-wrapper" id="canvasSection"
                      ng-model="droppedElement"
                      data-drop="true"
@@ -215,14 +216,14 @@
                     </div>
                 </div>
             </div>
-            <div id="multipleSceneWrapper" style="text-align: center" class="col-xs-3" ng-if="sceneShowState.show">
+            <div id="multipleSceneWrapper" style="text-align: center" class="col-xs-2" ng-if="sceneShowState.show">
                 <h4>场景缩略图</h4>
                 <button ng-click="addScene()" class="btn btn-primary">新建场景</button>
                 <hr>
                 <div id="sceneSection" style="overflow: scroll">
                     <div ng-if="scenes.length>=1" ng-repeat="scene in scenes" ng-class="isSelectedScene({{$index}})">
                         <h6>{{scene.name}}</h6>
-                        <img onerror="this.src='static/editor-app/images/logo.png'" alt="{{scene.name}}" id="{{scene.id}}" type="image" class="img-thumbnail" style="width:100px;height:100px"
+                        <img onerror="this.src='static/editor-app/images/logo.png'" alt="{{scene.name}}" id="{{scene.id}}" type="image" class="img-thumbnail" style="width:120px;height:80px"
                              src="{{scene.img}}" ng-click="changeScene($index)"/>
                         <hr style="border:1px dashed #eee">
                     </div>
