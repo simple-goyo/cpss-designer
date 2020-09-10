@@ -242,7 +242,7 @@ angular.module('activitiModeler')
                     }
                 }
 
-                var stencilVisibleGroup = ["社会实体", "信息实体", "物理实体", "节点列表"]
+                var stencilVisibleGroup = ["社会实体", "信息实体", "物理实体", "空间实体", "节点列表"]
                 for (var i = 0; i < stencilItemGroups.length; i++) {
                     if (stencilItemGroups[i].paletteItems && stencilItemGroups[i].paletteItems.length === 0) {
                         stencilItemGroups[i].visible = false;

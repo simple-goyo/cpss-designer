@@ -259,7 +259,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 "scene":[],
                 "action":{
                     "service":[],
-                    "event":[],
+                    "event":[]
                 },
                 "gateway":[]
             };

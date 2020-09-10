@@ -22,4 +22,7 @@ public class UrlConstant {
         String serviceURL = String.format("http://%s:%s/%s", APP_BACK_END_IP, APP_BACK_END_PORT, service);
         return serviceURL;
     }
+
+    public static final String KG_URL = "http://106.15.102.123:21910/KG201910/";
+
 }

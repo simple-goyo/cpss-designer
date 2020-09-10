@@ -264,6 +264,9 @@ var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
         var hasRemoveNum = 0;
         for (var i = 0; i < functions.length; i++) {
             var index = -1;
+            if ($scope.entity.Services === undefined || $scope.entity.Services.length === 0) {
+                $scope.entity.Services = [{value: ''}];
+            }
             for (var j = 0; j < $scope.entity.Services.length; j++) {
                 if (functions[i].value === $scope.entity.Services[j].value) {
                     index = j;

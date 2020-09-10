@@ -445,10 +445,14 @@ var __createNormalAction = function ($rootScope, $scope) {
 
         // 取消之前的高亮
         var oldShapeId = $scope.getHighlightedShapeId();
-        jQuery('#' + oldShapeId + 'bg_frame').attr({"fill": "#f9f9f9"}); //高亮显示
+        if(oldShapeId !== undefined){
+            jQuery('#' + oldShapeId + 'bg_frame').attr({"fill": "#f9f9f9"}); //取消高亮显示
+        }
 
         var lastSelectedAction = $scope.getHighlightedShape();
-        jQuery('#' + lastSelectedAction.id + 'bg_frame').attr({"fill": "#f9f9f9"}); //高亮显示
+        if(lastSelectedAction.id !== undefined){
+            jQuery('#' + lastSelectedAction.id + 'bg_frame').attr({"fill": "#f9f9f9"}); //取消高亮显示
+        }
 
         // 高亮
         var newShapeId = $scope.editor.getSelection()[0].id;

@@ -1319,6 +1319,39 @@
     },
     {
       "type": "node",
+      "id": "Group",
+      "title": "人群",
+      "description": "人资源",
+      "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg \n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"40\"\n   height=\"40\"\n   version=\"1.0\">\n\t<defs></defs>\n\t<oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  \t</oryx:magnets>\n <g>\n  <title>Layer 1</title>\n  <path d=\"m28.03125,22.82264l-0.975,2.53585c3.16875,2.53585 4.875,7.60755 4.875,12.67924l1.95,0c0,-6.15849 -2.19375,-11.95472 -5.85,-15.21509zm-8.775,-22.82264c-4.3875,0 -7.8,5.43396 -7.8,11.95472c0,4.34717 1.4625,7.96981 3.65625,10.14339c-4.3875,2.17358 -7.8,8.69434 -7.8,16.30188l1.95,0c0,-7.96981 4.63125,-14.85283 10.2375,-14.85283c4.3875,0 8.04375,-5.43396 8.04375,-11.95472s-3.9,-11.59245 -8.2875,-11.59245l0,0.00001zm0,20.64905c-3.16875,0 -5.85,-3.98491 -5.85,-8.69434c0,-4.70943 2.68125,-8.69434 5.85,-8.69434c3.16875,0 5.85,3.98491 5.85,8.69434c0.24375,4.70943 -2.4375,8.69434 -5.85,8.69434zm14.38125,-7.24528c0,-5.0717 -2.68125,-9.41887 -6.3375,-9.41887c0.24375,0.72453 0.73125,1.81132 0.975,2.53585c2.19375,0.72453 3.65625,3.62264 3.65625,6.88302c0,3.98491 -2.19375,7.24528 -4.875,7.24528c-0.4875,1.08679 -0.975,1.81132 -1.4625,2.53585c0.4875,0 0.975,-0.36226 1.4625,-0.36226c3.65625,0 6.58125,-4.34717 6.58125,-9.41887zm0.73125,8.69434l-0.73125,2.17358c2.4375,2.17358 3.9,6.15849 3.9,10.14339l1.4625,0c0,-5.0717 -1.70625,-9.78113 -4.63125,-12.31698l0,0.00001zm-34.36875,12.31698l1.70625,0c0,-4.34717 1.4625,-8.33207 3.9,-10.14339l-0.975,-2.17358c-2.925,2.53585 -4.63125,7.24528 -4.63125,12.31698l0,-0.00001zm13.1625,-11.59245c-0.4875,-0.72453 -0.975,-1.44906 -1.4625,-2.53585c-2.68125,0 -4.875,-3.26038 -4.875,-7.24528c0,-3.26038 1.70625,-6.15849 3.65625,-6.88302c0.4875,-0.72453 0.73125,-1.44906 0.975,-2.53585c-3.4125,0 -6.3375,4.34717 -6.3375,9.41887c0,5.0717 2.925,9.41887 6.3375,9.41887c0.73125,0.36226 1.21875,0.36226 1.70625,0.36226z\" id=\"svg_1\" stroke=\"null\"/>\n </g>\n</svg>",
+      "icon": "socialentity/group.png",
+      "groups": [
+        "社会实体"
+      ],
+      "propertyPackages": [
+        "overrideidpackage",
+        "namepackage",
+        "documentationpackage",
+        "typepackage",
+        "ownerpackage",
+        "executionlistenerspackage",
+        "initiatorpackage",
+        "resourcespackage",
+        "servicespackage",
+        "workercontainspackage",
+        "referenceentitypackage"
+      ],
+      "hiddenPropertyPackages": [],
+      "roles": [
+        "sequence_start",
+        "message_start",
+        "message_end",
+        "Startevents_all",
+        "StartEventsMorph",
+        "all"
+      ]
+    },
+    {
+      "type": "node",
       "id": "Organization",
       "title": "组织",
       "description": "组织资源",
@@ -1565,6 +1598,63 @@
         "message_end",
         "Startevents_all",
         "StartEventsMorph",
+        "all"
+      ]
+    },
+    {
+      "type": "node",
+      "id": "Room",
+      "title": "房间",
+      "description": "房间",
+      "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg \n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"40\"\n   height=\"40\"\n   version=\"1.0\">\n\t<defs></defs>\n\t<oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  \t</oryx:magnets>\n <g>\n  <title>Layer 1</title>\n  <g stroke=\"null\" id=\"svg_3\">\n   <path stroke=\"null\" id=\"svg_1\" d=\"m17.76163,38.374997l-9.559552,0c-1.639033,0 -2.972409,-1.474 -2.972409,-3.285894l0,-19.970011c0,-0.729655 0.536008,-1.322193 1.196051,-1.322193s1.196051,0.592538 1.196051,1.322193l0,19.970011c0,0.352585 0.261359,0.641508 0.580306,0.641508l9.559552,0c0.660043,0 1.196051,0.592538 1.196051,1.322193s-0.536008,1.322193 -1.196051,1.322193zm17.019369,-15.665538c-0.660043,0 -1.196051,-0.592538 -1.196051,-1.322193l0,-5.964559c0,-0.729655 0.536008,-1.322193 1.196051,-1.322193s1.196051,0.592538 1.196051,1.322193l0,5.964559c0,0.729655 -0.536008,1.322193 -1.196051,1.322193zm-1.780788,15.665538l-9.563982,0c-0.660043,0 -1.196051,-0.592538 -1.196051,-1.322193s0.536008,-1.322193 1.196051,-1.322193l9.563982,0c0.318947,0 0.580306,-0.288924 0.580306,-0.641508l0,-4.294679c0,-0.729655 0.536008,-1.322193 1.196051,-1.322193s1.196051,0.592538 1.196051,1.322193l0,4.294679c0.00443,1.811894 -1.328946,3.285894 -2.972409,3.285894z\"/>\n   <path stroke=\"null\" id=\"svg_2\" d=\"m1.637084,20.613539c-0.349956,0 -0.699912,-0.171395 -0.934692,-0.499495c-0.411973,-0.57295 -0.327807,-1.400545 0.190482,-1.855967l17.471211,-15.405997c0.624605,-0.548465 1.404253,-0.85208 2.201621,-0.85208l0.00443,0c0.797368,0 1.581446,0.303615 2.20605,0.856977l16.248581,14.387418c0.513859,0.455422 0.598026,1.287914 0.186052,1.860864c-0.411973,0.568053 -1.165043,0.661096 -1.683332,0.205674l-16.253011,-14.392315c-0.416403,-0.372173 -1.001139,-0.372173 -1.421972,0l-17.471211,15.405997c-0.217061,0.19588 -0.48285,0.288924 -0.74421,0.288924zm21.799146,17.761459c-0.070877,0 -0.137324,-0.004897 -0.203772,-0.019588c-0.066447,0.014691 -0.132895,0.019588 -0.203772,0.019588l-5.267056,0c-0.660043,0 -1.196051,-0.592538 -1.196051,-1.322193l0,-9.382673c0,-2.4583 1.811796,-4.461177 4.035566,-4.461177c1.076446,0 2.090875,0.465216 2.852804,1.307502c0.761929,0.842286 1.182762,1.963701 1.182762,3.153675l0,9.382673c-0.00443,0.729655 -0.540438,1.322193 -1.200481,1.322193zm-4.478548,-2.644386l3.286927,0l0,-8.06048c0,-0.484804 -0.172763,-0.940226 -0.48285,-1.283017s-0.722061,-0.533774 -1.160613,-0.533774c-0.903683,0 -1.643463,0.812904 -1.643463,1.816791l0,8.06048z\"/>\n  </g>\n </g>\n</svg>",
+      "icon": "spaceentity/room.png",
+      "groups": [
+        "空间实体"
+      ],
+      "propertyPackages": [
+        "overrideidpackage",
+        "namepackage",
+        "documentationpackage",
+        "typepackage",
+        "executionlistenerspackage",
+        "initiatorpackage",
+        "resourcespackage",
+        "servicespackage",
+        "nodeconditionpackage"
+      ],
+      "hiddenPropertyPackages": [],
+      "roles": [
+        "GatewaysMorph",
+        "sequence_end",
+        "all"
+      ]
+    },
+    {
+      "type": "node",
+      "id": "Gateway",
+      "title": "网关节点",
+      "description": "网关节点",
+      "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   xmlns:svg=\"http://www.w3.org/2000/svg\"\n   xmlns=\"http://www.w3.org/2000/svg\"\n   version=\"1.0\"\n   width=\"40\"\n   height=\"40\">\n  <oryx:magnets>\n    <oryx:magnet\n       oryx:default=\"yes\"\n       oryx:cy=\"16\"\n       oryx:cx=\"16\" />\n  </oryx:magnets>\n  <g>\n\n    <path\n       d=\"M -4.5,16 L 16,-4.5 L 35.5,16 L 16,35.5z\"\n       id=\"bg_frame\"\n       fill=\"#ffffff\"\n       stroke=\"#585858\"\n       style=\"stroke-width:1\" />\n    <circle\n    \tid=\"circle\"\n    \tstroke=\"#585858\"\n\t\tcx=\"16\"\n\t\tcy=\"16\"\n\t\tr=\"9.75\"\n\t\tstyle=\"fill:none;stroke-width:2.5\" />\n    \n\t<text id=\"text_name\" x=\"26\" y=\"26\" oryx:align=\"left top\"/>\n\t\n  </g>\n</svg>\n",
+      "icon": "gateway/inclusive.png",
+      "groups": [
+        "节点列表"
+      ],
+      "propertyPackages": [
+        "overrideidpackage",
+        "namepackage",
+        "documentationpackage",
+        "typepackage",
+        "executionlistenerspackage",
+        "initiatorpackage",
+        "resourcespackage",
+        "servicespackage",
+        "nodeconditionpackage"
+      ],
+      "hiddenPropertyPackages": [],
+      "roles": [
+        "sequence_start",
+        "GatewaysMorph",
+        "sequence_end",
         "all"
       ]
     },

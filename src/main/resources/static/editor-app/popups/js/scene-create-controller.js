@@ -41,6 +41,9 @@ var SceneCreateController = ['$scope','$rootScope', function ($scope,$rootScope)
             newScene.properties[property] = propertyValue;
         }
         newScene.id = ORYX.Editor.provideId();
+        if($rootScope.scenes === undefined){
+            $rootScope.scenes = [];
+        }
         $rootScope.scenes[$rootScope.scenes.length] = newScene;
         $scope.changeScene($rootScope.scenes.length-1);
         $scope.$hide();
