@@ -218,7 +218,11 @@
             </div>
             <div id="multipleSceneWrapper" style="text-align: center" class="col-xs-2" ng-if="sceneShowState.show">
                 <h4>场景缩略图</h4>
-                <button ng-click="addScene()" class="btn btn-primary">新建场景</button>
+<!--                <button ng-click="addScene()" class="btn btn-primary">新建场景</button>-->
+                <hr>
+                <div>
+                    多Scene
+                </div>
                 <hr>
                 <div id="sceneSection" style="overflow: scroll">
                     <div ng-if="scenes.length>=1" ng-repeat="scene in scenes" ng-class="isSelectedScene({{$index}})">

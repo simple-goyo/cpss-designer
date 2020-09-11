@@ -261,7 +261,8 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                     "service":[],
                     "event":[]
                 },
-                "gateway":[]
+                "gateway":[],
+                "constraint":[]
             };
             jsonObj["properties"]["name"] = modelMetaData.name;// add diagram name
             jsonObj["properties"]["documentation"] = description;
@@ -293,6 +294,10 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             jsonObj["gateway"] = gateway;
 
             //console.log(jsonObj);
-            return scene
+
+            // constraint
+            let constraint = $scope.getConstraint(scene);
+            jsonObj["constraint"] = constraint;
+            return scene;
         }
     }];

@@ -551,6 +551,10 @@ li.x-menu-list-item.x-menu-item-active a {
     content: url('../fonts/export_model.png');
 }
 
+.editor-icon-addScene:before {
+    content: url('../fonts/add.png');
+}
+
 .editor-icon-align-horizontal:before {
     content: 'p';
 }

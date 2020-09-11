@@ -1,4 +1,6 @@
 var SceneCreateController = ['$scope','$rootScope', function ($scope,$rootScope) {
+    $scope.sceneTypes = [{"id":0, "name":"normal"},{"id":1, "name":"multiscene"},{"id":2, "name":"constraint"}];
+    $scope.chosenSceneType = undefined;
     var properties = ["location"];
     $scope.$watch('$viewContentLoaded', function () {
         $scope.sceneSettingDiv = document.getElementById("sceneSetting");
@@ -12,15 +14,15 @@ var SceneCreateController = ['$scope','$rootScope', function ($scope,$rootScope)
         container.classList.add("row");
         container.setAttribute("style", "margin-top:3%");
         var label = document.createElement("label");
-        label.classList.add("col-xs-2");
+        label.classList.add("col-xs-3");
         label.setAttribute("for", property);
         label.setAttribute("style", "float:left");
         label.innerText = property + ":";
         var input = document.createElement("input");
         input.setAttribute("id", property);
         input.setAttribute("placeholder", "请输入" + property);
-        input.setAttribute("style", "border-radius: 5px;float:left");
-        input.classList.add("col-xs-10");
+        input.setAttribute("style", "border-radius: 5px;float:right");
+        input.classList.add("col-xs-9");
         container.appendChild(label);
         container.appendChild(input);
         $scope.sceneSettingDiv.appendChild(container);

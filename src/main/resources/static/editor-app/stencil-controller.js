@@ -2573,7 +2573,14 @@ angular.module('activitiModeler')
             //     if (!hasStartEventShape()) {
             //         _createAction($rootScope, $scope, "StartNoneEvent");
             //     }
-            let selectionOverrideIds = $rootScope.scenes[$rootScope.selectedSceneIndex].lastselectionOverrideIds;
+
+            let selectionOverrideIds;
+            let lastHighlightedActionId;
+            if($rootScope.selectedSceneIndex){
+                selectionOverrideIds = $rootScope.scenes[$rootScope.selectedSceneIndex].lastselectionOverrideIds;
+                lastHighlightedActionId = $rootScope.scenes[$rootScope.selectedSceneIndex].lastHighlightedActionId;
+            }
+
             if (selectionOverrideIds && selectionOverrideIds.length >= 1) {
                 let selection = [];
                 for (let i = 0; i < selectionOverrideIds.length; i++) {
@@ -2582,7 +2589,7 @@ angular.module('activitiModeler')
                 $scope.editor.setSelection(selection);
                 $scope.editor.getCanvas().update();
             }
-            if ($rootScope.scenes[$rootScope.selectedSceneIndex].lastHighlightedActionId) {
+            if (lastHighlightedActionId) {
                 HighlightedItem = $scope.getShapeById($rootScope.scenes[$rootScope.selectedSceneIndex].lastHighlightedActionId);
                 if (HighlightedItem) {
                     lastHighlightedId = HighlightedItem.id;
@@ -2591,13 +2598,13 @@ angular.module('activitiModeler')
             }
         });
 
-        $scope.addScene = function () {
-            var opts = {
-                template: 'editor-app/popups/scene-create.html?version=' + Date.now(),
-                scope: $scope
-            };
-            $modal(opts);
-        }
+        // $scope.addScene = function () {
+        //     var opts = {
+        //         template: 'editor-app/popups/scene-create.html?version=' + Date.now(),
+        //         scope: $scope
+        //     };
+        //     $modal(opts);
+        // }
 
         $scope.setSelectedSceneIndex = function (index) {
             $scope.selectedSceneIndex = index;
@@ -2605,7 +2612,7 @@ angular.module('activitiModeler')
 
         $scope.getSelectedSceneIndex = function() {
             return $scope.selectedSceneIndex;
-        }
+        };
 
 
         $scope.getScenes = function () {
