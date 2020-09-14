@@ -841,7 +841,7 @@ angular.module('activitiModeler')
                     }
                 }
                 return connectedLines;
-            }
+            };
 
             /**
              * 根据给定的from和to创建连线
@@ -2573,7 +2573,12 @@ angular.module('activitiModeler')
             //     if (!hasStartEventShape()) {
             //         _createAction($rootScope, $scope, "StartNoneEvent");
             //     }
-            let selectionOverrideIds = $rootScope.scenes[$rootScope.selectedSceneIndex].lastselectionOverrideIds;
+            let selectionOverrideIds = undefined;
+            let lastHighlightedActionId = undefined;
+            if($rootScope.selectedSceneIndex){
+                selectionOverrideIds = $rootScope.scenes[$rootScope.selectedSceneIndex].lastselectionOverrideIds;
+                lastHighlightedActionId = $rootScope.scenes[$rootScope.selectedSceneIndex].lastHighlightedActionId
+            }
             if (selectionOverrideIds && selectionOverrideIds.length >= 1) {
                 let selection = [];
                 for (let i = 0; i < selectionOverrideIds.length; i++) {
@@ -2582,7 +2587,8 @@ angular.module('activitiModeler')
                 $scope.editor.setSelection(selection);
                 $scope.editor.getCanvas().update();
             }
-            if ($rootScope.scenes[$rootScope.selectedSceneIndex].lastHighlightedActionId) {
+
+            if (lastHighlightedActionId) {
                 HighlightedItem = $scope.getShapeById($rootScope.scenes[$rootScope.selectedSceneIndex].lastHighlightedActionId);
                 if (HighlightedItem) {
                     lastHighlightedId = HighlightedItem.id;
@@ -2597,7 +2603,7 @@ angular.module('activitiModeler')
                 scope: $scope
             };
             $modal(opts);
-        }
+        };
 
         $scope.setSelectedSceneIndex = function (index) {
             $scope.selectedSceneIndex = index;
@@ -2605,7 +2611,7 @@ angular.module('activitiModeler')
 
         $scope.getSelectedSceneIndex = function() {
             return $scope.selectedSceneIndex;
-        }
+        };
 
 
         $scope.getScenes = function () {

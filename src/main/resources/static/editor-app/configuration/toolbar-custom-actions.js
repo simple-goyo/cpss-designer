@@ -244,10 +244,15 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                             action.push(s.childShapes[i]);
                         }
                 }
-            })
+            });
 
             return action;
         };
+
+        $scope.getConstraints = function(scene){
+
+        };
+
 
         $scope.createModelFile = function (scene) {
             let jsonObj = {
@@ -261,14 +266,15 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                     "service":[],
                     "event":[]
                 },
-                "gateway":[]
+                "gateway":[],
+                "constraint":[]
             };
             jsonObj["properties"]["name"] = modelMetaData.name;// add diagram name
             jsonObj["properties"]["documentation"] = description;
 
             scene.each(function (s){
                 delete s.img;
-            })
+            });
 
             // 填写模型内容（For建模）
             jsonObj["id"] = $scope.editor.getModelId();
@@ -279,7 +285,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             let service = $scope.getAction(scene,/(.*?)Action/,"UndefinedAction");
             service.each(function (s){
                 console.log(s);
-            })
+            });
             jsonObj["action"]["service"] = service;
 
             // event
@@ -292,7 +298,11 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 
             jsonObj["gateway"] = gateway;
 
-            //console.log(jsonObj);
+
+            // Constraints 约束位于另一个scene中
+            let constraints = $scope.getConstraints(scene);
+            jsonObj["gateway"] = constraints;
+
             return scene
         }
     }];
