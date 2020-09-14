@@ -1485,7 +1485,10 @@ angular.module('activitiModeler')
                 }
 
                 KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
-                $rootScope.scenes[$rootScope.selectedSceneIndex].childShapes = $scope.editor.getJSON().childShapes;
+                if($rootScope.selectedSceneIndex){
+                    $rootScope.scenes[$rootScope.selectedSceneIndex].childShapes = $scope.editor.getJSON().childShapes;
+                }
+
                 // $scope.editor.deleteShape(shapeToRemove);
                 // KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
             };

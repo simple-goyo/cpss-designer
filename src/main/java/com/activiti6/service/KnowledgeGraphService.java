@@ -263,7 +263,7 @@ public class KnowledgeGraphService {
     public static void main(String[] args) {
         //// 接口测试
         try{
-//        getResourceByLocation("roomD2008_InterdisciplineBuilding");
+//        getResourceByLocation("roomD2008_InterdisciplineBuilding2");
 //        getPropertyByLocation("meeting_room_FudanSELab");
 //        getCapabilityByResName("CoffeeMaker");
 //        List<String> attri = Arrays.asList("\"inputParameter\"", "\"outputParameter\"", "\"accessAddress\"", "\"methodType\"");

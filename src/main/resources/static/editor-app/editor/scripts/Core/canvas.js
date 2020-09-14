@@ -52,6 +52,9 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
     /**
      * Constructor
      */
+
+
+
     construct: function (options, stencil, facade) {
         arguments.callee.$.construct.apply(this, arguments);
 
@@ -75,7 +78,7 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
 
         //init svg document
         this.rootNode = ORYX.Editor.graft("http://www.w3.org/2000/svg", options.parentNode,
-            ['svg', {id: this.id, width: options.width, height: options.height},
+            ['svg', {id: this.id, width: options.width, height: options.height, class:"rootNodeClass"},
                 ['defs', {}]
             ]);
 
@@ -89,114 +92,28 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
         this.underlayNode = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.rootNode,
             ['svg', {id: "underlay-container"}]);
 
-        // Create 2 svg-elements in the svg-container
-        // 分割左右两块区域
-        // this.columnHightlight1 = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-        // 	['rect', {x: 0, width: ORYX.CONFIG.FORM_ROW_WIDTH , height: "100%", style: "fill: #DBFFE7;z-index:-2", visibility: "visible"}]); //#fff6d5
+        // 信息空间
+        let X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1;
+        let X2 = options.width - 30 - 1;
+        let Y1 = 20;
+        let Y2 = 150;
+        this._drawUnderlay(X1, "4%", X2-X1,"22%", this.underlayNode,"信息空间");
 
-        // this.columnHightlight2 = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-        // 		['rect', {x: ORYX.CONFIG.FORM_ROW_WIDTH , width: options.width - ORYX.CONFIG.FORM_ROW_WIDTH , height: "100%", style: "fill: #CFFFF7;z-index:-2", visibility: "visible"}]);
-
-        // 增加一块区域位于第二块分割区域中间
-        // <line x1="0" y1="0" x2="300" y2="300" style="stroke:rgb(99,99,99);stroke-width:2"/>
-        // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-        //    ['rect', {x:ORYX.CONFIG.FORM_ROW_WIDTH + 60, y:200, width:options.width - ORYX.CONFIG.FORM_ROW_WIDTH - 186 - 60, height:300, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:2;stroke:#000000;z-index:-1", visibility: "visible"}]);
-
-
-        // 交互序列
-		let X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1 ;
-	    let X2 = options.width - 30 - 1;
-	    // let X2 = options.width -186 - 30 + 1;
-	    let	Y1 = 560;
-		let Y2 = 680;
-
-
-        // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-        //     ['line', {x1:X1, y1:Y1, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
-        // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-        //     ['line', {x1:X1, y1:Y1, x2:X2, y2:Y1, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
-        // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-        //     ['line', {x1:X2, y1:Y1, x2:X2, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
-        // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-        //     ['line', {x1:X2, y1:Y2, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
-
-        ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-            ['rect', {
-                x: X1,
-                y: Y1,
-                width: X2 - X1,
-                height: Y2 - Y1,
-                rx: 5,
-                ry: 5,
-                "class": "canvasPart",
-                visibility: "visible"
-            }]);
-
-        this.StateSpace = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-            ['text', {'font-size':'24', 'x':X1+5, 'y':Y1+30, 'style': "font-family: Times New Roman;"}]);
-        this.StateSpace.textContent = "交互序列"; // 原状态空间
-		// 现实空间
+		// 社会物理空间
 		 X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1 ;
 		 X2 = options.width - 30 - 1;
 		 Y1 = 170;
 		 Y2 = 540;
+        this._drawUnderlay(X1, "30%", X2-X1,"45%", this.underlayNode,"社会物理空间");
 
-		// ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-		// 	['line', {x1:X1, y1:Y1, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
-		// ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-		// 	['line', {x1:X1, y1:Y1, x2:X2, y2:Y1, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
-		// ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-		// 	['line', {x1:X2, y1:Y1, x2:X2, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
-		// ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-		// 	['line', {x1:X2, y1:Y2, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
-        ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-            ['rect', {
-                x: X1,
-                y: Y1,
-                width: X2 - X1,
-                height: Y2 - Y1,
-                rx: 5,
-                ry: 5,
-                "class": "canvasPart",
-                visibility: "visible"
-            }]);
-
-
-        this.RealWord = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-            ['text', {'font-size': '24', 'x': X1 + 5, 'y': Y1 + 30, 'style': "font-family: Times New Roman;"}]);
-        this.RealWord.textContent = "社会物理空间";
-
-        // 虚拟空间
-        X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1;
+        // 交互序列
+        X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1 ;
         X2 = options.width - 30 - 1;
-        Y1 = 20;
-        Y2 = 150;
+        //X2 = options.width -186 - 30 + 1;
+        Y1 = 560;
+        Y2 = 680;
 
-        // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-        // 	['line', {x1:X1, y1:Y1, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
-        // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-        // 	['line', {x1:X1, y1:Y1, x2:X2, y2:Y1, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
-        // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-        // 	['line', {x1:X2, y1:Y1, x2:X2, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
-        // ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-        // 	['line', {x1:X2, y1:Y2, x2:X1, y2:Y2, rx:5, ry:5, style: "fill:#CECDCFFF;stroke-width:3;stroke:#000000", visibility: "visible"}]);
-
-        ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-            ['rect', {
-                x: X1,
-                y: Y1,
-                width: X2 - X1,
-                height: Y2 - Y1,
-                rx: 5,
-                ry: 5,
-                "class": "canvasPart",
-                visibility: "visible"
-            }]);
-
-
-        this.CyberWord = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.underlayNode,
-            ['text', {'font-size': '24', 'x': X1 + 5, 'y': Y1 + 30, 'style': "font-family: Times New Roman;"}]);
-        this.CyberWord.textContent = "信息空间";
+        this._drawUnderlay(X1, "80%", X2-X1,"20%", this.underlayNode,"交互序列");
 
 
         this.node = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.rootNode,
@@ -208,7 +125,6 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
                 ],
                 ['g', {"class": "svgcontainer"}]
             ]);
-
         /*
         var off = 2 * ORYX.CONFIG.GRID_DISTANCE;
         var size = 3;
@@ -254,6 +170,40 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
         this.rootNode.oncontextmenu = function () {
             return false;
         };
+    },
+
+    _toPercent: function (point){
+        let str = Number(point*100).toFixed(0);
+        str += "%";
+        return str;
+    },
+
+    _toPoint: function (point){
+        let str = point.replace("%","");
+        str = str / 100;
+        return str;
+    },
+
+    _drawUnderlay: function (x, y, width, height, parrentNode, spaceName) {
+
+        ORYX.Editor.graft("http://www.w3.org/2000/svg", parrentNode,
+            ['rect', {
+                x: x,
+                y: y,
+                width: width,
+                height: height,
+                rx: 5,
+                ry: 5,
+                "class": "canvasPart",
+                visibility: "visible"
+            }]);
+
+        // let X = this._toPercent(x + 5);
+         let Y = this._toPercent(this._toPoint(y) + 0.05);
+
+        this.newSpace = ORYX.Editor.graft("http://www.w3.org/2000/svg", parrentNode,
+            ['text', {'font-size':'22', 'x':x+5, 'y':Y, 'style': "font-family: Times New Roman;"}]);
+        this.newSpace.textContent = spaceName;
     },
 
     focus: function () {
