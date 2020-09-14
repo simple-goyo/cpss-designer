@@ -209,9 +209,13 @@ activitiModeler
 
                     updateWindowSize();
 
+                    // resize 之前的高和宽
+                    var lastHeight = jQuery(window).height();
+                    var lastWidth  = jQuery(window).width();
+
                     // Hook in resizing of main panels when window resizes
                     // TODO: perhaps move to a separate JS-file?
-                    jQuery(window).resize(["width","height"],function (event) {
+                    jQuery(window).resize(function () {
 
                         // Calculate the offset based on the bottom of the module header
                         var offset = jQuery("#editor-header").offset();
@@ -266,8 +270,15 @@ activitiModeler
 
                                 if(_isStencilNode(title)){
                                     // 调整位置
-                                    console.log("调整位置");
+                                    let currentHeight = jQuery(window).height();
+                                    let currentWidth = jQuery(window).width();
+                                    let hDiff = lastHeight - currentHeight;
+                                    let wDiff = lastWidth  - currentWidth;
+                                    lastHeight = currentHeight;
+                                    lastWidth = currentWidth;
 
+                                    console.log(hDiff);
+                                    console.log(wDiff);
                                     // 判断元素所处的区域
 
                                 }
