@@ -1485,7 +1485,10 @@ angular.module('activitiModeler')
                 }
 
                 KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
-                $rootScope.scenes[$rootScope.selectedSceneIndex].childShapes = $scope.editor.getJSON().childShapes;
+                if($rootScope.selectedSceneIndex){
+                    $rootScope.scenes[$rootScope.selectedSceneIndex].childShapes = $scope.editor.getJSON().childShapes;
+                }
+
                 // $scope.editor.deleteShape(shapeToRemove);
                 // KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
             };
@@ -2573,12 +2576,14 @@ angular.module('activitiModeler')
             //     if (!hasStartEventShape()) {
             //         _createAction($rootScope, $scope, "StartNoneEvent");
             //     }
-            let selectionOverrideIds = undefined;
-            let lastHighlightedActionId = undefined;
+
+            let selectionOverrideIds;
+            let lastHighlightedActionId;
             if($rootScope.selectedSceneIndex){
                 selectionOverrideIds = $rootScope.scenes[$rootScope.selectedSceneIndex].lastselectionOverrideIds;
-                lastHighlightedActionId = $rootScope.scenes[$rootScope.selectedSceneIndex].lastHighlightedActionId
+                lastHighlightedActionId = $rootScope.scenes[$rootScope.selectedSceneIndex].lastHighlightedActionId;
             }
+
             if (selectionOverrideIds && selectionOverrideIds.length >= 1) {
                 let selection = [];
                 for (let i = 0; i < selectionOverrideIds.length; i++) {
@@ -2587,7 +2592,6 @@ angular.module('activitiModeler')
                 $scope.editor.setSelection(selection);
                 $scope.editor.getCanvas().update();
             }
-
             if (lastHighlightedActionId) {
                 HighlightedItem = $scope.getShapeById($rootScope.scenes[$rootScope.selectedSceneIndex].lastHighlightedActionId);
                 if (HighlightedItem) {
@@ -2597,13 +2601,13 @@ angular.module('activitiModeler')
             }
         });
 
-        $scope.addScene = function () {
-            var opts = {
-                template: 'editor-app/popups/scene-create.html?version=' + Date.now(),
-                scope: $scope
-            };
-            $modal(opts);
-        };
+        // $scope.addScene = function () {
+        //     var opts = {
+        //         template: 'editor-app/popups/scene-create.html?version=' + Date.now(),
+        //         scope: $scope
+        //     };
+        //     $modal(opts);
+        // }
 
         $scope.setSelectedSceneIndex = function (index) {
             $scope.selectedSceneIndex = index;

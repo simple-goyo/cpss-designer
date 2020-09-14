@@ -9,9 +9,15 @@
             <hr>
             <div class="modal-body" id="sceneSetting">
                 <div class="row">
-                    <label for="sceneName" class="col-xs-2" style="float: left">场景名：</label>
-                    <input id="sceneName" class="col-xs-10" style="border-radius: 5px;float: left" placeholder="请输入场景名称">
-
+                    <label for="sceneName" class="col-xs-3" style="float: left">场景名：</label>
+                    <input id="sceneName" class="col-xs-9" style="border-radius: 5px;float: right" placeholder="请输入场景名称">
+                </div>
+                <div class="row" style="margin-top:3%">
+                    <label for="sceneType" class="col-xs-3" style="float: left">场景类型： </label>
+                    <select id="sceneType" class="col-xs-9" style="border-radius: 5px;float: right" ng-model="chosenSceneType">
+                        <option value="" selected="selected">请选择场景类型</option>
+                        <option ng-repeat="x in sceneTypes" value="{{x.name}}">{{x.name}}</option>
+                    </select>
                 </div>
             </div>
             <div class="modal-footer">

@@ -40,6 +40,18 @@ KISBPM.TOOLBAR_CONFIG = {
         },
         {
             "type" : "button",
+            "title" : "TOOLBAR.ACTION.ADDSCENE",
+            "cssClass" : "editor-icon editor-icon-addScene",
+            "action" : "KISBPM.TOOLBAR.ACTIONS.addScene",
+            "id" : "addScene-button"
+        },
+        {
+            "type" : "separator",
+            "title" : "",
+            "cssClass" : "toolbar-separator"
+        },
+        {
+            "type" : "button",
             "title" : "TOOLBAR.ACTION.CUT",
             "cssClass" : "editor-icon editor-icon-cut",
             "action" : "KISBPM.TOOLBAR.ACTIONS.cut",

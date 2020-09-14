@@ -211,17 +211,17 @@ activitiModeler
 
                     // Hook in resizing of main panels when window resizes
                     // TODO: perhaps move to a separate JS-file?
-                    jQuery(window).resize(function () {
+                    jQuery(window).resize(["width","height"],function (event) {
 
                         // Calculate the offset based on the bottom of the module header
                         var offset = jQuery("#editor-header").offset();
                         // var propSectionHeight = jQuery('#propertySection').height();
                         var canvas = jQuery('#canvasSection');
                         var mainHeader = jQuery('#main-header');
+                        var oryxEditor = jQuery('.rootNodeClass');
 
-                        if (offset == undefined || offset === null
+                        if (offset === undefined || offset === null|| canvas === undefined || canvas === null || mainHeader === null) {
                             // || propSectionHeight === undefined || propSectionHeight === null
-                            || canvas === undefined || canvas === null || mainHeader === null) {
                             return;
                         }
 
@@ -246,15 +246,38 @@ activitiModeler
                         // canvas.height(totalAvailable - propSectionHeight);
                         //属性编辑栏移动至资源实体下方，不影响canvas
                         canvas.height(totalAvailable);
-                        jQuery('#paletteSection').height(totalAvailable / 2);
 
+                        jQuery('#paletteSection').height(totalAvailable / 2);
                         //设置属性编辑栏的高度
                         jQuery('#propertySection').height(totalAvailable / 2);
-
                         jQuery('#sceneSection').height(totalAvailable - 100);
 
                         // Update positions of the resize-markers, according to the canvas
 
+                        // 自适应修改canvas里面的元素
+                        oryxEditor.height(totalAvailable);
+
+                        let child = oryxEditor.children("g").children(".stencils").children(".children");
+                        let children = child.children();
+                        if(children){
+                            children.each(function (i, elem){
+                                // 如果是画布中的元素（信息、物理、交互中的节点），则调整位置
+                                let title = elem.children[0].children[0].children[0].getAttribute("title");
+
+                                if(_isStencilNode(title)){
+                                    // 调整位置
+                                    console.log("调整位置");
+
+                                    // 判断元素所处的区域
+
+                                }
+                            });
+                        }
+
+                        function _isStencilNode(title){
+                            let nameList = ["用户","工人","人群","组织","设备","物品","机器人","云应用","移动应用","嵌入式应用","信息对象","房间","网关节点","入口节点","出口节点"];
+                            return nameList.findIndex(x => x === title) > -1;
+                        }
                         var actualCanvas = null;
                         if (canvas && canvas[0].children[1]) {
                             actualCanvas = canvas[0].children[1];

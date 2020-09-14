@@ -53,6 +53,15 @@ KISBPM.TOOLBAR = {
             });
         },
 
+        addScene: function (services) {
+            var modal = services.$modal({
+                backdrop: true,
+                keyboard: true,
+                template: 'editor-app/popups/scene-create.html?version=' + Date.now(),
+                scope: services.$scope
+            });
+        },
+
         undo: function (services) {
 
             // Get the last commands

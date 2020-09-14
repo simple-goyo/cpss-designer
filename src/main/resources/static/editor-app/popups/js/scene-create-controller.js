@@ -1,6 +1,4 @@
 var SceneCreateController = ['$scope','$rootScope', function ($scope,$rootScope) {
-    $scope.sceneTypes = [{"id":0,"name":"普通"}, {"id":1,"name":"多场景"},{"id":2,"name":"约束"}];
-
     var properties = ["location"];
     $scope.$watch('$viewContentLoaded', function () {
         $scope.sceneSettingDiv = document.getElementById("sceneSetting");

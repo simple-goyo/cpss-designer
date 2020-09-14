@@ -298,11 +298,11 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 
             jsonObj["gateway"] = gateway;
 
+            //console.log(jsonObj);
 
-            // Constraints 约束位于另一个scene中
-            let constraints = $scope.getConstraints(scene);
-            jsonObj["gateway"] = constraints;
-
-            return scene
+            // constraint
+            let constraint = $scope.getConstraint(scene);
+            jsonObj["constraint"] = constraint;
+            return scene;
         }
     }];
