@@ -420,20 +420,29 @@ table.history tr.current td {
 	 word-wrap: break-word;
 }
 
-.modal-viewer {
-	position: relative;
-	width: 1000px;
-	height: 800px;
-	margin: 1.75rem auto;
-	pointer-events: none;
+/*.modal-viewer {*/
+/*	position: relative;*/
+/*	width: 1000px;*/
+/*	height: 800px;*/
+/*	margin: 1.75rem auto;*/
+/*	pointer-events: none;*/
 
-	-webkit-transform: none;
-	transform: none;
-}
+/*	-webkit-transform: none;*/
+/*	transform: none;*/
+/*}*/
 
 .modal.modal-wide .modal-dialog {
 	width: 1000px;	
 }
+
+.modal.modal-height{
+	height: 600px;
+}
+
+.modal-dialog.modal-height{
+	height: 600px;
+}
+
 
 .modal-dialog.modal-wide {
     width: 1000px;  
@@ -441,6 +450,7 @@ table.history tr.current td {
 
 .modal-body p {
 	font-size: 15px;
+	height: auto;
 }
 
 .modal-body p.danger {

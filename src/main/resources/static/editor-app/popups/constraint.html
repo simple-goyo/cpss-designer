@@ -1,5 +1,5 @@
 <div class="modal" ng-controller="ConstraintController">
-    <div class="modal-viewer">
+    <div class="modal-dialog modal-wide modal-height">
         <div class="modal-content">
             <div class="modal-header">
                 <div type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">x
@@ -7,15 +7,32 @@
                 <h3>约束预览</h3>
             </div>
             <div class="modal-body" id="constraintViewer" ng-init="init()">
-                <div class="Viewer" align="center" >
-                    <svg>
+                <div id="entityList" style="overflow: auto" width="12%" align="left">
+                    <div ng-if="entities.length > 0">
+                            <li ng-repeat="item in entities" class="stencil-item"
+                                id="{{item.id}}"
+                                title="{{item.description}}"
+                                ng-model="draggedElement"
+                                data-drag="true"
+                                jqyoui-draggable="{onStart:'startDragCallback', onDrag:'dragCallback'}"
+                                data-jqyoui-options="{revert: 'invalid', helper: 'clone', opacity : 0.5}">
 
+                                <img ng-src="editor-app/stencilsets/bpmn2.0/icons/{{item.icon}}" width="16px;" height="16px;"/>
+                                {{item.name}}
+                            </li>
+                    </div>
+                </div>
+                <div id="Viewer" align="center" width="80%">
+                    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg" >
+                        <g>
+
+                        </g>
                     </svg>
+                </div>
             </div>
             <div class="modal-footer">
                 <div type="button" ng-click="close()" class="btn btn-primary" translate>ACTION.CANCEL</div>
             </div>
-        </div>
     </div>
 </div>
 </div>
