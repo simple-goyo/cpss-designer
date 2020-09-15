@@ -46,6 +46,13 @@ KISBPM.TOOLBAR_CONFIG = {
             "id" : "addScene-button"
         },
         {
+            "type" : "button",
+            "title" : "TOOLBAR.ACTION.CONSTRAINT",
+            "cssClass" : "editor-icon editor-icon-constraint",
+            "action" : "KISBPM.TOOLBAR.ACTIONS.constraint",
+            "id" : "constraint-button"
+        },
+        {
             "type" : "separator",
             "title" : "",
             "cssClass" : "toolbar-separator"

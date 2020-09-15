@@ -420,6 +420,17 @@ table.history tr.current td {
 	 word-wrap: break-word;
 }
 
+.modal-viewer {
+	position: relative;
+	width: 1000px;
+	height: 800px;
+	margin: 1.75rem auto;
+	pointer-events: none;
+
+	-webkit-transform: none;
+	transform: none;
+}
+
 .modal.modal-wide .modal-dialog {
 	width: 1000px;	
 }
@@ -522,7 +533,7 @@ table.history tr.current td {
 
 .center-pane .well {
     -moz-border-radius: 0px;
-    -webkit-border-radius: px;
+    -webkit-border-radius: 0px;
     border-radius: 0px;
     background-color: #f9f9f9;
     padding: 12px 10px;

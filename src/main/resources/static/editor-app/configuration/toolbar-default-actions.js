@@ -62,6 +62,15 @@ KISBPM.TOOLBAR = {
             });
         },
 
+        constraint: function (services) {
+            var modal = services.$modal({
+                backdrop: true,
+                keyboard: true,
+                template: 'editor-app/popups/constraint.html?version=' + Date.now(),
+                scope: services.$scope
+            });
+        },
+
         undo: function (services) {
 
             // Get the last commands

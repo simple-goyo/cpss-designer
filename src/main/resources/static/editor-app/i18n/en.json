@@ -21,6 +21,8 @@
   "TOOLBAR.ACTION.CLOSE": "Close the editor and go back to the overview page",
   "TOOLBAR.ACTION.SAVE": "保存",
   "TOOLBAR.ACTION.VALIDATE": "校验",
+  "TOOLBAR.ACTION.ADDSCENE": "添加Scene",
+  "TOOLBAR.ACTION.CONSTRAINT": "约束预览",
   "TOOLBAR.ACTION.CUT": "剪切",
   "TOOLBAR.ACTION.COPY": "复制",
   "TOOLBAR.ACTION.PASTE": "粘贴",
