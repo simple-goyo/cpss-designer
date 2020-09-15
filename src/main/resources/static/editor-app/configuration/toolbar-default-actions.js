@@ -382,10 +382,12 @@ var __createStartNode = function ($rootScope, $scope) {
             }
         }
     }
-    ORYX.CONFIG.NAMESPACE_ORYX
+
     if (!containedStencil) return;
 
     var positionOffset = {x: 80, y: 640};//初始节点的位置
+
+    positionOffset.y = jQuery(window).height()*0.8;
 
     var option = {
         type: namespace + itemId,

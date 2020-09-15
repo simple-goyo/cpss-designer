@@ -90,7 +90,8 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
 
         // Additional SVG-node BELOW the stencils to allow underlays (if that is even a word) by plugins
         this.underlayNode = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.rootNode,
-            ['svg', {id: "underlay-container"}]);
+            ['svg', {id: "underlay-container",style: "position:absolute; top:5px; z-index:-1;"}]);
+
 
         // 信息空间
         let X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1;

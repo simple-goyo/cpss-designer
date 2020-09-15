@@ -105,6 +105,10 @@ activitiModeler
                     delete initJson.model.selectedSceneIndex;
                     if ($rootScope.scenes)
                         initJson.model.childShapes = $rootScope.scenes[$rootScope.selectedSceneIndex].childShapes;
+
+                    if($rootScope.editor){
+                        jQuery(".ORYX_Editor").remove();
+                    }
                     $rootScope.editor = new ORYX.Editor(initJson);
                     $rootScope.modelData = angular.fromJson(initJson);
                     $rootScope.editorFactory.resolve();
@@ -260,35 +264,52 @@ activitiModeler
 
                         // 自适应修改canvas里面的元素
                         oryxEditor.height(totalAvailable);
+                        // 获取resize前后窗口height和width的差异
+                        let currentHeight = jQuery(window).height();
+                        let currentWidth = jQuery(window).width();
+                        let hDiff = currentHeight / lastHeight;
+                        let wDiff =  currentWidth / lastWidth;
+                        lastHeight = currentHeight;
+                        lastWidth = currentWidth;
 
-                        let child = oryxEditor.children("g").children(".stencils").children(".children");
-                        let children = child.children();
-                        if(children){
-                            children.each(function (i, elem){
-                                // 如果是画布中的元素（信息、物理、交互中的节点），则调整位置
-                                let title = elem.children[0].children[0].children[0].getAttribute("title");
+                        if($rootScope.editor === undefined) return;
+                        let nodes = $rootScope.editor._canvas.nodes;
+                        nodes.forEach(function (node,i) {
+                            let TopLeft     = node.bounds.a;
+                            let sizeX       = node.bounds.b.x - node.bounds.a.x;
+                            let sizeY       = node.bounds.b.y - node.bounds.a.y;
 
-                                if(_isStencilNode(title)){
-                                    // 调整位置
-                                    let currentHeight = jQuery(window).height();
-                                    let currentWidth = jQuery(window).width();
-                                    let hDiff = lastHeight - currentHeight;
-                                    let wDiff = lastWidth  - currentWidth;
-                                    lastHeight = currentHeight;
-                                    lastWidth = currentWidth;
+                            let newTL= {x:0,y:0};
+                            let newBR = {x:0,y:0};
+                            newTL.y = TopLeft.y*hDiff;
+                            newTL.x = TopLeft.x*wDiff;
+                            newBR.y = newTL.y + sizeY;
+                            newBR.x = newTL.x + sizeX;
 
-                                    console.log(hDiff);
-                                    console.log(wDiff);
-                                    // 判断元素所处的区域
+                            node.bounds.a = newTL;
+                            node.bounds.b = newBR;
 
-                                }
-                            });
-                        }
+                            node.refresh();
+                        });
 
-                        function _isStencilNode(title){
-                            let nameList = ["用户","工人","人群","组织","设备","物品","机器人","云应用","移动应用","嵌入式应用","信息对象","房间","网关节点","入口节点","出口节点"];
-                            return nameList.findIndex(x => x === title) > -1;
-                        }
+                        let edges = $rootScope.editor._canvas.edges;
+                        edges.forEach(function (edge,i){
+                            let TopLeft = edge.bounds.a;
+                            let BottomRight = edge.bounds.b;
+                            let newTL= {x:0,y:0};
+                            let newBR = {x:0,y:0};
+                            newTL.y = TopLeft.y*hDiff;
+                            newTL.x = TopLeft.x*wDiff;
+                            newBR.y = BottomRight.y*hDiff;
+                            newBR.x = BottomRight.x*wDiff;
+
+                            edge.bounds.a = newTL;
+                            edge.bounds.b = newBR;
+
+                            edge.optimizedUpdate();
+                        });
+                        $rootScope.editor.updateSelection();
+
                         var actualCanvas = null;
                         if (canvas && canvas[0].children[1]) {
                             actualCanvas = canvas[0].children[1];

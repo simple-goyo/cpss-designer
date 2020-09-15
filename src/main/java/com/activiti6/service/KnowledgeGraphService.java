@@ -53,7 +53,8 @@ public class KnowledgeGraphService {
     // {"cyberResouceTypes":"[NeteaseNews, Eleme, Meituan, Keep, Orders, DZH]","physicalResouceTypes":"[CoffeeMaker, ElectricKettle, WaterDispenser, WeighingScale, AirCleaner]"}
     public static JSONArray getResourceList() {
         final String KGURL = KG_URL+"getResourceTypes";
-        String reqParam = "?filePath="+filePath;
+        final String defaultLocation = "roomD2008_InterdisciplineBuilding2";
+        String reqParam = "?location="+defaultLocation+"&filePath="+filePath;
         String retn;
         JSONArray retnJSON = new JSONArray();
         JSONObject job;
