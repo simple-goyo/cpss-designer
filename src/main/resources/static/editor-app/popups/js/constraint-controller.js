@@ -1,27 +1,14 @@
-var ConstraintController = ['$scope','$rootScope', function ($scope,$rootScope) {
+var ConstraintController = ['$scope','$rootScope','$http', function ($scope, $rootScope, $http) {
     $scope.entities = [];
-
-    $scope.entities.push({id:"0",name:"11",description:"aa",icon:"socialentity/person.png"});
-
-    $scope.init = function (){
-        // var parent = jQuery('.constraintViewer');
-        // var div = ORYX.Editor.graft("http://www.w3.org/1999/xhtml", parent, ['div']);
-        // div.addClassName("HAHAHAHAHA");
-        var command = new VIEWER.CreateCanvas();
-        $scope.editor.executeCommands([command]);
-    };
+    $scope.entities.push({id:"0",name:"User",icon:"socialentity/person.png"});
 
     $scope.close = function (){
         $scope.$hide();
     }
+
+    // LOAD the content of the current editor instance
+    window.setTimeout(function(){
+        $scope.constraintViewer = new ORYX.Viewer();
+    }.bind(this), 500);
 }];
 
-var VIEWER = VIEWER || {};
-
-VIEWER.CreateCanvas = ORYX.Editor.extend({
-    construct: function (){
-        let v = this.getStencilSets().values();
-        console.log(v);
-        // this._createCanvas(null, null);
-    }
-})

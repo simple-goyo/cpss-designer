@@ -435,9 +435,9 @@ table.history tr.current td {
 	width: 1000px;	
 }
 
-.modal.modal-height{
-	height: 600px;
-}
+/*.modal.modal-height{*/
+/*	height: 600px;*/
+/*}*/
 
 .modal-dialog.modal-height{
 	height: 600px;

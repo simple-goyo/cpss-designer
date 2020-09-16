@@ -2744,6 +2744,11 @@ angular.module('activitiModeler')
                 $rootScope.scenes[index].img = screenshot.toDataURL("image/jpeg");
             });
         }
+
+        $scope.myExecuteCommands = function(){
+            // $scope.constraintViewer = new ORYX.Editor();
+
+        }
     }]);
 
 

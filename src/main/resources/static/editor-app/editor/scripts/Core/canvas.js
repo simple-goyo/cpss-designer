@@ -93,27 +93,18 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
             ['svg', {id: "underlay-container",style: "position:absolute; top:5px; z-index:-1;"}]);
 
 
-        // 信息空间
+        // 信息空间 和 社会物理空间
         let X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1;
         let X2 = options.width - 30 - 1;
         let Y1 = 20;
         let Y2 = 150;
-        this._drawUnderlay(X1, "4%", X2-X1,"22%", this.underlayNode,"信息空间");
+        // this._drawUnderlay(X1, "4%", X2-X1,"22%", this.underlayNode,"信息社会物理空间");
 
-		// 社会物理空间
-		 X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1 ;
-		 X2 = options.width - 30 - 1;
-		 Y1 = 170;
-		 Y2 = 540;
-        this._drawUnderlay(X1, "30%", X2-X1,"45%", this.underlayNode,"社会物理空间");
+        this._drawUnderlay(X1, "4%", X2-X1,"67%", this.underlayNode,"信息空间");
+
+        this._drawLine(X1, "22%", X2-X1+30,"22%", this.underlayNode,"社会物理空间");
 
         // 交互序列
-        X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1 ;
-        X2 = options.width - 30 - 1;
-        //X2 = options.width -186 - 30 + 1;
-        Y1 = 560;
-        Y2 = 680;
-
         this._drawUnderlay(X1, "80%", X2-X1,"20%", this.underlayNode,"交互序列");
 
 
@@ -203,8 +194,28 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
          let Y = this._toPercent(this._toPoint(y) + 0.05);
 
         this.newSpace = ORYX.Editor.graft("http://www.w3.org/2000/svg", parrentNode,
-            ['text', {'font-size':'22', 'x':x+5, 'y':Y, 'style': "font-family: Times New Roman;"}]);
+            ['text', {'font-size':'18', 'x':x+5, 'y':Y, 'style': "font-family: Times New Roman;"}]);
         this.newSpace.textContent = spaceName;
+    },
+
+    _drawLine: function (x1,y1,x2,y2,parrentNode, spaceName){
+        ORYX.Editor.graft("http://www.w3.org/2000/svg", parrentNode,
+            ['line', {
+            x1:x1,
+            y1:y1,
+            x2:x2,
+            y2:y2,
+            rx:3,
+            ry:3,
+            style: "fill:#CECDCFFF;stroke-width:2;stroke-dasharray:5;stroke:#000000",
+            visibility: "visible"
+        }]);
+
+        let Y = this._toPercent(this._toPoint(y1) + 0.05);
+        this.newSpace = ORYX.Editor.graft("http://www.w3.org/2000/svg", parrentNode,
+            ['text', {'font-size':'18', 'x':x1+5, 'y':Y, 'style': "font-family: Times New Roman;"}]);
+        this.newSpace.textContent = spaceName;
+        spaceName
     },
 
     focus: function () {

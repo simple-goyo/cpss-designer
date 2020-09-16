@@ -123,6 +123,7 @@
 <script src="editor-app/editor/scripts/Core/node.js" type="text/javascript"></script>
 <script src="editor-app/editor/scripts/Core/svgDrag.js" type="text/javascript"></script>
 <script src="editor-app/editor/scripts/Core/main.js" type="text/javascript"></script>
+<script src="editor-app/editor/scripts/Core/viewer.js" type="text/javascript"></script>
 <script src="editor-app/editor/scripts/signavio.js" type="text/javascript"></script>
 
 <script src="editor-app/editor/scripts/Core/Controls/control.js" type="text/javascript"></script>
