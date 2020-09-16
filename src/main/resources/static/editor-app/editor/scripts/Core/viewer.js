@@ -38,8 +38,8 @@ ORYX.Viewer = {
 
         // CREATES the canvas
         this._canvas =  new ORYX.MyCanvas({
-            width					: ORYX.CONFIG.CANVAS_WIDTH,
-            height					: ORYX.CONFIG.CANVAS_HEIGHT,
+            width					: "80%",
+            height					: 300,
             'eventHandlerCallback'	: this.handleEvents.bind(this),
             id						: this.id,
             parentNode				: div

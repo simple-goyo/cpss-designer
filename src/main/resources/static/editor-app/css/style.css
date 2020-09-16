@@ -552,7 +552,7 @@ li.x-menu-list-item.x-menu-item-active a {
 }
 
 .editor-icon-addScene:before {
-    content: url('../fonts/add.png');
+    content: url('../fonts/add-scene.png');
 }
 
 .editor-icon-constraint:before {

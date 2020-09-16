@@ -1483,7 +1483,7 @@ button.selection:active, button.selection:focus {
 }
 
 .modal-body {
-    height: 460px;
+    height: auto;
 }
 
 
