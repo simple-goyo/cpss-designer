@@ -247,6 +247,12 @@
 <script src="editor-app/eventbus.js" type="text/javascript"></script>
 
 <script src="editor-app/editor-controller.js" type="text/javascript"></script>
+<script src="editor-app/stencil-controller-connect.js" type="text/javascript"></script>
+<script src="editor-app/stencil-controller-UI.js" type="text/javascript"></script>
+<script src="editor-app/stencil-controller-scene.js" type="text/javascript"></script>
+<script src="editor-app/stencil-controller-worker.js" type="text/javascript"></script>
+<script src="editor-app/stencil-controller-animation.js" type="text/javascript"></script>
+<script src="editor-app/stencil-controller-dragdrop.js" type="text/javascript"></script>
 <script src="editor-app/stencil-controller.js" type="text/javascript"></script>
 <script src="editor-app/toolbar-controller.js" type="text/javascript"></script>
 <script src="editor-app/header-controller.js" type="text/javascript"></script>
