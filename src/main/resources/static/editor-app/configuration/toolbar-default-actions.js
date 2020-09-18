@@ -23,7 +23,7 @@ KISBPM.TOOLBAR = {
     ACTIONS: {
 
         saveModel: function (services) {
-            services.$scope.scenes[services.$scope.selectedSceneIndex].childShapes=services.$scope.editor.getJSON().childShapes;
+            services.$scope.scenes[services.$scope.selectedSceneIndex].childShapes = services.$scope.editor.getJSON().childShapes;
             let highlightedShape = services.$scope.getHighlightedShape();
             if (highlightedShape) {
                 services.$rootScope.scenes[services.$rootScope.selectedSceneIndex].lastHighlightedActionId = highlightedShape.id;
@@ -396,7 +396,7 @@ var __createStartNode = function ($rootScope, $scope) {
 
     var positionOffset = {x: 80, y: 640};//初始节点的位置
 
-    positionOffset.y = jQuery(window).height()*0.8;
+    positionOffset.y = jQuery(window).height() * 0.8;
 
     var option = {
         type: namespace + itemId,
@@ -407,15 +407,20 @@ var __createStartNode = function ($rootScope, $scope) {
     };
     var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
     $scope.editor.executeCommands([command]);
-    $scope.editor.getSelection()[0].properties['oryx-overrideid'] = ORYX.Editor.provideId();//为创建的初始化节点提供id
+    $scope.editor.getSelection()[0].properties['oryx-overrideid'] = $scope.editor.getSelection()[0].id;//为创建的初始化节点提供id
+
 };
 
 var __createNormalAction = function ($rootScope, $scope) {
     var itemId = "UndefinedAction";
 
-    var shapes = $rootScope.editor.getSelection();
-    if (shapes && shapes.length === 1) {
-        $rootScope.currentSelectedShape = shapes.first();
+    var shape = $scope.getHighlightedShape();
+    let startNoneEvent = $scope.justStartNoneEvent();
+    if (startNoneEvent !== null) {
+        shape = startNoneEvent;
+    }
+    if (shape) {
+        $rootScope.currentSelectedShape = shape;
 
         var containedStencil = undefined;
         var stencilSets = $scope.editor.getStencilSets().values();
@@ -463,25 +468,27 @@ var __createNormalAction = function ($rootScope, $scope) {
         var command = new KISBPM.CreateCommand(option, undefined, undefined, $rootScope.editor);
         $scope.editor.executeCommands([command]);
 
-        // 取消之前的高亮
-        var oldShapeId = $scope.getHighlightedShapeId();
-        if(oldShapeId !== undefined){
-            jQuery('#' + oldShapeId + 'bg_frame').attr({"fill": "#f9f9f9"}); //取消高亮显示
-        }
+        // // 取消之前的高亮
+        // var oldShapeId = $scope.getHighlightedShapeId();
+        // if (oldShapeId !== undefined) {
+        //     jQuery('#' + oldShapeId + 'bg_frame').attr({"fill": "#f9f9f9"}); //取消高亮显示
+        // }
 
-        var lastSelectedAction = $scope.getHighlightedShape();
-        if(lastSelectedAction.id !== undefined){
-            jQuery('#' + lastSelectedAction.id + 'bg_frame').attr({"fill": "#f9f9f9"}); //取消高亮显示
-        }
+        // var lastSelectedAction = $scope.getHighlightedShape();
+        // if (lastSelectedAction && lastSelectedAction.id !== undefined) {
+        //     jQuery('#' + lastSelectedAction.id + 'bg_frame').attr({"fill": "#f9f9f9"}); //取消高亮显示
+        // }
+        //
+        // // 高亮
+        // var newShapeId = $scope.editor.getSelection()[0].id;
+        // $scope.setHighlightedShape(newShapeId);
+        // jQuery('#' + newShapeId + 'bg_frame').attr({"fill": "#04FF8E"}); //高亮显示
 
-        // 高亮
-        var newShapeId = $scope.editor.getSelection()[0].id;
-        $scope.setHighlightedShape(newShapeId);
-        jQuery('#' + newShapeId + 'bg_frame').attr({"fill": "#04FF8E"}); //高亮显示
+        // $scope.toDoAboutResourceLineAfterChangingAction(lastSelectedAction);
 
-        $scope.editor.getSelection()[0].properties['oryx-overrideid'] = ORYX.Editor.provideId();//为创建的未定义的动作提供id
 
-        $scope.toDoAboutResourceLineAfterChangingAction(lastSelectedAction);
+        $scope.editor.getSelection()[0].properties['oryx-overrideid'] = $scope.editor.getSelection()[0].id;//为创建的未定义的动作提供id
+
     }
 };
 

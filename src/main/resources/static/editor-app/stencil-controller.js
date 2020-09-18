@@ -85,7 +85,7 @@ angular.module('activitiModeler')
                 canvasDiv.addClass("col-xs-7"); // 2 + 7 + 3
             } else if (!$scope.sceneShowState.show && $scope.entityInfoShowState.show) {
                 canvasDiv.addClass("col-xs-9"); // 9 + 3
-            }else if ($scope.sceneShowState.show && !$scope.entityInfoShowState.show) {
+            } else if ($scope.sceneShowState.show && !$scope.entityInfoShowState.show) {
                 canvasDiv.addClass("col-xs-10");// 2 + 10
             } else
                 canvasDiv.addClass("col-xs-12");// 12
@@ -471,11 +471,6 @@ angular.module('activitiModeler')
                 if (edge.getStencil()._jsonStencil["id"] !== nameSpace + "MessageFlow")
                     return;
 
-                var action = $scope.getHighlightedShape();
-                if (action) {
-                    action.setProperty("oryx-resourceline", $scope.getResourceConnect());
-                }
-
                 var from = edge.incoming[0];
                 var to = edge.outgoing[0];
                 if (from && to) {
@@ -487,6 +482,55 @@ angular.module('activitiModeler')
                     $scope.latestLine = edge;
                     $scope.latestfromto['from'] = from;
                     $scope.latestfromto['to'] = to;
+
+                    let actions = [];
+                    var shape = $scope.getNextAction($scope.getHighlightedShape());
+                    while (shape != null) {
+                        $scope.editor.deleteShape(shape.incoming[0]);
+                        var position = shape.bounds.center();
+                        position.x += 145;
+                        shape.bounds.centerMoveTo(position);
+                        actions.push(shape);
+                        shape = $scope.getNextAction(shape);
+                    }
+
+                    _createAction($rootScope, $scope, "UndefinedAction");
+
+                    // 取消之前的高亮
+                    var lastSelectedAction = $scope.getHighlightedShape();
+                    if (lastSelectedAction && lastSelectedAction.id !== undefined) {
+                        jQuery('#' + lastSelectedAction.id + 'bg_frame').attr({"fill": "#f9f9f9"}); //取消高亮显示
+                    }
+
+                    // 高亮
+                    var newShapeId = $scope.editor.getSelection()[0].id;
+                    $scope.setHighlightedShape(newShapeId);
+                    jQuery('#' + newShapeId + 'bg_frame').attr({"fill": "#04FF8E"}); //高亮显示
+
+                    let count = 0;
+                    let lastAction = $scope.getHighlightedShape();
+                    while (count < actions.length) {
+                        let nowAction = actions[count];
+                        $scope.connectWithSequenceFlow(lastAction, nowAction);
+                        lastAction = nowAction;
+                        count++;
+                    }
+                    $scope.editor.getCanvas().update();
+                    let bounds = from.bounds;
+                    let fromBounds = {a: {x: bounds.a.x, y: bounds.a.y}, b: {x: bounds.b.x, y: bounds.b.y}}
+                    let resourceConnect = [{
+                        from: from.id,
+                        fromBounds: fromBounds,
+                        to: to.id,
+                        toBounds: to.bounds
+                    }];
+
+                    var action = $scope.getHighlightedShape();
+                    if (action) {
+                        action.setProperty("oryx-resourceline", resourceConnect);
+                    }
+
+                    $scope.toDoAboutResourceLineAfterChangingAction(lastSelectedAction);
                     // 设置服务前，将连线的资源输入进去
                     // 目前的输入默认是连线连进去的资源
                     $scope.setService();
@@ -496,12 +540,12 @@ angular.module('activitiModeler')
             });
 
             /**
-             * 该方法是用于创建一个在选中的资源下方的messageFlow，并记录messageFlow的id
+             * 该方法是用于创建一个在选中的资源下方的messageFlow
              * 具体实现方式为：利用command创建一个与选中资源相同的临时资源，然后将选中资源与其连线，然后删除临时资源
              * */
             $scope.createConnectLine = function () {
-                var HighlightedShape = $scope.getHighlightedShape();
-                if (HighlightedShape === undefined) return;
+                // var HighlightedShape = $scope.getHighlightedShape();
+                // if (HighlightedShape === undefined) return;
 
                 var connectedShape = $scope.editor.getSelection()[0];
 
@@ -560,7 +604,7 @@ angular.module('activitiModeler')
              * */
             $scope.toDoAboutResourceLineAfterChangingAction = function (lastSelectedAction) {
                 var action = $scope.getHighlightedShape();
-                if (action === lastSelectedAction)
+                if (action === lastSelectedAction || !lastSelectedAction)
                     return;
                 $scope.deleteConnectedLines();
                 var resourceConnect = action.properties['oryx-resourceline'];
@@ -853,6 +897,26 @@ angular.module('activitiModeler')
 
                 var edge = new ORYX.Core.Edge({'eventHandlerCallback': $scope.editor.handleEvents.bind($scope.editor)},
                     sset.stencil(from.getStencil().namespace() + "MessageFlow"));
+                edge.dockers.first().setDockedShape(from);
+
+                var magnet = from.getDefaultMagnet();
+                var cPoint = magnet ? magnet.bounds.center() : from.bounds.midPoint();
+                edge.dockers.first().setReferencePoint(cPoint);
+                edge.dockers.last().setDockedShape(to);
+                magnet = to.getDefaultMagnet();
+                var ePoint = magnet ? magnet.bounds.center() : to.bounds.midPoint();
+                edge.dockers.last().setReferencePoint(ePoint);
+                $scope.editor._canvas.add(edge);
+                $scope.editor.getCanvas().update();
+            };
+
+            $scope.connectWithSequenceFlow = function (from, to) {
+                if (!from || !to)
+                    return;
+                var sset = ORYX.Core.StencilSet.stencilSet(from.getStencil().namespace());
+
+                var edge = new ORYX.Core.Edge({'eventHandlerCallback': $scope.editor.handleEvents.bind($scope.editor)},
+                    sset.stencil(from.getStencil().namespace() + "SequenceFlow"));
                 edge.dockers.first().setDockedShape(from);
 
                 var magnet = from.getDefaultMagnet();
@@ -1485,7 +1549,7 @@ angular.module('activitiModeler')
                 }
 
                 KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
-                if($rootScope.selectedSceneIndex){
+                if ($rootScope.selectedSceneIndex) {
                     $rootScope.scenes[$rootScope.selectedSceneIndex].childShapes = $scope.editor.getJSON().childShapes;
                 }
 
@@ -1641,22 +1705,22 @@ angular.module('activitiModeler')
         var basePosY = 0;
         $scope.isClicked = false;
 
-        $scope.clickLine = function(event){
+        $scope.clickLine = function (event) {
             basePosY = event.clientY;
             $scope.isClicked = true;
         }
 
-        $scope.dragLine = function(event) {
+        $scope.dragLine = function (event) {
             // 鼠标指针向对于浏览器页面（或客户区）的垂直坐标
             let isResize = true;
             let posY = event.clientY;
             let offsetY = posY - basePosY;
 
-            if($scope.propertyHeight - offsetY < 0 || $scope.entityHeight + offsetY < 0){
+            if ($scope.propertyHeight - offsetY < 0 || $scope.entityHeight + offsetY < 0) {
                 isResize = false;
             }
 
-            if($scope.isClicked && isResize){
+            if ($scope.isClicked && isResize) {
                 $scope.entityHeight = $scope.entityHeight + offsetY;
                 $scope.propertyHeight = $scope.propertyHeight - offsetY;
                 $scope.entitystyleObj = {
@@ -1669,8 +1733,8 @@ angular.module('activitiModeler')
             }
         }
 
-        $scope.releaseLine = function(event) {
-            $scope.isClicked  = false;
+        $scope.releaseLine = function (event) {
+            $scope.isClicked = false;
         }
 
         /* Click handler for clicking a property */
@@ -2579,7 +2643,7 @@ angular.module('activitiModeler')
 
             let selectionOverrideIds;
             let lastHighlightedActionId;
-            if($rootScope.selectedSceneIndex){
+            if ($rootScope.selectedSceneIndex>-1) {
                 selectionOverrideIds = $rootScope.scenes[$rootScope.selectedSceneIndex].lastselectionOverrideIds;
                 lastHighlightedActionId = $rootScope.scenes[$rootScope.selectedSceneIndex].lastHighlightedActionId;
             }
@@ -2613,7 +2677,7 @@ angular.module('activitiModeler')
             $scope.selectedSceneIndex = index;
         };
 
-        $scope.getSelectedSceneIndex = function() {
+        $scope.getSelectedSceneIndex = function () {
             return $scope.selectedSceneIndex;
         };
 
@@ -2630,16 +2694,18 @@ angular.module('activitiModeler')
             return $scope.scenes;
         };
 
-        $scope.updateScene = function() {
+        $scope.updateScene = function () {
             let index = $scope.getSelectedSceneIndex();
             let scene = $scope.getScenes();
 
-            if(index === undefined || scene===undefined){return ;}
+            if (index === undefined || scene === undefined) {
+                return;
+            }
 
             scene[index].sceneJson = $scope.editor.getJSON();
             let highlightedShape = $scope.getShapeById(lastHighlightedId);
-            if(highlightedShape !== undefined){
-                scene[index].lastHighlightedActionId =  highlightedShape.properties['oryx-overrideid'];
+            if (highlightedShape !== undefined) {
+                scene[index].lastHighlightedActionId = highlightedShape.properties['oryx-overrideid'];
             }
             let selection = $scope.editor.getSelection();
             if (selection && selection.length >= 1) {
@@ -2745,7 +2811,38 @@ angular.module('activitiModeler')
             });
         }
 
-        $scope.myExecuteCommands = function(){
+        $scope.justStartNoneEvent = function () {
+            var shapes = [$scope.editor.getCanvas()][0].children;
+            for (let i = 0; i < shapes.length; i++) {
+                let shape = shapes[i];
+                if (shape._stencil._jsonStencil.id === shape._stencil._namespace + "StartNoneEvent") {
+                    let nextAction = $scope.getNextAction(shape);
+                    if (nextAction) {
+                        return null;
+                    } else {
+                        return shape;
+                    }
+                }
+            }
+            return null;
+        }
+
+        $scope.getAllAction = function () {
+            let actions = [];
+            var shapes = [$scope.editor.getCanvas()][0].children;
+            for (let i = 0; i < shapes.length; i++) {
+                let shape = shapes[i];
+                if (shape._stencil._jsonStencil.id === shape._stencil._namespace + "StartNoneEvent") {
+                    while (shape) {
+                        actions.push(shape);
+                        shape = $scope.getNextAction(shape);
+                    }
+                }
+            }
+            return actions;
+        }
+
+        $scope.myExecuteCommands = function () {
             // $scope.constraintViewer = new ORYX.Editor();
 
         }
