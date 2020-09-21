@@ -42,11 +42,11 @@
                    ng-class="{'glyphicon-chevron-right': !sceneShowState.show, 'glyphicon-chevron-left': sceneShowState.show}"></i>
                 <span ng-show="!sceneShowState.show">场景</span>
             </a>
-            <div class="col-xs-3" ng-if="entityInfoShowState.show">
+            <div id="wrappers" class="col-xs-3" ng-if="entityInfoShowState.show">
                 <h4 style="text-align: center">资源实体</h4>
                 <hr>
-                <div id="paletteHelpWrapper" class="top" >
-                    <div class="stencils" id="paletteSection"  style="overflow: auto;" ng-style="entitystyleObj" >
+                <div id="paletteHelpWrapper" class="topWrapper" >
+                    <div class="stencils" id="paletteSection"  style="overflow: auto;"  >
                         <div ng-if="stencilItemGroups.length > 1">
                             <div ng-repeat="group in stencilItemGroups">
 
@@ -75,21 +75,14 @@
                                     {{item.name}}
                                 </li>
                             </ul>
-                        </div>
                     </div>
-                    <!--                <div class="customAction" id="ActionWrapper"-->
-                    <!--                     ng-model="droppedElement"-->
-                    <!--                     data-drop="true"-->
-                    <!--                     data-jqyoui-options-->
-                    <!--                     jqyoui-droppable="{onDrop:'dropCallback',onOver: 'overCallback', onOut: 'outCallback'}">-->
-                    <!--                    <div ng-controller="">-->
-                    <!--                </div>-->
+                    </div>
                 </div>
-                <div id="splitLine" class="line"  ng-mousedown="clickLine($event)" ng-mousemove="dragLine($event)" ng-mouseup="releaseLine($event)"></div>
+                <div id="splitLine" class="line"  ng-mousedown="clickLine($event)"></div>
                 <h4 style="text-align: center">实体属性</h4>
                 <hr>
-                <div id="propertiesHelpWrapper" class="bottom">
-                    <div class="propertySection" id="propertySection" ng-style="propertystyleObj"
+                <div id="propertiesHelpWrapper" class="bottomWrapper">
+                    <div class="propertySection" id="propertySection"
                          ng-class="{collapsed: propertyWindowState.collapsed}">
                         <div class="selected-item-section">
                             <div class="clearfix">

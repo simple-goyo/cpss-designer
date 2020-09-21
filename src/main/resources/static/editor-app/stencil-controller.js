@@ -36,7 +36,7 @@ angular.module('activitiModeler')
         // 最新的线两端
         $scope.latestfromto = {'from': undefined, 'to': undefined};
 
-        angular.module('activitiModeler').UIClass($rootScope, $scope);
+        angular.module('activitiModeler').UIClass($rootScope, $scope, $timeout);
 
         // Code that is dependent on an initialised Editor is wrapped in a promise for the editor
         $scope.editorFactory.promise.then(function () {
@@ -916,48 +916,41 @@ angular.module('activitiModeler')
 
         }); // end of $scope.editorFactory.promise block
 
-        $scope.entityHeight = 270;
-        $scope.propertyHeight = 270;
+        // $scope.entityHeight = 270;
+        // $scope.propertyHeight = 270;
         $scope.entitystyleObj = {
             "height": $scope.entityHeight + "px"
         };
         $scope.propertystyleObj = {
             "height": $scope.propertyHeight + "px"
         };
+
         var basePosY = 0;
-        $scope.isClicked = false;
-
         $scope.clickLine = function (event) {
+            let splitLine = jQuery('#splitLine');
+            let wrappers = jQuery("#wrappers");
+            let paletteHelpWrapper = jQuery('#paletteSection');
+            let propertiesHelpWrapper = jQuery('#propertySection');
             basePosY = event.clientY;
-            $scope.isClicked = true;
+            let anchor = splitLine[0].offsetTop - 60;
+
+            wrappers.bind("mousemove", function(event){
+                let posY = event.clientY;
+                let offsetY = (posY - basePosY);
+
+                paletteHelpWrapper.css("height", anchor + offsetY + "px");
+                // splitLine.css("top", anchor + offsetY+ "px");
+                propertiesHelpWrapper.css("height", anchor - offsetY + "px");
+
+                console.log(anchor + offsetY + "px");
+                console.log(anchor - offsetY + "px");
+            });
+
+            wrappers.bind("mouseup", function(event){
+                wrappers.unbind("mousemove");
+            });
         }
 
-        $scope.dragLine = function (event) {
-            // 鼠标指针向对于浏览器页面（或客户区）的垂直坐标
-            let isResize = true;
-            let posY = event.clientY;
-            let offsetY = posY - basePosY;
-
-            if ($scope.propertyHeight - offsetY < 0 || $scope.entityHeight + offsetY < 0) {
-                isResize = false;
-            }
-
-            if ($scope.isClicked && isResize) {
-                $scope.entityHeight = $scope.entityHeight + offsetY;
-                $scope.propertyHeight = $scope.propertyHeight - offsetY;
-                $scope.entitystyleObj = {
-                    "height": $scope.entityHeight + "px"
-                }
-                $scope.propertystyleObj = {
-                    "height": $scope.propertyHeight + "px"
-                };
-                $scope.isClicked = false;
-            }
-        }
-
-        $scope.releaseLine = function (event) {
-            $scope.isClicked = false;
-        }
 
         /* Click handler for clicking a property */
         $scope.propertyClicked = function (index) {
