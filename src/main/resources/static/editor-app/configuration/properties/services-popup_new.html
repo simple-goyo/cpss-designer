@@ -7,25 +7,26 @@
                 <h2 translate>PROPERTY.SERVICES.TITLE</h2>
             </div>
             <div class="modal-body">
-                <div class="row row-no-gutter">
-                    <div class="form-group">
-                        <label>{{'PROPERTY.SERVICES.FUNCTION.VALUE' | translate}}</label>
-<!--                        <select class="form-control" ng-model="selectedFunc">-->
-<!--                            <option value="" selected="selected">-&#45;&#45;请选择服务-&#45;&#45;</option>-->
-<!--                            <option ng-repeat="x in functions" value="{{x.name}}">{{x.name}}</option>-->
-<!--                        </select>-->
-                        <div ng-repeat="Service in entity.Services">
-<!--                            <input class="form-control" type="hidden" ng-model="Service.value"/>-->
-                            <select class="form-control" ng-model="Service.value">
-                                <option value="" selected="selected">---请选择服务---</option>
-                                <option ng-repeat="x in functions" value="{{x.name}}">{{x.name}}</option>
+                <div class="form-group">
+                    <div class="row">
+                        <label class="col-xs-3" style="float:left;font-size: 16px">{{'PROPERTY.SERVICES.FUNCTION.VALUE' | translate}}</label>
+                        <div class="col-xs-9" ng-repeat="Service in entity.Services">
+                            <select class="form-control" ng-model="selectedFunction" ng-change="changeValue(selectedFunction)">
+                                <option value="{}" selected="selected">---请选择服务---</option>
+                                <option ng-repeat="x in functions" value="{{x}}">{{x.name}}</option>
                             </select>
-                            <i class="glyphicon glyphicon-minus clickable-property"
-                               ng-click="removeServiceValue($index)"></i>
-                            <i ng-if="$index == (entity.Services.length - 1)"
-                               class="glyphicon glyphicon-plus clickable-property"
-                               ng-click="addServiceValue($index)"></i>
+<!--                            <i class="glyphicon glyphicon-minus clickable-property"-->
+<!--                               ng-click="removeServiceValue($index)"></i>-->
+<!--                            <i ng-if="$index == (entity.Services.length - 1)"-->
+<!--                               class="glyphicon glyphicon-plus clickable-property"-->
+<!--                               ng-click="addServiceValue($index)"></i>-->
                         </div>
+
+                    </div>
+                    <hr>
+                    <div class="row" ng-repeat="param in serviceParams">
+                        <label class="col-xs-3" style="float:left">{{param}}</label>
+                        <input class="col-xs-8" style="border-radius: 5px;margin-right:15px" placeholder="" id="{{param}}">
                     </div>
                 </div>
             </div>

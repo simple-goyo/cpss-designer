@@ -916,15 +916,6 @@ angular.module('activitiModeler')
 
         }); // end of $scope.editorFactory.promise block
 
-        // $scope.entityHeight = 270;
-        // $scope.propertyHeight = 270;
-        $scope.entitystyleObj = {
-            "height": $scope.entityHeight + "px"
-        };
-        $scope.propertystyleObj = {
-            "height": $scope.propertyHeight + "px"
-        };
-
         var basePosY = 0;
         $scope.clickLine = function (event) {
             let splitLine = jQuery('#splitLine');
@@ -942,8 +933,6 @@ angular.module('activitiModeler')
                 // splitLine.css("top", anchor + offsetY+ "px");
                 propertiesHelpWrapper.css("height", anchor - offsetY + "px");
 
-                console.log(anchor + offsetY + "px");
-                console.log(anchor - offsetY + "px");
             });
 
             wrappers.bind("mouseup", function(event){

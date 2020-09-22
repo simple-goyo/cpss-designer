@@ -23,13 +23,16 @@ KISBPM.TOOLBAR = {
     ACTIONS: {
 
         saveModel: function (services) {
-            services.$scope.scenes[services.$scope.selectedSceneIndex].childShapes = services.$scope.editor.getJSON().childShapes;
+            if(services.$scope && services.$scope.selectedSceneIndex){
+                services.$scope.scenes[services.$scope.selectedSceneIndex].childShapes = services.$scope.editor.getJSON().childShapes;
+            }
+
             let highlightedShape = services.$scope.getHighlightedShape();
-            if (highlightedShape) {
+            if (highlightedShape && services.$rootScope.selectedSceneIndex) {
                 services.$rootScope.scenes[services.$rootScope.selectedSceneIndex].lastHighlightedActionId = highlightedShape.id;
             }
             let selection = services.$scope.editor.getSelection();
-            if (selection && selection.length >= 1) {
+            if (selection && selection.length >= 1 && services.$rootScope.selectedSceneIndex) {
                 services.$rootScope.scenes[services.$rootScope.selectedSceneIndex].lastselectionOverrideIds = [];
                 for (let i = 0; i < selection.length; i++) {
                     services.$rootScope.scenes[services.$rootScope.selectedSceneIndex].lastselectionOverrideIds

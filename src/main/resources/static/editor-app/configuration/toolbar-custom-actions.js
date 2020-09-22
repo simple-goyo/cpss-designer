@@ -213,16 +213,17 @@ var SaveSceneCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
     function ($rootScope, $scope, $http, $route, $location) {
         var modelMetaData = $scope.editor.getModelMetaData();
-
+        var rootScope = $rootScope;
+        console.log(rootScope.editor);
         var description = '';
         if (modelMetaData.description) {
             description = modelMetaData.description;
         }
 
         $scope.exportDialog = {
-                'name': modelMetaData.name,
-                'description': description
-            };
+            'name': modelMetaData.name,
+            'description': description
+        };
 
         $scope.close = function () {
             $scope.$hide();
@@ -235,6 +236,56 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         };
 
         $scope.getAction = function (scene, patten, exclude){
+            let action_template = {
+            "id":"aaaaa-7",
+            "name":"取文件",
+            "enactedBy":{"id":"eeeee-5","name":"众包工人"},
+            "type":"DeviceOperation",
+                "input":"[order]",
+                "output":"",
+                "flow":{
+                "id":"fffff-6",
+                    "to":"aaaaa-10",
+                    "condition":""
+                }
+            };
+
+            let event_template = {
+
+                "id":"aaaaa-12",
+                "name":"会议准备事件",
+                "enactedBy":{"id":"eeeee-1","name":"会议室预定系统"},
+                "type":"CyberEvent",
+                "input":"",
+                "output":"[Order]",
+                "flow":{
+                "id":"fffff-0",
+                    "to":"aaaaa-14",
+                    "condition":""
+                }
+
+            };
+
+            let gateway_template = {
+                "id":"aaaaa-14",
+                "name":"决策",
+                "input":"[Order]",
+                "output":"[Order]",
+                "flow":{
+                    "id":"fffff-1",
+                    "to":[
+                        "aaaaa-4",
+                        "aaaaa-5",
+                        "aaaaa-6"
+                    ],
+                    "condition":[
+                        "Order.content==coffee",
+                        "Order.content==print",
+                        "Order.content==project"
+                    ]
+                }
+            };
+
             let action = [];
             scene.each(function (s){
                 let len = s.childShapes.length;
@@ -250,7 +301,23 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         };
 
         $scope.getConstraints = function(scene){
-
+            let constraint_template = {
+                "entity": {
+                    "anchor": {
+                        "id": "eeeee-10",
+                        "name": "投影仪"
+                    },
+                    "adjustable":{
+                        "id": "sppp-01",
+                        "name": "会议室"
+                    }
+                },
+                "flow": {
+                    "from": "sppp-01",
+                    "to":  "eeeee-10",
+                    "condition": "包含"
+                }
+            };
         };
 
 
@@ -306,3 +373,8 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             return scene;
         }
     }];
+
+var activitiModule = angular.module('activitiModeler');
+activitiModule.controller('ExportModelCtrl', ExportModelCtrl);
+
+

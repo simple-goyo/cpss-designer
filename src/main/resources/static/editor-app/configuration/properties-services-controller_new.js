@@ -110,6 +110,7 @@ var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
     var HighlightedShape = $scope.getHighlightedShape();
     var resProperties = {"oryx-overrideid":"sid-xxx", "oryx-name":"","oryx-type":"", "oryx-resName":"","oryx-ServiceName":"","oryx-objName":"","oryx-InParam":"","oryx-OutParam":""}; //资源属性模板
 
+    $scope.serviceParams = ["param1"];
     // 资源执行主体所拥有的功能，数据从知识图谱中获得
     $scope.resourceFunctions = [
         // {name: "获取水杯", type: "SocialAction"},
@@ -140,6 +141,8 @@ var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
     // 当前资源的输出，决定是否有资源图标生成，数据从知识图谱中获得
     $scope.output = [];
 
+    $scope.input = [];
+
     $scope.servicesDetails = [];
 
     // 资源与人机物三种Action的对应（固定不变）
@@ -157,45 +160,49 @@ var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
     ];
 
     var selectedShapeFunctionType = undefined;
-    for (var i = 0; i < $scope.constTypeOfResource.length; i++) {
+    for (let i = 0; i < $scope.constTypeOfResource.length; i++) {
         if ($scope.constTypeOfResource[i].name === shape.properties["oryx-type"]) {
             selectedShapeFunctionType = $scope.constTypeOfResource[i].type;
         }
     }
     $scope.functions = [];
-    // {"name":"Orders","service":"[{\"output\": \"[OnlineOrder]\", \"input\": [], \"inputParameter\": \"[{userId}]\", \"description\": \"order coffee online\", \"outputParameter\": \"[{state, data{action, mode, level, num}}]\"}]","event":"[]","capability":"[]","category":"[\"CyberEntity\"]"}
-    $http({method: 'GET', url: KISBPM.URL.getResourceDetails(shape.properties["oryx-name"])}).success(function (data, status, headers, config) {
-        console.log(JSON.stringify(data));
-
-        // 解析得到function，包括其中的参数
-        for(var i=0;i<data.service.length;i++){
-            // 获取函数名
-            $scope.resourceFunctions[i] = {name:data.service[i].description, type:selectedShapeFunctionType};
-            $scope.functions[$scope.functions.length] = {name: $scope.resourceFunctions[i].name}; // 加入下拉框中
-
-            // 获取函数的参数
-            $scope.resourceInputs[i] = paramParser(data.service[i].inputParameter);
-            $scope.resourceOutputs[i] = paramParser(data.service[i].outputParameter);
-
-            // 设置output参数，output决定是否有输出
-            $scope.output[i] = data.service[i].output;
-
-            // 获取函数，包含所有参数
-            $scope.servicesDetails[i] = data.service[i];
-        }
-
-        //console.log($scope.resourceOutputs);
-
-    }).error(function (data, status, headers, config) {
-        console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
-    });
 
     // 判断连线源头是否为worker，如果是worker则另外处理
     var prop = $scope.latestfromto["from"].properties["oryx-type"];
     if (prop && prop === "工人"){
         console.log('是工人！');
     }else{
-        console.log('不是工人！');
+        let res_entity = $scope.latestfromto["to"].properties["oryx-name"];
+        let functionType = $scope.latestfromto["to"].properties["oryx-type"];
+        $http({method: 'GET', url: KISBPM.URL.getResourceDetails(res_entity)}).success(function (data, status, headers, config) {
+            console.log(JSON.stringify(data));
+
+            // 解析得到functions，包括其中的参数
+            for(var i=0;i<data.service.length;i++){
+                // 获取函数名
+                $scope.resourceFunctions[i] = {name:data.service[i].Capability, type:functionType, input:data.service[i].input, output:data.service[i].output};
+                $scope.functions[$scope.functions.length] = {id:$scope.functions.length, name: $scope.resourceFunctions[i].name}; // 加入下拉框中
+
+                // 获取函数的参数
+                $scope.resourceInputs[i] = paramParser(data.service[i].inputParameter);
+                $scope.resourceOutputs[i] = paramParser(data.service[i].outputParameter);
+
+                // 设置output参数，output决定是否有输出
+                $scope.output[i] = data.service[i].output;
+
+                // 设置input参数，
+                $scope.input[i] = data.service[i].input;
+
+                // 获取函数，包含所有参数
+                $scope.servicesDetails[i] = data.service[i];
+            }
+
+            //console.log($scope.resourceOutputs);
+
+        }).error(function (data, status, headers, config) {
+            console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
+        });
+
     }
 
 
@@ -226,6 +233,16 @@ var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
     if ($scope.entity.Services === undefined || $scope.entity.Services.length === 0) {
         $scope.entity.Services = [{value: ''}];
     }
+
+    $scope.changeValue = function (selectedFunction){
+        let func = JSON.parse(selectedFunction);
+        let id = func.id;
+        if(id !== undefined){
+            $scope.serviceParams = $scope.input[id];
+        }else{
+            $scope.serviceParams = [];
+        }
+    };
 
     // Click handler for + button after enum value
     $scope.addServiceValue = function (index) {
