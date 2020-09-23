@@ -730,17 +730,62 @@ angular.module('activitiModeler')
                     }
                 }
 
+                let shape = $scope.editor.getSelection()[0];
+                if (shape.properties["oryx-type"] === "场景") {
+                    $scope.deleteScene(shape);
+                } else if ($scope.isGateway(shape)) {
+                    $scope.deleteGateway(shape);
+                }
                 KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
+
                 if ($rootScope.selectedSceneIndex > -1) {
                     $rootScope.scenes[$rootScope.selectedSceneIndex].childShapes = $scope.editor.getJSON().childShapes;
                 } else if ($rootScope.selectedSceneIndex === -1) {
                     $rootScope.scenesRelations.childShapes = $scope.editor.getJSON().childShapes;
-
                 }
 
                 // $scope.editor.deleteShape(shapeToRemove);
                 // KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
             };
+
+            $scope.deleteGateway = function (shape) {
+                while (shape.incoming.length > 0) {
+                    $scope.editor.deleteShape(shape.incoming[0]);
+                }
+                while (shape.outgoing.length > 0) {
+                    $scope.editor.deleteShape(shape.outgoing[0]);
+                }
+
+                let companyId = shape.properties["oryx-gatewaycompany"];
+                if (companyId !== undefined && companyId !== "") {
+                    let company = $scope.getShapeById(companyId);
+                    if (company !== undefined) {
+                        if ($scope.isStartGateway(shape)) {
+                            $scope.deleteGateway(company);
+                            $scope.editor.deleteShape(company);
+                        } else {
+                            company.setProperty("oryx-gatewaycompany", "");
+
+                        }
+                    }
+                }
+            }
+
+            $scope.deleteScene = function (shape) {
+                while (shape.incoming.length > 0) {
+                    $scope.editor.deleteShape(shape.incoming[0]);
+                }
+                while (shape.outgoing.length > 0) {
+                    $scope.editor.deleteShape(shape.outgoing[0]);
+                }
+                for (let i = 0; i < $rootScope.scenes.length; i++) {
+                    let scene = $rootScope.scenes[i];
+                    if (scene.id === shape.id) {
+                        $rootScope.scenes.splice(i, 1);
+                        return;
+                    }
+                }
+            }
 
             $scope.quickAddItem = function (newItemId) {
                 $scope.safeApply(function () {
