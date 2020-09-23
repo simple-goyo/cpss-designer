@@ -23,7 +23,7 @@ KISBPM.TOOLBAR = {
     ACTIONS: {
 
         saveModel: function (services) {
-            if (services.$scope.selectedSceneIndex > -1) {
+            if (services.$scope && services.$scope.selectedSceneIndex > -1) {
                 services.$scope.scenes[services.$scope.selectedSceneIndex].childShapes = services.$scope.editor.getJSON().childShapes;
                 let highlightedShape = services.$scope.getHighlightedShape();
                 if (highlightedShape) {
@@ -36,16 +36,17 @@ KISBPM.TOOLBAR = {
                         services.$rootScope.scenes[services.$rootScope.selectedSceneIndex].lastselectionOverrideIds
                             [services.$rootScope.scenes[services.$rootScope.selectedSceneIndex].lastselectionOverrideIds.length] = selection[i].id;
                     }
+
+                } else if (services.$scope.selectedSceneIndex === -1) {
+                    services.$rootScope.scenesRelations.childShapes = services.$scope.editor.getJSON().childShapes;
                 }
-            } else if (services.$scope.selectedSceneIndex === -1) {
-                services.$rootScope.scenesRelations.childShapes = services.$scope.editor.getJSON().childShapes;
+                var modal = services.$modal({
+                    backdrop: true,
+                    keyboard: true,
+                    template: 'editor-app/popups/save-model.html?version=' + Date.now(),
+                    scope: services.$scope
+                });
             }
-            var modal = services.$modal({
-                backdrop: true,
-                keyboard: true,
-                template: 'editor-app/popups/save-model.html?version=' + Date.now(),
-                scope: services.$scope
-            });
         },
 
         exportModel: function (services) {
@@ -398,9 +399,9 @@ var __createStartNode = function ($rootScope, $scope) {
 
     if (!containedStencil) return;
 
-    var positionOffset = {x: 80, y: 640};//初始节点的位置
+    var positionOffset = {x: 80, y: 600};//初始节点的位置
 
-    positionOffset.y = jQuery(window).height() * 0.8;
+    positionOffset.y = jQuery(window).height() * 0.75;
 
     var option = {
         type: namespace + itemId,

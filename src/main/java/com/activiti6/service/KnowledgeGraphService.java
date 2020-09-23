@@ -38,7 +38,8 @@ public class KnowledgeGraphService {
             // [coffee finished] -> ["coffee finished"]
             // ['foo1','foo2'] -> ['foo1','foo2']
             if(splitedStrs.length == 1){
-                Collections.addAll(retnList, "\""+v+"\"");
+//                Collections.addAll(retnList, "\""+v+"\"");
+                Collections.addAll(retnList, v);
             }else{
                 Collections.addAll(retnList, splitedStrs);
             }
@@ -126,10 +127,10 @@ public class KnowledgeGraphService {
         // resourceEvent——事件
         // resourceService——服务
         // resourceCategory——目录（CyberEntity）
-        List<String> resCap = parseString(job.getString("resourceCapability"));
+        //List<String> resCap = parseString(job.getString("resourceCapability"));
         List<String> resEve = parseString(job.getString("resourceEvent"));
         List<String> resCat = parseString(job.getString("resourceCategory"));
-        List<String> resServs = parseString(job.getString("resourceService"));
+        List<String> resServs = parseString(job.getString("resourceCapability"));
         JSONObject serv = new JSONObject();
 
         // resourceService中有以下几个参数
@@ -138,7 +139,7 @@ public class KnowledgeGraphService {
         //   inputParameter——输入参数名称
         //   outputParameter——服务参数名称
         //   descrition——描述
-        return "{\"name\":\""+resName+"\",\"service\":"+resServs.toString()+",\"event\":"+resEve.toString()+",\"capability\":"+resCap.toString()+",\"category\":"+resCat.toString()+"}";
+        return "{\"name\":\""+resName+"\",\"service\":"+resServs.toString()+",\"event\":"+resEve.toString()+",\"category\":"+resCat.toString()+"}";
     }
 
     // 获取指定空间包含的物理、信息资源类型

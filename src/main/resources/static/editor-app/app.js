@@ -262,7 +262,7 @@ activitiModeler
                         var totalAvailable = jQuery(window).height() - offset.top - mainHeader.height() - 21;
                         // canvas.height(totalAvailable - propSectionHeight);
                         //属性编辑栏移动至资源实体下方，不影响canvas
-                        canvas.height(totalAvailable);
+                        canvas.height(totalAvailable + 22);
 
                         jQuery('#paletteSection').height(totalAvailable / 2);
                         //设置属性编辑栏的高度

@@ -1665,7 +1665,10 @@
         "currentscenepackage",
         "resourcelinepackage"
       ],
-      "hiddenPropertyPackages": [],
+      "hiddenPropertyPackages": [
+        "resourcelinepackage",
+        "animatedirectionpackage"
+      ],
       "roles": [
         "Activity",
         "sequence_start",
@@ -1697,7 +1700,10 @@
         "currentscenepackage",
         "resourcelinepackage"
       ],
-      "hiddenPropertyPackages": [],
+      "hiddenPropertyPackages": [
+        "resourcelinepackage",
+        "animatedirectionpackage"
+      ],
       "roles": [
         "Activity",
         "sequence_start",
@@ -1729,7 +1735,9 @@
         "currentscenepackage",
         "resourcelinepackage"
       ],
-      "hiddenPropertyPackages": [],
+      "hiddenPropertyPackages": [
+        "resourcelinepackage",
+        "animatedirectionpackage"],
       "roles": [
         "Activity",
         "sequence_start",
@@ -1929,7 +1937,8 @@
         "currentscenepackage",
         "resourcelinepackage"
       ],
-      "hiddenPropertyPackages": [],
+      "hiddenPropertyPackages": ["resourcelinepackage",
+        "animatedirectionpackage"],
       "roles": [
         "Activity",
         "sequence_start",
@@ -1961,7 +1970,8 @@
         "currentscenepackage",
         "resourcelinepackage"
       ],
-      "hiddenPropertyPackages": [],
+      "hiddenPropertyPackages": [
+      "animatedirectionpackage"],
       "roles": [
         "Activity",
         "sequence_start",

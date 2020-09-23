@@ -20,7 +20,7 @@
 /*
  * entity
  */
-var selectedShapeFunctionType = undefined;
+var selectedShapeActionType = undefined;
 
 var KisBpmServicesCtrl = ['$scope', '$modal', function ($scope, $modal) {
 
@@ -51,64 +51,52 @@ var KisBpmServicesPopupCtrl = ['$scope', function ($scope) {
     };
 }];
 
-// 结合律
-// mode{aaa, bbb, ccc} -> mode.aaa, mode.bbb, mode.ccc
-var associative = function(s){
-    var l = s.indexOf('{');
-    var r = s.indexOf('}');
-    var newList=[];
-
-    var outside = s.substring(0, l);   // mode
-    var inside  = s.substring(l+1, r); // aaa, bbb, ccc
-
-    var insideList = inside.split(', ');
-    for(var i=0;i<insideList.length;i++){
-        newList[i] = outside + '.' + insideList[i];
-    }
-
-    return newList.toString().replace(/,/g, ', ');
-};
-
-var paramParser = function(rawParam){
-    // 将[{state, data{action, mode, level, num}}]，解析为
-    // resource_param——[state, data.action, data.mode, data.level, data.num]
-    /* service_param——[state, action, mode, level, num] (service_param是下一个service的输入参数)*/
-
-    // 测试字符串 [{state, data{action, mode{aaa, bbb{dddd, eeee}, ccc}, level, num{xxx, yyy}}}]
-    var str = "";
-    var oldStr = "";
-
-    rawParam = rawParam.toString();
-    if(rawParam[0] === '['){
+var paramParser = function (rawParam){
+    // 测试字符串 [{"mode":"","level":"","num":"","action":""}]
+    let str = "";
+    let oldStr = "";
+    let keyList = [];
+    
+    rawParam = JSON.stringify(rawParam);
+    if(rawParam[0] === '{'){
         str = rawParam.substring(1,rawParam.length-1);
     }else{
         str = rawParam;
     }
 
+
+
     if(str === ""){return "";}
 
-    do{
-        oldStr = str;
-        var matchedStrList = oldStr.match(/\w+\{([^\{\}]+)\}/g);
-        for(var i=0; matchedStrList!==null && i < matchedStrList.length; i++){
-            str = oldStr.replace(matchedStrList[i], associative(matchedStrList[i].trim()));
+    oldStr = str.trim();
+
+    let splitedList = oldStr.split(',');
+    let matchedStrList = oldStr.match(/\w+\{([^\{\}]+)\}/g);
+    console.log(matchedStrList);
+    splitedList.forEach(function (value) {
+        // value == "mode":""
+        let key_value  = value.split(':');
+        let key = key_value[0];
+        if (key[0]=== '\"' || key[0]=== '\''){
+            key = key.substring(1, key.length -1);
         }
+        
+        keyList.push(key);
+    });
 
-    }while(oldStr !== str);
-
-    if(str[0] === "{"){
-        str = str.substring(1,str.length-1);
-    }
     // console.log(str);
-    return str;
+    return keyList;
+
 
 };
 
-var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
+var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, $scope, $http) {
     var ActivityElement;
     var shape = $scope.selectedShape;
-    var HighlightedShape = $scope.getHighlightedShape();
-    var resProperties = {"oryx-overrideid":"sid-xxx", "oryx-name":"","oryx-type":"", "oryx-resName":"","oryx-ServiceName":"","oryx-objName":"","oryx-InParam":"","oryx-OutParam":""}; //资源属性模板
+
+    $scope.serviceParams = [];
+    $scope.selectedFunction = "";
+    $scope.modelInput = [];
 
     // 资源执行主体所拥有的功能，数据从知识图谱中获得
     $scope.resourceFunctions = [
@@ -140,6 +128,8 @@ var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
     // 当前资源的输出，决定是否有资源图标生成，数据从知识图谱中获得
     $scope.output = [];
 
+    $scope.input = [];
+
     $scope.servicesDetails = [];
 
     // 资源与人机物三种Action的对应（固定不变）
@@ -156,59 +146,52 @@ var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
         {name: "信息对象", type: "CyberAction"}
     ];
 
-    var selectedShapeFunctionType = undefined;
-    for (var i = 0; i < $scope.constTypeOfResource.length; i++) {
-        if ($scope.constTypeOfResource[i].name === shape.properties["oryx-type"]) {
-            selectedShapeFunctionType = $scope.constTypeOfResource[i].type;
-        }
-    }
+    var selectedShapeActionType = undefined;
+
     $scope.functions = [];
-    // {"name":"Orders","service":"[{\"output\": \"[OnlineOrder]\", \"input\": [], \"inputParameter\": \"[{userId}]\", \"description\": \"order coffee online\", \"outputParameter\": \"[{state, data{action, mode, level, num}}]\"}]","event":"[]","capability":"[]","category":"[\"CyberEntity\"]"}
-    $http({method: 'GET', url: KISBPM.URL.getResourceDetails(shape.properties["oryx-name"])}).success(function (data, status, headers, config) {
-        console.log(JSON.stringify(data));
-
-        // 解析得到function，包括其中的参数
-        for(var i=0;i<data.service.length;i++){
-            // 获取函数名
-            $scope.resourceFunctions[i] = {name:data.service[i].description, type:selectedShapeFunctionType};
-            $scope.functions[$scope.functions.length] = {name: $scope.resourceFunctions[i].name}; // 加入下拉框中
-
-            // 获取函数的参数
-            $scope.resourceInputs[i] = paramParser(data.service[i].inputParameter);
-            $scope.resourceOutputs[i] = paramParser(data.service[i].outputParameter);
-
-            // 设置output参数，output决定是否有输出
-            $scope.output[i] = data.service[i].output;
-
-            // 获取函数，包含所有参数
-            $scope.servicesDetails[i] = data.service[i];
-        }
-
-        //console.log($scope.resourceOutputs);
-
-    }).error(function (data, status, headers, config) {
-        console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
-    });
 
     // 判断连线源头是否为worker，如果是worker则另外处理
     var prop = $scope.latestfromto["from"].properties["oryx-type"];
     if (prop && prop === "工人"){
-        console.log('是工人！');
+        console.log('工人');
     }else{
-        console.log('不是工人！');
+        let res_entity = $scope.latestfromto["to"].properties["oryx-name"];
+        let functionType = $scope.latestfromto["to"].properties["oryx-type"];
+        for (let i = 0; i < $scope.constTypeOfResource.length; i++) {
+            if ($scope.constTypeOfResource[i].name === functionType) {
+                selectedShapeActionType = $scope.constTypeOfResource[i].type;
+            }
+        }
+        $http({method: 'GET', url: KISBPM.URL.getResourceDetails(res_entity)}).success(function (data, status, headers, config) {
+            console.log(JSON.stringify(data));
+
+            // 解析得到functions，包括其中的参数
+            for(var i=0;i<data.service.length;i++){
+                // 获取函数名
+                $scope.resourceFunctions[i] = {name:data.service[i].Capability, type:functionType, input:data.service[i].input, output:data.service[i].output};
+                $scope.functions[$scope.functions.length] = {id:$scope.functions.length, name: $scope.resourceFunctions[i].name}; // 加入下拉框中
+
+                // 获取函数的参数
+                $scope.resourceInputs[i] = paramParser(data.service[i].inputParameter[0]);
+                $scope.resourceOutputs[i] = paramParser(data.service[i].outputParameter[0]);
+
+                // 设置output参数，output决定是否有输出
+                $scope.output[i] = data.service[i].output;
+
+                // 设置input参数，
+                $scope.input[i] = data.service[i].input;
+
+                // 获取函数，包含所有参数
+                $scope.servicesDetails[i] = data.service[i];
+            }
+
+            //console.log($scope.resourceOutputs);
+
+        }).error(function (data, status, headers, config) {
+            console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
+        });
+
     }
-
-
-    //
-    // if (selectedShapeFunctionType) {
-    //     for (var i = 0; i < $scope.resourceFunctions.length; i++) {
-    //         if ($scope.resourceFunctions[i].type === selectedShapeFunctionType) {
-    //             $scope.functions[$scope.functions.length] = {name: $scope.resourceFunctions[i].name};
-    //         }
-    //     }
-    // } else {
-    //     $scope.functions = $scope.resourceFunctions;
-    // }
 
     // Put json representing entity on scope
     if ($scope.property !== undefined && $scope.property.value !== undefined && $scope.property.value !== null
@@ -227,17 +210,82 @@ var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
         $scope.entity.Services = [{value: ''}];
     }
 
-    // Click handler for + button after enum value
-    $scope.addServiceValue = function (index) {
-        $scope.entity.Services.splice(index + 1, 0, {value: ''});
+    $scope.changeFunction = function (selectedFunction){
+        let func = JSON.parse(selectedFunction);
+        let id = func.id;
+        $scope.selectedFunction = func.name;
+        if(id !== undefined){
+            $scope.serviceParams = $scope.resourceInputs[id];
+        }else{
+            $scope.serviceParams = [];
+        }
     };
 
-    // Click handler for - button after enum value
-    $scope.removeServiceValue = function (index) {
-        $scope.entity.Services.splice(index, 1);
+    // // Click handler for + button after enum value
+    // $scope.addServiceValue = function (index) {
+    //     $scope.entity.Services.splice(index + 1, 0, {value: ''});
+    // };
+    //
+    // // Click handler for - button after enum value
+    // $scope.removeServiceValue = function (index) {
+    //     $scope.entity.Services.splice(index, 1);
+    // };
+
+    $scope.save = function(){
+        // console.log($scope.selectedFunction);
+        // console.log($scope.modelInput);
+        // console.log(selectedShapeActionType);
+
+        // 更新Action名称和类型
+        $scope.updateAction($scope, $scope.selectedFunction, selectedShapeActionType);
+
+        if ($scope.property.value === undefined || !$scope.property.value) {
+            $scope.property.value = [{"id": "", "function": ""}];
+        }
+
+        let functions = [];
+        let ids = [];
+        if ($scope.property.value) {
+            for (let i = 0; i < $scope.property.value.length; i++) {
+                functions[functions.length] = {value: $scope.property.value[i].function};
+                ids[ids.length] = {id: $scope.property.value[i].id};
+            }
+        } else {
+            $scope.property.value = [];
+        }
+
+        $scope.property.value[$scope.property.value.length] = {
+            id: $scope.editor.getSelection()[0].id, function: $scope.selectedFunction
+        };
+
+        // 给Action设置属性值(service及参数)
+        $scope.setActionProperty($scope, $scope.selectedFunction, $scope.resourceInputs[i], $scope.resourceOutputs[i]);
+
+        // // 服务有Output时，需要自动生成的资源
+        // $scope.AutoGenerateResource($scope, $scope.servicesDetails[i].description, $scope.output[i], $scope.resourceOutputs[i]);
+
+        // 将工人与物品、水杯这些物理Item绑定
+        // 当选择获取水杯服务时，调用工人获取资源方法
+        // 当选择递交物品服务时，调用工人释放资源方法
+        // if ($scope.entity.Services[i].value === '获取水杯') {
+        //     $scope.workerGetResource($scope.getHighlightedShape(), $scope.latestLine.incoming[0], $scope.latestLine.outgoing[0]);
+        // } else if ($scope.entity.Services[i].value === '递交物品') {
+        //     $scope.workerResourceEmpty($scope.getHighlightedShape(), shape);
+        // }
+
+        $scope.close();
     };
 
-    $scope.save = function () {
+    angular.module('activitiModeler').ResActionClass($rootScope, $scope);
+
+    // Close button handler
+    $scope.close = function () {
+        //handleEntityInput($scope);
+        // $scope.property.mode = 'read';
+        $scope.$hide();
+    };
+
+    $scope.oldsave = function () {
         handleEntityInput($scope);
         if ($scope.property.value === undefined || !$scope.property.value) {
             $scope.property.value = [{"id": "", "function": ""}];
@@ -254,12 +302,7 @@ var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
         } else {
             $scope.property.value = [];
         }
-        // if (!$scope.entity.Services) {
-        //     $scope.entity.Services = [{value: $scope.selectedFunc}];
-        // }
-        // else {
-        //     $scope.entity.Services[$scope.entity.Services.length] = {value: $scope.selectedFunc};
-        // }
+
         var indexToRemove = [];
         var hasRemoveNum = 0;
         for (var i = 0; i < functions.length; i++) {
@@ -299,7 +342,7 @@ var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
                 var currentService = $scope.entity.Services[i];
 
                 // 替换当前Action的图标，从泛型到社会、网络、物理特定的类型
-                $scope.replaceAction($scope, currentService.value, selectedShapeFunctionType);
+                $scope.updateAction($scope, currentService.value, selectedShapeActionType);
 
                 $scope.property.value[$scope.property.value.length] = {
                     id: $scope.editor.getSelection()[0].id, function: currentService.value
@@ -328,263 +371,59 @@ var ServicesPopupCtrl = ['$scope', '$http', function ($scope, $http) {
         $scope.newPlayShape();
     };
 
-    // 有些信息服务能够自动生成信息对象
-    $scope.AutoGenerateResource = function($scope, serviceName, serviceOutput, serviceOutputDetials){
-        // 服务的output中有值
-        if( serviceOutput.length > 0){   // 当选择点咖啡服务时，会生成一个订单对象.length > 0){
-            // 当选择点咖啡服务时，会生成一个订单对象
-            if (serviceName === 'order coffee online') {
-                $scope.createResource($scope, shape, "CyberObject");
-
-                var resTemp = resProperties;
-                resTemp["oryx-type"] = "信息对象";
-                resTemp["oryx-InParam"] = serviceOutputDetials;
-                resTemp["oryx-OutParam"] = serviceOutputDetials;
-                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], serviceOutput, resTemp);
-            }
-        }
-    };
-
-    $scope.setNewResourceProperty = function ($scope, selectionElement, serviceOutput, resProps) {
-        // var resProps = {"oryx-overrideid":"sid-xxx", "oryx-name":"","oryx-type":"", "oryx-resName":"","oryx-ServiceName":"","oryx-objName":""};
-        // selectionElement.setProperty("oryx-overrideid", ORYX.Editor.provideId());
-        selectionElement.setProperty("oryx-overrideid", $scope.editor.getSelection()[0].id);
-        selectionElement.setProperty("oryx-name", serviceOutput);
-        selectionElement.setProperty("oryx-type", resProps["oryx-type"]);
-
-        //selectionElement.setProperty("oryx-resName", resProps["oryx-resName"]);
-        //selectionElement.setProperty("oryx-objName", resProps["oryx-objName"]);
-        // selectionElement.setProperty("oryx-InParam", resProps["oryx-InParam"]);
-        // selectionElement.setProperty("oryx-OutParam", resProps["oryx-OutParam"]);
-
-        $scope.editor.getCanvas().update();
-        $scope.editor.updateSelection();
-    };
-
-    $scope.createResource = function ($scope, shape, resourceId) {
-        var resource = undefined;
-        var stencilSets = $scope.editor.getStencilSets().values();
-        for (var i = 0; i < stencilSets.length; i++) {
-            var stencilSet = stencilSets[i];
-            var nodes = stencilSet.nodes();
-            for (var j = 0; j < nodes.length; j++) {
-                if (nodes[j].idWithoutNs() === resourceId) {
-                    resource = nodes[j];
-                    break;
-                }
-            }
-        }
-        if (!resource)
-            return undefined;
-
-        var resourceOption = {type: 'set', x: shape.bounds.center().x + 50, y: shape.bounds.center().y};
-
-        var option = {
-            type: shape.getStencil().namespace() + resourceId,
-            namespace: shape.getStencil().namespace(),
-            parent: shape.parent,
-            containedStencil: resource,
-            positionController: resourceOption
-        };
-
-        var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
-
-        $scope.editor.executeCommands([command]);
-    };
-
-    $scope.createAction = function ($scope, actionName, FunctionType) {
-        var selectItem = ActivityElement;//$scope.editor.getSelection()[0];
-        //var itemId = "actionActivity";
-        // 机的图标 对应 CyberAction，itemId==类型
-        // var itemId = "SocialAction";
-        // if ("点咖啡服务" === actionName) {
-        //     itemId = "CyberAction";
-        // } else if ("制作咖啡" === actionName) {
-        //     itemId = "PhysicalAction";
-        // } else {
-        //     itemId = "SocialAction";
-        // }
-        var itemId = FunctionType;
-        var action = undefined;
-        var stencilSets = $scope.editor.getStencilSets().values();
-        for (var i = 0; i < stencilSets.length; i++) {
-            var stencilSet = stencilSets[i];
-            var nodes = stencilSet.nodes();
-            for (var j = 0; j < nodes.length; j++) {
-                if (nodes[j].idWithoutNs() === itemId) {
-                    action = nodes[j];
-                    break;
-                }
-            }
-        }
-        if (!action) return;
-
-        var nodes = [$scope.editor.getCanvas()][0].children;
-        var positionOffset = {type: 'offsetY', x: 0, y: 0};
-        for (var i = 0; i < nodes.length; i++) {
-            if (nodes[i].properties["oryx-activityelement"]) {
-                if (positionOffset.y < nodes[i].bounds.center().y) {
-                    positionOffset.y = nodes[i].bounds.center().y;
-                }
-            }
-        }
-        //if (positionController.y !== 0) {
-        // positionOffset.y += 30;
-        //}
-
-        var option = {
-            type: selectItem.getStencil().namespace() + itemId,
-            namespace: selectItem.getStencil().namespace(),
-            parent: selectItem.parent,
-            containedStencil: action,
-            positionController: positionOffset
-        };
-
-        var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
-
-        $scope.editor.executeCommands([command]);
-
-        var actionActivity = $scope.selectedItem;
-        for (var i = 0; i < actionActivity.properties.length; i++) {
-            var property = actionActivity.properties[i];
-            if (property.title === "Id") {
-                property.value = $scope.editor.getSelection()[0].id;
-                $scope.updatePropertyInModel(property);
-            } else if (property.title === "名称") {
-                property.value = actionName;
-                $scope.updatePropertyInModel(property);
-            } else if (property.title === "活动元素") {
-                property.value = {
-                    "id": selectItem.properties["oryx-overrideid"],
-                    "name": selectItem.properties["oryx-name"],
-                    "type": selectItem.properties["oryx-type"]
-                };
-                $scope.updatePropertyInModel(property);
-            }
-            // else if (property.title === "输入") {
-            //     property.mode = 'set';
-            // }
-            else if (property.title === "动作输入状态") {
-                property.value = $scope.inputStatus;
-                $scope.inputStatus = [];
-                $scope.updatePropertyInModel(property);
-            } else if (property.title === "动作输出状态") {
-                property.value = $scope.outputStatus;
-                $scope.outputStatus = [];
-                $scope.updatePropertyInModel(property);
-            }
-        }
-    };
-
-    // 设置action的属性
-    $scope.setActionProperty = function($scope, serviceName, inputParam, outputParam){
-        // 给Action设置属性，services是Action对应的资源服务。
-        // shape.setProperty("oryx-services", $scope.property.value);
-        // shape.setProperty("oryx-services", $scope.servicesDetails[i]);
-        var serviceDetail = {"name":serviceName, "input": inputParam, "output":outputParam};
-        shape.setProperty("oryx-services", serviceDetail);
-        $scope.editor.getCanvas().update();
-        $scope.editor.updateSelection();
-    };
-
-    // 替换未定义Action
-    $scope.replaceAction = function($scope, actionName, FunctionType) {
-        if(HighlightedShape === undefined) return;// 如果没有高亮，直接返回
-
-        var selectItem = $scope.editor.getSelection()[0];
-        var stencil = undefined;
-        var stencilSets = $scope.editor.getStencilSets().values();
-        var stencilId = FunctionType;
-        var newShapeId = "";
-
-        for (var i = 0; i < stencilSets.length; i++)
-        {
-            var stencilSet = stencilSets[i];
-            var nodes = stencilSet.nodes();
-            for (var j = 0; j < nodes.length; j++)
-            {
-                if (nodes[j].idWithoutNs() === stencilId)
-                {
-                    stencil = nodes[j];
-                    break;
-                }
-            }
-        }
-
-        if (!stencil) return;
-
-        // Create and execute command (for undo/redo)
-        var command = new MorphTo(HighlightedShape, stencil, $scope.editor);
-        $scope.editor.executeCommands([command]);
-
-        // 填写Action动作的属性
-        var actionActivity = $scope.selectedItem;
-        for (var i = 0; i < actionActivity.properties.length; i++) {
-            var property = actionActivity.properties[i];
-            if (property.title === "Id") {
-                property.value = $scope.editor.getSelection()[0].id;
-                newShapeId = property.value;
-                $scope.updatePropertyInModel(property);
-            } else if (property.title === "名称") {
-                property.value = actionName;
-                $scope.updatePropertyInModel(property);
-            } else if (property.title === "活动元素") {
-                property.value = {
-                    "id": selectItem.properties["oryx-overrideid"],
-                    "name": selectItem.properties["oryx-name"],
-                    "type": selectItem.properties["oryx-type"]
-                };
-                $scope.updatePropertyInModel(property);
-            } else if (property.title === "动作输入状态") {
-                property.value = $scope.inputStatus;
-                $scope.inputStatus = [];
-                $scope.updatePropertyInModel(property);
-            } else if (property.title === "动作输出状态") {
-                property.value = $scope.outputStatus;
-                $scope.outputStatus = [];
-                $scope.updatePropertyInModel(property);
-            }
-        }
-        $scope.setHighlightedShape(newShapeId);
-        jQuery('#' + newShapeId + 'bg_frame').attr({"fill":"#04FF8E"}); //高亮显示
-
-        $scope.workerContainsActionIdUpdate(HighlightedShape.id, newShapeId);
-
-        //$scope.close();
-    };
-
-    // Close button handler
-    $scope.close = function () {
-        //handleEntityInput($scope);
-        $scope.property.mode = 'read';
-        $scope.$hide();
-    };
-
-    var handleEntityInput = function ($scope) {
-        if ($scope.entity.Services) {
-            var emptyUsers = true;
-            var toRemoveIndexes = [];
-            for (var i = 0; i < $scope.entity.Services.length; i++) {
-                if ($scope.entity.Services[i].value !== '') {
-                    emptyUsers = false;
-                }
-                else {
-                    toRemoveIndexes[toRemoveIndexes.length] = i;
-                }
-            }
-
-            for (var i = 0; i < toRemoveIndexes.length; i++) {
-                $scope.entity.Services.splice(toRemoveIndexes[i], 1);
-            }
-
-            if (emptyUsers) {
-                $scope.entity.Services = undefined;
-            }
-        }
-    };
-
 }];
-
+// 结合律
+// mode{aaa, bbb, ccc} -> mode.aaa, mode.bbb, mode.ccc
+// var associative = function(s){
+//     var l = s.indexOf('{');
+//     var r = s.indexOf('}');
+//     var newList=[];
+//
+//     var outside = s.substring(0, l);   // mode
+//     var inside  = s.substring(l+1, r); // aaa, bbb, ccc
+//
+//     var insideList = inside.split(', ');
+//     for(var i=0;i<insideList.length;i++){
+//         newList[i] = outside + '.' + insideList[i];
+//     }
+//
+//     return newList.toString().replace(/,/g, ', ');
+// };
+//
+// var paramParser_old = function(rawParam){
+//     // 将[{state, data{action, mode, level, num}}]，解析为
+//     // resource_param——[state, data.action, data.mode, data.level, data.num]
+//     /* service_param——[state, action, mode, level, num] (service_param是下一个service的输入参数)*/
+//
+//     // 测试字符串 [{state, data{action, mode{aaa, bbb{dddd, eeee}, ccc}, level, num{xxx, yyy}}}]
+//     var str = "";
+//     var oldStr = "";
+//
+//     rawParam = rawParam.toString();
+//     if(rawParam[0] === '['){
+//         str = rawParam.substring(1,rawParam.length-1);
+//     }else{
+//         str = rawParam;
+//     }
+//
+//     if(str === ""){return "";}
+//
+//     do{
+//         oldStr = str;
+//         var matchedStrList = oldStr.match(/\w+\{([^\{\}]+)\}/g);
+//         for(var i=0; matchedStrList!==null && i < matchedStrList.length; i++){
+//             str = oldStr.replace(matchedStrList[i], associative(matchedStrList[i].trim()));
+//         }
+//
+//     }while(oldStr !== str);
+//
+//     if(str[0] === "{"){
+//         str = str.substring(1,str.length-1);
+//     }
+//     // console.log(str);
+//     return str;
+//
+// };
 var ServicesDisplayedCtrl = ['$scope', function ($scope) {
     if ($scope.property.value) {
         var indexToRemove = [];
@@ -724,7 +563,7 @@ var MorphTo = ORYX.Core.Command.extend({
          */
         if(shape.getStencil().property("oryx-bgcolor")
             && shape.properties["oryx-bgcolor"]
-            && shape.getStencil().property("oryx-bgcolor").value().toUpperCase()== shape.properties["oryx-bgcolor"].toUpperCase()){
+            && shape.getStencil().property("oryx-bgcolor").value().toUpperCase()=== shape.properties["oryx-bgcolor"].toUpperCase()){
             if(newShape.getStencil().property("oryx-bgcolor")){
                 newShape.setProperty("oryx-bgcolor", newShape.getStencil().property("oryx-bgcolor").value());
             }
@@ -733,11 +572,11 @@ var MorphTo = ORYX.Core.Command.extend({
             newShape.bounds.set(changedBounds);
         }
 
-        if(newShape.getStencil().type()==="edge" || (newShape.dockers.length==0 || !newShape.dockers[0].getDockedShape())) {
+        if(newShape.getStencil().type()==="edge" || (newShape.dockers.length===0 || !newShape.dockers[0].getDockedShape())) {
             newShape.bounds.centerMoveTo(oPos);
         }
 
-        if(newShape.getStencil().type()==="node" && (newShape.dockers.length==0 || !newShape.dockers[0].getDockedShape())) {
+        if(newShape.getStencil().type()==="node" && (newShape.dockers.length===0 || !newShape.dockers[0].getDockedShape())) {
             this.setRelatedDockers(newShape, newShape);
 
         }
@@ -780,7 +619,7 @@ var MorphTo = ORYX.Core.Command.extend({
             (shape.incoming||[]).concat(shape.outgoing||[])
                 .each(function(i) {
                     i.dockers.each(function(docker) {
-                        if (docker.getDockedShape() == shape) {
+                        if (docker.getDockedShape() === shape) {
                             var rPoint = Object.clone(docker.referencePoint);
                             // Move reference point per percent
 
