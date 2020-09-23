@@ -32,13 +32,12 @@ var KisBPMEventsCtrl = [ '$scope', '$modal', function($scope, $modal) {
     $modal(opts);
 }];
 
-var EventsPopupCtrl = [ '$scope', function($scope) {
+var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $scope, $http) {
 	var ActivityElement;
 	var shape = $scope.selectedShape;
 	var HighlightedShape = $scope.getHighlightedShape();
 
-	var selectedShapeFunctionType = "DefaultEvent";
-
+	var selectedShapeEventType = "DefaultEvent";
 
 	// Put json representing entity on scope
 	if ($scope.property !== undefined && $scope.property.value !== undefined && $scope.property.value !== null
@@ -47,7 +46,6 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 		for(var i=0 ; i<$scope.property.value.length ; i++){
 			$scope.entity.listeners[i].value = $scope.property.value[i].listener;
 		}
-
 	} else {
 		$scope.entity = {};
 		$scope.property = {};
@@ -57,18 +55,59 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
     {
     	$scope.entity.listeners = [{value: ''}];
     }
-    
-    // Click handler for + button after enum value
-    $scope.addListenerValue = function(index) {
-        $scope.entity.listeners.splice(index + 1, 0, {value: ''});
-    };
 
-    // Click handler for - button after enum value
-    $scope.removeListenerValue = function(index) {
-        $scope.entity.listeners.splice(index, 1);
-    };
+	$scope.events = [];
+	$scope.resourceEvents = [];
+	let eventType = selectedShapeEventType;
+	$scope.getResourcesfromKG = function (resName) {
+		$http({method: 'GET', url: KISBPM.URL.getResourceDetails(resName)}).success(function (data, status, headers, config) {
+			console.log(JSON.stringify(data));
 
-    $scope.save = function() {
+			// 解析得到event，包括其中的参数
+			for(let i=0;i<data.event.length;i++){
+				// 获取函数名
+				$scope.resourceEvents[i] = {name:data.event[i].name, type:eventType, output:data.event};
+				$scope.events[$scope.events.length] = {id:$scope.events.length, name: $scope.resourceEvents[i].name}; // 加入下拉框中
+
+				// // 获取函数的参数
+				// $scope.resourceInputs[i] = paramParser(data.service[i].inputParameter[0]);
+				// $scope.resourceOutputs[i] = paramParser(data.service[i].outputParameter[0]);
+
+				// // 设置output参数，output决定是否有输出
+				// $scope.output[i] = data.service[i].output;
+				//
+				// // 设置input参数，
+				// $scope.input[i] = data.service[i].input;
+
+				// // 获取函数，包含所有参数
+				// $scope.servicesDetails[i] = data.service[i];
+			}
+
+
+		}).error(function (data, status, headers, config) {
+			console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
+		});
+	}
+	// 判断连线源头是否为worker，如果是worker则另外处理
+	let prop;
+	let res_entity;
+	if($scope.latestfromto["from"]){
+		prop = $scope.latestfromto["from"].properties["oryx-type"];
+
+		if (prop && prop === "工人"){
+			res_entity = $scope.latestfromto["from"].properties["oryx-name"];
+			$scope.getResourcesfromKG(res_entity);
+		}else{
+			res_entity = $scope.latestfromto["to"].properties["oryx-name"];
+			$scope.getResourcesfromKG(res_entity);
+		}
+	}else{
+		res_entity = $scope.selectedItem.title;
+		$scope.getResourcesfromKG(res_entity);
+	}
+
+
+	$scope.save = function() {
 		if ($scope.property.value === undefined || !$scope.property.value) {
 			$scope.property.value = [{"id": "", "event": ""}];
 		}
@@ -124,8 +163,8 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 			}
 
 			if (index < 0) {
-				//$scope.createEvent($scope, $scope.entity.listeners[i].value);
-				$scope.replaceAction($scope, $scope.entity.listeners[i].value, selectedShapeFunctionType);
+				$scope.createEvent($scope, $scope.entity.listeners[i].value);
+				$scope.replaceAction($scope, $scope.entity.listeners[i].value, selectedShapeEventType);
 				$scope.property.value[$scope.property.value.length] = {
 					id: $scope.editor.getSelection()[0].id, event: $scope.entity.listeners[i].value
 				};
@@ -220,13 +259,13 @@ var EventsPopupCtrl = [ '$scope', function($scope) {
 	};
 
 	// 替换Action
-	$scope.replaceAction = function($scope, actionName, FunctionType) {
+	$scope.replaceAction = function($scope, actionName, eventType) {
 		if(HighlightedShape === undefined) return;// 如果没有高亮，直接返回
 
 		var selectItem = $scope.editor.getSelection()[0];
 		var stencil = undefined;
 		var stencilSets = $scope.editor.getStencilSets().values();
-		var stencilId = FunctionType;
+		var stencilId = eventType;
 		var newShapeId = "";
 
 		for (var i = 0; i < stencilSets.length; i++)

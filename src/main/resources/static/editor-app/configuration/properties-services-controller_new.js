@@ -166,7 +166,7 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
             console.log(JSON.stringify(data));
 
             // 解析得到functions，包括其中的参数
-            for(var i=0;i<data.service.length;i++){
+            for(let i=0;i<data.service.length;i++){
                 // 获取函数名
                 $scope.resourceFunctions[i] = {name:data.service[i].Capability, type:functionType, input:data.service[i].input, output:data.service[i].output};
                 $scope.functions[$scope.functions.length] = {id:$scope.functions.length, name: $scope.resourceFunctions[i].name}; // 加入下拉框中

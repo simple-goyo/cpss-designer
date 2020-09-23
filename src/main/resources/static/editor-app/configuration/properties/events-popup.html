@@ -10,14 +10,15 @@
 
                 <div class="row row-no-gutter">
                     <div class="form-group">
-                        <!--<label for="assigneeField">{{'PROPERTY.SERVICES.SOURCE' | translate}}</label>-->
-                        <!--<input type="text" id="assigneeField" class="form-control" ng-model="assignment.assignee"-->
-                        <!--placeholder="{{'PROPERTY.ASSIGNMENT.SOURCE_PLACEHOLDER' | translate}}"/>-->
-                        <label for="function">{{'PROPERTY.EVENTS.LISTENER' | translate}}</label>
-                        <div ng-repeat="listener in entity.listeners">
-                            <input id="function" class="form-control" type="text" ng-model="listener.value" />
-                            <i class="glyphicon glyphicon-minus clickable-property" ng-click="removeListenerValue($index)"></i>
-                            <i ng-if="$index == (entity.listeners.length - 1)" class="glyphicon glyphicon-plus clickable-property" ng-click="addListenerValue($index)"></i>
+                        <label class="col-xs-3" style="float:left;font-size: 16px">{{'PROPERTY.EVENTS.LISTENER' | translate}}</label>
+                        <div class="col-xs-9" ng-repeat="listener in entity.listeners">
+                            <select class="form-control" ng-model="selectedEvent" ng-change="changeEvent(selectedEvent)">
+                                <option value="{}" selected="selected">---请选择事件---</option>
+                                <option ng-repeat="x in events" value="{{x}}">{{x.name}}</option>
+                            </select>
+<!--                            <input id="function" class="form-control" type="text" ng-model="listener.value" />-->
+<!--                            <i class="glyphicon glyphicon-minus clickable-property" ng-click="removeListenerValue($index)"></i>-->
+<!--                            <i ng-if="$index == (entity.listeners.length - 1)" class="glyphicon glyphicon-plus clickable-property" ng-click="addListenerValue($index)"></i>-->
                         </div>
                     </div>
                 </div>

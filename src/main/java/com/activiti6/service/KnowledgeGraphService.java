@@ -128,10 +128,13 @@ public class KnowledgeGraphService {
         // resourceService——服务
         // resourceCategory——目录（CyberEntity）
         //List<String> resCap = parseString(job.getString("resourceCapability"));
-        List<String> resEve = parseString(job.getString("resourceEvent"));
+        JSONObject tmp = new JSONObject();
+        tmp.put("name", parseString(job.getString("resourceEvent")).get(0).replace("\"",""));
+        List<String> resEve = new ArrayList<String>();
+        resEve.add(tmp.toString());
         List<String> resCat = parseString(job.getString("resourceCategory"));
         List<String> resServs = parseString(job.getString("resourceCapability"));
-        JSONObject serv = new JSONObject();
+
 
         // resourceService中有以下几个参数
         //   output——输出
