@@ -25,18 +25,15 @@ angular.module('activitiModeler')
         $scope.lastHighlightedId = "";
         $scope.HighlightedItem;
 
-        //场景列表
-        $rootScope.scenes = [];
-
-        $rootScope.selectedSceneIndex = -1;
-
         // 最新的资源连线
         $scope.latestLine = undefined;
 
         // 最新的线两端
         $scope.latestfromto = {'from': undefined, 'to': undefined};
 
-        angular.module('activitiModeler').UIClass($rootScope, $scope);
+        angular.module('activitiModeler').UIClass($rootScope, $scope, $timeout);
+        angular.module('activitiModeler').RouterClass($rootScope, $scope);
+        angular.module('activitiModeler').ModalClass($rootScope, $scope, $modal);
 
         // Code that is dependent on an initialised Editor is wrapped in a promise for the editor
         $scope.editorFactory.promise.then(function () {
@@ -359,11 +356,7 @@ angular.module('activitiModeler')
                                     };
                             }
                             if ($scope.neibor && $scope.neibor.length !== 0) {
-                                var opts = {
-                                    template: "editor-app/configuration/properties/thing-get-or-leave-popup.html",
-                                    scope: $scope
-                                };
-                                $modal(opts);
+                                $scope.popupThingGetOrLeave();
                             }
                         }
 
@@ -712,22 +705,6 @@ angular.module('activitiModeler')
                 });
             };
 
-            $scope.setService = function () {
-                var opts = {
-                    template: 'editor-app/configuration/properties/services-popup_new.html?version=' + Date.now(),
-                    scope: $scope
-                };
-                $modal(opts);
-            };
-
-            $scope.setEvent = function () {
-                var opts = {
-                    template: 'editor-app/configuration/properties/events-popup.html?version=' + Date.now(),
-                    scope: $scope
-                };
-                $modal(opts);
-            };
-
             // $scope.addResource = function () {
             //     var opts = {
             //         template: 'editor-app/configuration/properties/input-popup.html?version=' + Date.now(),
@@ -780,8 +757,11 @@ angular.module('activitiModeler')
                 }
 
                 KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
-                if ($rootScope.selectedSceneIndex) {
+                if ($rootScope.selectedSceneIndex > -1) {
                     $rootScope.scenes[$rootScope.selectedSceneIndex].childShapes = $scope.editor.getJSON().childShapes;
+                } else if ($rootScope.selectedSceneIndex === -1) {
+                    $rootScope.scenesRelations.childShapes = $scope.editor.getJSON().childShapes;
+
                 }
 
                 // $scope.editor.deleteShape(shapeToRemove);
@@ -1160,7 +1140,7 @@ angular.module('activitiModeler')
         }).then(function (result) {
             let selectionOverrideIds;
             let lastHighlightedActionId;
-            if ($rootScope.selectedSceneIndex>-1) {
+            if ($rootScope.selectedSceneIndex > -1) {
                 selectionOverrideIds = $rootScope.scenes[$rootScope.selectedSceneIndex].lastselectionOverrideIds;
                 lastHighlightedActionId = $rootScope.scenes[$rootScope.selectedSceneIndex].lastHighlightedActionId;
             }
@@ -1250,7 +1230,11 @@ angular.module('activitiModeler')
                     });
                 }
             }).then(function (screenshot) {
-                $rootScope.scenes[index].img = screenshot.toDataURL("image/jpeg");
+                if (index > -1)
+                    $rootScope.scenes[index].img = screenshot.toDataURL("image/jpeg");
+                else {
+                    $rootScope.scenesRelations.img = screenshot.toDataURL("image/jpeg");
+                }
             });
         }
 

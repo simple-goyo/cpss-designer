@@ -39,8 +39,9 @@ var SaveSceneCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         delete modelJson.childShapes;
         modelJson["properties"]["name"] = modelMetaData.name;
         modelJson["properties"]["documentation"] = description;
-        modelJson.scenes = $scope.scenes;
-        modelJson.selectedSceneIndex = $scope.selectedSceneIndex;
+        modelJson.scenes = $rootScope.scenes;
+        modelJson.selectedSceneIndex = $rootScope.selectedSceneIndex;
+        modelJson.scenesRelations = $rootScope.scenesRelations;
         modelJson = JSON.stringify(modelJson);
 
 
@@ -70,8 +71,9 @@ var SaveSceneCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             delete modelJson.childShapes;
             modelJson["properties"]["name"] = modelMetaData.name;
             modelJson["properties"]["documentation"] = description;
-            modelJson.scenes = $scope.scenes;
-            modelJson.selectedSceneIndex = $scope.selectedSceneIndex;
+            modelJson.scenes = $rootScope.scenes;
+            modelJson.selectedSceneIndex = $rootScope.selectedSceneIndex;
+            modelJson.scenesRelations = $rootScope.scenesRelations;
             modelJson = JSON.stringify(modelJson);
             // Update
             $http({
@@ -119,8 +121,9 @@ var SaveSceneCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             delete modelJson.childShapes;
             modelJson["properties"]["name"] = modelMetaData.name;
             modelJson["properties"]["documentation"] = description;
-            modelJson.scenes = $scope.scenes;
-            modelJson.selectedSceneIndex = $scope.selectedSceneIndex;
+            modelJson.scenes = $rootScope.scenes;
+            modelJson.selectedSceneIndex = $rootScope.selectedSceneIndex;
+            modelJson.scenesRelations = $rootScope.scenesRelations;
             modelJson = JSON.stringify(modelJson);
 
 
@@ -220,9 +223,9 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         }
 
         $scope.exportDialog = {
-                'name': modelMetaData.name,
-                'description': description
-            };
+            'name': modelMetaData.name,
+            'description': description
+        };
 
         $scope.close = function () {
             $scope.$hide();
@@ -234,13 +237,13 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             $scope.createModelFile(scene);
         };
 
-        $scope.getAction = function (scene, patten, exclude){
+        $scope.getAction = function (scene, patten, exclude) {
             let action = [];
-            scene.each(function (s){
+            scene.each(function (s) {
                 let len = s.childShapes.length;
-                if(len){
-                    for(let i=0;i<len;i++)
-                        if(exclude !== s.childShapes[i].stencil.id && patten.test(s.childShapes[i].stencil.id)){
+                if (len) {
+                    for (let i = 0; i < len; i++)
+                        if (exclude !== s.childShapes[i].stencil.id && patten.test(s.childShapes[i].stencil.id)) {
                             action.push(s.childShapes[i]);
                         }
                 }
@@ -249,7 +252,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             return action;
         };
 
-        $scope.getConstraints = function(scene){
+        $scope.getConstraints = function (scene) {
 
         };
 
@@ -257,44 +260,46 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         $scope.createModelFile = function (scene) {
             let jsonObj = {
                 "id": "",
-                "properties":{
-                    "name":"",
-                    "documentation":""
+                "properties": {
+                    "name": "",
+                    "documentation": ""
                 },
-                "scene":[],
-                "action":{
-                    "service":[],
-                    "event":[]
+                "scene": [],
+                "action": {
+                    "service": [],
+                    "event": []
                 },
-                "gateway":[],
-                "constraint":[]
+                "gateway": [],
+                "constraint": [],
+                "scenesRelations": {}
             };
             jsonObj["properties"]["name"] = modelMetaData.name;// add diagram name
             jsonObj["properties"]["documentation"] = description;
 
-            scene.each(function (s){
+            scene.each(function (s) {
                 delete s.img;
             });
 
             // 填写模型内容（For建模）
             jsonObj["id"] = $scope.editor.getModelId();
             jsonObj["scene"] = scene;
+            jsonObj["scenesRelations"] = $rootScope.scenesRelations;
 
             // 填写action内容（For运行）
             // service
-            let service = $scope.getAction(scene,/(.*?)Action/,"UndefinedAction");
-            service.each(function (s){
+            let service = $scope.getAction(scene, /(.*?)Action/, "UndefinedAction");
+            service.each(function (s) {
                 console.log(s);
             });
             jsonObj["action"]["service"] = service;
 
             // event
-            let event = $scope.getAction(scene,/^(.*?)Event$/, "StartNoneEvent");
+            let event = $scope.getAction(scene, /^(.*?)Event$/, "StartNoneEvent");
 
             jsonObj["action"]["event"] = event;
 
             // gateway
-            let gateway = $scope.getAction(scene,/Gateway|EntryPoint|ExitPoint/);
+            let gateway = $scope.getAction(scene, /Gateway|EntryPoint|ExitPoint/);
 
             jsonObj["gateway"] = gateway;
 

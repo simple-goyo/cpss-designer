@@ -1,0 +1,64 @@
+<div class="modal" ng-controller="SceneLineNodeConditionInitialController">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!--                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;-->
+                <!--                </button>-->
+                <h2 translate>PROPERTY.NODE.CONDITION.SETTING</h2>
+                <div class="row" id="changeNodeConditionSettingEdge">
+                    <button class="btn btn-info"
+                            ng-class="isSelected($index)"
+                            ng-repeat="edge in setConditionsEdges"
+                            ng-click="changeEdge($index)">
+                        {{edge.label}}
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body" id="conditionInitial" style="height: 250px;overflow: scroll">
+                <div class="row" ng-repeat="nodeCondition in nodeConditions">
+                    <select ng-if="$index>0" id="combination{{$index+1}}" style="width:15%;margin-right:1%">
+                        <option value="">请选择逻辑符号</option>
+                        <option ng-repeat="combination in combinations"
+                                ng-if="nodeCondition.combination==combination" value="{{combination}}" selected>{{combination}}
+                        </option>
+                        <option ng-repeat="combination in combinations"
+                                ng-if="nodeCondition.combination!=combination" value="{{combination}}">{{combination}}
+                        </option>
+                    </select>
+                    <label for="property{{$index+1}}" style="width:10%">属性{{$index + 1}}</label>
+                    <select style="width:15%;margin-right:1%" id="property{{$index+1}}">
+                        <option value="">请选择属性</option>
+                        <option ng-repeat="property in properties" ng-if="property==nodeCondition.property"
+                                value="{{property}}" selected>{{property}}
+                        </option>
+                        <option ng-repeat="property in properties" ng-if="property!=nodeCondition.property"
+                                value="{{property}}">{{property}}
+                        </option>
+                    </select>
+
+                    <label for="condition{{$index+1}}" style="width:10%">条件：</label>
+                    <select style="width:15%;margin-right:1%" id="condition{{$index+1}}">
+                        <option value="">请选择条件</option>
+                        <option ng-repeat="condition in conditions" ng-if="condition==nodeCondition.condition"
+                                value="{{condition}}" selected> {{condition}}
+                        </option>
+                        <option ng-repeat="condition in conditions" ng-if="condition!=nodeCondition.condition"
+                                value="{{condition}}">{{condition}}
+                        </option>
+                    </select>
+
+                    <label for="value{{$index+1}}" style="width:10%">属性值：</label>
+                    <input id="value{{$index+1}}"
+                           style="border-radius: 5px;width:15%" value="{{nodeCondition.value}}" placeholder="请输入属性值">
+                    <hr>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button ng-click="addEmptyCondition()" class="btn btn-primary" translate style="float: left">
+                    PROPERTY.NODE.CONDITION.ADD
+                </button>
+                <button ng-click="save()" class="btn btn-primary" translate>ACTION.SAVE</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -98,18 +98,27 @@ activitiModeler
                 var modelUrl = KISBPM.URL.getModel(modelId);
 
                 $http({method: 'GET', url: modelUrl}).success(function (data, status, headers, config) {
-                    $rootScope.selectedSceneIndex = data.model.selectedSceneIndex;
+                    $rootScope.selectedSceneIndex = data.model.selectedSceneIndex === undefined ? -1 : data.model.selectedSceneIndex;
                     $rootScope.scenes = data.model.scenes;
+                    $rootScope.scenesRelations = data.model.scenesRelations === undefined ? {} : data.model.scenesRelations;
                     let initJson = data;
                     delete initJson.model.scenes;
                     delete initJson.model.selectedSceneIndex;
-                    if ($rootScope.scenes)
+                    delete initJson.model.scenesRelations;
+                    if ($rootScope.selectedSceneIndex > -1 && $rootScope.scenes)
                         initJson.model.childShapes = $rootScope.scenes[$rootScope.selectedSceneIndex].childShapes;
+                    else if ($rootScope.selectedSceneIndex === -1 && $rootScope.scenesRelations) {
+                        initJson.model.childShapes = $rootScope.scenesRelations.childShapes;
+                    }
 
-                    if($rootScope.editor){
+                    if ($rootScope.editor) {
                         jQuery(".ORYX_Editor").remove();
                     }
                     $rootScope.editor = new ORYX.Editor(initJson);
+                    if ($rootScope.selectedSceneIndex !== -1) {
+                        jQuery('#scenesRelationsShow').css('display', 'none');
+                        jQuery('#underlay-container').css('display', 'block');
+                    }
                     $rootScope.modelData = angular.fromJson(initJson);
                     $rootScope.editorFactory.resolve();
                 }).error(function (data, status, headers, config) {
@@ -215,7 +224,7 @@ activitiModeler
 
                     // resize 之前的高和宽
                     var lastHeight = jQuery(window).height();
-                    var lastWidth  = jQuery(window).width();
+                    var lastWidth = jQuery(window).width();
 
                     // Hook in resizing of main panels when window resizes
                     // TODO: perhaps move to a separate JS-file?
@@ -228,7 +237,7 @@ activitiModeler
                         var mainHeader = jQuery('#main-header');
                         var oryxEditor = jQuery('.rootNodeClass');
 
-                        if (offset === undefined || offset === null|| canvas === undefined || canvas === null || mainHeader === null) {
+                        if (offset === undefined || offset === null || canvas === undefined || canvas === null || mainHeader === null) {
                             // || propSectionHeight === undefined || propSectionHeight === null
                             return;
                         }
@@ -268,21 +277,21 @@ activitiModeler
                         let currentHeight = jQuery(window).height();
                         let currentWidth = jQuery(window).width();
                         let hDiff = currentHeight / lastHeight;
-                        let wDiff =  currentWidth / lastWidth;
+                        let wDiff = currentWidth / lastWidth;
                         lastHeight = currentHeight;
                         lastWidth = currentWidth;
 
-                        if($rootScope.editor === undefined) return;
+                        if ($rootScope.editor === undefined) return;
                         let nodes = $rootScope.editor._canvas.nodes;
-                        nodes.forEach(function (node,i) {
-                            let TopLeft     = node.bounds.a;
-                            let sizeX       = node.bounds.b.x - node.bounds.a.x;
-                            let sizeY       = node.bounds.b.y - node.bounds.a.y;
+                        nodes.forEach(function (node, i) {
+                            let TopLeft = node.bounds.a;
+                            let sizeX = node.bounds.b.x - node.bounds.a.x;
+                            let sizeY = node.bounds.b.y - node.bounds.a.y;
 
-                            let newTL= {x:0,y:0};
-                            let newBR = {x:0,y:0};
-                            newTL.y = TopLeft.y*hDiff;
-                            newTL.x = TopLeft.x*wDiff;
+                            let newTL = {x: 0, y: 0};
+                            let newBR = {x: 0, y: 0};
+                            newTL.y = TopLeft.y * hDiff;
+                            newTL.x = TopLeft.x * wDiff;
                             newBR.y = newTL.y + sizeY;
                             newBR.x = newTL.x + sizeX;
 
@@ -293,15 +302,15 @@ activitiModeler
                         });
 
                         let edges = $rootScope.editor._canvas.edges;
-                        edges.forEach(function (edge,i){
+                        edges.forEach(function (edge, i) {
                             let TopLeft = edge.bounds.a;
                             let BottomRight = edge.bounds.b;
-                            let newTL= {x:0,y:0};
-                            let newBR = {x:0,y:0};
-                            newTL.y = TopLeft.y*hDiff;
-                            newTL.x = TopLeft.x*wDiff;
-                            newBR.y = BottomRight.y*hDiff;
-                            newBR.x = BottomRight.x*wDiff;
+                            let newTL = {x: 0, y: 0};
+                            let newBR = {x: 0, y: 0};
+                            newTL.y = TopLeft.y * hDiff;
+                            newTL.x = TopLeft.x * wDiff;
+                            newBR.y = BottomRight.y * hDiff;
+                            newBR.x = BottomRight.x * wDiff;
 
                             edge.bounds.a = newTL;
                             edge.bounds.b = newBR;

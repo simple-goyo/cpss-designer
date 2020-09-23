@@ -1,0 +1,23 @@
+<div class="modal" ng-controller="SelectControlNodeTypeController">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!--                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;-->
+                <!--                </button>-->
+                <h2 translate>CONTROLLER.NODE.SELECT</h2>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <label for="controlNodeType" class="col-xs-3" style="float: left">控制节点类型</label>
+                    <select id="controlNodeType" class="col-xs-9" style="border-radius: 5px;float: right"
+                            ng-model="selectedControlNodeId">
+                        <option ng-repeat="type in controlNodeType" value="{{type.id}}">{{type.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button ng-click="save()" class="btn btn-primary" translate>ACTION.SAVE</button>
+            </div>
+        </div>
+    </div>
+</div>

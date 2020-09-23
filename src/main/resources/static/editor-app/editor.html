@@ -43,10 +43,10 @@
                 <span ng-show="!sceneShowState.show">场景</span>
             </a>
             <div class="col-xs-3" ng-if="entityInfoShowState.show">
-                <h4 style="text-align: center">资源实体</h4>
-                <hr>
-                <div id="paletteHelpWrapper" class="top" >
-                    <div class="stencils" id="paletteSection"  style="overflow: auto;" ng-style="entitystyleObj" >
+                <h4 ng-if="selectedSceneIndex>-1" style="text-align: center">资源实体</h4>
+                <hr ng-if="selectedSceneIndex>-1">
+                <div id="paletteHelpWrapper" class="top" ng-if="selectedSceneIndex>-1">
+                    <div class="stencils" id="paletteSection" style="overflow: auto;" ng-style="entitystyleObj">
                         <div ng-if="stencilItemGroups.length > 1">
                             <div ng-repeat="group in stencilItemGroups">
 
@@ -85,7 +85,8 @@
                     <!--                    <div ng-controller="">-->
                     <!--                </div>-->
                 </div>
-                <div id="splitLine" class="line"  ng-mousedown="clickLine($event)" ng-mousemove="dragLine($event)" ng-mouseup="releaseLine($event)"></div>
+                <div id="splitLine" class="line" ng-mousedown="clickLine($event)" ng-mousemove="dragLine($event)"
+                     ng-mouseup="releaseLine($event)"></div>
                 <h4 style="text-align: center">实体属性</h4>
                 <hr>
                 <div id="propertiesHelpWrapper" class="bottom">
@@ -146,7 +147,7 @@
                      data-jqyoui-options
                      jqyoui-droppable="{onDrop:'dropCallback',onOver: 'overCallback', onOut: 'outCallback'}"
                 >
-<!--                    滚动条隐藏，添加 style="overflow: hidden"-->
+                    <!--                    滚动条隐藏，添加 style="overflow: hidden"-->
                     <div class="canvas-message" id="model-modified-date"></div>
                     <div class="Oryx_button"
                          id="delete-button"
@@ -162,13 +163,13 @@
                          style="display:none">
                         <img src="editor-app/images/wrench.png"/>
                     </div>
-<!--                                        <div class="Oryx_button"-->
-<!--                                             id="play-button"-->
-<!--                                             title="播放动画"-->
-<!--                                             ng-click="playShape()"-->
-<!--                                             style="display:none">-->
-<!--                                            <img src="editor-app/images/play.png"/>-->
-<!--                                        </div>-->
+                    <!--                                        <div class="Oryx_button"-->
+                    <!--                                             id="play-button"-->
+                    <!--                                             title="播放动画"-->
+                    <!--                                             ng-click="playShape()"-->
+                    <!--                                             style="display:none">-->
+                    <!--                                            <img src="editor-app/images/play.png"/>-->
+                    <!--                                        </div>-->
                     <div class="Oryx_button"
                          id="service-button"
                          title="设置服务"
@@ -190,20 +191,20 @@
                          style="display:none">
                         <img src="editor-app/stencilsets/bpmn2.0/icons/connector/messageflow.png"/>
                     </div>
-<!--                                        <div class="Oryx_button"-->
-<!--                                             id="addResource-button"-->
-<!--                                             title="添加输入资源"-->
-<!--                                             ng-click="addResource()"-->
-<!--                                             style="display:none">-->
-<!--                                            <img src="editor-app/images/event.png"/>-->
-<!--                                        </div>-->
-<!--                                        <div class="Oryx_button"-->
-<!--                                             id="delResource-button"-->
-<!--                                             title="移除输入资源"-->
-<!--                                             ng-click="delResource()"-->
-<!--                                             style="display:none">-->
-<!--                                            <img src="editor-app/images/event.png"/>-->
-<!--                                        </div>-->
+                    <!--                                        <div class="Oryx_button"-->
+                    <!--                                             id="addResource-button"-->
+                    <!--                                             title="添加输入资源"-->
+                    <!--                                             ng-click="addResource()"-->
+                    <!--                                             style="display:none">-->
+                    <!--                                            <img src="editor-app/images/event.png"/>-->
+                    <!--                                        </div>-->
+                    <!--                                        <div class="Oryx_button"-->
+                    <!--                                             id="delResource-button"-->
+                    <!--                                             title="移除输入资源"-->
+                    <!--                                             ng-click="delResource()"-->
+                    <!--                                             style="display:none">-->
+                    <!--                                            <img src="editor-app/images/event.png"/>-->
+                    <!--                                        </div>-->
                     <div class="Oryx_button"
                          ng-repeat="item in quickMenuItems"
                          id="{{item.id}}"
@@ -220,16 +221,20 @@
             </div>
             <div id="multipleSceneWrapper" style="text-align: center" class="col-xs-2" ng-if="sceneShowState.show">
                 <h4>场景缩略图</h4>
-<!--                <button ng-click="addScene()" class="btn btn-primary">新建场景</button>-->
-                <hr>
-                <div>
-                    多Scene
-                </div>
+                <!--                <button ng-click="addScene()" class="btn btn-primary">新建场景</button>-->
                 <hr>
                 <div id="sceneSection" style="overflow: scroll">
+                    <div ng-class="isSelectedScene(-1)">
+                        <h6>场景关系</h6>
+                        <img onerror="this.src='static/editor-app/images/logo.png'" alt="场景关系建立" id="sceneRelations"
+                             type="image" class="img-thumbnail" style="width:120px;height:80px"
+                             src="{{scenesRelations.img}}" ng-click="changeScene(-1)"/>
+                        <hr style="border:1px dotted #eee">
+                    </div>
                     <div ng-if="scenes.length>=1" ng-repeat="scene in scenes" ng-class="isSelectedScene({{$index}})">
                         <h6>{{scene.name}}</h6>
-                        <img onerror="this.src='static/editor-app/images/logo.png'" alt="{{scene.name}}" id="{{scene.id}}" type="image" class="img-thumbnail" style="width:120px;height:80px"
+                        <img onerror="this.src='static/editor-app/images/logo.png'" alt="{{scene.name}}"
+                             id="{{scene.id}}" type="image" class="img-thumbnail" style="width:120px;height:80px"
                              src="{{scene.img}}" ng-click="changeScene($index)"/>
                         <hr style="border:1px dashed #eee">
                     </div>

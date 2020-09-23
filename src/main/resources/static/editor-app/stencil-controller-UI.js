@@ -1,6 +1,6 @@
 'use strict';
 angular.module('activitiModeler')
-    .UIClass = function($rootScope, $scope) {
+    .UIClass = function($rootScope, $scope,$timeout) {
     // Property window toggle state
     $scope.propertyWindowState = {'collapsed': false};
 

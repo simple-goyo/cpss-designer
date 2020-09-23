@@ -1,4 +1,4 @@
-var SceneCreateController = ['$scope','$rootScope', function ($scope,$rootScope) {
+var SceneCreateController = ['$scope', '$rootScope', function ($scope, $rootScope) {
     $scope.properties = ["location"];
     // $scope.$watch('$viewContentLoaded', function () {
     //     $scope.sceneSettingDiv = document.getElementById("sceneSetting");
@@ -40,12 +40,26 @@ var SceneCreateController = ['$scope','$rootScope', function ($scope,$rootScope)
                 return;
             newScene.properties[property] = propertyValue;
         }
-        newScene.id = ORYX.Editor.provideId();
-        if($rootScope.scenes === undefined){
+        if ($rootScope.scenes === undefined) {
             $rootScope.scenes = [];
         }
+        $scope.changeScene(-1);
+        $scope.createScene();
+
+        let id = $scope.editor.getSelection()[0].id;
+        let idProperty = {
+            key: 'oryx-overrideid',
+            value: id
+        }
+        let nameProperty = {
+            key: 'oryx-name',
+            value: nameValue
+        }
+        $scope.updatePropertyInModel(idProperty);
+        $scope.updatePropertyInModel(nameProperty);
+        newScene.id = $scope.editor.getSelection()[0].id;
         $rootScope.scenes[$rootScope.scenes.length] = newScene;
-        $scope.changeScene($rootScope.scenes.length-1);
+
         $scope.$hide();
     }
     $scope.close = function () {

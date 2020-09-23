@@ -248,6 +248,8 @@
 
 <script src="editor-app/editor-controller.js" type="text/javascript"></script>
 <script src="editor-app/stencil-controller-connect.js" type="text/javascript"></script>
+<script src="editor-app/stencil-controller-router.js" type="text/javascript"></script>
+<script src="editor-app/stencil-controller-modal.js" type="text/javascript"></script>
 <script src="editor-app/stencil-controller-UI.js" type="text/javascript"></script>
 <script src="editor-app/stencil-controller-scene.js" type="text/javascript"></script>
 <script src="editor-app/stencil-controller-worker.js" type="text/javascript"></script>
@@ -294,6 +296,8 @@
 <script src="editor-app/configuration/properties-node-condition-controller.js" type="text/javascript"></script>
 <script src="editor-app/popups/js/scene-create-controller.js" type="text/javascript"></script>
 <script src="editor-app/popups/js/constraint-controller.js" type="text/javascript"></script>
+<script src="editor-app/popups/js/select-control-node-type-controller.js" type="text/javascript"></script>
+<script src="editor-app/popups/js/scene-line-node-condition-initial-controller.js" type="text/javascript"></script>
 <script src="editor-app/configuration/properties-reference-entity-controller.js" type="text/javascript"></script>
 <script src="editor-app/libs/html2canvas.js" type="text/javascript"></script>
 <script type="text/javascript" src="https://unpkg.com/canvg@3.0.4/lib/umd.js"></script>

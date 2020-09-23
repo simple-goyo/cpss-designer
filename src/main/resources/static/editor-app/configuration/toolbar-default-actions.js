@@ -23,18 +23,22 @@ KISBPM.TOOLBAR = {
     ACTIONS: {
 
         saveModel: function (services) {
-            services.$scope.scenes[services.$scope.selectedSceneIndex].childShapes = services.$scope.editor.getJSON().childShapes;
-            let highlightedShape = services.$scope.getHighlightedShape();
-            if (highlightedShape) {
-                services.$rootScope.scenes[services.$rootScope.selectedSceneIndex].lastHighlightedActionId = highlightedShape.id;
-            }
-            let selection = services.$scope.editor.getSelection();
-            if (selection && selection.length >= 1) {
-                services.$rootScope.scenes[services.$rootScope.selectedSceneIndex].lastselectionOverrideIds = [];
-                for (let i = 0; i < selection.length; i++) {
-                    services.$rootScope.scenes[services.$rootScope.selectedSceneIndex].lastselectionOverrideIds
-                        [services.$rootScope.scenes[services.$rootScope.selectedSceneIndex].lastselectionOverrideIds.length] = selection[i].id;
+            if (services.$scope.selectedSceneIndex > -1) {
+                services.$scope.scenes[services.$scope.selectedSceneIndex].childShapes = services.$scope.editor.getJSON().childShapes;
+                let highlightedShape = services.$scope.getHighlightedShape();
+                if (highlightedShape) {
+                    services.$rootScope.scenes[services.$rootScope.selectedSceneIndex].lastHighlightedActionId = highlightedShape.id;
                 }
+                let selection = services.$scope.editor.getSelection();
+                if (selection && selection.length >= 1) {
+                    services.$rootScope.scenes[services.$rootScope.selectedSceneIndex].lastselectionOverrideIds = [];
+                    for (let i = 0; i < selection.length; i++) {
+                        services.$rootScope.scenes[services.$rootScope.selectedSceneIndex].lastselectionOverrideIds
+                            [services.$rootScope.scenes[services.$rootScope.selectedSceneIndex].lastselectionOverrideIds.length] = selection[i].id;
+                    }
+                }
+            } else if (services.$scope.selectedSceneIndex === -1) {
+                services.$rootScope.scenesRelations.childShapes = services.$scope.editor.getJSON().childShapes;
             }
             var modal = services.$modal({
                 backdrop: true,
@@ -407,8 +411,13 @@ var __createStartNode = function ($rootScope, $scope) {
     };
     var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
     $scope.editor.executeCommands([command]);
-    $scope.editor.getSelection()[0].properties['oryx-overrideid'] = $scope.editor.getSelection()[0].id;//为创建的初始化节点提供id
-
+    // $scope.editor.getSelection()[0].properties['oryx-overrideid'] = $scope.editor.getSelection()[0].id;//为创建的初始化节点提供id
+    let id = $scope.editor.getSelection()[0].id;
+    let idProperty = {
+        key: 'oryx-overrideid',
+        value: id
+    }
+    $scope.updatePropertyInModel(idProperty);
 };
 
 var __createNormalAction = function ($rootScope, $scope) {
@@ -487,8 +496,13 @@ var __createNormalAction = function ($rootScope, $scope) {
         // $scope.toDoAboutResourceLineAfterChangingAction(lastSelectedAction);
 
 
-        $scope.editor.getSelection()[0].properties['oryx-overrideid'] = $scope.editor.getSelection()[0].id;//为创建的未定义的动作提供id
-
+        // $scope.editor.getSelection()[0].properties['oryx-overrideid'] = $scope.editor.getSelection()[0].id;//为创建的未定义的动作提供id
+        let id = $scope.editor.getSelection()[0].id;
+        let idProperty = {
+            key: 'oryx-overrideid',
+            value: id
+        }
+        $scope.updatePropertyInModel(idProperty);
     }
 };
 

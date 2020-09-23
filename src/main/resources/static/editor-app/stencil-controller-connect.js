@@ -1,6 +1,6 @@
 'use strict';
 angular.module('activitiModeler')
-    .ConnectClass = function($rootScope, $scope) {
+    .ConnectClass = function ($rootScope, $scope) {
     /**
      * 监听资源连线成功事件
      * options: {
@@ -16,12 +16,17 @@ angular.module('activitiModeler')
             return;
 
         var nameSpace = edge.getStencil().namespace();
-        if (edge.getStencil()._jsonStencil["id"] !== nameSpace + "MessageFlow")
+        if (edge.getStencil()._jsonStencil["id"] !== nameSpace + "MessageFlow"
+            && edge.getStencil()._jsonStencil["id"] !== nameSpace + "MessageSceneFlow")
             return;
 
         var from = edge.incoming[0];
         var to = edge.outgoing[0];
         if (from && to) {
+            if (from.properties['oryx-type'] === "场景" && to.properties['oryx-type'] === "场景") {
+                $scope.connectScene(from, edge, to);
+                return
+            }
             if (from.properties['oryx-type'] === "工人") {
                 $scope.editor.setSelection(from);
             } else
@@ -99,13 +104,17 @@ angular.module('activitiModeler')
 
         var stencil = connectedShape.getStencil();
         stencil._jsonStencil.defaultAlign = "south";//设置messageFlow在下方生成
+        let lineId = "MessageFlow";
+        if (stencil._jsonStencil.id === stencil._namespace + "scene") {
+            lineId = "MessageSceneFlow";
+        }
         var option = {
             type: stencil._jsonStencil["id"],
             namespace: stencil.namespace(),
             connectedShape: connectedShape,
             parent: connectedShape.parent,
             containedStencil: stencil,
-            connectingType: stencil.namespace() + "MessageFlow"
+            connectingType: stencil.namespace() + lineId
         };
         var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
         $scope.editor.executeCommands(command);
@@ -248,7 +257,7 @@ angular.module('activitiModeler')
             var line = resourceConnect[i];
             var from = $scope.getShapeById(line['from']);
             var to = $scope.getShapeById(line['to']);
-            $scope.connectResource(from, to);
+            $scope.connectResourceByMessageFlow(from, to);
         }
     };
 
@@ -283,33 +292,21 @@ angular.module('activitiModeler')
     /**
      * 根据给定的from和to创建连线
      * */
-    $scope.connectResource = function (from, to) {
-        if (!from || !to)
-            return;
-        var sset = ORYX.Core.StencilSet.stencilSet(from.getStencil().namespace());
-
-        var edge = new ORYX.Core.Edge({'eventHandlerCallback': $scope.editor.handleEvents.bind($scope.editor)},
-            sset.stencil(from.getStencil().namespace() + "MessageFlow"));
-        edge.dockers.first().setDockedShape(from);
-
-        var magnet = from.getDefaultMagnet();
-        var cPoint = magnet ? magnet.bounds.center() : from.bounds.midPoint();
-        edge.dockers.first().setReferencePoint(cPoint);
-        edge.dockers.last().setDockedShape(to);
-        magnet = to.getDefaultMagnet();
-        var ePoint = magnet ? magnet.bounds.center() : to.bounds.midPoint();
-        edge.dockers.last().setReferencePoint(ePoint);
-        $scope.editor._canvas.add(edge);
-        $scope.editor.getCanvas().update();
+    $scope.connectResourceByMessageFlow = function (from, to) {
+        $scope.connectResourceWithSpecificLine(from, to, "MessageFlow")
     };
 
-    $scope.connectWithSequenceFlow = function (from, to) {
+    $scope.connectResourceByMessageSceneFlow = function (from, to) {
+        return $scope.connectResourceWithSpecificLine(from, to, "MessageSceneFlow")
+    };
+
+    $scope.connectResourceWithSpecificLine = function (from, to, lineId) {
         if (!from || !to)
             return;
         var sset = ORYX.Core.StencilSet.stencilSet(from.getStencil().namespace());
 
         var edge = new ORYX.Core.Edge({'eventHandlerCallback': $scope.editor.handleEvents.bind($scope.editor)},
-            sset.stencil(from.getStencil().namespace() + "SequenceFlow"));
+            sset.stencil(from.getStencil().namespace() + lineId));
         edge.dockers.first().setDockedShape(from);
 
         var magnet = from.getDefaultMagnet();
@@ -321,6 +318,11 @@ angular.module('activitiModeler')
         edge.dockers.last().setReferencePoint(ePoint);
         $scope.editor._canvas.add(edge);
         $scope.editor.getCanvas().update();
+        return edge;
+    }
+
+    $scope.connectWithSequenceFlow = function (from, to) {
+        $scope.connectResourceWithSpecificLine(from, to, "SequenceFlow");
     };
 
 };

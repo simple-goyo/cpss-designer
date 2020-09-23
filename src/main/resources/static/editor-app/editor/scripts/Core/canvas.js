@@ -90,8 +90,10 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
 
         // Additional SVG-node BELOW the stencils to allow underlays (if that is even a word) by plugins
         this.underlayNode = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.rootNode,
-            ['svg', {id: "underlay-container",style: "position:absolute; top:5px; z-index:-1;"}]);
+            ['svg', {id: "underlay-container",style: "position:absolute; top:5px; z-index:-1;display:none;"}]);
 
+        this.scenesRelationsShow=ORYX.Editor.graft("http://www.w3.org/2000/svg", this.rootNode,
+            ['svg', {id: "scenesRelationsShow",style: "position:absolute; top:5px; z-index:-1;"}]);
 
         // 信息空间 和 社会物理空间
         let X1 = ORYX.CONFIG.FORM_ROW_WIDTH + 30 + 1;
@@ -100,6 +102,7 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
         let Y2 = 150;
         // this._drawUnderlay(X1, "4%", X2-X1,"22%", this.underlayNode,"信息社会物理空间");
 
+
         this._drawUnderlay(X1, "4%", X2-X1,"67%", this.underlayNode,"信息空间");
 
         this._drawLine(X1, "22%", X2-X1+30,"22%", this.underlayNode,"社会物理空间");
@@ -107,6 +110,7 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
         // 交互序列
         this._drawUnderlay(X1, "80%", X2-X1,"20%", this.underlayNode,"交互序列");
 
+        this._drawUnderlay(X1,"4%",X2-X1,"87%",this.scenesRelationsShow,"场景关系")
 
         this.node = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.rootNode,
             ['g', {},
@@ -215,7 +219,6 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
         this.newSpace = ORYX.Editor.graft("http://www.w3.org/2000/svg", parrentNode,
             ['text', {'font-size':'18', 'x':x1+5, 'y':Y, 'style': "font-family: Times New Roman;"}]);
         this.newSpace.textContent = spaceName;
-        spaceName
     },
 
     focus: function () {
