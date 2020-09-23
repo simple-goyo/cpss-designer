@@ -735,8 +735,8 @@ angular.module('activitiModeler')
                     $scope.deleteScene(shape);
                 } else if ($scope.isGateway(shape)) {
                     $scope.deleteGateway(shape);
-                } else
-                    KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
+                }
+                KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
 
                 if ($rootScope.selectedSceneIndex > -1) {
                     $rootScope.scenes[$rootScope.selectedSceneIndex].childShapes = $scope.editor.getJSON().childShapes;
@@ -749,11 +749,11 @@ angular.module('activitiModeler')
             };
 
             $scope.deleteGateway = function (shape) {
-                for (let i = 0; i < shape.incoming.length; i++) {
-                    $scope.editor.deleteShape(shape.incoming[i]);
+                while (shape.incoming.length > 0) {
+                    $scope.editor.deleteShape(shape.incoming[0]);
                 }
-                for (let i = 0; i < shape.outgoing.length; i++) {
-                    $scope.editor.deleteShape(shape.outgoing[i]);
+                while (shape.outgoing.length > 0) {
+                    $scope.editor.deleteShape(shape.outgoing[0]);
                 }
 
                 let companyId = shape.properties["oryx-gatewaycompany"];
@@ -762,16 +762,22 @@ angular.module('activitiModeler')
                     if (company !== undefined) {
                         if ($scope.isStartGateway(shape)) {
                             $scope.deleteGateway(company);
+                            $scope.editor.deleteShape(company);
                         } else {
                             company.setProperty("oryx-gatewaycompany", "");
 
                         }
                     }
                 }
-                $scope.editor.deleteShape(shape);
             }
 
             $scope.deleteScene = function (shape) {
+                while (shape.incoming.length > 0) {
+                    $scope.editor.deleteShape(shape.incoming[0]);
+                }
+                while (shape.outgoing.length > 0) {
+                    $scope.editor.deleteShape(shape.outgoing[0]);
+                }
                 for (let i = 0; i < $rootScope.scenes.length; i++) {
                     let scene = $rootScope.scenes[i];
                     if (scene.id === shape.id) {
@@ -779,9 +785,6 @@ angular.module('activitiModeler')
                         return;
                     }
                 }
-                $scope.editor.deleteShape(shape.incoming[0]);
-                $scope.editor.deleteShape(shape.outgoing[0]);
-                $scope.editor.deleteShape(shape);
             }
 
             $scope.quickAddItem = function (newItemId) {

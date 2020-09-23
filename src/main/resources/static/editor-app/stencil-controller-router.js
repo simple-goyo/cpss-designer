@@ -17,18 +17,23 @@ angular.module('activitiModeler')
         let controlNodes1 = $scope.findMaxStartControlNodesInPath(shape1);
         let controlNodes2 = $scope.findMaxStartControlNodesInPath(shape2);
         let indexPair = $scope.findCommonStartControlNode(controlNodes1, controlNodes2);
-        let edges1 = $scope.createControlNodePair(shape1, controlNodes1, indexPair.index1);
-        let edges2 = $scope.createControlNodePair(shape2, controlNodes2, indexPair.index2);
-        edges1[0].setProperty("oryx-nodecondition", nodeCondition1);
-        edges2[0].setProperty("oryx-nodecondition", nodeCondition2);
-        $scope.editor.deleteShape(edge1);
-        $scope.editor.deleteShape(edge2);
-        let commonEndNode = $scope.getShapeById(controlNodes1[indexPair.index1].properties['oryx-gatewaycompany']);
-        while (commonEndNode.outgoing[0]) {
-            commonEndNode = commonEndNode.outgoing[0];
-        }
-        if (commonEndNode.id !== to.id) {
-            $scope.connectResourceByMessageSceneFlow(commonEndNode, to);
+        if (indexPair) {
+            let edges1 = $scope.createControlNodePair(shape1, controlNodes1, indexPair.index1);
+            let edges2 = $scope.createControlNodePair(shape2, controlNodes2, indexPair.index2);
+            edges1[0].setProperty("oryx-nodecondition", nodeCondition1);
+            edges2[0].setProperty("oryx-nodecondition", nodeCondition2);
+            $scope.editor.deleteShape(edge1);
+            $scope.editor.deleteShape(edge2);
+            let commonEndNode = $scope.getShapeById(controlNodes1[indexPair.index1].properties['oryx-gatewaycompany']);
+            while (commonEndNode.outgoing[0]) {
+                commonEndNode = commonEndNode.outgoing[0];
+            }
+            if (commonEndNode.id !== to.id) {
+                $scope.connectResourceByMessageSceneFlow(commonEndNode, to);
+            }
+        } else {
+            $scope.handleControlNodeDispatch(to, "EndParallelGateway");
+
         }
     }
 
@@ -188,6 +193,8 @@ angular.module('activitiModeler')
                         controlNodeCompany.setProperty("oryx-name", name);
                     }
                 } else {
+                    let name = $scope.getGatewayItemId(controlNode) + " about " + shape.properties['oryx-name'];
+                    controlNode.setProperty("oryx-name", name);
                     edge = $scope.connectResourceByMessageSceneFlow(controlNode, shape);
                 }
                 if (removedEdge) {
