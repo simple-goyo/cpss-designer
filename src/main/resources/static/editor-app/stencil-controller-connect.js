@@ -23,6 +23,9 @@ angular.module('activitiModeler')
         var from = edge.incoming[0];
         var to = edge.outgoing[0];
         if (from && to) {
+            if ($scope.isGateway(from) || $scope.isGateway(to)) {
+                return;
+            }
             if (from.properties['oryx-type'] === "场景" && to.properties['oryx-type'] === "场景") {
                 $scope.connectScene(from, edge, to);
                 return

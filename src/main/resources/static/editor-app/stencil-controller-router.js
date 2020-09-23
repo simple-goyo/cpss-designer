@@ -48,6 +48,7 @@ angular.module('activitiModeler')
                 controlNode = $scope.editor.getSelection()[0];
                 controlNode.setProperty("oryx-name", controlNodes[i].properties['oryx-name']);
                 controlNodes[i].setProperty("oryx-gatewaycompany", controlNode.id);
+                controlNode.setProperty("oryx-gatewaycompany", controlNode[i].id);
             }
             let edge = $scope.containsLine(shape, controlNode);
             if (edge === null) {
@@ -238,6 +239,13 @@ angular.module('activitiModeler')
     $scope.isStartGateway = function (shape) {
         return $scope.isStartParallelGateway(shape) ||
             $scope.isStartExclusiveGateway(shape)
+    }
+
+    $scope.isGateway = function (shape) {
+        return $scope.isStartParallelGateway(shape) ||
+            $scope.isStartExclusiveGateway(shape) ||
+            $scope.isEndExclusiveGateway(shape) ||
+            $scope.isEndParallelGateway(shape)
     }
 
     //包含最多的节点
