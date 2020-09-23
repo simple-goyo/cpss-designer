@@ -397,9 +397,9 @@ var __createStartNode = function ($rootScope, $scope) {
 
     if (!containedStencil) return;
 
-    var positionOffset = {x: 80, y: 640};//初始节点的位置
+    var positionOffset = {x: 80, y: 600};//初始节点的位置
 
-    positionOffset.y = jQuery(window).height() * 0.8;
+    positionOffset.y = jQuery(window).height() * 0.75;
 
     var option = {
         type: namespace + itemId,

@@ -271,33 +271,7 @@ angular.module('activitiModeler')
                 }
             };
 
-            // $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_DBLCLICK, function (event) {
-            //     // 双击高亮
-            //     // 两个阶段的要求
-            //     // 1.选中的Action，高亮(被选中元素高亮，未选中元素取消高亮)
-            //     // 2.选中的Action，显示当前画布
-            //     // 阶段1
-            //     if($scope.selectedItem){
-            //         var itemId = $scope.selectedItem.properties[0].value;
-            //         var lastId = lastHighlightedId;
-            //         // 取消上次高亮
-            //         if(lastId !== ""){
-            //             jQuery('#' + lastId + 'bg_frame').attr({"fill":"#f9f9f9"});
-            //         }
-            //
-            //         // 只有Action才会被高亮
-            //         if(($scope.selectedItem.properties["oryx-activityelement"] !== undefined)){
-            //             // 高亮
-            //             jQuery('#' + itemId + 'bg_frame').attr({"fill":"#04FF8E8F"});
-            //             console.log(itemId);
-            //
-            //             lastHighlightedId = itemId;
-            //             HighlightedItem = $scope.selectedItem;
-            //         }
-            //     }
-            // });
-
-            $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEUP, function (event) {
+             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEUP, function (event) {
                 var action = $scope.getHighlightedShape();
                 if (action) {
                     action.setProperty("oryx-resourceline", $scope.getResourceConnect());

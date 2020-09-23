@@ -11,7 +11,7 @@
                     <div class="row">
                         <label class="col-xs-3" style="float:left;font-size: 16px">{{'PROPERTY.SERVICES.FUNCTION.VALUE' | translate}}</label>
                         <div class="col-xs-9" ng-repeat="Service in entity.Services">
-                            <select class="form-control" ng-model="selectedFunction" ng-change="changeValue(selectedFunction)">
+                            <select class="form-control" ng-model="selectedFunction" ng-change="changeFunction(selectedFunction)">
                                 <option value="{}" selected="selected">---请选择服务---</option>
                                 <option ng-repeat="x in functions" value="{{x}}">{{x.name}}</option>
                             </select>
@@ -24,9 +24,9 @@
 
                     </div>
                     <hr>
-                    <div class="row" ng-repeat="param in serviceParams">
+                    <div class="row" ng-repeat="param in serviceParams" style="margin-top:6px">
                         <label class="col-xs-3" style="float:left">{{param}}</label>
-                        <input class="col-xs-8" style="border-radius: 5px;margin-right:15px" placeholder="" id="{{param}}">
+                        <input class="col-xs-8" type="text" style="margin-right:15px" placeholder="" id="{{param}}" ng-model="$parent.modelInput[param]">
                     </div>
                 </div>
             </div>
