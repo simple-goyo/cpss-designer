@@ -71,8 +71,8 @@ var paramParser = function (rawParam){
     oldStr = str.trim();
 
     let splitedList = oldStr.split(',');
-    let matchedStrList = oldStr.match(/\w+\{([^\{\}]+)\}/g);
-    console.log(matchedStrList);
+    // let matchedStrList = oldStr.match(/\w+\{([^\{\}]+)\}/g);
+    // console.log(matchedStrList);
     splitedList.forEach(function (value) {
         // value == "mode":""
         let key_value  = value.split(':');
@@ -153,7 +153,41 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
     // 判断连线源头是否为worker，如果是worker则另外处理
     var prop = $scope.latestfromto["from"].properties["oryx-type"];
     if (prop && prop === "工人"){
-        console.log('工人');
+        let res_entity = $scope.latestfromto["from"].properties["oryx-name"];
+        let functionType = $scope.latestfromto["from"].properties["oryx-type"];
+        for (let i = 0; i < $scope.constTypeOfResource.length; i++) {
+            if ($scope.constTypeOfResource[i].name === functionType) {
+                selectedShapeActionType = $scope.constTypeOfResource[i].type;
+            }
+        }
+        $http({method: 'GET', url: KISBPM.URL.getResourceDetails(res_entity)}).success(function (data, status, headers, config) {
+            console.log(JSON.stringify(data));
+
+            // 解析得到functions，包括其中的参数
+            for(let i=0;i<data.service.length;i++){
+                // 获取函数名
+                $scope.resourceFunctions[i] = {name:data.service[i].Capability, type:functionType, input:data.service[i].input, output:data.service[i].output};
+                $scope.functions[$scope.functions.length] = {id:$scope.functions.length, name: $scope.resourceFunctions[i].name}; // 加入下拉框中
+
+                // 获取函数的参数
+                $scope.resourceInputs[i] = paramParser(data.service[i].inputParameter[0]);
+                $scope.resourceOutputs[i] = paramParser(data.service[i].outputParameter[0]);
+
+                // 设置output参数，output决定是否有输出
+                $scope.output[i] = data.service[i].output;
+
+                // 设置input参数，
+                $scope.input[i] = data.service[i].input;
+
+                // 获取函数，包含所有参数
+                $scope.servicesDetails[i] = data.service[i];
+            }
+
+            //console.log($scope.resourceOutputs);
+
+        }).error(function (data, status, headers, config) {
+            console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
+        });
     }else{
         let res_entity = $scope.latestfromto["to"].properties["oryx-name"];
         let functionType = $scope.latestfromto["to"].properties["oryx-type"];
@@ -237,7 +271,7 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
         // console.log(selectedShapeActionType);
 
         // 更新Action名称和类型
-        $scope.updateAction($scope, $scope.selectedFunction, selectedShapeActionType);
+        $scope.modifyAction($scope, $scope.selectedFunction, selectedShapeActionType);
 
         if ($scope.property.value === undefined || !$scope.property.value) {
             $scope.property.value = [{"id": "", "function": ""}];
@@ -285,91 +319,91 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
         $scope.$hide();
     };
 
-    $scope.oldsave = function () {
-        handleEntityInput($scope);
-        if ($scope.property.value === undefined || !$scope.property.value) {
-            $scope.property.value = [{"id": "", "function": ""}];
-        }
-
-        ActivityElement = $scope.editor.getSelection()[0];
-        var functions = [];
-        var ids = [];
-        if ($scope.property.value) {
-            for (var i = 0; i < $scope.property.value.length; i++) {
-                functions[functions.length] = {value: $scope.property.value[i].function};
-                ids[ids.length] = {id: $scope.property.value[i].id};
-            }
-        } else {
-            $scope.property.value = [];
-        }
-
-        var indexToRemove = [];
-        var hasRemoveNum = 0;
-        for (var i = 0; i < functions.length; i++) {
-            var index = -1;
-            if ($scope.entity.Services === undefined || $scope.entity.Services.length === 0) {
-                $scope.entity.Services = [{value: ''}];
-            }
-            for (var j = 0; j < $scope.entity.Services.length; j++) {
-                if (functions[i].value === $scope.entity.Services[j].value) {
-                    index = j;
-                }
-            }
-            if (index < 0) {
-                indexToRemove[indexToRemove.length] = i;
-            }
-        }
-        for (var i = 0; i < indexToRemove.length; i++) {
-            var index = indexToRemove[i];
-            var shapeToRemove = $scope.getShapeById(ids[index].id);
-            $scope.editor.deleteShape(shapeToRemove);
-            functions.splice(index - hasRemoveNum, 1);
-            $scope.property.value.splice(index - hasRemoveNum, 1);
-            hasRemoveNum++;
-        }
-
-        // $scope.entity.Services是一个Action对应的服务，通过“+”号增加，通过“-”号减少
-        // 2个以上的服务对应2个以上select下拉选择框，因此需要用for循环处理
-        for (var i = 0; i < $scope.entity.Services.length; i++) {
-            index = -1;
-            for (var j = 0; j < functions.length; j++) {
-                if (functions[j].value === $scope.entity.Services[i].value) {
-                    index = j;
-                }
-            }
-            // 如果是初次设置Services值
-            if (index < 0) {
-                var currentService = $scope.entity.Services[i];
-
-                // 替换当前Action的图标，从泛型到社会、网络、物理特定的类型
-                $scope.updateAction($scope, currentService.value, selectedShapeActionType);
-
-                $scope.property.value[$scope.property.value.length] = {
-                    id: $scope.editor.getSelection()[0].id, function: currentService.value
-                };
-
-                // 给Action设置属性值( service 以及子参数)
-                //$scope.setActionProperty($scope, currentService);
-                $scope.setActionProperty($scope, currentService.value, $scope.resourceInputs[i], $scope.resourceOutputs[i]);
-
-                // 服务有Output时，需要自动生成的资源
-                $scope.AutoGenerateResource($scope, $scope.servicesDetails[i].description, $scope.output[i], $scope.resourceOutputs[i]);
-
-                // 将工人与物品、水杯这些物理Item绑定
-                // 当选择获取水杯服务时，调用工人获取资源方法
-                // 当选择递交物品服务时，调用工人释放资源方法
-                if ($scope.entity.Services[i].value === '获取水杯') {
-                    $scope.workerGetResource($scope.getHighlightedShape(), $scope.latestLine.incoming[0], $scope.latestLine.outgoing[0]);
-                } else if ($scope.entity.Services[i].value === '递交物品') {
-                    $scope.workerResourceEmpty($scope.getHighlightedShape(), shape);
-                }
-            }
-        }
-        $scope.close();
-
-        // 播放动画
-        $scope.newPlayShape();
-    };
+    // $scope.oldsave = function () {
+    //     handleEntityInput($scope);
+    //     if ($scope.property.value === undefined || !$scope.property.value) {
+    //         $scope.property.value = [{"id": "", "function": ""}];
+    //     }
+    //
+    //     ActivityElement = $scope.editor.getSelection()[0];
+    //     var functions = [];
+    //     var ids = [];
+    //     if ($scope.property.value) {
+    //         for (var i = 0; i < $scope.property.value.length; i++) {
+    //             functions[functions.length] = {value: $scope.property.value[i].function};
+    //             ids[ids.length] = {id: $scope.property.value[i].id};
+    //         }
+    //     } else {
+    //         $scope.property.value = [];
+    //     }
+    //
+    //     var indexToRemove = [];
+    //     var hasRemoveNum = 0;
+    //     for (var i = 0; i < functions.length; i++) {
+    //         var index = -1;
+    //         if ($scope.entity.Services === undefined || $scope.entity.Services.length === 0) {
+    //             $scope.entity.Services = [{value: ''}];
+    //         }
+    //         for (var j = 0; j < $scope.entity.Services.length; j++) {
+    //             if (functions[i].value === $scope.entity.Services[j].value) {
+    //                 index = j;
+    //             }
+    //         }
+    //         if (index < 0) {
+    //             indexToRemove[indexToRemove.length] = i;
+    //         }
+    //     }
+    //     for (var i = 0; i < indexToRemove.length; i++) {
+    //         var index = indexToRemove[i];
+    //         var shapeToRemove = $scope.getShapeById(ids[index].id);
+    //         $scope.editor.deleteShape(shapeToRemove);
+    //         functions.splice(index - hasRemoveNum, 1);
+    //         $scope.property.value.splice(index - hasRemoveNum, 1);
+    //         hasRemoveNum++;
+    //     }
+    //
+    //     // $scope.entity.Services是一个Action对应的服务，通过“+”号增加，通过“-”号减少
+    //     // 2个以上的服务对应2个以上select下拉选择框，因此需要用for循环处理
+    //     for (var i = 0; i < $scope.entity.Services.length; i++) {
+    //         index = -1;
+    //         for (var j = 0; j < functions.length; j++) {
+    //             if (functions[j].value === $scope.entity.Services[i].value) {
+    //                 index = j;
+    //             }
+    //         }
+    //         // 如果是初次设置Services值
+    //         if (index < 0) {
+    //             var currentService = $scope.entity.Services[i];
+    //
+    //             // 替换当前Action的图标，从泛型到社会、网络、物理特定的类型
+    //             $scope.modifyAction($scope, currentService.value, selectedShapeActionType);
+    //
+    //             $scope.property.value[$scope.property.value.length] = {
+    //                 id: $scope.editor.getSelection()[0].id, function: currentService.value
+    //             };
+    //
+    //             // 给Action设置属性值( service 以及子参数)
+    //             //$scope.setActionProperty($scope, currentService);
+    //             $scope.setActionProperty($scope, currentService.value, $scope.resourceInputs[i], $scope.resourceOutputs[i]);
+    //
+    //             // 服务有Output时，需要自动生成的资源
+    //             $scope.AutoGenerateResource($scope, $scope.servicesDetails[i].description, $scope.output[i], $scope.resourceOutputs[i]);
+    //
+    //             // 将工人与物品、水杯这些物理Item绑定
+    //             // 当选择获取水杯服务时，调用工人获取资源方法
+    //             // 当选择递交物品服务时，调用工人释放资源方法
+    //             if ($scope.entity.Services[i].value === '获取水杯') {
+    //                 $scope.workerGetResource($scope.getHighlightedShape(), $scope.latestLine.incoming[0], $scope.latestLine.outgoing[0]);
+    //             } else if ($scope.entity.Services[i].value === '递交物品') {
+    //                 $scope.workerResourceEmpty($scope.getHighlightedShape(), shape);
+    //             }
+    //         }
+    //     }
+    //     $scope.close();
+    //
+    //     // 播放动画
+    //     $scope.newPlayShape();
+    // };
 
 }];
 // 结合律

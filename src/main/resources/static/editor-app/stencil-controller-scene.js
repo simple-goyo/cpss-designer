@@ -45,9 +45,9 @@ angular.module('activitiModeler')
             $scope.editor.getCanvas().update();
             let shapes = childShapes;
             if (!shapes || shapes.length === 0) {
-                _createAction($rootScope, $scope, "StartNoneEvent");
+                $scope._createAction($rootScope, $scope, "StartNoneEvent");
             }
-        } else _createAction($rootScope, $scope, "StartNoneEvent");
+        } else $scope._createAction($rootScope, $scope, "StartNoneEvent");
 
         let selectionOverrideIds = $rootScope.scenes[$rootScope.selectedSceneIndex].lastselectionOverrideIds;
         if (selectionOverrideIds && selectionOverrideIds.length >= 1) {

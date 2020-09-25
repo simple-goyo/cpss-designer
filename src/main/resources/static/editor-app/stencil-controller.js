@@ -1189,34 +1189,6 @@ angular.module('activitiModeler')
             return null;
         };
 
-
-        // $scope.updateScene = function () {
-        //     let index = $scope.getSelectedSceneIndex();
-        //     let scene = $scope.getScenes();
-        //
-        //     if (index === undefined || scene === undefined) {
-        //         return;
-        //     }
-        //
-        //     scene[index].sceneJson = $scope.editor.getJSON();
-        //     let highlightedShape = $scope.getShapeById(lastHighlightedId);
-        //     if (highlightedShape !== undefined) {
-        //         scene[index].lastHighlightedActionId = highlightedShape.properties['oryx-overrideid'];
-        //     }
-        //     let selection = $scope.editor.getSelection();
-        //     if (selection && selection.length >= 1) {
-        //         $scope.scenes[$scope.selectedSceneIndex].lastselectionOverrideIds = [];
-        //         for (let i = 0; i < selection.length; i++) {
-        //             $scope.scenes[$scope.selectedSceneIndex].lastselectionOverrideIds
-        //                 [$scope.scenes[$scope.selectedSceneIndex].lastselectionOverrideIds.length] = selection[i].properties['oryx-overrideid'];
-        //         }
-        //     }
-        //
-        // }
-
-
-        angular.module('activitiModeler').SceneClass($rootScope, $scope);
-
         $scope.takeScreenshot = function (index) {
             html2canvas(document.getElementById("canvasHelpWrapper"), {
                 onclone: function (html) {
@@ -1239,36 +1211,8 @@ angular.module('activitiModeler')
             });
         }
 
-        $scope.justStartNoneEvent = function () {
-            var shapes = [$scope.editor.getCanvas()][0].children;
-            for (let i = 0; i < shapes.length; i++) {
-                let shape = shapes[i];
-                if (shape._stencil._jsonStencil.id === shape._stencil._namespace + "StartNoneEvent") {
-                    let nextAction = $scope.getNextAction(shape);
-                    if (nextAction) {
-                        return null;
-                    } else {
-                        return shape;
-                    }
-                }
-            }
-            return null;
-        }
-
-        $scope.getAllAction = function () {
-            let actions = [];
-            var shapes = [$scope.editor.getCanvas()][0].children;
-            for (let i = 0; i < shapes.length; i++) {
-                let shape = shapes[i];
-                if (shape._stencil._jsonStencil.id === shape._stencil._namespace + "StartNoneEvent") {
-                    while (shape) {
-                        actions.push(shape);
-                        shape = $scope.getNextAction(shape);
-                    }
-                }
-            }
-            return actions;
-        }
+        angular.module('activitiModeler').SceneClass($rootScope, $scope);
+        angular.module('activitiModeler').ActionSeqClass($rootScope, $scope, $timeout);
 
     }]);
 

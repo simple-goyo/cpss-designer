@@ -40,17 +40,17 @@ angular.module('activitiModeler')
             $scope.latestfromto['to'] = to;
 
             let actions = [];
-            var shape = $scope.getNextAction($scope.getHighlightedShape());
+            let shape = $scope.getNextAction($scope.getHighlightedShape());
             while (shape != null) {
                 $scope.editor.deleteShape(shape.incoming[0]);
-                var position = shape.bounds.center();
+                let position = shape.bounds.center();
                 position.x += 145;
                 shape.bounds.centerMoveTo(position);
                 actions.push(shape);
                 shape = $scope.getNextAction(shape);
             }
 
-            _createAction($rootScope, $scope, "UndefinedAction");
+            $scope._createAction($rootScope, $scope, "UndefinedAction");
 
             // 取消之前的高亮
             var lastSelectedAction = $scope.getHighlightedShape();
@@ -227,30 +227,7 @@ angular.module('activitiModeler')
             }
         }
     };
-    /**
-     * 获取指定动作的上一个动作，只有一个动作指向该动作的时候保证正确性，对于多个动作指向该动作，取第一个动作指向该动作的动作
-     * */
-    $scope.getLastAction = function (nowAction) {
-        if (!nowAction)
-            return;
-        var edge = nowAction.incoming[0];
-        if (edge) {
-            return edge.incoming[0];
-        }
-        return null;
-    };
-    /**
-     * 获取指定动作的下一个动作，只有该动作指向一个动作的时候保证正确性，对于多个动作指向该动作，取该动作指向的第一个的动作
-     * */
-    $scope.getNextAction = function (nowAction) {
-        if (!nowAction)
-            return;
-        var edge = nowAction.outgoing[0];
-        if (edge) {
-            return edge.outgoing[0];
-        }
-        return null;
-    };
+
 
     /**
      * 用于切换action时生成对应Action的资源连线

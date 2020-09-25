@@ -42,7 +42,7 @@
                    ng-class="{'glyphicon-chevron-right': !sceneShowState.show, 'glyphicon-chevron-left': sceneShowState.show}"></i>
                 <span ng-show="!sceneShowState.show">场景</span>
             </a>
-            <div class="col-xs-3" ng-if="entityInfoShowState.show">
+            <div class="col-xs-3" ng-if="entityInfoShowState.show" id="wrappers">
                 <h4 ng-if="selectedSceneIndex>-1" style="text-align: center">资源实体</h4>
                 <hr ng-if="selectedSceneIndex>-1">
                 <div id="paletteHelpWrapper" class="top" ng-if="selectedSceneIndex>-1">

@@ -158,7 +158,7 @@ angular.module('activitiModeler')
     }
 
     // 替换未定义Action
-    $scope.updateAction = function($scope, actionName, FunctionType) {
+    $scope.modifyAction = function($scope, actionName, FunctionType) {
         if(HighlightedShape === undefined) return;// 如果没有高亮，直接返回
 
         let selectItem = $scope.editor.getSelection()[0];

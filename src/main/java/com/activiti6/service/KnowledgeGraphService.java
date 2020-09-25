@@ -101,9 +101,9 @@ public class KnowledgeGraphService {
          *  众包worker的details暂时先写死，处理完直接返回
          * */
         //////////////////////////众包///////////////////////////////
-        if( resName.length()>=6 && resName.substring(0,6).equals("worker")){
+        if( resName.length()>=6 && resName.toLowerCase().startsWith("worker")){
 
-            retn = "{\"name\":\"CrowdSouring\",\"service\":[{\"output\": \"[]\", \"input\": [], \"inputParameter\": \"[]\", \"description\": \"deliver something\", \"outputParameter\": \"[]\"}],\"event\":\"[]\",\"capability\":\"[]\",\"category\":\"[\\\"SocialEntity\\\"]\"}";
+            retn = "{\"name\":\"CrowdSouring\",\"service\":[{\"output\":\"[]\",\"input\":[],\"inputParameter\":\"[]\",\"Capability\":\"get item\",\"outputParameter\":\"[]\"},{\"output\":\"[]\",\"input\":[],\"inputParameter\":\"[]\",\"Capability\":\"deliver item\",\"outputParameter\":\"[]\"}],\"event\":\"[]\",\"capability\":\"[]\",\"category\":\"[\\\"SocialEntity\\\"]\"}";
             InputStream resourceDetailsStream = new ByteArrayInputStream(retn.getBytes(StandardCharsets.UTF_8));
 
             try {
