@@ -116,7 +116,6 @@ var KisBpmTextPropertyPopupCtrl = ['$scope', function($scope) {
 var propertyInitPopupController= [ '$scope', '$modal', function($scope, $modal) {
     // 设置是否弹窗
     console.log($scope.nameProperty);
-
     var opts = {
         template:  'editor-app/configuration/properties/propertyInitPopup.html?version=' + Date.now(),
         scope: $scope
@@ -129,8 +128,7 @@ var propertyInitPopupController= [ '$scope', '$modal', function($scope, $modal) 
 var propertyInitController = ['$scope', '$http', function ($scope ,$http) {
     $scope.resources = []; // 界面显示的资源列表
 
-    //console.log($scope);
-    var shape = $scope.selectedShape;
+    let selectedResourceEntity = $scope.selectedShape;
 
     // 资源与人机物三种Action的对应（固定不变）
     $scope.constTypeOfResource = [
@@ -148,25 +146,22 @@ var propertyInitController = ['$scope', '$http', function ($scope ,$http) {
 
     // 获取当前资源的类型：Cyber、Physical or Social
     var selectedShapeFunctionType = undefined;
-    for (var i = 0; i < $scope.constTypeOfResource.length; i++) {
-        if ($scope.constTypeOfResource[i].name === shape.properties["oryx-type"]) {
+    for (let i = 0; i < $scope.constTypeOfResource.length; i++) {
+        if ($scope.constTypeOfResource[i].name === selectedResourceEntity.properties["oryx-type"]) {
             selectedShapeFunctionType = $scope.constTypeOfResource[i].type;
         }
     }
 
     // 社会资源的名称在不在知识图谱中，需要手动自定义
     // 还有CyberObject和Item也需要手动自定义
-    if(selectedShapeFunctionType == "SocialAction" || shape.properties["oryx-type"] == "信息对象" || shape.properties["oryx-type"] == "物品"){
-        $scope.isHide=false;
-    }else{
-        $scope.isHide=true;
-    }
+    $scope.isHide = !(selectedShapeFunctionType === "SocialAction" || selectedResourceEntity.properties["oryx-type"] === "信息对象" || selectedResourceEntity.properties["oryx-type"] === "物品"
+        || selectedResourceEntity.properties["oryx-type"] === "入口节点" || selectedResourceEntity.properties["oryx-type"] === "出口节点");
 
     // 请求知识图谱，获取对应的资源，如下单应用、咖啡机等
     $http({method: 'GET', url: KISBPM.URL.getResources()}).success(function (data, status, headers, config) {
-        var k=0;
-        for(var i=0; i< data.length;i++){
-            if(data[i].type == selectedShapeFunctionType){
+        let k=0;
+        for(let i=0; i< data.length;i++){
+            if(data[i].type === selectedShapeFunctionType){
                 $scope.resources[k] = data[i];
                 k++;
             }
