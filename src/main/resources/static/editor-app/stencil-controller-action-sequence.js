@@ -83,8 +83,68 @@ angular.module('activitiModeler')
         if (ItemId === "UndefinedAction") {
             return $scope.__createNormalAction($rootScope, $scope);
         } else if (ItemId === "StartNoneEvent") {
-            return $scope.__createStartNode($rootScope, $scope);
+            $scope.__createStartNode($rootScope, $scope);
+            $scope.__createEntryNode($rootScope, $scope);
+            $scope.__createExitNode($rootScope, $scope);
         }
+    };
+
+    $scope.__createEntryNode = function ($rootScope, $scope) {
+        let itemId = "EntryPoint";
+        let positionOffset = {x: 44, y: 200};//初始节点的位置
+
+        positionOffset.y = jQuery('#canvasSection').height() * 0.34;
+
+        let namespace = ORYX.CONFIG.NAMESPACE_STENCILSET;
+        if ($scope.editor === undefined) return;
+        let containedStencil = $scope.fetchStentil(itemId);
+        if (!containedStencil) return;
+
+        var option = {
+            type: namespace + itemId,
+            namespace: namespace,
+
+            positionController: positionOffset,
+            containedStencil: containedStencil
+        };
+        var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
+        $scope.editor.executeCommands([command]);
+        // $scope.editor.getSelection()[0].properties['oryx-overrideid'] = $scope.editor.getSelection()[0].id;//为创建的初始化节点提供id
+        let id = $scope.editor.getSelection()[0].id;
+        let idProperty = {
+            key: 'oryx-overrideid',
+            value: id
+        }
+        $scope.updatePropertyInModel(idProperty);
+    };
+
+    $scope.__createExitNode = function ($rootScope, $scope){
+        let itemId = "ExitPoint";
+        let positionOffset = {x: 1150, y: 300};//初始节点的位置
+
+        positionOffset.y = jQuery('#canvasSection').height() * 0.34;
+
+        let namespace = ORYX.CONFIG.NAMESPACE_STENCILSET;
+        if ($scope.editor === undefined) return;
+        let containedStencil = $scope.fetchStentil(itemId);
+        if (!containedStencil) return;
+
+        var option = {
+            type: namespace + itemId,
+            namespace: namespace,
+
+            positionController: positionOffset,
+            containedStencil: containedStencil
+        };
+        var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
+        $scope.editor.executeCommands([command]);
+        // $scope.editor.getSelection()[0].properties['oryx-overrideid'] = $scope.editor.getSelection()[0].id;//为创建的初始化节点提供id
+        let id = $scope.editor.getSelection()[0].id;
+        let idProperty = {
+            key: 'oryx-overrideid',
+            value: id
+        }
+        $scope.updatePropertyInModel(idProperty);
     };
 
     $scope.__createStartNode = function ($rootScope, $scope) {

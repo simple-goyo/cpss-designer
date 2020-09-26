@@ -5,17 +5,25 @@ angular.module('activitiModeler')
     let resProperties = {"oryx-overrideid":"sid-xxx", "oryx-name":"","oryx-type":"", "oryx-resName":"","oryx-ServiceName":"","oryx-objName":"","oryx-InParam":"","oryx-OutParam":""}; //资源属性模板
 
     // 有些信息服务能够自动生成信息对象
-    $scope.AutoGenerateResource = function($scope, serviceName, serviceOutput, serviceOutputDetials){
+    $scope.AutoGenerateResource = function($scope, actionName, serviceOutput, serviceOutputDetials){
         // 服务的output中有值
         if( serviceOutput.length > 0){   // 当选择点咖啡服务时，会生成一个订单对象.length > 0){
             // 当选择点咖啡服务时，会生成一个订单对象
-            if (serviceName === 'order coffee online') {
+            if (actionName === 'order coffee online') {
                 $scope.createResource($scope, shape, "CyberObject");
 
-                var resTemp = resProperties;
+                let resTemp = resProperties;
                 resTemp["oryx-type"] = "信息对象";
                 resTemp["oryx-InParam"] = serviceOutputDetials;
                 resTemp["oryx-OutParam"] = serviceOutputDetials;
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], serviceOutput, resTemp);
+            }
+
+            if (actionName === 'finish making coffee') {
+                $scope.createResource($scope, shape, "PysicalObject");
+
+                let resTemp = resProperties;
+                resTemp["oryx-type"] = "物品";
                 $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], serviceOutput, resTemp);
             }
         }

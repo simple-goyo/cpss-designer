@@ -242,14 +242,14 @@ angular.module('activitiModeler')
     };
 
     $scope.newPlayShape = function () {
-        // var propertylist = $scope.selectedItem.properties;
-        var propertylist = $scope.getHighlightedShape().properties;
-        var AEProp = $scope.getPropertybyKey(propertylist, "oryx-activityelement");
-        var AEPropSel = jQuery("#" + AEProp.id).parent().parent();
+        // let propertylist = $scope.selectedItem.properties;
+        let propertylist = $scope.getHighlightedShape().properties;
+        let AEProp = $scope.getPropertybyKey(propertylist, "oryx-activityelement");
+        let AEPropSel = jQuery("#" + AEProp.id).parent().parent();
 
-        var pos_AE = $scope.getPositionbyselector(AEPropSel);
+        let pos_AE = $scope.getPositionbyselector(AEPropSel);
         setTimeout(function () {
-            var cssRuleName = $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
+            let cssRuleName = $scope.playAnimation(AEPropSel, "flash", "0", pos_AE, pos_AE);
             $scope.stopAnimation(AEPropSel, 1500, cssRuleName);
         }, 100);
     };

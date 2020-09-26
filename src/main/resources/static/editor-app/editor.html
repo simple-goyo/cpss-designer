@@ -46,7 +46,7 @@
                 <h4 ng-if="selectedSceneIndex>-1" style="text-align: center">资源实体</h4>
                 <hr ng-if="selectedSceneIndex>-1">
                 <div id="paletteHelpWrapper" class="top" ng-if="selectedSceneIndex>-1">
-                    <div class="stencils" id="paletteSection" style="overflow: auto;" ng-style="entitystyleObj">
+                    <div class="stencils" id="paletteSection" style="overflow: auto;">
 
                         <div ng-if="stencilItemGroups.length > 1">
                             <div ng-repeat="group in stencilItemGroups">
@@ -216,14 +216,15 @@
                 <h4>场景缩略图</h4>
                 <!--                <button ng-click="addScene()" class="btn btn-primary">新建场景</button>-->
                 <hr>
+                <div ng-class="isSelectedScene(-1)">
+                    <h6>场景关系</h6>
+                    <img onerror="this.src='static/editor-app/images/logo.png'" alt="场景关系建立" id="sceneRelations"
+                         type="image" class="img-thumbnail" style="width:120px;height:80px"
+                         src="{{scenesRelations.img}}" ng-click="changeScene(-1)"/>
+                    <hr style="border:1px dotted #eee">
+                </div>
                 <div id="sceneSection" style="overflow: scroll">
-                    <div ng-class="isSelectedScene(-1)">
-                        <h6>场景关系</h6>
-                        <img onerror="this.src='static/editor-app/images/logo.png'" alt="场景关系建立" id="sceneRelations"
-                             type="image" class="img-thumbnail" style="width:120px;height:80px"
-                             src="{{scenesRelations.img}}" ng-click="changeScene(-1)"/>
-                        <hr style="border:1px dotted #eee">
-                    </div>
+
                     <div ng-if="scenes.length>=1" ng-repeat="scene in scenes" ng-class="isSelectedScene({{$index}})">
                         <h6>{{scene.name}}</h6>
                         <img onerror="this.src='static/editor-app/images/logo.png'" alt="{{scene.name}}"

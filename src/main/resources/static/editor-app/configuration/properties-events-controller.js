@@ -34,7 +34,7 @@ var KisBPMEventsCtrl = [ '$scope', '$modal', function($scope, $modal) {
 
 var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $scope, $http) {
 	var ActivityElement;
-	var shape = $scope.selectedShape;
+	var selectedResourceEntity = $scope.selectedShape;
 	var HighlightedShape = $scope.getHighlightedShape();
 
 	var selectedShapeEventType = "DefaultEvent";
@@ -132,6 +132,11 @@ var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $s
 
 		$scope.close();
 
+		if($scope.selectedEvent === 'finish making coffee' ){
+			$scope.AutoGenerateResource($scope, $scope.selectedEvent, "coffee",null);
+		}
+
+
 		// 播放动画
 		$scope.newPlayShape();
     };
@@ -148,7 +153,7 @@ var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $s
 	$scope.replaceAction = function($scope, actionName, eventType) {
 		if(HighlightedShape === undefined) return;// 如果没有高亮，直接返回
 
-		let selectItem = $scope.editor.getSelection()[0];
+		let selectItem = selectedResourceEntity; // $scope.editor.getSelection()[0];
 		let newShapeId = "";
 
 		let stencil = $scope.getStentil(eventType);

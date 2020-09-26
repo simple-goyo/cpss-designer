@@ -1641,6 +1641,66 @@
         "sequence_end",
         "all"
       ]
+    },{
+      "type": "node",
+      "id": "EntryPoint",
+      "title": "入口节点",
+      "description": "入口节点",
+      "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   xmlns=\"http://www.w3.org/2000/svg\"\n   version=\"1.0\"\n   width=\"40\"\n   height=\"40\">\n   \n  <oryx:magnets>\n    <oryx:magnet\n       oryx:default=\"yes\"\n       oryx:cy=\"16\"\n       oryx:cx=\"16\" />\n  </oryx:magnets>\n <g stroke=\"null\">\n  <title style=\"vector-effect: non-scaling-stroke;\" stroke=\"null\">Layer 1</title>\n  <g stroke=\"null\" id=\"svg_3\">\n    <rect stroke=\"null\" fill=\"none\" id=\"canvas_background\" height=\"42\" width=\"42\" y=\"-1\" x=\"-1\"/>\n   <path stroke=\"null\" id=\"svg_1\" p-id=\"10292\" fill=\"#515151\" d=\"m19.95965,0c-10.97781,0 -19.95966,8.9646 -19.95966,19.92134s8.98185,19.92134 19.95966,19.92134s19.95966,-8.9646 19.95966,-19.92134s-8.98185,-19.92134 -19.95966,-19.92134zm0,37.51853c-9.64717,0 -17.63103,-7.96854 -17.63103,-17.59719s7.98386,-17.59719 17.63103,-17.59719s17.63103,7.96854 17.63103,17.59719s-7.98386,17.59719 -17.63103,17.59719z\"/>\n   <path stroke=\"null\" id=\"svg_2\" p-id=\"10293\" fill=\"#515151\" d=\"m19.46066,10.4587c-0.66532,-0.66404 -1.6633,-0.66404 -2.32863,0s-0.66532,1.66011 0,2.32416l7.15221,7.13848l-7.15221,7.13848c-0.66532,0.66404 -0.66532,1.66011 0,2.32416c0.33266,0.33202 0.83165,0.49803 1.16431,0.49803s0.83165,-0.16601 1.16431,-0.49803l8.31652,-8.30056c0.66532,-0.66404 0.66532,-1.66011 0,-2.32416l-8.31652,-8.30056z\"/>\n  </g>\n </g>\n</svg>",
+      "icon": "gateway/entry.png",
+      "groups": [
+        "节点列表"
+      ],
+      "propertyPackages": [
+        "overrideidpackage",
+        "namepackage",
+        "documentationpackage",
+        "typepackage",
+        "executionlistenerspackage",
+        "initiatorpackage",
+        "resourcespackage",
+        "servicespackage",
+        "nodeconditionpackage"
+      ],
+      "hiddenPropertyPackages": [],
+      "roles": [
+        "GatewaysMorph",
+        "message_start",
+        "message_end",
+        "Startevents_all",
+        "StartEventsMorph",
+        "all"
+      ]
+    },{
+      "type": "node",
+      "id": "ExitPoint",
+      "title": "出口节点",
+      "description": "出口节点",
+      "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   xmlns=\"http://www.w3.org/2000/svg\"\n   version=\"1.0\"\n   width=\"40\"\n   height=\"40\">\n   \n  <oryx:magnets>\n    <oryx:magnet\n       oryx:default=\"yes\"\n       oryx:cy=\"16\"\n       oryx:cx=\"16\" />\n  </oryx:magnets>\n <g>\n  <title>Layer 1</title>\n  <path stroke=\"null\" id=\"svg_1\" p-id=\"6723\" d=\"m19.89943,0c10.99001,0 19.89943,8.96516 19.89943,20.02394s-8.90942,20.02394 -19.89943,20.02394s-19.89943,-8.96516 -19.89943,-20.02394s8.90942,-20.02394 19.89943,-20.02394zm-5.92008,10.98202c-1.06351,1.16584 -0.9209,2.92238 0.3195,3.92136l7.73424,6.23857l-7.73314,6.22522c-1.2404,0.99897 -1.38522,2.7544 -0.32171,3.92136c1.0613,1.16695 2.92964,1.30156 4.17114,0.3037l9.04318,-7.28093c0.17246,-0.13906 0.33387,-0.29035 0.48201,-0.45276c1.59527,-1.74876 1.3808,-4.38302 -0.4798,-5.88259l-9.04318,-7.29316c-1.2404,-1.0012 -3.10873,-0.86659 -4.17225,0.30036l0,-0.00111z\"/>\n </g>\n</svg>",
+      "icon": "gateway/exit.png",
+      "groups": [
+        "节点列表"
+      ],
+      "propertyPackages": [
+        "overrideidpackage",
+        "namepackage",
+        "documentationpackage",
+        "typepackage",
+        "executionlistenerspackage",
+        "initiatorpackage",
+        "resourcespackage",
+        "servicespackage",
+        "nodeconditionpackage"
+      ],
+      "hiddenPropertyPackages": [],
+      "roles": [
+        "GatewaysMorph",
+        "message_start",
+        "message_end",
+        "Startevents_all",
+        "StartEventsMorph",
+        "all"
+      ]
     },
     {
       "type": "node",

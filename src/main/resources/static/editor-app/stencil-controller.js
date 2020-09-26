@@ -184,7 +184,7 @@ angular.module('activitiModeler')
                     }
                 }
 
-                var stencilVisibleGroup = ["社会实体", "信息实体", "物理实体", "空间实体", "节点列表"]
+                var stencilVisibleGroup = ["社会实体", "信息实体", "物理实体", "空间实体", "节点列表"];
                 for (var i = 0; i < stencilItemGroups.length; i++) {
                     if (stencilItemGroups[i].paletteItems && stencilItemGroups[i].paletteItems.length === 0) {
                         stencilItemGroups[i].visible = false;
@@ -1200,6 +1200,11 @@ angular.module('activitiModeler')
                             const value = style.getPropertyValue(item);
                             jQuery(this).css(item, value);
                         });
+                        // let display = rect.parentElement.getAttribute('style').match(/display:(.*?);/)
+                        // if(display.length > 0){
+                        //     let type = display[1].trim(); // block 或 none
+                        //
+                        // }
                     });
                 }
             }).then(function (screenshot) {
