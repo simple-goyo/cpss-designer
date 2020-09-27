@@ -1663,8 +1663,11 @@
       ],
       "hiddenPropertyPackages": [],
       "roles": [
-        "GatewaysMorph",
-        "sequence_end",
+        "sequence_start",
+        "message_start",
+        "message_end",
+        "Startevents_all",
+        "StartEventsMorph",
         "all"
       ]
     },

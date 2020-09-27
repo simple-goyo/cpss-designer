@@ -157,7 +157,7 @@ var propertyInitController = ['$scope', '$http', function ($scope ,$http) {
     // 社会资源的名称在不在知识图谱中，需要手动自定义
     // 还有CyberObject和Item也需要手动自定义
     $scope.isSettingbyKG = !(selectedShapeFunctionType === "SocialAction" || selectedResourceEntity.properties["oryx-type"] === "信息对象" || selectedResourceEntity.properties["oryx-type"] === "物品"
-        || selectedResourceEntity.properties["oryx-type"] === "入口节点" || selectedResourceEntity.properties["oryx-type"] === "出口节点");
+        || selectedResourceEntity.properties["oryx-type"] === "入口节点" || selectedResourceEntity.properties["oryx-type"] === "房间"|| selectedResourceEntity.properties["oryx-type"] === "出口节点");
 
     // 请求知识图谱，获取对应的资源，如下单应用、咖啡机等
     $http({method: 'GET', url: KISBPM.URL.getResources()}).success(function (data, status, headers, config) {
