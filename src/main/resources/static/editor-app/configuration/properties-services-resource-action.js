@@ -200,6 +200,7 @@ angular.module('activitiModeler')
         $scope.setHighlightedShape(newShapeId);
         jQuery('#' + newShapeId + 'bg_frame').attr({"fill":"#04FF8E"}); //高亮显示
 
+
         $scope.workerContainsActionIdUpdate(HighlightedShape.id, newShapeId);
 
     };

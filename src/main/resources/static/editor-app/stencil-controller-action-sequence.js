@@ -2,6 +2,10 @@
 angular.module('activitiModeler')
     .ActionSeqClass = function ($rootScope, $scope, $timeout) {
 
+    const PhysicalAction = "PhysicalAction";
+    const CyberAction = "CyberAction";
+    const SocialAction = "SocialAction";
+
     /**
      * 获取指定动作的上一个动作，只有一个动作指向该动作的时候保证正确性，对于多个动作指向该动作，取第一个动作指向该动作的动作
      * */
@@ -59,17 +63,14 @@ angular.module('activitiModeler')
     }
 
     // 获取模板，getStentil名称已使用，改为fetchStentil
-    $scope.fetchStentil = function(stencilId){
+    $scope.fetchStentil = function (stencilId) {
         let stencil;
         let stencilSets = $scope.editor.getStencilSets().values();
-        for (let i = 0; i < stencilSets.length; i++)
-        {
+        for (let i = 0; i < stencilSets.length; i++) {
             let stencilSet = stencilSets[i];
             let nodes = stencilSet.nodes();
-            for (let j = 0; j < nodes.length; j++)
-            {
-                if (nodes[j].idWithoutNs() === stencilId)
-                {
+            for (let j = 0; j < nodes.length; j++) {
+                if (nodes[j].idWithoutNs() === stencilId) {
                     stencil = nodes[j];
                     break;
                 }
@@ -123,7 +124,7 @@ angular.module('activitiModeler')
         $scope.updatePropertyInModel(idProperty);
     };
 
-    $scope.__createExitNode = function ($rootScope, $scope){
+    $scope.__createExitNode = function ($rootScope, $scope) {
         let itemId = "ExitPoint";
         let positionOffset = {x: 1150, y: 300};//初始节点的位置
 
@@ -262,5 +263,28 @@ angular.module('activitiModeler')
             $scope.updatePropertyInModel(idProperty);
         }
     };
+    $scope.getTraceableActions = function (action) {
+        let actions = [];
+        if ($scope.isAction(action)) {
+            actions.push(action.id);
+        }
+        for (let i = 0; i < action.incoming.length; i++) {
+            let nodes = $scope.getTraceableActions(action.incoming[i]);
+            actions = actions.concat(nodes);
+        }
+        let result = [];
+        for (let i = 0; i < actions.length; i++) {
+            if (!result.includes(actions[i])) {
+                result.push(actions[i]);
+            }
+        }
+        return result;
+    }
 
-};
+    $scope.isAction = function (shape) {
+        let id = shape._stencil._jsonStencil.id;
+        let namespace = shape._stencil._namespace;
+        return id === namespace + PhysicalAction || id === namespace + CyberAction || id === namespace + SocialAction;
+    }
+}
+;
