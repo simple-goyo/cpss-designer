@@ -34,6 +34,7 @@ var KisBPMEventsCtrl = [ '$scope', '$modal', function($scope, $modal) {
 
 var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $scope, $http) {
 	var ActivityElement;
+	let sceneId = $rootScope.scenes[$rootScope.selectedSceneIndex].id;
 	var selectedResourceEntity = $scope.selectedShape;
 	var HighlightedShape = $scope.getHighlightedShape();
 
@@ -66,7 +67,7 @@ var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $s
 			// 解析得到event，包括其中的参数
 			for(let i=0;i<data.event.length;i++){
 				// 获取函数名
-				$scope.resourceEvents[i] = {name:data.event[i].name, type:eventType, output:data.event};
+				$scope.resourceEvents[i] = {name:data.event[i].name, type:eventType, output:data.event[i].payload};
 				$scope.events[$scope.events.length] = {id:$scope.events.length, name: $scope.resourceEvents[i].name}; // 加入下拉框中
 			}
 
@@ -129,6 +130,15 @@ var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $s
 		HighlightedShape = $scope.getHighlightedShape();
 
 		$scope.replaceAction($scope, $scope.selectedEvent, selectedShapeEventType);
+		let action = $scope.editor.getSelection()[0];
+
+		let index = -1;
+		for (let j = 0; j < $scope.events.length; j++) {
+			if ($scope.events[j].name === $scope.selectedEvent) {
+				index = j;
+			}
+		}
+		$scope.insertParameters(sceneId, action.id, $scope.resourceEvents[index]);
 
 		$scope.close();
 

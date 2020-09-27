@@ -1211,30 +1211,35 @@ angular.module('activitiModeler')
         };
 
         $scope.takeScreenshot = function (index) {
-            html2canvas(document.getElementById("canvasHelpWrapper"), {
-                onclone: function (html) {
-                    const rects = jQuery(html).find('rect');
-                    const rectStyles = ['stroke-width', 'stroke', 'z-index', 'fill'];
-                    rects.each(function () {
-                        const style = window.getComputedStyle(this);
-                        rectStyles.forEach(item => {
-                            const value = style.getPropertyValue(item);
-                            jQuery(this).css(item, value);
+            try {
+                html2canvas(document.getElementById("canvasHelpWrapper"), {
+                    onclone: function (html) {
+                        const rects = jQuery(html).find('rect');
+                        const rectStyles = ['stroke-width', 'stroke', 'z-index', 'fill'];
+                        rects.each(function () {
+                            const style = window.getComputedStyle(this);
+                            rectStyles.forEach(item => {
+                                const value = style.getPropertyValue(item);
+                                jQuery(this).css(item, value);
+                            });
+                            // let display = rect.parentElement.getAttribute('style').match(/display:(.*?);/)
+                            // if(display.length > 0){
+                            //     let type = display[1].trim(); // block 或 none
+                            //
+                            // }
                         });
-                        // let display = rect.parentElement.getAttribute('style').match(/display:(.*?);/)
-                        // if(display.length > 0){
-                        //     let type = display[1].trim(); // block 或 none
-                        //
-                        // }
-                    });
-                }
-            }).then(function (screenshot) {
-                if (index > -1)
-                    $rootScope.scenes[index].img = screenshot.toDataURL("image/jpeg");
-                else {
-                    $rootScope.scenesRelations.img = screenshot.toDataURL("image/jpeg");
-                }
-            });
+                    }
+                }).then(function (screenshot) {
+                    if (index > -1)
+                        $rootScope.scenes[index].img = screenshot.toDataURL("image/jpeg");
+                    else {
+                        $rootScope.scenesRelations.img = screenshot.toDataURL("image/jpeg");
+                    }
+                });
+            }catch (e) {
+                console.log(e);
+            }
+
         }
 
         angular.module('activitiModeler').SceneClass($rootScope, $scope);
