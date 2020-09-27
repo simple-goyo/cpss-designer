@@ -2,6 +2,11 @@
 angular.module('activitiModeler')
     .RouterClass = function ($rootScope, $scope) {
 
+    const StartParallelGateway = "StartParallelGateway";
+    const EndParallelGateway = "EndParallelGateway";
+    const StartExclusiveGateway = "StartExclusiveGateway";
+    const EndExclusiveGateway = "EndExclusiveGateway";
+
     //场景单入单出  start控制节点单入多出  end控制节点多进单出
     $scope.dispatchPath = function (from, edge) {
         $scope.selectControlNodeType(from, edge);
@@ -32,8 +37,7 @@ angular.module('activitiModeler')
                 $scope.connectResourceByMessageSceneFlow(commonEndNode, to);
             }
         } else {
-            $scope.handleControlNodeDispatch(to, "EndParallelGateway");
-
+            $scope.handleControlNodeDispatch(to, EndParallelGateway);
         }
     }
 
@@ -46,9 +50,11 @@ angular.module('activitiModeler')
                 controlNode = $scope.getShapeById(controlNodes[i].properties['oryx-gatewaycompany']);
             } else {
                 if ($scope.isStartParallelGateway(controlNodes[i])) {
-                    $scope.createControlNode(shape, "EndParallelGateway");
+                    // $scope.createControlNode(shape, "EndParallelGateway");
+                    $scope.createControlNode(shape, EndParallelGateway);
                 } else if ($scope.isStartExclusiveGateway(controlNodes[i])) {
-                    $scope.createControlNode(shape, "EndExclusiveGateway");
+                    // $scope.createControlNode(shape, "EndExclusiveGateway");
+                    $scope.createControlNode(shape, EndExclusiveGateway);
                 } else break;
                 controlNode = $scope.editor.getSelection()[0];
                 controlNode.setProperty("oryx-name", controlNodes[i].properties['oryx-name']);
@@ -70,6 +76,9 @@ angular.module('activitiModeler')
     $scope.handleControlNodeDispatch = function (scene, itemId) {
         $scope.createControlNode(scene, itemId);
         let controlNode = $scope.editor.getSelection()[0];
+        let type = $scope.getGatewayType(controlNode);
+        let name = type + $scope.countGateway(type);
+        controlNode.setProperty("oryx-name", name);
         $scope.handleReconnectScenes(scene, controlNode);
     }
 
@@ -184,17 +193,7 @@ angular.module('activitiModeler')
                 let edge;
                 if (!reverse) {
                     edge = $scope.connectResourceByMessageSceneFlow(shape, controlNode);
-                    let name = $scope.getGatewayItemId(controlNode) + " about " + shape.properties['oryx-name'];
-                    controlNode.setProperty("oryx-name", name);
-                    let controlNodeCompanyId = controlNode.properties['oryx-gatewaycompany'];
-                    if (controlNodeCompanyId !== undefined
-                        && controlNodeCompanyId !== "") {
-                        let controlNodeCompany = $scope.getShapeById(controlNodeCompanyId);
-                        controlNodeCompany.setProperty("oryx-name", name);
-                    }
                 } else {
-                    let name = $scope.getGatewayItemId(controlNode) + " about " + shape.properties['oryx-name'];
-                    controlNode.setProperty("oryx-name", name);
                     edge = $scope.connectResourceByMessageSceneFlow(controlNode, shape);
                 }
                 if (removedEdge) {
@@ -220,22 +219,22 @@ angular.module('activitiModeler')
     }
 
     $scope.isStartExclusiveGateway = function (shape) {
-        return shape._stencil._jsonStencil.id === shape._stencil._namespace + "StartExclusiveGateway";
+        return shape._stencil._jsonStencil.id === shape._stencil._namespace + StartExclusiveGateway;
     }
 
     $scope.isEndExclusiveGateway = function (shape) {
-        return shape._stencil._jsonStencil.id === shape._stencil._namespace + "EndExclusiveGateway";
+        return shape._stencil._jsonStencil.id === shape._stencil._namespace + EndExclusiveGateway;
     }
 
     $scope.isStartParallelGateway = function (shape) {
-        return shape._stencil._jsonStencil.id === shape._stencil._namespace + "StartParallelGateway";
+        return shape._stencil._jsonStencil.id === shape._stencil._namespace + StartParallelGateway;
     }
 
     $scope.isEndParallelGateway = function (shape) {
-        return shape._stencil._jsonStencil.id === shape._stencil._namespace + "EndParallelGateway";
+        return shape._stencil._jsonStencil.id === shape._stencil._namespace + EndParallelGateway;
     }
 
-    $scope.getGatewayItemId = function (shape) {
+    $scope.getGatewayType = function (shape) {
         if ($scope.isStartExclusiveGateway(shape) || $scope.isEndExclusiveGateway(shape)) {
             return "ExclusiveGateway";
         } else {
@@ -255,6 +254,36 @@ angular.module('activitiModeler')
             $scope.isEndParallelGateway(shape)
     }
 
+    $scope.countGateway = function (type) {
+        let count = 0;
+        let shapes = [$scope.editor.getCanvas()][0];
+        for (let i = 0; i < shapes.length; i++) {
+            let shape = shapes[i];
+            let companyId = shape.properties['oryx-gatewaycompany'];
+            if (type === "ExclusiveGateway") {
+                if ($scope.isStartExclusiveGateway(shape)) {
+                    count++;
+                } else if ($scope.isEndParallelGateway(shape)) {
+                    if (companyId === undefined
+                        || companyId === "") {
+                        count++;
+                    }
+                }
+            } else {
+                if ($scope.isStartParallelGateway(shape)) {
+                    count++;
+                } else if ($scope.isEndParallelGateway(shape)) {
+                    if (companyId === undefined
+                        || companyId === "") {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+
+
     //包含最多的节点
     $scope.findMaxStartControlNodesInPath = function (shape) {
         let controlNodes = [];
@@ -268,24 +297,27 @@ angular.module('activitiModeler')
                 max = nodes;
             }
         }
-        for (let i = 0; i < max; i++) {
-
-        }
         controlNodes = controlNodes.concat(max);
         return controlNodes;
     }
 
-
-    $scope.findStartControlNodeInPath = function (shape) {
-        let controlNodes = [];
-        while (shape) {
-            if ($scope.isStartGateway(shape)) {
-                controlNodes.push(shape);
-            }
-            shape = shape.incoming[0];
+    $scope.findTraceableScenes = function (shape) {
+        let traceableScenes = [];
+        if (shape.properties['oryx-type'] === "场景") {
+            traceableScenes.push(shape.id);
+        }
+        for (let i = 0; i < shape.incoming.length; i++) {
+            let nodes = $scope.findTraceableScenes(shape.incoming[i]);
+            traceableScenes=traceableScenes.concat(nodes);
         }
 
-        return controlNodes;
+        let result = [];
+        for (let i = 0; i < traceableScenes.length; i++) {
+            if (!result.includes(traceableScenes[i])) {
+                result.push(traceableScenes[i]);
+            }
+        }
+        return result;
     }
 
     $scope.findCommonStartControlNode = function (conditionsNodes1, conditionNodes2) {

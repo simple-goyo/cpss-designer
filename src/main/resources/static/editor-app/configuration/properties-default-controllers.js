@@ -127,6 +127,8 @@ var propertyInitPopupController= [ '$scope', '$modal', function($scope, $modal) 
 
 var propertyInitController = ['$scope', '$http', function ($scope ,$http) {
     $scope.resources = []; // 界面显示的资源列表
+    //$scope.isRefencedResource = true; //被引用的资源
+    // $scope.ResourceType = 'blue';
 
     let selectedResourceEntity = $scope.selectedShape;
 
@@ -154,7 +156,7 @@ var propertyInitController = ['$scope', '$http', function ($scope ,$http) {
 
     // 社会资源的名称在不在知识图谱中，需要手动自定义
     // 还有CyberObject和Item也需要手动自定义
-    $scope.isHide = !(selectedShapeFunctionType === "SocialAction" || selectedResourceEntity.properties["oryx-type"] === "信息对象" || selectedResourceEntity.properties["oryx-type"] === "物品"
+    $scope.isSettingbyKG = !(selectedShapeFunctionType === "SocialAction" || selectedResourceEntity.properties["oryx-type"] === "信息对象" || selectedResourceEntity.properties["oryx-type"] === "物品"
         || selectedResourceEntity.properties["oryx-type"] === "入口节点" || selectedResourceEntity.properties["oryx-type"] === "出口节点");
 
     // 请求知识图谱，获取对应的资源，如下单应用、咖啡机等
@@ -171,12 +173,16 @@ var propertyInitController = ['$scope', '$http', function ($scope ,$http) {
         console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
     });
 
+    $scope.newValue = function (color){
+        console.log('单选框:' + color);
+    };
 
     $scope.save = function () {
         // 提供一个下拉框，提供开发者选择
         // console.log($scope.selectedRes);
         // 社会资源的名称在不在知识图谱中，需要手动自定义
-        if($scope.isHide){
+        console.log($scope.ResourceType);
+        if($scope.isSettingbyKG){
             $scope.nameProperty.value = $scope.selectedRes;        //$scope.selectedRes表示选中的资源
         }
         $scope.updatePropertyInModel($scope.nameProperty);

@@ -128,10 +128,14 @@ public class KnowledgeGraphService {
         // resourceService——服务
         // resourceCategory——目录（CyberEntity）
         //List<String> resCap = parseString(job.getString("resourceCapability"));
+//        JSONObject tmp = new JSONObject();
+//        tmp.put("name", parseString(job.getString("resourceEvent")).get(0).replace("\"",""));
+//        List<String> resEve = new ArrayList<String>();
+//        resEve.add(tmp.toString());
+        List<String> resEve = parseString(job.getString("resourceEvent"));
         JSONObject tmp = new JSONObject();
-        tmp.put("name", parseString(job.getString("resourceEvent")).get(0).replace("\"",""));
-        List<String> resEve = new ArrayList<String>();
-        resEve.add(tmp.toString());
+
+
         List<String> resCat = parseString(job.getString("resourceCategory"));
         List<String> resServs = parseString(job.getString("resourceCapability"));
 
@@ -274,6 +278,8 @@ public class KnowledgeGraphService {
 //        List<String> attri = Arrays.asList("\"inputParameter\"", "\"outputParameter\"", "\"accessAddress\"", "\"methodType\"");
 //        getInstanceAttributes( attri, "makeCoffee_coffeeMaker_roomD2008");
 //        getOrgByLocation("roomD2008_InterdisciplineBuilding2");
+        String a = getResourceDetails("MeetingRoomMS");
+        System.out.println(a);
         }catch (Exception e){
             e.printStackTrace();
         }

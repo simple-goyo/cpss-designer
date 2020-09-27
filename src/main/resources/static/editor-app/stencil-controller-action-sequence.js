@@ -117,6 +117,11 @@ angular.module('activitiModeler')
             value: id
         }
         $scope.updatePropertyInModel(idProperty);
+        idProperty = {
+            key: 'oryx-type',
+            value: '入口节点'
+        }
+        $scope.updatePropertyInModel(idProperty);
     };
 
     $scope.__createExitNode = function ($rootScope, $scope) {
@@ -144,6 +149,11 @@ angular.module('activitiModeler')
         let idProperty = {
             key: 'oryx-overrideid',
             value: id
+        }
+        $scope.updatePropertyInModel(idProperty);
+        idProperty = {
+            key: 'oryx-type',
+            value: '出口节点'
         }
         $scope.updatePropertyInModel(idProperty);
     };
@@ -255,18 +265,23 @@ angular.module('activitiModeler')
     };
     $scope.getTraceableActions = function (action) {
         let actions = [];
-        if ($scope.isActions(action)) {
+        if ($scope.isAction(action)) {
             actions.push(action.id);
         }
         for (let i = 0; i < action.incoming.length; i++) {
             let nodes = $scope.getTraceableActions(action.incoming[i]);
-            actions.concat(nodes);
+            actions = actions.concat(nodes);
         }
-        actions = Array.from(new Set(actions));
-        return actions;
+        let result = [];
+        for (let i = 0; i < actions.length; i++) {
+            if (!result.includes(actions[i])) {
+                result.push(actions[i]);
+            }
+        }
+        return result;
     }
 
-    $scope.isActions = function (shape) {
+    $scope.isAction = function (shape) {
         let id = shape._stencil._jsonStencil.id;
         let namespace = shape._stencil._namespace;
         return id === namespace + PhysicalAction || id === namespace + CyberAction || id === namespace + SocialAction;

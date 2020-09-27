@@ -156,103 +156,80 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
     var selectedShapeActionType = undefined;
 
     $scope.functions = [];
+    let functionType;
 
     // 判断连线源头是否为worker，如果是worker则另外处理
+    $scope.getResourcesfromKG = function (resName) {
+        $http({
+            method: 'GET',
+            url: KISBPM.URL.getResourceDetails(res_entity.name)
+        }).success(function (data, status, headers, config) {
+            console.log(JSON.stringify(data));
+
+            // 解析得到functions，包括其中的参数
+            for (let i = 0; i < data.service.length; i++) {
+                // 获取函数名
+                $scope.resourceFunctions[i] = {
+                    name: data.service[i].Capability,
+                    type: functionType,
+                    input: data.service[i].input,
+                    output: data.service[i].output
+                };
+                $scope.functions[$scope.functions.length] = {
+                    id: $scope.functions.length,
+                    name: $scope.resourceFunctions[i].name
+                }; // 加入下拉框中
+
+                // 获取函数的参数
+                $scope.resourceInputs[i] = paramParser(data.service[i].inputParameter[0]);
+                $scope.resourceOutputs[i] = paramParser(data.service[i].outputParameter[0]);
+
+                // 设置output参数，output决定是否有输出
+                $scope.output[i] = data.service[i].output;
+
+                // 设置input参数，
+                $scope.input[i] = data.service[i].input;
+
+                // 获取函数，包含所有参数
+                $scope.servicesDetails[i] = data.service[i];
+            }
+
+            //console.log($scope.resourceOutputs);
+
+        }).error(function (data, status, headers, config) {
+            console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
+        });
+    };
     var prop = $scope.latestfromto["from"].properties["oryx-type"];
+    let res_entity = {"id": "", "name": "", "type": ""};
     if (prop && prop === "工人") {
-        let res_entity = $scope.latestfromto["from"].properties["oryx-name"];
+        res_entity.id = $scope.latestfromto["from"].properties["oryx-overrideid"];
+        res_entity.name = $scope.latestfromto["from"].properties["oryx-name"];
+        res_entity.type = $scope.latestfromto["from"].properties["oryx-type"];
         let functionType = $scope.latestfromto["from"].properties["oryx-type"];
         for (let i = 0; i < $scope.constTypeOfResource.length; i++) {
             if ($scope.constTypeOfResource[i].name === functionType) {
                 selectedShapeActionType = $scope.constTypeOfResource[i].type;
             }
         }
-        $http({
-            method: 'GET',
-            url: KISBPM.URL.getResourceDetails(res_entity)
-        }).success(function (data, status, headers, config) {
-            console.log(JSON.stringify(data));
-
-            // 解析得到functions，包括其中的参数
-            for (let i = 0; i < data.service.length; i++) {
-                // 获取函数名
-                $scope.resourceFunctions[i] = {
-                    name: data.service[i].Capability,
-                    type: functionType,
-                    input: data.service[i].input,
-                    output: data.service[i].output
-                };
-                $scope.functions[$scope.functions.length] = {
-                    id: $scope.functions.length,
-                    name: $scope.resourceFunctions[i].name
-                }; // 加入下拉框中
-
-                // 获取函数的参数
-                $scope.resourceInputs[i] = paramParser(data.service[i].inputParameter[0]);
-                $scope.resourceOutputs[i] = paramParser(data.service[i].outputParameter[0]);
-
-                // 设置output参数，output决定是否有输出
-                $scope.output[i] = data.service[i].output;
-
-                // 设置input参数，
-                $scope.input[i] = data.service[i].input;
-
-                // 获取函数，包含所有参数
-                $scope.servicesDetails[i] = data.service[i];
-            }
-
-            //console.log($scope.resourceOutputs);
-
-        }).error(function (data, status, headers, config) {
-            console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
-        });
+        $scope.getResourcesfromKG(res_entity.name);
     } else {
-        let res_entity = $scope.latestfromto["to"].properties["oryx-name"];
-        let functionType = $scope.latestfromto["to"].properties["oryx-type"];
+        res_entity.id = $scope.latestfromto["to"].properties["oryx-overrideid"];
+        res_entity.name = $scope.latestfromto["to"].properties["oryx-name"];
+        res_entity.type = $scope.latestfromto["to"].properties["oryx-type"];
+
+        functionType = $scope.latestfromto["to"].properties["oryx-type"];
         for (let i = 0; i < $scope.constTypeOfResource.length; i++) {
             if ($scope.constTypeOfResource[i].name === functionType) {
                 selectedShapeActionType = $scope.constTypeOfResource[i].type;
             }
         }
-        $http({
-            method: 'GET',
-            url: KISBPM.URL.getResourceDetails(res_entity)
-        }).success(function (data, status, headers, config) {
-            console.log(JSON.stringify(data));
-
-            // 解析得到functions，包括其中的参数
-            for (let i = 0; i < data.service.length; i++) {
-                // 获取函数名
-                $scope.resourceFunctions[i] = {
-                    name: data.service[i].Capability,
-                    type: functionType,
-                    input: data.service[i].input,
-                    output: data.service[i].output
-                };
-                $scope.functions[$scope.functions.length] = {
-                    id: $scope.functions.length,
-                    name: $scope.resourceFunctions[i].name
-                }; // 加入下拉框中
-
-                // 获取函数的参数
-                $scope.resourceInputs[i] = paramParser(data.service[i].inputParameter[0]);
-                $scope.resourceOutputs[i] = paramParser(data.service[i].outputParameter[0]);
-
-                // 设置output参数，output决定是否有输出
-                $scope.output[i] = data.service[i].output;
-
-                // 设置input参数，
-                $scope.input[i] = data.service[i].input;
-
-                // 获取函数，包含所有参数
-                $scope.servicesDetails[i] = data.service[i];
-            }
-
-            //console.log($scope.resourceOutputs);
-
-        }).error(function (data, status, headers, config) {
-            console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
-        });
+        if (selectedShapeActionType === undefined) {
+            $scope.close();
+            return;
+        }
+        console.log(res_entity.name);
+        $scope.getResourcesfromKG(res_entity.name);
 
     }
 
@@ -296,11 +273,12 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
 
     $scope.save = function () {
         // console.log($scope.selectedFunction);
-        console.log($scope.modelInput);
+        // console.log($scope.modelInput);
         // console.log(selectedShapeActionType);
 
         // 更新Action名称和类型
         $scope.modifyAction($scope, $scope.selectedFunction, selectedShapeActionType);
+        action = $scope.editor.getSelection()[0];
 
         if ($scope.property.value === undefined || !$scope.property.value) {
             $scope.property.value = [{"id": "", "function": ""}];
@@ -321,9 +299,19 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
             id: $scope.editor.getSelection()[0].id, function: $scope.selectedFunction
         };
 
+        let index = -1;
+        for (let j = 0; j < $scope.functions.length; j++) {
+            if ($scope.functions[j].name === $scope.selectedFunction) {
+                index = j;
+            }
+        }
         // 给Action设置属性值(service及参数)
-        $scope.setActionProperty($scope, $scope.selectedFunction, $scope.resourceInputs[i], $scope.resourceOutputs[i]);
-        $scope.insertParameters(sceneId, action.id, $scope.resourceOutputs[i])
+
+        //$scope.setActionProperty($scope, res_entity, $scope.selectedFunction, $scope.modelInput, $scope.resourceOutputs[i]);
+
+        $scope.updateActionProperty($scope, res_entity, $scope.selectedFunction, $scope.modelInput, $scope.resourceOutputs[index]);
+        $scope.insertParameters(sceneId, action.id, $scope.resourceOutputs[index]);
+
         // // 服务有Output时，需要自动生成的资源
         // $scope.AutoGenerateResource($scope, $scope.servicesDetails[i].description, $scope.output[i], $scope.resourceOutputs[i]);
 

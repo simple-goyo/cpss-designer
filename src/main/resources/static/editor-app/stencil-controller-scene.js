@@ -153,15 +153,27 @@ angular.module('activitiModeler')
     }
 
     $scope.connectScene = function (from, edge, to) {
+        let traceableScenes = $scope.findTraceableScenes(to);
+        traceableScenes.splice(traceableScenes.indexOf(to.id), 1);
+        to.setProperty("oryx-traceablescenes", traceableScenes);
         if (from.outgoing.length === 1 && to.incoming.length === 1) {
             return;
         }
         if (from.outgoing.length === 2) {
-            $scope.dispatchPath(from,edge);
+            $scope.dispatchPath(from, edge);
         }
         if (to.incoming.length === 2) {
             $scope.joinPath(to);
         }
+    }
+
+    $scope.getTraceableScenes = function (sceneId) {
+        for (let i = 0; i < $rootScope.scenesRelations.childShapes.length; i++) {
+            if ($scope.scenesRelations.childShapes[i].properties['overrideid'] === sceneId) {
+                return $scope.scenesRelations.childShapes[i].properties['traceablescenes'];
+            }
+        }
+        return undefined;
     }
 
 

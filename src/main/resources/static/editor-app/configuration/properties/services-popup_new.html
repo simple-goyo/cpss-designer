@@ -9,24 +9,40 @@
             <div class="modal-body">
                 <div class="form-group">
                     <div class="row">
-                        <label class="col-xs-3" style="float:left;font-size: 16px">{{'PROPERTY.SERVICES.FUNCTION.VALUE' | translate}}</label>
+                        <label class="col-xs-3"
+                               style="float:left;font-size: 16px">{{'PROPERTY.SERVICES.FUNCTION.VALUE' | translate}}</label>
                         <div class="col-xs-9" ng-repeat="Service in entity.Services">
-                            <select class="form-control" ng-model="selectedFunction" ng-change="changeFunction(selectedFunction)">
+                            <select class="form-control" ng-model="selectedFunction"
+                                    ng-change="changeFunction(selectedFunction)">
                                 <option value="{}" selected="selected">---请选择服务---</option>
                                 <option ng-repeat="x in functions" value="{{x}}">{{x.name}}</option>
                             </select>
-<!--                            <i class="glyphicon glyphicon-minus clickable-property"-->
-<!--                               ng-click="removeServiceValue($index)"></i>-->
-<!--                            <i ng-if="$index == (entity.Services.length - 1)"-->
-<!--                               class="glyphicon glyphicon-plus clickable-property"-->
-<!--                               ng-click="addServiceValue($index)"></i>-->
+                            <!--                            <i class="glyphicon glyphicon-minus clickable-property"-->
+                            <!--                               ng-click="removeServiceValue($index)"></i>-->
+                            <!--                            <i ng-if="$index == (entity.Services.length - 1)"-->
+                            <!--                               class="glyphicon glyphicon-plus clickable-property"-->
+                            <!--                               ng-click="addServiceValue($index)"></i>-->
                         </div>
 
                     </div>
                     <hr>
                     <div class="row" ng-repeat="param in serviceParams" style="margin-top:6px">
                         <label class="col-xs-3" style="float:left">{{param}}</label>
-                        <input class="col-xs-8" type="text" style="margin-right:15px" placeholder="" id="{{param}}" ng-model="$parent.modelInput[param]">
+                        <div class="col-xs-8" style="position:relative;">
+
+                            <select style="width:178px; position: absolute;left: 0"
+                                    ng-model="$parent.modelInput[param]">
+                                <option selected>请选择{{param}}</option>
+                                <option ng-repeat="parameter in visibleParameters" value="{{parameter.name}}">
+                                    {{parameter.name}}
+                                </option>
+                            </select>
+
+                            <input type="text"
+                                   style="width:160px;position:absolute;border: 0;border-radius: 5px;left: 2px;height: 16px;top:1px;"
+                                   placeholder="请输入{{param}}"
+                                   id="{{param}}" ng-model="$parent.modelInput[param]">
+                        </div>
                     </div>
                 </div>
             </div>

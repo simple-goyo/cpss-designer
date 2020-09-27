@@ -34,7 +34,7 @@ angular.module('activitiModeler')
         angular.module('activitiModeler').UIClass($rootScope, $scope, $timeout);
         angular.module('activitiModeler').RouterClass($rootScope, $scope);
         angular.module('activitiModeler').ModalClass($rootScope, $scope, $modal);
-
+        angular.module('activitiModeler').ParameterPoolClass($rootScope, $scope);
         // Code that is dependent on an initialised Editor is wrapped in a promise for the editor
         $scope.editorFactory.promise.then(function () {
             $scope.canvasShowChange();
@@ -735,6 +735,8 @@ angular.module('activitiModeler')
                     $scope.deleteScene(shape);
                 } else if ($scope.isGateway(shape)) {
                     $scope.deleteGateway(shape);
+                } else if ($scope.isAction(shape)) {
+                    $scope.deleteAction(shape);
                 }
                 KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
 
@@ -747,6 +749,12 @@ angular.module('activitiModeler')
                 // $scope.editor.deleteShape(shapeToRemove);
                 // KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
             };
+
+            $scope.deleteAction = function (action) {
+                let sceneId = $rootScope.scenes[$rootScope.selectedSceneIndex].id;
+                $scope.deleteParametersInAction(sceneId, action.id);
+                $scope.editor.deleteShape(action);
+            }
 
             $scope.deleteGateway = function (shape) {
                 while (shape.incoming.length > 0) {
@@ -765,10 +773,10 @@ angular.module('activitiModeler')
                             $scope.editor.deleteShape(company);
                         } else {
                             company.setProperty("oryx-gatewaycompany", "");
-
                         }
                     }
                 }
+                $scope.adjustTraceableScenes();
             }
 
             $scope.deleteScene = function (shape) {
@@ -782,7 +790,20 @@ angular.module('activitiModeler')
                     let scene = $rootScope.scenes[i];
                     if (scene.id === shape.id) {
                         $rootScope.scenes.splice(i, 1);
-                        return;
+                        break;
+                    }
+                }
+                $scope.deleteParametersInScene(shape.id);
+                $scope.adjustTraceableScenes();
+            }
+
+            $scope.adjustTraceableScenes = function () {
+                let shapes = [$scope.editor.getCanvas()][0];
+                for (let i = 0; i < shapes.length; i++) {
+                    if (shapes[i].properties['oryx-type'] === "场景") {
+                        let traceableScenes = $scope.findTraceableScenes(shapes[i]);
+                        traceableScenes.splice(traceableScenes.indexOf(shapes[i].id), 1);
+                        shapes[i].setProperty("oryx-traceablescenes", traceableScenes);
                     }
                 }
             }

@@ -4,6 +4,32 @@
   "description": "BPMN process editor",
   "propertyPackages": [
     {
+      "name": "traceablescenespackage",
+      "properties": [
+        {
+          "id": "traceablescenes",
+          "type": "String",
+          "title": "可回溯到的场景",
+          "value": "",
+          "description": "可回溯到的场景",
+          "popular": true
+        }
+      ]
+    },
+    {
+      "name": "traceableactionspackage",
+      "properties": [
+        {
+          "id": "traceableactions",
+          "type": "String",
+          "title": "可回溯到的服务",
+          "value": "",
+          "description": "可回溯到的服务",
+          "popular": true
+        }
+      ]
+    },
+    {
       "name": "gatewaycompanypackage",
       "properties": [
         {
@@ -1641,7 +1667,8 @@
         "sequence_end",
         "all"
       ]
-    },{
+    },
+    {
       "type": "node",
       "id": "EntryPoint",
       "title": "入口节点",
@@ -1671,7 +1698,8 @@
         "StartEventsMorph",
         "all"
       ]
-    },{
+    },
+    {
       "type": "node",
       "id": "ExitPoint",
       "title": "出口节点",
@@ -1723,11 +1751,13 @@
         "outputpackage",
         "animatedirectionpackage",
         "currentscenepackage",
-        "resourcelinepackage"
+        "resourcelinepackage",
+        "traceableactionspackage"
       ],
       "hiddenPropertyPackages": [
         "resourcelinepackage",
-        "animatedirectionpackage"
+        "animatedirectionpackage",
+        "traceableactionspackage"
       ],
       "roles": [
         "Activity",
@@ -1758,11 +1788,13 @@
         "outputpackage",
         "animatedirectionpackage",
         "currentscenepackage",
-        "resourcelinepackage"
+        "resourcelinepackage",
+        "traceableactionspackage"
       ],
       "hiddenPropertyPackages": [
         "resourcelinepackage",
-        "animatedirectionpackage"
+        "animatedirectionpackage",
+        "traceableactionspackage"
       ],
       "roles": [
         "Activity",
@@ -1793,11 +1825,14 @@
         "outputpackage",
         "animatedirectionpackage",
         "currentscenepackage",
-        "resourcelinepackage"
+        "resourcelinepackage",
+        "traceableactionspackage"
       ],
       "hiddenPropertyPackages": [
         "resourcelinepackage",
-        "animatedirectionpackage"],
+        "animatedirectionpackage",
+        "traceableactionspackage"
+      ],
       "roles": [
         "Activity",
         "sequence_start",
@@ -1856,9 +1891,12 @@
         "formkeydefinitionpackage",
         "formpropertiespackage",
         "resourcespackage",
-        "currentscenepackage"
+        "currentscenepackage",
+        "traceablescenespackage"
       ],
-      "hiddenPropertyPackages": [],
+      "hiddenPropertyPackages": [
+        "traceablescenespackage"
+      ],
       "roles": [
         "sequence_start",
         "message_start",
@@ -1995,10 +2033,14 @@
         "outputpackage",
         "animatedirectionpackage",
         "currentscenepackage",
-        "resourcelinepackage"
+        "resourcelinepackage",
+        "traceableactionspackage"
       ],
-      "hiddenPropertyPackages": ["resourcelinepackage",
-        "animatedirectionpackage"],
+      "hiddenPropertyPackages": [
+        "resourcelinepackage",
+        "animatedirectionpackage",
+        "traceableactionspackage"
+      ],
       "roles": [
         "Activity",
         "sequence_start",
@@ -2028,10 +2070,13 @@
         "outputpackage",
         "animatedirectionpackage",
         "currentscenepackage",
-        "resourcelinepackage"
+        "resourcelinepackage",
+        "traceableactionspackage"
       ],
       "hiddenPropertyPackages": [
-      "animatedirectionpackage"],
+        "animatedirectionpackage",
+        "traceableactionspackage"
+      ],
       "roles": [
         "Activity",
         "sequence_start",

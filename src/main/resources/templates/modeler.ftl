@@ -248,6 +248,7 @@
 
 <script src="editor-app/editor-controller.js" type="text/javascript"></script>
 <script src="editor-app/stencil-controller-action-sequence.js" type="text/javascript"></script>
+<script src="editor-app/stencil-controller-parameters-pool.js" type="text/javascript"></script>
 <script src="editor-app/stencil-controller-connect.js" type="text/javascript"></script>
 <script src="editor-app/stencil-controller-router.js" type="text/javascript"></script>
 <script src="editor-app/stencil-controller-modal.js" type="text/javascript"></script>

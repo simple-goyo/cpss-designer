@@ -26,6 +26,22 @@ angular.module('activitiModeler')
                 resTemp["oryx-type"] = "物品";
                 $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], serviceOutput, resTemp);
             }
+
+            if (actionName === 'finish printing') {
+                $scope.createResource($scope, shape, "PysicalObject");
+
+                let resTemp = resProperties;
+                resTemp["oryx-type"] = "物品";
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "file", resTemp);
+            }
+
+            if (actionName === 'meeting reminder') {
+                $scope.createResource($scope, shape, "CyberObject");
+
+                let resTemp = resProperties;
+                resTemp["oryx-type"] = "信息对象";
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "message", resTemp);
+            }
         }
     };
 
@@ -63,6 +79,130 @@ angular.module('activitiModeler')
         let command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
 
         $scope.editor.executeCommands([command]);
+    };
+
+    // 设置action的属性
+    $scope.setActionProperty = function($scope, resourceEntity, serviceName, inputParam, outputParam){
+        // 给Action设置属性，services是Action对应的资源服务。
+        var serviceDetail = {"name":serviceName, "input": inputParam, "output":outputParam};
+        shape.setProperty("oryx-services", serviceDetail);
+        shape.setProperty("oryx-activityelement", resourceEntity);
+        $scope.editor.getCanvas().update();
+        $scope.editor.updateSelection();
+    };
+
+    $scope.getStentil = function(stencilId){
+        let stencil;
+        let stencilSets = $scope.editor.getStencilSets().values();
+        for (let i = 0; i < stencilSets.length; i++)
+        {
+            let stencilSet = stencilSets[i];
+            let nodes = stencilSet.nodes();
+            for (let j = 0; j < nodes.length; j++)
+            {
+                if (nodes[j].idWithoutNs() === stencilId)
+                {
+                    stencil = nodes[j];
+                    break;
+                }
+            }
+        }
+
+        return stencil;
+    }
+
+    $scope.updateActionProperty = function ($scope, res_entity, actionName, modelInput, Output){
+        // 填写Action动作的属性
+        let actionActivity = $scope.selectedItem;
+        for (let i = 0; i < actionActivity.properties.length; i++) {
+            let property = actionActivity.properties[i];
+            switch (property.title){
+                case "Id":
+                    property.value = $scope.editor.getSelection()[0].id;
+                    $scope.updatePropertyInModel(property);
+                    break;
+                case "名称":
+                    property.value = actionName;
+                    $scope.updatePropertyInModel(property);
+                    break;
+                case "活动元素":
+                    property.value = {
+                        "id": res_entity.id,
+                        "name": res_entity.name,
+                        "type": res_entity.type
+                    };
+                    $scope.updatePropertyInModel(property);
+                    break;
+                case "动作输入状态":
+                    property.value = modelInput;
+                    $scope.inputStatus = [];
+                    $scope.updatePropertyInModel(property);
+                    break;
+                case "动作输出状态":
+                    property.value = Output;
+                    $scope.outputStatus = [];
+                    $scope.updatePropertyInModel(property);
+                    break;
+                default:break;
+
+            }
+        }
+    };
+    // 替换未定义Action
+    $scope.modifyAction = function($scope, actionName, FunctionType) {
+        if(HighlightedShape === undefined) return;// 如果没有高亮，直接返回
+
+        let selectItem = $scope.editor.getSelection()[0];
+        let newShapeId = "";
+
+        let stencil = $scope.getStentil(FunctionType);
+        if (!stencil) return;
+
+        // Create and execute command (for undo/redo)
+        let command = new MorphTo(HighlightedShape, stencil, $scope.editor);
+        $scope.editor.executeCommands([command]);
+
+        // 填写Action动作的属性
+        let actionActivity = $scope.selectedItem;
+        for (let i = 0; i < actionActivity.properties.length; i++) {
+            let property = actionActivity.properties[i];
+            switch (property.title){
+                case "Id":
+                    property.value = $scope.editor.getSelection()[0].id;
+                    newShapeId = property.value;
+                    $scope.updatePropertyInModel(property);
+                    break;
+                case "名称":
+                    property.value = actionName;
+                    $scope.updatePropertyInModel(property);
+                    break;
+                case "活动元素":
+                    property.value = {
+                        "id": selectItem.properties["oryx-overrideid"],
+                        "name": selectItem.properties["oryx-name"],
+                        "type": selectItem.properties["oryx-type"]
+                    };
+                    $scope.updatePropertyInModel(property);
+                    break;
+                case "动作输入状态":
+                    property.value = $scope.inputStatus;
+                    $scope.inputStatus = [];
+                    $scope.updatePropertyInModel(property);
+                    break;
+                case "动作输出状态":
+                    property.value = $scope.outputStatus;
+                    $scope.outputStatus = [];
+                    $scope.updatePropertyInModel(property);
+                    break;
+                default:break;
+            }
+        }
+        $scope.setHighlightedShape(newShapeId);
+        jQuery('#' + newShapeId + 'bg_frame').attr({"fill":"#04FF8E"}); //高亮显示
+
+
+        $scope.workerContainsActionIdUpdate(HighlightedShape.id, newShapeId);
+
     };
 
     // $scope.createAction = function ($scope, actionName, FunctionType) {
@@ -136,88 +276,4 @@ angular.module('activitiModeler')
     //     }
     // };
 
-    // 设置action的属性
-    $scope.setActionProperty = function($scope, serviceName, inputParam, outputParam){
-        // 给Action设置属性，services是Action对应的资源服务。
-        var serviceDetail = {"name":serviceName, "input": inputParam, "output":outputParam};
-        shape.setProperty("oryx-services", serviceDetail);
-        $scope.editor.getCanvas().update();
-        $scope.editor.updateSelection();
-    };
-
-    $scope.getStentil = function(stencilId){
-        let stencil;
-        let stencilSets = $scope.editor.getStencilSets().values();
-        for (let i = 0; i < stencilSets.length; i++)
-        {
-            let stencilSet = stencilSets[i];
-            let nodes = stencilSet.nodes();
-            for (let j = 0; j < nodes.length; j++)
-            {
-                if (nodes[j].idWithoutNs() === stencilId)
-                {
-                    stencil = nodes[j];
-                    break;
-                }
-            }
-        }
-
-        return stencil;
-    }
-
-    // 替换未定义Action
-    $scope.modifyAction = function($scope, actionName, FunctionType) {
-        if(HighlightedShape === undefined) return;// 如果没有高亮，直接返回
-
-        let selectItem = $scope.editor.getSelection()[0];
-        let newShapeId = "";
-
-        let stencil = $scope.getStentil(FunctionType);
-        if (!stencil) return;
-
-        // Create and execute command (for undo/redo)
-        let command = new MorphTo(HighlightedShape, stencil, $scope.editor);
-        $scope.editor.executeCommands([command]);
-
-        // 填写Action动作的属性
-        let actionActivity = $scope.selectedItem;
-        for (let i = 0; i < actionActivity.properties.length; i++) {
-            let property = actionActivity.properties[i];
-            switch (property.title){
-                case "Id":
-                    property.value = $scope.editor.getSelection()[0].id;
-                    newShapeId = property.value;
-                    $scope.updatePropertyInModel(property);
-                    break;
-                case "名称":
-                    property.value = actionName;
-                    $scope.updatePropertyInModel(property);
-                    break;
-                case "活动元素":
-                    property.value = {
-                        "id": selectItem.properties["oryx-overrideid"],
-                        "name": selectItem.properties["oryx-name"],
-                        "type": selectItem.properties["oryx-type"]
-                    };
-                    $scope.updatePropertyInModel(property);
-                    break;
-                case "动作输入状态":
-                    property.value = $scope.inputStatus;
-                    $scope.inputStatus = [];
-                    $scope.updatePropertyInModel(property);
-                    break;
-                case "动作输出状态":
-                    property.value = $scope.outputStatus;
-                    $scope.outputStatus = [];
-                    $scope.updatePropertyInModel(property);
-                    break;
-                default:break;
-            }
-        }
-        $scope.setHighlightedShape(newShapeId);
-        jQuery('#' + newShapeId + 'bg_frame').attr({"fill":"#04FF8E"}); //高亮显示
-
-        $scope.workerContainsActionIdUpdate(HighlightedShape.id, newShapeId);
-
-    };
-};
+}
