@@ -133,9 +133,6 @@ public class KnowledgeGraphService {
 //        List<String> resEve = new ArrayList<String>();
 //        resEve.add(tmp.toString());
         List<String> resEve = parseString(job.getString("resourceEvent"));
-        JSONObject tmp = new JSONObject();
-
-
         List<String> resCat = parseString(job.getString("resourceCategory"));
         List<String> resServs = parseString(job.getString("resourceCapability"));
 
@@ -278,8 +275,10 @@ public class KnowledgeGraphService {
 //        List<String> attri = Arrays.asList("\"inputParameter\"", "\"outputParameter\"", "\"accessAddress\"", "\"methodType\"");
 //        getInstanceAttributes( attri, "makeCoffee_coffeeMaker_roomD2008");
 //        getOrgByLocation("roomD2008_InterdisciplineBuilding2");
-        String a = getResourceDetails("MeetingRoomMS");
+        String a = getResourceDetails("Orders");
         System.out.println(a);
+
+//            getResourceList();
         }catch (Exception e){
             e.printStackTrace();
         }

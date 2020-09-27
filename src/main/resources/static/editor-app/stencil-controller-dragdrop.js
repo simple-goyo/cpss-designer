@@ -37,16 +37,16 @@ angular.module('activitiModeler')
             var pos = {x: event.pageX, y: event.pageY};
 
             var additionalIEZoom = 1;
-            if (!isNaN(screen.logicalXDPI) && !isNaN(screen.systemXDPI)) {
-                var ua = navigator.userAgent;
-                if (ua.indexOf('MSIE') >= 0) {
-                    //IE 10 and below
-                    var zoom = Math.round((screen.deviceXDPI / screen.logicalXDPI) * 100);
-                    if (zoom !== 100) {
-                        additionalIEZoom = zoom / 100;
-                    }
-                }
-            }
+            // if (!isNaN(screen.logicalXDPI) && !isNaN(screen.systemXDPI)) {
+            //     var ua = navigator.userAgent;
+            //     if (ua.indexOf('MSIE') >= 0) {
+            //         //IE 10 and below
+            //         var zoom = Math.round((screen.deviceXDPI / screen.logicalXDPI) * 100);
+            //         if (zoom !== 100) {
+            //             additionalIEZoom = zoom / 100;
+            //         }
+            //     }
+            // }
 
             var screenCTM = $scope.editor.getCanvas().node.getScreenCTM();
 
@@ -274,16 +274,16 @@ angular.module('activitiModeler')
             var coord = $scope.editor.eventCoordinatesXY(event.pageX, event.pageY);
 
             var additionalIEZoom = 1;
-            if (!isNaN(screen.logicalXDPI) && !isNaN(screen.systemXDPI)) {
-                var ua = navigator.userAgent;
-                if (ua.indexOf('MSIE') >= 0) {
-                    //IE 10 and below
-                    var zoom = Math.round((screen.deviceXDPI / screen.logicalXDPI) * 100);
-                    if (zoom !== 100) {
-                        additionalIEZoom = zoom / 100
-                    }
-                }
-            }
+            // if (!isNaN(screen.logicalXDPI) && !isNaN(screen.systemXDPI)) {
+            //     var ua = navigator.userAgent;
+            //     if (ua.indexOf('MSIE') >= 0) {
+            //         //IE 10 and below
+            //         var zoom = Math.round((screen.deviceXDPI / screen.logicalXDPI) * 100);
+            //         if (zoom !== 100) {
+            //             additionalIEZoom = zoom / 100
+            //         }
+            //     }
+            // }
 
             if (additionalIEZoom !== 1) {
                 coord.x = coord.x / additionalIEZoom;
