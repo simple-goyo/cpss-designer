@@ -292,10 +292,16 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
             id: $scope.editor.getSelection()[0].id, function: $scope.selectedFunction
         };
 
+        let index = -1;
+        for (let j = 0; j < $scope.functions.length; j++) {
+            if ($scope.functions[j].name === $scope.selectedFunction) {
+                index = j;
+            }
+        }
         // 给Action设置属性值(service及参数)
         //$scope.setActionProperty($scope, res_entity, $scope.selectedFunction, $scope.modelInput, $scope.resourceOutputs[i]);
 
-        $scope.updateActionProperty($scope, res_entity, $scope.selectedFunction, $scope.modelInput, $scope.resourceOutputs[i]);
+        $scope.updateActionProperty($scope, res_entity, $scope.selectedFunction, $scope.modelInput, $scope.resourceOutputs[index]);
 
         // // 服务有Output时，需要自动生成的资源
         // $scope.AutoGenerateResource($scope, $scope.servicesDetails[i].description, $scope.output[i], $scope.resourceOutputs[i]);

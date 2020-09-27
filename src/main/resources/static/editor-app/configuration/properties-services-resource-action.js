@@ -26,6 +26,22 @@ angular.module('activitiModeler')
                 resTemp["oryx-type"] = "物品";
                 $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], serviceOutput, resTemp);
             }
+
+            if (actionName === 'finish printing') {
+                $scope.createResource($scope, shape, "PysicalObject");
+
+                let resTemp = resProperties;
+                resTemp["oryx-type"] = "物品";
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "file", resTemp);
+            }
+
+            if (actionName === 'meeting reminder') {
+                $scope.createResource($scope, shape, "CyberObject");
+
+                let resTemp = resProperties;
+                resTemp["oryx-type"] = "信息对象";
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "message", resTemp);
+            }
         }
     };
 

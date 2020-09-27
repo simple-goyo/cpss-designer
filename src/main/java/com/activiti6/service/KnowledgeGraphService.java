@@ -278,7 +278,7 @@ public class KnowledgeGraphService {
 //        List<String> attri = Arrays.asList("\"inputParameter\"", "\"outputParameter\"", "\"accessAddress\"", "\"methodType\"");
 //        getInstanceAttributes( attri, "makeCoffee_coffeeMaker_roomD2008");
 //        getOrgByLocation("roomD2008_InterdisciplineBuilding2");
-        String a = getResourceDetails("CoffeeMaker");
+        String a = getResourceDetails("MeetingRoomMS");
         System.out.println(a);
         }catch (Exception e){
             e.printStackTrace();

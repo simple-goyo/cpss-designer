@@ -132,9 +132,9 @@ var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $s
 
 		$scope.close();
 
-		if($scope.selectedEvent === 'finish making coffee' ){
+		//if($scope.selectedEvent === 'finish making coffee' ){
 			$scope.AutoGenerateResource($scope, $scope.selectedEvent, "coffee",null);
-		}
+		//}
 
 
 		// 播放动画
