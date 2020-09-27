@@ -173,9 +173,6 @@ var propertyInitController = ['$scope', '$http', function ($scope ,$http) {
         console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
     });
 
-    $scope.newValue = function (color){
-        console.log('单选框:' + color);
-    };
 
     $scope.save = function () {
         // 提供一个下拉框，提供开发者选择
@@ -190,7 +187,7 @@ var propertyInitController = ['$scope', '$http', function ($scope ,$http) {
     };
 
     $scope.close = function () {
-        $scope.nameProperty.mode = 'read';
+        // $scope.nameProperty.mode = 'read';
         $scope.$hide();
     };
 }];

@@ -206,7 +206,7 @@ var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $s
 	// Close button handler
     $scope.close = function() {
     	//handleAssignmentInput($scope);
-    	$scope.property.mode = 'read';
+    	//$scope.property.mode = 'read';
     	$scope.$hide();
     };
 

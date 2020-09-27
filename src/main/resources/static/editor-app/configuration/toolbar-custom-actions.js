@@ -254,15 +254,6 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 
         $scope.getServices = function(scenes){
             let services = [];
-            let action_template = {
-                "id":"",
-                "name":"",
-                "enactedBy":{"id":"eeeee-5","name":"众包工人"},
-                "type":"DeviceOperation",
-                "input":"",
-                "output":"",
-                "flow":""
-            };
             let service_list = $scope.getAllActionFromScenes(scenes, /(.*?)Action/, "UndefinedAction");
 
             service_list.forEach(function (service) {
@@ -373,6 +364,8 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                         ]
                     }
                 };
+                console.log(gateway);
+
             })
             console.log("gateways"+gateways);
         };
