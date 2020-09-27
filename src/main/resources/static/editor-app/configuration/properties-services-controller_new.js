@@ -51,22 +51,23 @@ var KisBpmServicesPopupCtrl = ['$scope', function ($scope) {
     };
 }];
 
-var paramParser = function (rawParam){
+var paramParser = function (rawParam) {
     // 测试字符串 [{"mode":"","level":"","num":"","action":""}]
     let str = "";
     let oldStr = "";
     let keyList = [];
-    
+
     rawParam = JSON.stringify(rawParam);
-    if(rawParam[0] === '{'){
-        str = rawParam.substring(1,rawParam.length-1);
-    }else{
+    if (rawParam[0] === '{') {
+        str = rawParam.substring(1, rawParam.length - 1);
+    } else {
         str = rawParam;
     }
 
 
-
-    if(str === ""){return "";}
+    if (str === "") {
+        return "";
+    }
 
     oldStr = str.trim();
 
@@ -75,12 +76,12 @@ var paramParser = function (rawParam){
     // console.log(matchedStrList);
     splitedList.forEach(function (value) {
         // value == "mode":""
-        let key_value  = value.split(':');
+        let key_value = value.split(':');
         let key = key_value[0];
-        if (key[0]=== '\"' || key[0]=== '\''){
-            key = key.substring(1, key.length -1);
+        if (key[0] === '\"' || key[0] === '\'') {
+            key = key.substring(1, key.length - 1);
         }
-        
+
         keyList.push(key);
     });
 
@@ -94,9 +95,15 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
     var ActivityElement;
     var shape = $scope.selectedShape;
 
+    let sceneId = $rootScope.scenes[$rootScope.selectedSceneIndex].id;
+    let action = $scope.editor.getSelection()[0];
+    $scope.visibleParameters = $scope.getVisibleParameters(sceneId,
+        $scope.getTraceableScenes(sceneId),
+        $scope.getTraceableActions(action));
+
     $scope.serviceParams = [];
     $scope.selectedFunction = "";
-    $scope.modelInput = [];
+    $scope.modelInput = {};
 
     // 资源执行主体所拥有的功能，数据从知识图谱中获得
     $scope.resourceFunctions = [
@@ -152,7 +159,7 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
 
     // 判断连线源头是否为worker，如果是worker则另外处理
     var prop = $scope.latestfromto["from"].properties["oryx-type"];
-    if (prop && prop === "工人"){
+    if (prop && prop === "工人") {
         let res_entity = $scope.latestfromto["from"].properties["oryx-name"];
         let functionType = $scope.latestfromto["from"].properties["oryx-type"];
         for (let i = 0; i < $scope.constTypeOfResource.length; i++) {
@@ -160,14 +167,25 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
                 selectedShapeActionType = $scope.constTypeOfResource[i].type;
             }
         }
-        $http({method: 'GET', url: KISBPM.URL.getResourceDetails(res_entity)}).success(function (data, status, headers, config) {
+        $http({
+            method: 'GET',
+            url: KISBPM.URL.getResourceDetails(res_entity)
+        }).success(function (data, status, headers, config) {
             console.log(JSON.stringify(data));
 
             // 解析得到functions，包括其中的参数
-            for(let i=0;i<data.service.length;i++){
+            for (let i = 0; i < data.service.length; i++) {
                 // 获取函数名
-                $scope.resourceFunctions[i] = {name:data.service[i].Capability, type:functionType, input:data.service[i].input, output:data.service[i].output};
-                $scope.functions[$scope.functions.length] = {id:$scope.functions.length, name: $scope.resourceFunctions[i].name}; // 加入下拉框中
+                $scope.resourceFunctions[i] = {
+                    name: data.service[i].Capability,
+                    type: functionType,
+                    input: data.service[i].input,
+                    output: data.service[i].output
+                };
+                $scope.functions[$scope.functions.length] = {
+                    id: $scope.functions.length,
+                    name: $scope.resourceFunctions[i].name
+                }; // 加入下拉框中
 
                 // 获取函数的参数
                 $scope.resourceInputs[i] = paramParser(data.service[i].inputParameter[0]);
@@ -188,7 +206,7 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
         }).error(function (data, status, headers, config) {
             console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
         });
-    }else{
+    } else {
         let res_entity = $scope.latestfromto["to"].properties["oryx-name"];
         let functionType = $scope.latestfromto["to"].properties["oryx-type"];
         for (let i = 0; i < $scope.constTypeOfResource.length; i++) {
@@ -196,14 +214,25 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
                 selectedShapeActionType = $scope.constTypeOfResource[i].type;
             }
         }
-        $http({method: 'GET', url: KISBPM.URL.getResourceDetails(res_entity)}).success(function (data, status, headers, config) {
+        $http({
+            method: 'GET',
+            url: KISBPM.URL.getResourceDetails(res_entity)
+        }).success(function (data, status, headers, config) {
             console.log(JSON.stringify(data));
 
             // 解析得到functions，包括其中的参数
-            for(let i=0;i<data.service.length;i++){
+            for (let i = 0; i < data.service.length; i++) {
                 // 获取函数名
-                $scope.resourceFunctions[i] = {name:data.service[i].Capability, type:functionType, input:data.service[i].input, output:data.service[i].output};
-                $scope.functions[$scope.functions.length] = {id:$scope.functions.length, name: $scope.resourceFunctions[i].name}; // 加入下拉框中
+                $scope.resourceFunctions[i] = {
+                    name: data.service[i].Capability,
+                    type: functionType,
+                    input: data.service[i].input,
+                    output: data.service[i].output
+                };
+                $scope.functions[$scope.functions.length] = {
+                    id: $scope.functions.length,
+                    name: $scope.resourceFunctions[i].name
+                }; // 加入下拉框中
 
                 // 获取函数的参数
                 $scope.resourceInputs[i] = paramParser(data.service[i].inputParameter[0]);
@@ -244,13 +273,13 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
         $scope.entity.Services = [{value: ''}];
     }
 
-    $scope.changeFunction = function (selectedFunction){
+    $scope.changeFunction = function (selectedFunction) {
         let func = JSON.parse(selectedFunction);
         let id = func.id;
         $scope.selectedFunction = func.name;
-        if(id !== undefined){
+        if (id !== undefined) {
             $scope.serviceParams = $scope.resourceInputs[id];
-        }else{
+        } else {
             $scope.serviceParams = [];
         }
     };
@@ -265,9 +294,9 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
     //     $scope.entity.Services.splice(index, 1);
     // };
 
-    $scope.save = function(){
+    $scope.save = function () {
         // console.log($scope.selectedFunction);
-        // console.log($scope.modelInput);
+        console.log($scope.modelInput);
         // console.log(selectedShapeActionType);
 
         // 更新Action名称和类型
@@ -294,7 +323,7 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
 
         // 给Action设置属性值(service及参数)
         $scope.setActionProperty($scope, $scope.selectedFunction, $scope.resourceInputs[i], $scope.resourceOutputs[i]);
-
+        $scope.insertParameters(sceneId, action.id, $scope.resourceOutputs[i])
         // // 服务有Output时，需要自动生成的资源
         // $scope.AutoGenerateResource($scope, $scope.servicesDetails[i].description, $scope.output[i], $scope.resourceOutputs[i]);
 
@@ -477,28 +506,28 @@ var ServicesDisplayedCtrl = ['$scope', function ($scope) {
 }];
 
 var MorphTo = ORYX.Core.Command.extend({
-    construct: function(shape, stencil, facade){
+    construct: function (shape, stencil, facade) {
         this.shape = shape;
         this.stencil = stencil;
         this.facade = facade;
     },
-    execute: function(){
+    execute: function () {
         var shape = this.shape;
         var stencil = this.stencil;
         var resourceId = shape.resourceId;
 
         // Serialize all attributes
         var serialized = shape.serialize();
-        stencil.properties().each((function(prop) {
-            if(prop.readonly()) {
-                serialized = serialized.reject(function(serProp) {
+        stencil.properties().each((function (prop) {
+            if (prop.readonly()) {
+                serialized = serialized.reject(function (serProp) {
                     return serProp.name === prop.id();
                 });
             }
         }).bind(this));
 
         // Get shape if already created, otherwise create a new shape
-        if (this.newShape){
+        if (this.newShape) {
             newShape = this.newShape;
             this.facade.getCanvas().add(newShape);
         } else {
@@ -510,7 +539,7 @@ var MorphTo = ORYX.Core.Command.extend({
         }
 
         // calculate new bounds using old shape's upperLeft and new shape's width/height
-        var boundsObj = serialized.find(function(serProp){
+        var boundsObj = serialized.find(function (serProp) {
             return (serProp.prefix === "oryx" && serProp.name === "bounds");
         });
 
@@ -531,10 +560,10 @@ var MorphTo = ORYX.Core.Command.extend({
             bounds[3] = parseInt(bounds[1], 10) + newShape.bounds.height();
             boundsObj.value = bounds.join(",");
 
-        }  else {
+        } else {
 
             var height = shape.bounds.height();
-            var width  = shape.bounds.width();
+            var width = shape.bounds.width();
 
             // consider the minimum and maximum size of
             // the new shape
@@ -550,22 +579,22 @@ var MorphTo = ORYX.Core.Command.extend({
                 }
             }
 
-            if(newShape.maximumSize) {
-                if(shape.bounds.height() > newShape.maximumSize.height) {
+            if (newShape.maximumSize) {
+                if (shape.bounds.height() > newShape.maximumSize.height) {
                     height = newShape.maximumSize.height;
                 }
 
-                if(shape.bounds.width() > newShape.maximumSize.width) {
+                if (shape.bounds.width() > newShape.maximumSize.width) {
                     width = newShape.maximumSize.width;
                 }
             }
 
             changedBounds = {
-                a : {
+                a: {
                     x: shape.bounds.a.x,
                     y: shape.bounds.a.y
                 },
-                b : {
+                b: {
                     x: shape.bounds.a.x + width,
                     y: shape.bounds.a.y + height
                 }
@@ -574,7 +603,7 @@ var MorphTo = ORYX.Core.Command.extend({
         }
 
         var oPos = shape.bounds.center();
-        if(changedBounds !== null) {
+        if (changedBounds !== null) {
             newShape.bounds.set(changedBounds);
         }
 
@@ -595,28 +624,28 @@ var MorphTo = ORYX.Core.Command.extend({
          * Change color to default if unchanged
          * 23.04.2010
          */
-        if(shape.getStencil().property("oryx-bgcolor")
+        if (shape.getStencil().property("oryx-bgcolor")
             && shape.properties["oryx-bgcolor"]
-            && shape.getStencil().property("oryx-bgcolor").value().toUpperCase()=== shape.properties["oryx-bgcolor"].toUpperCase()){
-            if(newShape.getStencil().property("oryx-bgcolor")){
+            && shape.getStencil().property("oryx-bgcolor").value().toUpperCase() === shape.properties["oryx-bgcolor"].toUpperCase()) {
+            if (newShape.getStencil().property("oryx-bgcolor")) {
                 newShape.setProperty("oryx-bgcolor", newShape.getStencil().property("oryx-bgcolor").value());
             }
         }
-        if(changedBounds !== null) {
+        if (changedBounds !== null) {
             newShape.bounds.set(changedBounds);
         }
 
-        if(newShape.getStencil().type()==="edge" || (newShape.dockers.length===0 || !newShape.dockers[0].getDockedShape())) {
+        if (newShape.getStencil().type() === "edge" || (newShape.dockers.length === 0 || !newShape.dockers[0].getDockedShape())) {
             newShape.bounds.centerMoveTo(oPos);
         }
 
-        if(newShape.getStencil().type()==="node" && (newShape.dockers.length===0 || !newShape.dockers[0].getDockedShape())) {
+        if (newShape.getStencil().type() === "node" && (newShape.dockers.length === 0 || !newShape.dockers[0].getDockedShape())) {
             this.setRelatedDockers(newShape, newShape);
 
         }
 
         // place at the DOM position of the old shape
-        if(nextSibling) parentNode.insertBefore(newShape.node, nextSibling);
+        if (nextSibling) parentNode.insertBefore(newShape.node, nextSibling);
         else parentNode.appendChild(newShape.node);
 
         // Set selection
@@ -626,9 +655,11 @@ var MorphTo = ORYX.Core.Command.extend({
         this.newShape = newShape;
 
     },
-    rollback: function(){
+    rollback: function () {
 
-        if (!this.shape || !this.newShape || !this.newShape.parent) {return;}
+        if (!this.shape || !this.newShape || !this.newShape.parent) {
+            return;
+        }
 
         // Append shape to the parent
         this.newShape.parent.add(this.shape);
@@ -648,28 +679,28 @@ var MorphTo = ORYX.Core.Command.extend({
      * @param {Shape} shape
      * @param {Shape} newShape
      */
-    setRelatedDockers: function(shape, newShape){
-        if(shape.getStencil().type()==="node") {
-            (shape.incoming||[]).concat(shape.outgoing||[])
-                .each(function(i) {
-                    i.dockers.each(function(docker) {
+    setRelatedDockers: function (shape, newShape) {
+        if (shape.getStencil().type() === "node") {
+            (shape.incoming || []).concat(shape.outgoing || [])
+                .each(function (i) {
+                    i.dockers.each(function (docker) {
                         if (docker.getDockedShape() === shape) {
                             var rPoint = Object.clone(docker.referencePoint);
                             // Move reference point per percent
 
                             var rPointNew = {
-                                x: rPoint.x*newShape.bounds.width()/shape.bounds.width(),
-                                y: rPoint.y*newShape.bounds.height()/shape.bounds.height()
+                                x: rPoint.x * newShape.bounds.width() / shape.bounds.width(),
+                                y: rPoint.y * newShape.bounds.height() / shape.bounds.height()
                             };
 
                             docker.setDockedShape(newShape);
                             // Set reference point and center to new position
                             docker.setReferencePoint(rPointNew);
-                            if(i instanceof ORYX.Core.Edge) {
+                            if (i instanceof ORYX.Core.Edge) {
                                 docker.bounds.centerMoveTo(rPointNew);
                             } else {
                                 var absXY = shape.absoluteXY();
-                                docker.bounds.centerMoveTo({x:rPointNew.x+absXY.x, y:rPointNew.y+absXY.y});
+                                docker.bounds.centerMoveTo({x: rPointNew.x + absXY.x, y: rPointNew.y + absXY.y});
                                 //docker.bounds.moveBy({x:rPointNew.x-rPoint.x, y:rPointNew.y-rPoint.y});
                             }
                         }
@@ -677,7 +708,7 @@ var MorphTo = ORYX.Core.Command.extend({
                 });
 
             // for attached events
-            if(shape.dockers.length>0&&shape.dockers.first().getDockedShape()) {
+            if (shape.dockers.length > 0 && shape.dockers.first().getDockedShape()) {
                 newShape.dockers.first().setDockedShape(shape.dockers.first().getDockedShape());
                 newShape.dockers.first().setReferencePoint(Object.clone(shape.dockers.first().referencePoint));
             }
