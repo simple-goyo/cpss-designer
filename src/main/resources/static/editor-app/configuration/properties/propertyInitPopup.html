@@ -7,48 +7,14 @@
                 <h2>{{'PROPERTY.SETTING.TITLE' | translate:nameProperty}}</h2>
             </div>
             <div class="modal-body">
-<!--                <form class="form-group" name="myForm" >-->
-<!--                    <label>-->
-<!--                        <input type="radio" ng-model="ResourceType" name="State" value="red">-->
-<!--                        引用资源-->
-<!--                    </label>-->
-<!--                    <label>-->
-<!--                        <input type="radio" ng-model="ResourceType" name="State" value="blue" ng-change="newValue(ResourceType)">-->
-<!--                        非引用资源-->
-<!--                    </label>-->
-<!--                    <div ng-switch="ResourceType">-->
-<!--                        <div class="row" ng-switch-when="red" >-->
-<!--                            <input type="text" id="initProperty" placeholder="" ng-hide="isSettingbyKG" ng-model="nameProperty.value" class="form-control"/>-->
-<!--                            <div class="row row-no-gutter" ng-hide="!isSettingbyKG">-->
-<!--                                <div class="form-group">-->
-<!--                                    <label>{{'PROPERTY.SERVICES.RESOURCE.VALUE' | translate}}</label>-->
-<!--                                    <select class="form-control" ng-model="selectedRes">-->
-<!--                                        <option value="" selected="selected">-&#45;&#45;请选择所需资源-&#45;&#45;</option>-->
-<!--                                        <option ng-repeat="x in resources" value="{{x.name}}">{{x.name}}</option>-->
-<!--                                    </select>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="row" ng-switch-when="blue" >-->
-<!--                            被引用的资源-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </form>-->
-                <div>
-                    <div class="row" >
-                        <input type="text" id="initProperty" placeholder="" ng-hide="isSettingbyKG" ng-model="nameProperty.value" class="form-control"/>
-                        <div class="row row-no-gutter" ng-hide="!isSettingbyKG">
-                            <div class="form-group">
-                                <label>{{'PROPERTY.SERVICES.RESOURCE.VALUE' | translate}}</label>
-                                <select class="form-control" ng-model="selectedRes">
-                                    <option value="" selected="selected">---请选择所需资源---</option>
-                                    <option ng-repeat="x in resources" value="{{x.name}}">{{x.name}}</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" ng-hide="true">
-                        被引用的资源
+                <input class="form-control" type="text" id="initProperty" placeholder="" ng-hide="isSettingbyKG" ng-model="nameProperty.value"/>
+                <div class="row row-no-gutter" ng-hide="!isSettingbyKG">
+                    <div class="form-group">
+                        <label class="col-xs-3" style="float: left" >{{'PROPERTY.SERVICES.RESOURCE.VALUE' | translate}}</label>
+                        <select class="form-control col-xs-8" style="float: right" ng-model="selectedRes">
+                            <option value="" selected="selected">---请选择所需资源---</option>
+                            <option ng-repeat="x in resources" value="{{x.name}}">{{x.name}}</option>
+                        </select>
                     </div>
                 </div>
             </div>

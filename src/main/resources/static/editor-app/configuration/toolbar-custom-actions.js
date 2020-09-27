@@ -266,6 +266,15 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             let service_list = $scope.getAllActionFromScenes(scenes, /(.*?)Action/, "UndefinedAction");
 
             service_list.forEach(function (service) {
+                let action_template = {
+                    "id":"",
+                    "name":"",
+                    "enactedBy":{"id":"eeeee-5","name":"众包工人"},
+                    "type":"DeviceOperation",
+                    "input":"",
+                    "output":"",
+                    "flow":""
+                };
                 // id
                 let id = service.properties["overrideid"];
                 // name
@@ -297,22 +306,23 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 
         $scope.getEvents = function(scenes){
             let events = [];
-            let event_template = {
-                "id":"aaaaa-12",
-                "name":"会议准备事件",
-                "enactedBy":{"id":"eeeee-1","name":"会议室预定系统"},
-                "type":"CyberEvent",
-                "input":"",
-                "output":"[Order]",
-                "flow":{
-                    "id":"fffff-0",
-                    "to":"aaaaa-14",
-                    "condition":""
-                }
 
-            };
             let event_list = $scope.getAllActionFromScenes(scenes, /^(.*?)Event$/, "StartNoneEvent");
             event_list.forEach(function (event) {
+                let event_template = {
+                    "id":"aaaaa-12",
+                    "name":"会议准备事件",
+                    "enactedBy":{"id":"eeeee-1","name":"会议室预定系统"},
+                    "type":"CyberEvent",
+                    "input":"",
+                    "output":"[Order]",
+                    "flow":{
+                        "id":"fffff-0",
+                        "to":"aaaaa-14",
+                        "condition":""
+                    }
+
+                };
                 // id
                 let id = event.properties["overrideid"];
                 // name
@@ -326,7 +336,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 // output
                 let output = event.properties["output"];
                 // flow
-                let outgoing = "service.outgoing[0].resourceId";
+                let outgoing = "event.outgoing[0].resourceId";
 
                 event_template["id"] = id;
                 event_template["name"] = name;
@@ -341,27 +351,30 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         };
 
         $scope.getGateways = function(scenes){
-            let gateway_template = {
-                "id":"aaaaa-14",
-                "name":"决策",
-                "input":"[Order]",
-                "output":"[Order]",
-                "flow":{
-                    "id":"fffff-1",
-                    "to":[
-                        "aaaaa-4",
-                        "aaaaa-5",
-                        "aaaaa-6"
-                    ],
-                    "condition":[
-                        "Order.content==coffee",
-                        "Order.content==print",
-                        "Order.content==project"
-                    ]
-                }
-            };
+            let gateways = [];
             let gateway_list = $scope.getAllActionFromScenes(scenes, /Gateway|EntryPoint|ExitPoint/);
-            console.log("gateway_list"+gateway_list);
+            gateway_list.forEach(function (gateway) {
+                let gateway_template = {
+                    "id":"aaaaa-14",
+                    "name":"决策",
+                    "input":"[Order]",
+                    "output":"[Order]",
+                    "flow":{
+                        "id":"fffff-1",
+                        "to":[
+                            "aaaaa-4",
+                            "aaaaa-5",
+                            "aaaaa-6"
+                        ],
+                        "condition":[
+                            "Order.content==coffee",
+                            "Order.content==print",
+                            "Order.content==project"
+                        ]
+                    }
+                };
+            })
+            console.log("gateways"+gateways);
         };
 
         $scope.getConstraints = function(scenes){
@@ -436,7 +449,13 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             // constraint
             let constraint = $scope.getConstraints(scenes);
             jsonObj["constraint"] = constraint;
+
+            console.log(JSON.stringify(jsonObj));
+            $scope.close();
+
             return scenes;
+
+
         }
     }];
 
