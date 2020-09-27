@@ -1,23 +1,30 @@
 var NodeConditionWriteCtrl = ['$scope', '$modal', '$timeout', '$translate', function ($scope, $modal, $timeout, $translate) {
 
-    // Config for the modal window
-    var opts = {
-        template: 'editor-app/configuration/properties/node-condition-popup.html?version=' + Date.now(),
-        scope: $scope
-    };
+    let edge = $scope.editor.getSelection()[0];
+    let shapeIn = edge.incoming[0];
+    if ($scope.isStartExclusiveGateway(shapeIn)) {
+        $scope.connectedScene = edge.outgoing[0];
+        // Config for the modal window
+        var opts = {
+            template: 'editor-app/configuration/properties/node-condition-popup.html?version=' + Date.now(),
+            scope: $scope
+        };
 
-    // Open the dialog
-    $modal(opts);
+        // Open the dialog
+        $modal(opts);
+    } else {
+        $scope.property.mode = 'read';
+    }
 }];
 
 var NodeConditionPopupController = ['$scope', '$modal', function ($scope) {
-    $scope.properties = ["a", "b", "c", "d", "e"];
+    $scope.properties = $scope.getVisibleParameters("", $scope.connectedScene.properties['oryx-traceablescenes'], []);
     $scope.conditions = ["==", "!="];
     $scope.combinations = ["AND", "OR"];
     $scope.nodeConditions = $scope.property.value.nodeConditions;
-    if (!$scope.nodeConditions){
-        $scope.nodeConditions=[];
-        $scope.nodeConditions[$scope.nodeConditions.length]={
+    if (!$scope.nodeConditions) {
+        $scope.nodeConditions = [];
+        $scope.nodeConditions[$scope.nodeConditions.length] = {
             property: "",
             condition: "",
             value: "",
@@ -37,7 +44,7 @@ var NodeConditionPopupController = ['$scope', '$modal', function ($scope) {
 
     $scope.addEmptyCondition = function () {
         // $scope.addCondition("", "", "", "");
-        $scope.nodeConditions[$scope.nodeConditions.length]={
+        $scope.nodeConditions[$scope.nodeConditions.length] = {
             property: "",
             condition: "",
             value: "",

@@ -166,23 +166,23 @@ angular.module('activitiModeler')
     }
 
     $scope.reconnectScenes = function (starts, ends, controlNode) {
-        let setConditionsEdges = [];
+        // let setConditionsEdges = [];
         $scope.reconnect(starts, controlNode, false);
         $scope.reconnect(ends, controlNode, true);
-        if ($scope.isStartExclusiveGateway(controlNode)) {
-            for (let i = 0; i < controlNode.outgoing.length; i++) {
-                let edge = controlNode.outgoing[i];
-                if (edge.properties['oryx-nodecondition'] === "") {
-                    let from = controlNode.incoming[0].incoming[0].properties['oryx-name'];
-                    let to = edge.outgoing[0].properties['oryx-name'];
-                    let label = from + " to " + to;
-                    setConditionsEdges.push({edge: edge, label: label});
-                }
-            }
-        }
-        if (setConditionsEdges.length > 0) {
-            $scope.sceneLineNodeConditionInitial(setConditionsEdges);
-        }
+        // if ($scope.isStartExclusiveGateway(controlNode)) {
+        //     for (let i = 0; i < controlNode.outgoing.length; i++) {
+        //         let edge = controlNode.outgoing[i];
+        //         if (edge.properties['oryx-nodecondition'] === "") {
+        //             let from = controlNode.incoming[0].incoming[0].properties['oryx-name'];
+        //             let to = edge.outgoing[0].properties['oryx-name'];
+        //             let label = from + " to " + to;
+        //             setConditionsEdges.push({edge: edge, label: label});
+        //         }
+        //     }
+        // }
+        // if (setConditionsEdges.length > 0) {
+        //     $scope.sceneLineNodeConditionInitial(setConditionsEdges);
+        // }
     }
 
     $scope.reconnect = function (nodes, controlNode, reverse) {
@@ -308,7 +308,7 @@ angular.module('activitiModeler')
         }
         for (let i = 0; i < shape.incoming.length; i++) {
             let nodes = $scope.findTraceableScenes(shape.incoming[i]);
-            traceableScenes=traceableScenes.concat(nodes);
+            traceableScenes = traceableScenes.concat(nodes);
         }
 
         let result = [];
