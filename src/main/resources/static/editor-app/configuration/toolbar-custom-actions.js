@@ -215,10 +215,9 @@ var SaveSceneCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 
 var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
     function ($rootScope, $scope, $http, $route, $location) {
-        var modelMetaData = $scope.editor.getModelMetaData();
-        var rootScope = $rootScope;
-        console.log(rootScope.editor);
-        var description = '';
+        let modelMetaData = $scope.editor.getModelMetaData();
+        console.log($rootScope.editor);
+        let description = '';
         if (modelMetaData.description) {
             description = modelMetaData.description;
         }
@@ -233,29 +232,72 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         };
 
         $scope.export = function () {
-            let scene = $scope.getScenes();
+            let scenes = $scope.getScenes();
 
-            $scope.createModelFile(scene);
+            $scope.createModelFile(scenes);
         };
 
-
-        $scope.getAction = function (scene, patten, exclude){
-            let action_template = {
-            "id":"aaaaa-7",
-            "name":"取文件",
-            "enactedBy":{"id":"eeeee-5","name":"众包工人"},
-            "type":"DeviceOperation",
-                "input":"[order]",
-                "output":"",
-                "flow":{
-                "id":"fffff-6",
-                    "to":"aaaaa-10",
-                    "condition":""
+        $scope.getAllActionFromScenes = function (scenes, patten, exclude){
+            let action_list = [];
+            scenes.each(function (s) {
+                let len = s.childShapes.length;
+                if (len) {
+                    for (let i = 0; i < len; i++)
+                        if (exclude !== s.childShapes[i].stencil.id && patten.test(s.childShapes[i].stencil.id)) {
+                            action_list.push(s.childShapes[i]);
+                        }
                 }
+            });
+
+            return action_list;
+        };
+
+        $scope.getServices = function(scenes){
+            let services = [];
+            let action_template = {
+                "id":"",
+                "name":"",
+                "enactedBy":{"id":"eeeee-5","name":"众包工人"},
+                "type":"DeviceOperation",
+                "input":"",
+                "output":"",
+                "flow":""
             };
+            let service_list = $scope.getAllActionFromScenes(scenes, /(.*?)Action/, "UndefinedAction");
 
+            service_list.forEach(function (service) {
+                // id
+                let id = service.properties["overrideid"];
+                // name
+                let name = service.properties["name"];
+                // enactedBy
+                let enactedBy = service.properties["activityelement"];
+                // type
+                let type = service.stencil.id
+                // input
+                let input = service.properties["actioninputstatus"];
+                // output
+                let output = service.properties["output"];
+                // flow
+                let outgoing = "service.outgoing[0].resourceId";
+
+                action_template["id"] = id;
+                action_template["name"] = name;
+                action_template["enactedBy"] = enactedBy;
+                action_template["type"] = type;
+                action_template["input"] = input;
+                action_template["output"] = output;
+                action_template["outgoing"] = outgoing;
+                services.push(action_template);
+
+            })
+            // console.log("services "+services);
+            return services;
+        };
+
+        $scope.getEvents = function(scenes){
+            let events = [];
             let event_template = {
-
                 "id":"aaaaa-12",
                 "name":"会议准备事件",
                 "enactedBy":{"id":"eeeee-1","name":"会议室预定系统"},
@@ -263,13 +305,42 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 "input":"",
                 "output":"[Order]",
                 "flow":{
-                "id":"fffff-0",
+                    "id":"fffff-0",
                     "to":"aaaaa-14",
                     "condition":""
                 }
 
             };
+            let event_list = $scope.getAllActionFromScenes(scenes, /^(.*?)Event$/, "StartNoneEvent");
+            event_list.forEach(function (event) {
+                // id
+                let id = event.properties["overrideid"];
+                // name
+                let name = event.properties["name"];
+                // enactedBy
+                let enactedBy = event.properties["activityelement"];
+                // type
+                let type = event.stencil.id
+                // input
+                let input = event.properties["actioninputstatus"];
+                // output
+                let output = event.properties["output"];
+                // flow
+                let outgoing = "service.outgoing[0].resourceId";
 
+                event_template["id"] = id;
+                event_template["name"] = name;
+                event_template["enactedBy"] = enactedBy;
+                event_template["type"] = type;
+                event_template["input"] = input;
+                event_template["output"] = output;
+                event_template["outgoing"] = outgoing;
+                events.push(event_template);
+            })
+            console.log("events"+events);
+        };
+
+        $scope.getGateways = function(scenes){
             let gateway_template = {
                 "id":"aaaaa-14",
                 "name":"决策",
@@ -289,23 +360,11 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                     ]
                 }
             };
-
-
-            let action = [];
-            scene.each(function (s) {
-                let len = s.childShapes.length;
-                if (len) {
-                    for (let i = 0; i < len; i++)
-                        if (exclude !== s.childShapes[i].stencil.id && patten.test(s.childShapes[i].stencil.id)) {
-                            action.push(s.childShapes[i]);
-                        }
-                }
-            });
-
-            return action;
+            let gateway_list = $scope.getAllActionFromScenes(scenes, /Gateway|EntryPoint|ExitPoint/);
+            console.log("gateway_list"+gateway_list);
         };
 
-        $scope.getConstraints = function(scene){
+        $scope.getConstraints = function(scenes){
             let constraint_template = {
                 "entity": {
                     "anchor": {
@@ -326,7 +385,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         };
 
 
-        $scope.createModelFile = function (scene) {
+        $scope.createModelFile = function (scenes) {
             let jsonObj = {
                 "id": "",
                 "properties": {
@@ -345,39 +404,39 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             jsonObj["properties"]["name"] = modelMetaData.name;// add diagram name
             jsonObj["properties"]["documentation"] = description;
 
-            scene.each(function (s) {
+            scenes.each(function (s) {
                 delete s.img;
             });
 
             // 填写模型内容（For建模）
             jsonObj["id"] = $scope.editor.getModelId();
-            jsonObj["scene"] = scene;
+            jsonObj["scene"] = scenes;
             jsonObj["scenesRelations"] = $rootScope.scenesRelations;
 
             // 填写action内容（For运行）
             // service
-            let service = $scope.getAction(scene, /(.*?)Action/, "UndefinedAction");
+            let service = $scope.getServices(scenes);
             service.each(function (s) {
                 console.log(s);
             });
             jsonObj["action"]["service"] = service;
 
             // event
-            let event = $scope.getAction(scene, /^(.*?)Event$/, "StartNoneEvent");
+            let event = $scope.getEvents(scenes);
 
             jsonObj["action"]["event"] = event;
 
             // gateway
-            let gateway = $scope.getAction(scene, /Gateway|EntryPoint|ExitPoint/);
+            let gateway = $scope.getGateways(scenes);
 
             jsonObj["gateway"] = gateway;
 
             //console.log(jsonObj);
 
             // constraint
-            let constraint = $scope.getConstraint(scene);
+            let constraint = $scope.getConstraints(scenes);
             jsonObj["constraint"] = constraint;
-            return scene;
+            return scenes;
         }
     }];
 

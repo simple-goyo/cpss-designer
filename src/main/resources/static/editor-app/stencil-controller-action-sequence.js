@@ -116,6 +116,11 @@ angular.module('activitiModeler')
             value: id
         }
         $scope.updatePropertyInModel(idProperty);
+        idProperty = {
+            key: 'oryx-type',
+            value: '入口节点'
+        }
+        $scope.updatePropertyInModel(idProperty);
     };
 
     $scope.__createExitNode = function ($rootScope, $scope){
@@ -143,6 +148,11 @@ angular.module('activitiModeler')
         let idProperty = {
             key: 'oryx-overrideid',
             value: id
+        }
+        $scope.updatePropertyInModel(idProperty);
+        idProperty = {
+            key: 'oryx-type',
+            value: '出口节点'
         }
         $scope.updatePropertyInModel(idProperty);
     };
