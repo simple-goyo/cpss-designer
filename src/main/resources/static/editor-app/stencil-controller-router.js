@@ -59,7 +59,7 @@ angular.module('activitiModeler')
                 controlNode = $scope.editor.getSelection()[0];
                 controlNode.setProperty("oryx-name", controlNodes[i].properties['oryx-name']);
                 controlNodes[i].setProperty("oryx-gatewaycompany", controlNode.id);
-                controlNode.setProperty("oryx-gatewaycompany", controlNode[i].id);
+                controlNode.setProperty("oryx-gatewaycompany", controlNodes[i].id);
             }
             let edge = $scope.containsLine(shape, controlNode);
             if (edge === null) {
