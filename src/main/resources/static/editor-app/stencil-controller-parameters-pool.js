@@ -44,15 +44,19 @@ angular.module('activitiModeler')
     $scope.getVisibleParameters = function (nowSceneId, traceableScenes, traceableActions) {
         let parameters = [];
         let actionsInScene = $scope.parameterPool.get(nowSceneId);
-        for (let i = 0; i < traceableActions.length; i++) {
-            parameters = parameters.concat(actionsInScene.get(traceableActions[i]));
+        if (actionsInScene !== undefined) {
+            for (let i = 0; i < traceableActions.length; i++) {
+                parameters = parameters.concat(actionsInScene.get(traceableActions[i]));
+            }
         }
         if (traceableScenes !== undefined && traceableScenes !== "") {
             for (let i = 0; i < traceableScenes.length; i++) {
                 actionsInScene = $scope.parameterPool.get(traceableScenes[i]);
-                actionsInScene.forEach(function (value) {
-                    parameters = parameters.concat(value);
-                });
+                if (actionsInScene !== undefined) {
+                    actionsInScene.forEach(function (value) {
+                        parameters = parameters.concat(value);
+                    });
+                }
             }
         }
         return parameters;

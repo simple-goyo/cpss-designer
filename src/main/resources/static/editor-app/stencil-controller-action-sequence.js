@@ -5,6 +5,8 @@ angular.module('activitiModeler')
     const PhysicalAction = "PhysicalAction";
     const CyberAction = "CyberAction";
     const SocialAction = "SocialAction";
+    const StartMessageEvent = "StartMessageEvent";
+    const DefaultEvent = "DefaultEvent";
 
     /**
      * 获取指定动作的上一个动作，只有一个动作指向该动作的时候保证正确性，对于多个动作指向该动作，取第一个动作指向该动作的动作
@@ -284,7 +286,11 @@ angular.module('activitiModeler')
     $scope.isAction = function (shape) {
         let id = shape._stencil._jsonStencil.id;
         let namespace = shape._stencil._namespace;
-        return id === namespace + PhysicalAction || id === namespace + CyberAction || id === namespace + SocialAction;
+        return id === namespace + PhysicalAction
+            || id === namespace + CyberAction
+            || id === namespace + SocialAction
+            || id === namespace + StartMessageEvent
+            || id === namespace + DefaultEvent;
     }
 }
 ;
