@@ -1,5 +1,5 @@
 var SceneCreateController = ['$scope', '$rootScope', function ($scope, $rootScope) {
-    $scope.properties = ["location"];
+    $scope.properties = [];
     // $scope.$watch('$viewContentLoaded', function () {
     //     $scope.sceneSettingDiv = document.getElementById("sceneSetting");
     //     for (let i = 0; i <$scope.properties.length; i++) {

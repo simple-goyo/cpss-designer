@@ -310,7 +310,14 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
         //$scope.setActionProperty($scope, res_entity, $scope.selectedFunction, $scope.modelInput, $scope.resourceOutputs[i]);
 
         $scope.updateActionProperty($scope, res_entity, $scope.selectedFunction, $scope.modelInput, $scope.resourceOutputs[index]);
-        $scope.insertParameters(sceneId, action.id, $scope.resourceOutputs[index]);
+        let parameter;
+        if($scope.resourceOutputs[index] === ""){
+            parameter = [];
+        }
+        else{
+            parameter = [$scope.resourceOutputs[index]];
+        }
+        $scope.insertParameters(sceneId, action.id, parameter);
 
         // // 服务有Output时，需要自动生成的资源
         // $scope.AutoGenerateResource($scope, $scope.servicesDetails[i].description, $scope.output[i], $scope.resourceOutputs[i]);

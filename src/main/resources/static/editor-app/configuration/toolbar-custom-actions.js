@@ -398,14 +398,12 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                     "name": "",
                     "documentation": ""
                 },
-                "scene": [],
                 "action": {
                     "service": [],
                     "event": []
                 },
                 "gateway": [],
-                "constraint": [],
-                "scenesRelations": {}
+                "constraint": []
             };
             jsonObj["properties"]["name"] = modelMetaData.name;// add diagram name
             jsonObj["properties"]["documentation"] = description;
@@ -416,15 +414,13 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 
             // 填写模型内容（For建模）
             jsonObj["id"] = $scope.editor.getModelId();
-            jsonObj["scene"] = scenes;
-            jsonObj["scenesRelations"] = $rootScope.scenesRelations;
+            //jsonObj["scene"] = scenes;
+            //jsonObj["scenesRelations"] = $rootScope.scenesRelations;
 
             // 填写action内容（For运行）
             // service
             let service = $scope.getServices(scenes);
-            service.each(function (s) {
-                console.log(s);
-            });
+
             jsonObj["action"]["service"] = service;
 
             // event
