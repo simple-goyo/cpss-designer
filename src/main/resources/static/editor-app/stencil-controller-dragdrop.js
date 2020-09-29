@@ -1,6 +1,6 @@
 'use strict';
 angular.module('activitiModeler')
-    .DragDropClass = function($rootScope, $scope){
+    .DragDropClass = function ($rootScope, $scope) {
 
     /*
      * DRAG AND DROP FUNCTIONALITY
@@ -25,9 +25,8 @@ angular.module('activitiModeler')
         KISBPM.eventBus.dispatch(KISBPM.eventBus.EVENT_TYPE_HIDE_SHAPE_BUTTONS);
 
         // var setting = false;
+        let item = $scope.getStencilItemById(ui.draggable[0].id);
         if ($scope.dragCanContain) {
-
-            var item = $scope.getStencilItemById(ui.draggable[0].id);
             // var group = $scope.findGroupNameByStencilItem(ui.draggable[0].id);
             // if (group.name === "物理实体") {
             //     setting = true;
@@ -239,9 +238,8 @@ angular.module('activitiModeler')
             }
         }
 
-        //set mode to set is to judge whether the item is dragged to canvas firstly.
         if (!$scope.nameProperty.hidden) {
-            $scope.nameProperty.mode = 'set';
+            $scope.setShapeName();
         }
     };
 

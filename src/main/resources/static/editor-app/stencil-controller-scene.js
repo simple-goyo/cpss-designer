@@ -128,11 +128,9 @@ angular.module('activitiModeler')
 
         var command = new KISBPM.CreateCommand(option, undefined, undefined, $rootScope.editor);
         $rootScope.editor.executeCommands([command]);
-        let typeProperty = {
-            key: 'oryx-type',
-            value: "场景"
-        }
-        $scope.updatePropertyInModel(typeProperty);
+        let scene = $scope.editor.getSelection()[0];
+        scene.setProperty("oryx-overrideid", scene.id);
+        scene.setProperty("oryx-type", "场景");
     }
 
     $scope.hideScenesRelations = function () {

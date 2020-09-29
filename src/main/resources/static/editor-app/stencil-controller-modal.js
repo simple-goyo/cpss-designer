@@ -45,4 +45,12 @@ angular.module('activitiModeler')
         };
         $modal(opts);
     }
+
+    $scope.setShapeName= function () {
+        var opts = {
+            template:  'editor-app/configuration/properties/propertyInitPopup.html?version=' + Date.now(),
+            scope: $scope
+        };
+        $modal(opts);
+    };
 }

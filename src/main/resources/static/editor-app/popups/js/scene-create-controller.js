@@ -46,18 +46,10 @@ var SceneCreateController = ['$scope', '$rootScope', function ($scope, $rootScop
         $scope.changeScene(-1);
         $scope.createScene();
 
-        let id = $scope.editor.getSelection()[0].id;
-        let idProperty = {
-            key: 'oryx-overrideid',
-            value: id
-        }
-        let nameProperty = {
-            key: 'oryx-name',
-            value: nameValue
-        }
-        $scope.updatePropertyInModel(idProperty);
-        $scope.updatePropertyInModel(nameProperty);
-        newScene.id = $scope.editor.getSelection()[0].id;
+        let scene = $scope.editor.getSelection()[0];
+        scene.setProperty("oryx-overrideid", scene.id);
+        scene.setProperty("oryx-name", nameValue);
+        newScene.id = scene.id;
         $rootScope.scenes[$rootScope.scenes.length] = newScene;
 
         $scope.$hide();

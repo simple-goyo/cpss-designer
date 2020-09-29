@@ -113,17 +113,9 @@ angular.module('activitiModeler')
         var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
         $scope.editor.executeCommands([command]);
         // $scope.editor.getSelection()[0].properties['oryx-overrideid'] = $scope.editor.getSelection()[0].id;//为创建的初始化节点提供id
-        let id = $scope.editor.getSelection()[0].id;
-        let idProperty = {
-            key: 'oryx-overrideid',
-            value: id
-        }
-        $scope.updatePropertyInModel(idProperty);
-        idProperty = {
-            key: 'oryx-type',
-            value: '入口节点'
-        }
-        $scope.updatePropertyInModel(idProperty);
+        let entryPoint = $scope.editor.getSelection()[0];
+        entryPoint.setProperty("oryx-overrideid", entryPoint.id);
+        entryPoint.setProperty("oryx-type", "入口节点");
     };
 
     $scope.__createExitNode = function ($rootScope, $scope) {
@@ -147,17 +139,9 @@ angular.module('activitiModeler')
         var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
         $scope.editor.executeCommands([command]);
         // $scope.editor.getSelection()[0].properties['oryx-overrideid'] = $scope.editor.getSelection()[0].id;//为创建的初始化节点提供id
-        let id = $scope.editor.getSelection()[0].id;
-        let idProperty = {
-            key: 'oryx-overrideid',
-            value: id
-        }
-        $scope.updatePropertyInModel(idProperty);
-        idProperty = {
-            key: 'oryx-type',
-            value: '出口节点'
-        }
-        $scope.updatePropertyInModel(idProperty);
+        let exitPoint = $scope.editor.getSelection()[0];
+        exitPoint.setProperty("oryx-overrideid", exitPoint.id);
+        exitPoint.setProperty("oryx-type", "出口节点");
     };
 
     $scope.__createStartNode = function ($rootScope, $scope) {
@@ -183,12 +167,8 @@ angular.module('activitiModeler')
         var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
         $scope.editor.executeCommands([command]);
         // $scope.editor.getSelection()[0].properties['oryx-overrideid'] = $scope.editor.getSelection()[0].id;//为创建的初始化节点提供id
-        let id = $scope.editor.getSelection()[0].id;
-        let idProperty = {
-            key: 'oryx-overrideid',
-            value: id
-        }
-        $scope.updatePropertyInModel(idProperty);
+        let startNoneEvent = $scope.editor.getSelection()[0];
+        startNoneEvent.setProperty("oryx-overrideid", startNoneEvent.id);
     };
 
     $scope.__createNormalAction = function ($rootScope, $scope) {
@@ -257,12 +237,8 @@ angular.module('activitiModeler')
 
 
             // $scope.editor.getSelection()[0].properties['oryx-overrideid'] = $scope.editor.getSelection()[0].id;//为创建的未定义的动作提供id
-            let id = $scope.editor.getSelection()[0].id;
-            let idProperty = {
-                key: 'oryx-overrideid',
-                value: id
-            }
-            $scope.updatePropertyInModel(idProperty);
+            let action = $scope.editor.getSelection()[0];
+            action.setProperty("oryx-overrideid", action.id);
         }
     };
     $scope.getTraceableActions = function (action) {
