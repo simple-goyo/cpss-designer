@@ -311,11 +311,8 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
 
         $scope.updateActionProperty($scope, res_entity, $scope.selectedFunction, $scope.modelInput, $scope.resourceOutputs[index]);
         let parameter;
-        if($scope.resourceOutputs[index] === ""){
+        if ($scope.resourceOutputs[index] === "" || $scope.resourceOutputs[index] === undefined) {
             parameter = [];
-        }
-        else{
-            parameter = [$scope.resourceOutputs[index]];
         }
         $scope.insertParameters(sceneId, action.id, parameter);
 

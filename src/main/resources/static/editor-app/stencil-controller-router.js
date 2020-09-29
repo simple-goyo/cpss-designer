@@ -119,12 +119,8 @@ angular.module('activitiModeler')
 
         let command = new KISBPM.CreateCommand(option, undefined, undefined, $rootScope.editor);
         $rootScope.editor.executeCommands([command]);
-        let id = $scope.editor.getSelection()[0].id;
-        let idProperty = {
-            key: 'oryx-overrideid',
-            value: id
-        }
-        $scope.updatePropertyInModel(idProperty);
+        let shape=$scope.editor.getSelection()[0];
+        shape.setProperty("oryx-overrideid",shape.id);
     }
 
     $scope.handleReconnectScenes = function (scene, controlNode) {
