@@ -310,8 +310,8 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
         //$scope.setActionProperty($scope, res_entity, $scope.selectedFunction, $scope.modelInput, $scope.resourceOutputs[i]);
 
         $scope.updateActionProperty($scope, res_entity, $scope.selectedFunction, $scope.modelInput, $scope.resourceOutputs[index]);
-        let parameter;
-        if ($scope.resourceOutputs[index] === "" || $scope.resourceOutputs[index] === undefined) {
+        let parameter = $scope.resourceOutputs[index];
+        if (parameter === "" || parameter === undefined) {
             parameter = [];
         }
         $scope.insertParameters(sceneId, action.id, parameter);
