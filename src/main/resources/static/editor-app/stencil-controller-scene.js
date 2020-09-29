@@ -19,6 +19,10 @@ angular.module('activitiModeler')
 
         return $scope.scenes;
     };
+    
+    $scope.getSceneRelations = function (){
+        return $scope.scenesRelations;
+    };
 
     $scope.storeSceneInfo = function () {
         $rootScope.scenes[$rootScope.selectedSceneIndex].childShapes = $scope.editor.getJSON().childShapes;

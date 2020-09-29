@@ -314,9 +314,6 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
         if($scope.resourceOutputs[index] === ""){
             parameter = [];
         }
-        else{
-            parameter = [$scope.resourceOutputs[index]];
-        }
         $scope.insertParameters(sceneId, action.id, parameter);
 
         // // 服务有Output时，需要自动生成的资源

@@ -240,17 +240,36 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         $scope.getAllActionFromScenes = function (scenes, patten, exclude){
             let action_list = [];
             scenes.each(function (s) {
-                let len = s.childShapes.length;
-                if (len) {
-                    for (let i = 0; i < len; i++)
-                        if (exclude !== s.childShapes[i].stencil.id && patten.test(s.childShapes[i].stencil.id)) {
-                            action_list.push(s.childShapes[i]);
-                        }
+                if(s.childShapes){
+                    let len = s.childShapes.length;
+                    if (len) {
+                        for (let i = 0; i < len; i++)
+                            if (exclude !== s.childShapes[i].stencil.id && patten.test(s.childShapes[i].stencil.id)) {
+                                action_list.push(s.childShapes[i]);
+                            }
+                    }
                 }
             });
 
             return action_list;
         };
+
+        $scope.getEdgebyId = function (edgeid) {
+            let edges = $scope.editor.getCanvas().getChildEdges(true);
+            for(let i=0;i<edges.length;i++){
+                if(edgeid === edges[i].resourceId){
+                    return edges[i];
+                }
+            }
+            return undefined;
+        }
+
+        $scope.getOutgoingAction = function (edgeid) {
+            let edge = $scope.getEdgebyId(edgeid);
+            if(edge === undefined || edge.outgoing.length<1) return undefined;
+            return edge.outgoing[0].resourceId;
+
+        }
 
         $scope.getServices = function(scenes){
             let services = [];
@@ -264,7 +283,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                     "type":"DeviceOperation",
                     "input":"",
                     "output":"",
-                    "flow":""
+                    "flow":{"id":"", "to":"", "condition":""}
                 };
                 // id
                 let id = service.properties["overrideid"];
@@ -279,7 +298,13 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 // output
                 let output = service.properties["output"];
                 // flow
-                let outgoing = "service.outgoing[0].resourceId";
+                let flowid = "";
+                let flowto = "";
+
+                if(service.outgoing.length){
+                   flowid = service.outgoing[0].resourceId;
+                   flowto = $scope.getOutgoingAction(flowid);
+                }
 
                 action_template["id"] = id;
                 action_template["name"] = name;
@@ -287,7 +312,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 action_template["type"] = type;
                 action_template["input"] = input;
                 action_template["output"] = output;
-                action_template["outgoing"] = outgoing;
+                action_template["flow"] = {"id":flowid,"to":flowto,"condition":""};
                 services.push(action_template);
 
             })
@@ -327,7 +352,13 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 // output
                 let output = event.properties["output"];
                 // flow
-                let outgoing = "event.outgoing[0].resourceId";
+                let flowid = "";
+                let flowto = "";
+
+                if(event.outgoing.length){
+                    flowid = event.outgoing[0].resourceId;
+                    flowto = $scope.getOutgoingAction(flowid);
+                }
 
                 event_template["id"] = id;
                 event_template["name"] = name;
@@ -335,10 +366,11 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 event_template["type"] = type;
                 event_template["input"] = input;
                 event_template["output"] = output;
-                event_template["outgoing"] = outgoing;
+                event_template["flow"] = {"id":flowid,"to":flowto,"condition":""};
                 events.push(event_template);
             })
             console.log("events"+events);
+            return events;
         };
 
         $scope.getGateways = function(scenes){
@@ -368,6 +400,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 
             })
             console.log("gateways"+gateways);
+            return gateways;
         };
 
         $scope.getConstraints = function(scenes){

@@ -68,9 +68,9 @@ angular.module('activitiModeler')
                 // var quickMenuDefinition = ['UserTask', 'EndNoneEvent', 'ExclusiveGateway',
                 //     'CatchTimerEvent', 'ThrowNoneEvent', 'TextAnnotation',
                 //     'SequenceFlow', 'Association'];
-                var quickMenuDefinition = [];
+                var quickMenuDefinition = ['ConstraintFlow'];
                 var ignoreForPaletteDefinition = ['SequenceFlow', 'SequenceEventFlow', 'MessageFlow', 'Association', 'DataAssociation', 'DataStore', 'SendTask'];
-                var quickMenuItems = [];
+                var quickMenuItems = ['ConstraintFlow'];
 
                 var morphRoles = [];
                 for (var i = 0; i < data.rules.morphingRules.length; i++) {
