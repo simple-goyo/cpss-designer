@@ -103,7 +103,7 @@ public class ModelerController{
 		list = Arrays.asList(models);
 
 		modelAndView.addObject("modelList", list);
-        modelAndView.addObject("modelSize", repositoryService.createModelQuery().list().size());
+        modelAndView.addObject("modelSize", list.size());
         return modelAndView;
 	}
 //

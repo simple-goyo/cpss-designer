@@ -103,7 +103,7 @@ public class KnowledgeGraphService {
         //////////////////////////众包///////////////////////////////
         if( resName.length()>=6 && resName.toLowerCase().startsWith("worker")){
 
-            retn = "{\"name\":\"CrowdSouring\",\"service\":[{\"output\":\"[]\",\"input\":[],\"inputParameter\":\"[]\",\"Capability\":\"get item\",\"outputParameter\":\"[]\"},{\"output\":\"[]\",\"input\":[],\"inputParameter\":\"[]\",\"Capability\":\"deliver item\",\"outputParameter\":\"[]\"}],\"event\":\"[]\",\"capability\":\"[]\",\"category\":\"[\\\"SocialEntity\\\"]\"}";
+            retn = "{\"name\":\"CrowdSouring\",\"service\":[{\"output\":\"[]\",\"input\":[],\"inputParameter\":\"[]\",\"Capability\":\"get item\",\"outputParameter\":\"[]\"},{\"output\":\"[]\",\"input\":[],\"inputParameter\":\"[]\",\"Capability\":\"deliver item\",\"outputParameter\":\"[]\"},{\"output\":\"[]\",\"input\":[],\"inputParameter\":\"[\\\"task\\\"]\",\"Capability\":\"perform task\",\"outputParameter\":\"[]\"}],\"event\":\"[]\",\"capability\":\"[]\",\"category\":\"[\\\"SocialEntity\\\"]\"}";
             InputStream resourceDetailsStream = new ByteArrayInputStream(retn.getBytes(StandardCharsets.UTF_8));
 
             try {

@@ -233,8 +233,8 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 
         $scope.export = function () {
             let scenes = $scope.getScenes();
-
-            $scope.createModelFile(scenes);
+            let relations = $scope.getSceneRelations();
+            $scope.createModelFile(scenes, relations);
         };
 
         $scope.getAllActionFromScenes = function (scenes, patten, exclude){
@@ -264,11 +264,25 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             return undefined;
         }
 
-        $scope.getOutgoingAction = function (edgeid) {
-            let edge = $scope.getEdgebyId(edgeid);
-            if(edge === undefined || edge.outgoing.length<1) return undefined;
-            return edge.outgoing[0].resourceId;
+        $scope.getOutgoingAction = function (outgoing) {
+            if(outgoing.length > 0){
+                // 有outgoing线,分两种情况，一种是事件，一种是Action
+                let flow_tempate = {"id":"","to":"","condition":""};
+                let flowid = outgoing[0].resourceId;
+                let flowto = "";
+                let edge = $scope.getEdgebyId(flowid);
+                if(edge !== undefined) {
+                    flowto = edge.outgoing[0].resourceId;
+                }
+                flow_tempate["id"] = flowid;
+                flow_tempate["to"] = flowto;
+                return flow_tempate;
+            }else{
+                // 没有outgoing线，当前scene结束
+                let flow_tempate = {"id":"","to":"","condition":""};
 
+                return flow_tempate;
+            }
         }
 
         $scope.getServices = function(scenes){
@@ -298,13 +312,12 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 // output
                 let output = service.properties["output"];
                 // flow
-                let flowid = "";
-                let flowto = "";
 
-                if(service.outgoing.length){
-                   flowid = service.outgoing[0].resourceId;
-                   flowto = $scope.getOutgoingAction(flowid);
-                }
+                let flow = $scope.getOutgoingAction(service.outgoing);
+                // if(service.outgoing.length){
+                //    flowid = service.outgoing[0].resourceId;
+                //    flowto = $scope.getOutgoingAction(flowid);
+                // }
 
                 action_template["id"] = id;
                 action_template["name"] = name;
@@ -312,7 +325,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 action_template["type"] = type;
                 action_template["input"] = input;
                 action_template["output"] = output;
-                action_template["flow"] = {"id":flowid,"to":flowto,"condition":""};
+                action_template["flow"] = flow;
                 services.push(action_template);
 
             })
@@ -373,34 +386,52 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             return events;
         };
 
-        $scope.getGateways = function(scenes){
-            let gateways = [];
-            let gateway_list = $scope.getAllActionFromScenes(scenes, /Gateway|EntryPoint|ExitPoint/);
-            gateway_list.forEach(function (gateway) {
-                let gateway_template = {
-                    "id":"aaaaa-14",
-                    "name":"决策",
-                    "input":"[Order]",
-                    "output":"[Order]",
-                    "flow":{
-                        "id":"fffff-1",
-                        "to":[
-                            "aaaaa-4",
-                            "aaaaa-5",
-                            "aaaaa-6"
-                        ],
-                        "condition":[
-                            "Order.content==coffee",
-                            "Order.content==print",
-                            "Order.content==project"
-                        ]
-                    }
-                };
-                console.log(gateway);
+        $scope.getGateways = function(scenes, relations){
+            // let gateways = [];
+            // let gateway_list = $scope.getAllActionFromScenes(scenes, /Gateway|EntryPoint|ExitPoint/);
+            // gateway_list.forEach(function (gateway) {
+            //     let gateway_template = {
+            //         "id":"aaaaa-14",
+            //         "name":"决策",
+            //         "type":"fork",//join
+            //         "input":"[Order]",
+            //         "output":"[Order]",
+            //         "flow":{
+            //             "id":"fffff-1",
+            //             "to":[
+            //                 "aaaaa-4",
+            //                 "aaaaa-5",
+            //                 "aaaaa-6"
+            //             ],
+            //             "condition":[
+            //                 "Order.content==coffee",
+            //                 "Order.content==print",
+            //                 "Order.content==project"
+            //             ]
+            //         }
+            //     };
+            //     console.log(gateway);
+            //
+            // })
 
-            })
-            console.log("gateways"+gateways);
-            return gateways;
+            if(relations.childShapes){
+                let gateway_patten = /(.*?)Gateway/;
+                let flow_patten = /(.*?)Flow/;
+                let tmp = relations.childShapes;
+                tmp.each(function (relation) {
+                    // console.log("relation " + relation);
+                    if(flow_patten.test(relation.stencil.id)){
+                        // 取出所有的flow
+                        console.log("flow " + relation);
+                    }
+                    if(gateway_patten.test(relation.stencil.id)){
+                        console.log("gateway " + relation);
+                    }
+                })
+
+            }
+            //console.log("gateways"+gateways);
+            return "gateways";
         };
 
         $scope.getConstraints = function(scenes){
@@ -424,7 +455,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         };
 
 
-        $scope.createModelFile = function (scenes) {
+        $scope.createModelFile = function (scenes, relations) {
             let jsonObj = {
                 "id": "",
                 "properties": {
@@ -462,7 +493,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             jsonObj["action"]["event"] = event;
 
             // gateway
-            let gateway = $scope.getGateways(scenes);
+            let gateway = $scope.getGateways(scenes, relations);
 
             jsonObj["gateway"] = gateway;
 

@@ -268,5 +268,4 @@ angular.module('activitiModeler')
             || id === namespace + StartMessageEvent
             || id === namespace + DefaultEvent;
     }
-}
-;
+};

@@ -3164,32 +3164,6 @@
     },
     {
       "type": "edge",
-      "id": "ConstraintFlow",
-      "title": "约束依赖流",
-      "description": "表示约束关系，从entity指向entity，如：房间指向信息对象，可设置信息对象中的location字段与房间location绑定",
-      "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n\txmlns=\"http://www.w3.org/2000/svg\"\n\txmlns:oryx=\"http://www.b3mn.org/oryx\"\n\tversion=\"1.0\"\n\toryx:edge=\"edge\" >\n\t<defs>\n\t\t<marker id=\"start\" oryx:optional=\"yes\" oryx:enabled=\"yes\" refX=\"5\" refY=\"5\" markerUnits=\"userSpaceOnUse\" markerWidth=\"10\" markerHeight=\"10\" orient=\"auto\">\n\t  \t\t<!-- <path d=\"M 10 10 L 0 5 L 10 0\" fill=\"none\" stroke=\"#585858\" /> -->\n\t  \t\t<circle id=\"arrowhead\" cx=\"5\" cy=\"5\" r=\"5\" fill=\"white\" stroke=\"black\" />\n\t  \t</marker>\n\n\t  \t<marker id=\"end\" refX=\"10\" refY=\"5\" markerUnits=\"userSpaceOnUse\" markerWidth=\"10\" markerHeight=\"10\" orient=\"auto\">\n\t  \t\t<path id=\"arrowhead2\" d=\"m0,0l10,5l-10,5l0,-10\" fill=\"white\" stroke=\"#585858\" />\n\t  \t</marker>\n\t</defs>\n\t<g id=\"edge\">\n\t    <path id=\"bg_frame\" d=\"m6,50.69565l203.30435,0\" stroke=\"#585858\" fill=\"none\" stroke-width=\"2\" stroke-dasharray=\"3, 4\" marker-start=\"url(#start)\" marker-end=\"url(#end)\" />\n\t\t<text id=\"text_name\" x=\"0\" y=\"0\" oryx:edgePosition=\"midTop\"/>\n\t</g>\n</svg>",
-      "icon": "connector/association.unidirectional.png",
-      "groups": [
-        "连接对象"
-      ],
-      "layout": [
-        {
-          "type": "layout.bpmn2_0.sequenceflow"
-        }
-      ],
-      "propertyPackages": [
-        "overrideidpackage",
-        "namepackage",
-        "documentationpackage"
-      ],
-      "hiddenPropertyPackages": [],
-      "roles": [
-        "ConnectingObjectsMorph",
-        "all"
-      ]
-    },
-    {
-      "type": "edge",
       "id": "MessageSceneFlow",
       "title": "消息流",
       "description": "Message flow to connect elements in different pools.",

@@ -200,38 +200,50 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
             console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
         });
     };
-    var prop = $scope.latestfromto["from"].properties["oryx-type"];
+
+    let prop;
     let res_entity = {"id": "", "name": "", "type": ""};
-    if (prop && prop === "工人") {
-        res_entity.id = $scope.latestfromto["from"].properties["oryx-overrideid"];
-        res_entity.name = $scope.latestfromto["from"].properties["oryx-name"];
-        res_entity.type = $scope.latestfromto["from"].properties["oryx-type"];
-        let functionType = $scope.latestfromto["from"].properties["oryx-type"];
-        for (let i = 0; i < $scope.constTypeOfResource.length; i++) {
-            if ($scope.constTypeOfResource[i].name === functionType) {
-                selectedShapeActionType = $scope.constTypeOfResource[i].type;
+    if($scope.latestfromto["from"]){
+        prop = $scope.latestfromto["from"].properties["oryx-type"];
+        if (prop && prop === "工人") {
+            res_entity.id = $scope.latestfromto["from"].properties["oryx-overrideid"];
+            res_entity.name = $scope.latestfromto["from"].properties["oryx-name"];
+            res_entity.type = $scope.latestfromto["from"].properties["oryx-type"];
+            let functionType = $scope.latestfromto["from"].properties["oryx-type"];
+            for (let i = 0; i < $scope.constTypeOfResource.length; i++) {
+                if ($scope.constTypeOfResource[i].name === functionType) {
+                    selectedShapeActionType = $scope.constTypeOfResource[i].type;
+                }
             }
-        }
-        $scope.getResourcesfromKG(res_entity.name);
-    } else {
-        res_entity.id = $scope.latestfromto["to"].properties["oryx-overrideid"];
-        res_entity.name = $scope.latestfromto["to"].properties["oryx-name"];
-        res_entity.type = $scope.latestfromto["to"].properties["oryx-type"];
+            $scope.getResourcesfromKG(res_entity.name);
+        } else {
+            res_entity.id = $scope.latestfromto["to"].properties["oryx-overrideid"];
+            res_entity.name = $scope.latestfromto["to"].properties["oryx-name"];
+            res_entity.type = $scope.latestfromto["to"].properties["oryx-type"];
 
-        functionType = $scope.latestfromto["to"].properties["oryx-type"];
-        for (let i = 0; i < $scope.constTypeOfResource.length; i++) {
-            if ($scope.constTypeOfResource[i].name === functionType) {
-                selectedShapeActionType = $scope.constTypeOfResource[i].type;
+            functionType = $scope.latestfromto["to"].properties["oryx-type"];
+            for (let i = 0; i < $scope.constTypeOfResource.length; i++) {
+                if ($scope.constTypeOfResource[i].name === functionType) {
+                    selectedShapeActionType = $scope.constTypeOfResource[i].type;
+                }
             }
-        }
-        if (selectedShapeActionType === undefined) {
-            $scope.close();
-            return;
-        }
-        console.log(res_entity.name);
-        $scope.getResourcesfromKG(res_entity.name);
+            if (selectedShapeActionType === undefined) {
+                $scope.close();
+                return;
+            }
+            console.log(res_entity.name);
+            $scope.getResourcesfromKG(res_entity.name);
 
+        }
     }
+    else{
+        res_entity.name = $scope.selectedItem.title;
+        res_entity.id = $scope.selectedItem.properties["oryx-overrideid"];
+        res_entity.type = $scope.selectedItem.properties["oryx-type"];
+        $scope.getResourcesfromKG(res_entity);
+    }
+
+
 
     // Put json representing entity on scope
     if ($scope.property !== undefined && $scope.property.value !== undefined && $scope.property.value !== null
@@ -317,7 +329,14 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
         $scope.insertParameters(sceneId, action.id, parameter);
 
         // // 服务有Output时，需要自动生成的资源
-        // $scope.AutoGenerateResource($scope, $scope.servicesDetails[i].description, $scope.output[i], $scope.resourceOutputs[i]);
+        let serviceName;
+        if($scope.servicesDetails[index].description === undefined){
+            serviceName = $scope.servicesDetails[index].Capability;
+        }else{
+            serviceName = $scope.servicesDetails[index].description;
+        }
+        let selectedShape = $scope.getShapeById(res_entity.id);
+        $scope.AutoGenerateResource($scope, serviceName, $scope.output[index], $scope.resourceOutputs[index], selectedShape);
 
         // 将工人与物品、水杯这些物理Item绑定
         // 当选择获取水杯服务时，调用工人获取资源方法
