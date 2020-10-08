@@ -372,12 +372,13 @@ var MorphToEvent = ORYX.Core.Command.extend({
 
 		// 修改线型
 		var oldedge = this.shape.getIncomingShapes().first();
+		var oldedge_resourceId = oldedge.resourceId;
 		var serializededge = oldedge.serialize();
 
 		var newEdge = this.facade.createShape({
 		 	type: "http://b3mn.org/stencilset/bpmn2.0#SequenceEventFlow",
 		 	namespace: "http://b3mn.org/stencilset/bpmn2.0",
-		 	resourceId: oldedge.resourceId,
+		 	resourceId: oldedge_resourceId,
 			connectedShape: oldedge.incoming[0],
 			connectingType: stencil.id(),
 			containedStencil: stencil
@@ -385,7 +386,7 @@ var MorphToEvent = ORYX.Core.Command.extend({
 		serializededge[0].value = "http://b3mn.org/stencilset/bpmn2.0#SequenceEventFlow";
 
 		newEdge.deserialize(serializededge);
-
+		newEdge.resourceId = oldedge_resourceId;
 		var heighte = oldedge.bounds.height();
 		var widthe  = oldedge.bounds.width();
 

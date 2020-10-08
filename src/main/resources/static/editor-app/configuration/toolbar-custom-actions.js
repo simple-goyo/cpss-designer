@@ -264,28 +264,34 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             return undefined;
         }
 
-        $scope.getOutgoingAction = function (outgoing) {
+        $scope.getOutgoingAction = function (outgoing, relations) {
             if(outgoing.length > 0){
                 // 有outgoing线,分两种情况，一种是事件，一种是Action
                 let flow_tempate = {"id":"","to":"","condition":""};
                 let flowid = outgoing[0].resourceId;
                 let flowto = "";
                 let edge = $scope.getEdgebyId(flowid);
-                if(edge !== undefined) {
-                    flowto = edge.outgoing[0].resourceId;
+
+                // hiddenProperties: Hash
+                // oryx-type: "http://b3mn.org/stencilset/bpmn2.0#SequenceEventFlow"
+                if(edge !== undefined && edge.hiddenProperties["oryx-type"] === "http://b3mn.org/stencilset/bpmn2.0#SequenceEventFlow"){
+                    // 事件流
+                    console.log("事件流");
+                }else{
+                    flow_tempate["id"] = flowid;
+                    flow_tempate["to"] = edge.outgoing[0].resourceId;
                 }
-                flow_tempate["id"] = flowid;
-                flow_tempate["to"] = flowto;
                 return flow_tempate;
             }else{
-                // 没有outgoing线，当前scene结束
+                // Action没有outgoing线，表示当前scene结束
+                // 下一个节点可能是gateway，也可能是scene，也可能没有
                 let flow_tempate = {"id":"","to":"","condition":""};
-
+                // relations.childShapes
                 return flow_tempate;
             }
         }
 
-        $scope.getServices = function(scenes){
+        $scope.getServices = function(scenes, relations){
             let services = [];
             let service_list = $scope.getAllActionFromScenes(scenes, /(.*?)Action/, "UndefinedAction");
 
@@ -313,7 +319,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 let output = service.properties["output"];
                 // flow
 
-                let flow = $scope.getOutgoingAction(service.outgoing);
+                let flow = $scope.getOutgoingAction(service.outgoing, relations);
                 // if(service.outgoing.length){
                 //    flowid = service.outgoing[0].resourceId;
                 //    flowto = $scope.getOutgoingAction(flowid);
@@ -333,7 +339,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             return services;
         };
 
-        $scope.getEvents = function(scenes){
+        $scope.getEvents = function(scenes, relations){
             let events = [];
 
             let event_list = $scope.getAllActionFromScenes(scenes, /^(.*?)Event$/, "StartNoneEvent");
@@ -483,12 +489,12 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 
             // 填写action内容（For运行）
             // service
-            let service = $scope.getServices(scenes);
+            let service = $scope.getServices(scenes, relations);
 
             jsonObj["action"]["service"] = service;
 
             // event
-            let event = $scope.getEvents(scenes);
+            let event = $scope.getEvents(scenes, relations);
 
             jsonObj["action"]["event"] = event;
 
