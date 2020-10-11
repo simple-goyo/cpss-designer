@@ -8,6 +8,33 @@ angular.module('activitiModeler')
 
     $rootScope.scenesRelations = {};
 
+    // 返回scene的总数
+    $scope.getNumberOfScene = function (){
+        return $rootScope.scenes.length;
+    };
+
+    $scope.getSceneIndexByAction = function (actionid){//actionshapeid
+        let scene_index = -1;
+
+        $scope.scenes.each(function (scene, index) {
+            if(scene.childShapes){
+                let len = scene.childShapes.length;
+                if (len) {
+                    for (let i = 0; i < len; i++){
+                        if (scene.childShapes[i].resourceId === actionid) {
+                            scene_index = index;
+                            return scene_index;
+                        }
+                    }
+                }
+            }
+        });
+
+        return scene_index;
+    };
+
+
+
     $scope.getScenes = function () {
         // id: "sid-0ABA3F8C-7725-4D35-8E22-D0CD74494EBC"
         // lastselectionOverrideIds: [""]
@@ -17,11 +44,11 @@ angular.module('activitiModeler')
         let currentscene = $scope.getSelectedSceneIndex();
         $scope.changeScene(currentscene); // 保存画布上的元素到当前scene中
 
-        return $scope.scenes;
+        return $rootScope.scenes;
     };
     
     $scope.getSceneRelations = function (){
-        return $scope.scenesRelations;
+        return $rootScope.scenesRelations;
     };
 
     $scope.storeSceneInfo = function () {
