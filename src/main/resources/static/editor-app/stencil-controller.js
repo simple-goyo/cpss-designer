@@ -776,6 +776,8 @@ angular.module('activitiModeler')
                         }
                     }
                 }
+                $rootScope.scenesRelations.childShapes = $scope.editor.getJSON().childShapes;
+                $rootScope.scenesRelations.sceneTree = $scope.getSceneTree();
                 $scope.adjustTraceableScenes();
             }
 
@@ -794,6 +796,8 @@ angular.module('activitiModeler')
                     }
                 }
                 $scope.deleteParametersInScene(shape.id);
+                $rootScope.scenesRelations.childShapes = $scope.editor.getJSON().childShapes;
+                $rootScope.scenesRelations.sceneTree = $scope.getSceneTree();
                 $scope.adjustTraceableScenes();
             }
 

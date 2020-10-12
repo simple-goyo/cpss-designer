@@ -15,18 +15,18 @@ angular.module('activitiModeler')
     const EndExclusiveGateway = "EndExclusiveGateway";
 
     // 返回scene的总数
-    $scope.getNumberOfScene = function (){
+    $scope.getNumberOfScene = function () {
         return $rootScope.scenes.length;
     };
 
-    $scope.getSceneIndexByAction = function (actionid){//actionshapeid
+    $scope.getSceneIndexByAction = function (actionid) {//actionshapeid
         let scene_index = -1;
 
         $scope.scenes.each(function (scene, index) {
-            if(scene.childShapes){
+            if (scene.childShapes) {
                 let len = scene.childShapes.length;
                 if (len) {
-                    for (let i = 0; i < len; i++){
+                    for (let i = 0; i < len; i++) {
                         if (scene.childShapes[i].resourceId === actionid) {
                             scene_index = index;
                             return scene_index;
@@ -38,8 +38,6 @@ angular.module('activitiModeler')
 
         return scene_index;
     };
-
-
 
 
     $scope.getScenes = function () {
@@ -54,8 +52,8 @@ angular.module('activitiModeler')
         return $rootScope.scenes;
     };
 
-    
-    $scope.getSceneRelations = function (){
+
+    $scope.getSceneRelations = function () {
         return $rootScope.scenesRelations;
     };
 
@@ -174,7 +172,7 @@ angular.module('activitiModeler')
             jQuery('#scenesRelationsShow').css('display', 'none');
             jQuery('#underlay-container').css('display', 'block');
             $rootScope.scenesRelations.childShapes = $scope.editor.getJSON().childShapes;
-            $rootScope.scenesRelations.sceneTree=$scope.getSceneTree();
+            $rootScope.scenesRelations.sceneTree = $scope.getSceneTree();
         }
     }
 
@@ -214,6 +212,38 @@ angular.module('activitiModeler')
         return undefined;
     }
 
+    /**
+     * tree:
+     * {
+     *     id:"sceneTreeRoot",
+     *     parent:null,
+     *     children:[
+     *         {
+     *            id:"scene1Id",
+     *            parent:[
+     *            sceneTreeRootNode
+     *            ],
+     *            children:[scene1IdNode]
+     *         },
+     *         {
+     *              id:"scene2Id",
+     *            parent:[
+     *            sceneTreeRootNode
+     *            ],
+     *            children:[scene2IdNode]
+     *         }
+     *     ]
+     * }
+     *
+     * node: {
+     *      id:overrideid,
+     *      parent:[],
+     *      children:[]
+     * }
+     *
+     * rootNode的parent为null
+     * */
+
     $scope.getSceneTree = function () {
         if ($scope.scenesRelations.childShapes && $scope.scenesRelations.childShapes.length > 0) {
             let shapeMap = new Map();
@@ -236,7 +266,7 @@ angular.module('activitiModeler')
                         let childId = children[i].id;
                         let childNode = treeNodes.get(childId);
                         if (childNode === undefined) {
-                            childNode = {id: id, parent: [], children: []}
+                            childNode = {id: childId, parent: [], children: []}
                         }
                         childNode.parent.push(node);
                         node.children.push(childNode);

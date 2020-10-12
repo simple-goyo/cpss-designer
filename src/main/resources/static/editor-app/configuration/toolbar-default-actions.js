@@ -39,6 +39,7 @@ KISBPM.TOOLBAR = {
 
                 } else if (services.$scope.selectedSceneIndex === -1) {
                     services.$rootScope.scenesRelations.childShapes = services.$scope.editor.getJSON().childShapes;
+                    services.$rootScope.scenesRelations.sceneTree=services.$scope.getSceneTree();
                 }
                 var modal = services.$modal({
                     backdrop: true,

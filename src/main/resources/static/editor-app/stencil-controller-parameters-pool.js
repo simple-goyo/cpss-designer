@@ -61,4 +61,20 @@ angular.module('activitiModeler')
         }
         return parameters;
     }
+
+    $rootScope.initializeParameterPool = function () {
+        $scope.parameterPool = new Map();
+        let actionPattern = /(.*?)Action/;
+        let eventPattern = /^(.*?)Event$/;
+        $rootScope.scenes.forEach((scene) => {
+            scene.childShapes.forEach((shape) => {
+                if (shape.stencil.id !== "UndefinedAction" && actionPattern.test(shape.stencil.id)) {
+                    $scope.insertParameters(scene.id, shape.properties['overrideid'], shape.properties['actionoutputstatus'])
+                } else if (shape.stencil.id !== "StartNoneEvent" && eventPattern.test(shape.stencil.id)) {
+                    $scope.insertParameters(scene.id, shape.properties['overrideid'], shape.properties['actionoutputstatus'])
+                }
+            });
+        });
+        console.log($scope.parameterPool);
+    }
 }

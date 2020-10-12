@@ -111,6 +111,8 @@ activitiModeler
                         initJson.model.childShapes = $rootScope.scenesRelations.childShapes;
                     }
 
+                    $rootScope.initializeParameterPool();
+
                     if ($rootScope.editor) {
                         jQuery(".ORYX_Editor").remove();
                     }
