@@ -215,6 +215,8 @@ var SaveSceneCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 
 var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
     function ($rootScope, $scope, $http, $route, $location) {
+        $scope.scenes = [];
+
         let modelMetaData = $scope.editor.getModelMetaData();
         console.log($rootScope.editor);
         let description = '';
@@ -234,6 +236,9 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         $scope.export = function () {
             let scenes = $scope.getScenes();
             let relations = $scope.getSceneRelations();
+            delete relations.img;
+            $scope.scenes = scenes;
+            $scope.getSceneIndexByAction("");
             $scope.createModelFile(scenes, relations);
         };
 
@@ -262,9 +267,90 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 }
             }
             return undefined;
+        };
+
+        $scope.getActionbyId = function (actionid) {
+            let nodes = $scope.editor.getCanvas().getChildNodes(true);
+            for(let i=0;i<nodes.length;i++){
+                if(actionid === nodes[i].resourceId){
+                    return nodes[i];
+                }
+            }
+            return undefined;
         }
 
-        $scope.getOutgoingAction = function (outgoing, relations) {
+        // 返回Scene中第一个Action
+        $scope.getFirstActionFromSceneByIndex = function (index) {
+            let childShapes = $rootScope.scenes[index].childShapes;
+            // get StartNoneEvent ID
+            return $scope.getFirstActionFromScene(childShapes);
+        }
+
+        $scope.getFirstActionFromScene = function (childShapes) {
+            for(let i=0;childShapes!== undefined && i<childShapes.length;i++){
+                if(childShapes[i].stencil.id === "StartNoneEvent"){
+                    // get NextAction
+                    let edgeid = childShapes[i].outgoing[0].resourceId;
+                    for(let j=0;j<childShapes.length;j++){
+                        if(childShapes[j].resourceId === edgeid){
+                            let edge = childShapes[j];
+                            return edge.outgoing[0].resourceId;
+                        }
+                    }
+                }
+            }
+            return undefined;
+        }
+        $scope.getOutgoingShapeById = function (relations, sceneid){
+            let retn = undefined;
+            relations.childShapes.each(function (shape) {
+                if(shape.properties["overrideid"] === sceneid || shape.resourceId === sceneid )
+                    retn = shape;
+            });
+
+            return retn;
+        }
+
+        // $scope.getEdgeFromRelations = function(relations, edgeid){
+        //     let retn = undefined;
+        //     console.log('edgeid'+edgeid);
+        //     relations.childShapes.each(function (shape) {
+        //         console.log(shape);
+        //     });
+        //
+        //     return retn;
+        // }
+
+        $scope.getSceneIndexByAction = function (actionid){//actionshapeid
+            let scene_index = -1;
+            $scope.scenes.each(function (scene, index) {
+                if(scene.childShapes){
+                    let len = scene.childShapes.length;
+                    if (len) {
+                        for (let i = 0; i < len; i++){
+                            if (scene.childShapes[i].resourceId === actionid) {
+                                scene_index = index;
+                                return scene_index;
+                            }
+                        }
+                    }
+                }
+            });
+            return scene_index;
+        }
+
+        $scope.getSceneIndexById = function (sceneid){
+            let scene_index = -1;
+            $scope.scenes.each(function (scene, index) {
+                if(scene.id === sceneid){
+                    scene_index = index;
+                }
+            });
+            return scene_index;
+        }
+
+        // 返回下一个Action节点 {"id":"", "to":"", "condition":""}
+        $scope.getOutgoingAction = function (service, outgoing, relations) {
             if(outgoing.length > 0){
                 // 有outgoing线,分两种情况，一种是事件，一种是Action
                 let flow_tempate = {"id":"","to":"","condition":""};
@@ -276,7 +362,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 // oryx-type: "http://b3mn.org/stencilset/bpmn2.0#SequenceEventFlow"
                 if(edge !== undefined && edge.hiddenProperties["oryx-type"] === "http://b3mn.org/stencilset/bpmn2.0#SequenceEventFlow"){
                     // 事件流
-                    console.log("事件流");
+                    console.log("事件流,不加入flow中");
                 }else{
                     flow_tempate["id"] = flowid;
                     flow_tempate["to"] = edge.outgoing[0].resourceId;
@@ -284,9 +370,38 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 return flow_tempate;
             }else{
                 // Action没有outgoing线，表示当前scene结束
-                // 下一个节点可能是gateway，也可能是scene，也可能没有
+                // 下一个节点可能是gateway，也可能是scene，也可能是最终节点
                 let flow_tempate = {"id":"","to":"","condition":""};
-                // relations.childShapes
+                let scene_index = $scope.getSceneIndexByAction(service.resourceId);
+
+                let sceneNum = $scope.getNumberOfScene();
+                if(scene_index === sceneNum - 1){
+                    // 最后一个scene
+                    // do nothing
+                }else{
+                    // 获取下一个node————gateway或scene，node和node之间存在edge
+                    let this_scene = $scope.scenes[scene_index];
+                    let next_scene = $scope.scenes[scene_index + 1];
+
+                    let shape = $scope.getOutgoingShapeById(relations, this_scene.id);
+                    let edgeid = shape.outgoing[0].resourceId;
+
+                    let edge = $scope.getOutgoingShapeById(relations, edgeid);
+                    let next_node = $scope.getOutgoingShapeById(relations, edge.outgoing[0].resourceId);
+
+                    if(next_scene.id === next_node["properties"].overrideid){
+                        // scene，获取scene中第一个action的id
+                        let actionid = $scope.getFirstActionFromSceneByIndex(scene_index + 1);
+                        flow_tempate["id"] = edgeid;
+                        flow_tempate["to"] = actionid;
+                    }else{
+                        // gateway，直接给出gateway的id
+                        let gatewayid = next_node.resourceId;
+                        flow_tempate["id"] = edgeid;
+                        flow_tempate["to"] = gatewayid;
+                    }
+
+                }
                 return flow_tempate;
             }
         }
@@ -319,7 +434,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 let output = service.properties["output"];
                 // flow
 
-                let flow = $scope.getOutgoingAction(service.outgoing, relations);
+                let flow = $scope.getOutgoingAction(service, service.outgoing, relations);
                 // if(service.outgoing.length){
                 //    flowid = service.outgoing[0].resourceId;
                 //    flowto = $scope.getOutgoingAction(flowid);
@@ -374,10 +489,11 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 let flowid = "";
                 let flowto = "";
 
-                if(event.outgoing.length){
-                    flowid = event.outgoing[0].resourceId;
-                    flowto = $scope.getOutgoingAction(flowid);
-                }
+                let flow = $scope.getOutgoingAction(event, event.outgoing, relations);
+                // if(event.outgoing.length){
+                //     flowid = event.outgoing[0].resourceId;
+                //     flowto = $scope.getOutgoingAction(flowid);
+                // }
 
                 event_template["id"] = id;
                 event_template["name"] = name;
@@ -385,7 +501,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 event_template["type"] = type;
                 event_template["input"] = input;
                 event_template["output"] = output;
-                event_template["flow"] = {"id":flowid,"to":flowto,"condition":""};
+                event_template["flow"] = flow;
                 events.push(event_template);
             })
             console.log("events"+events);
@@ -393,51 +509,95 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         };
 
         $scope.getGateways = function(scenes, relations){
-            // let gateways = [];
-            // let gateway_list = $scope.getAllActionFromScenes(scenes, /Gateway|EntryPoint|ExitPoint/);
-            // gateway_list.forEach(function (gateway) {
-            //     let gateway_template = {
-            //         "id":"aaaaa-14",
-            //         "name":"决策",
-            //         "type":"fork",//join
-            //         "input":"[Order]",
-            //         "output":"[Order]",
-            //         "flow":{
-            //             "id":"fffff-1",
-            //             "to":[
-            //                 "aaaaa-4",
-            //                 "aaaaa-5",
-            //                 "aaaaa-6"
-            //             ],
-            //             "condition":[
-            //                 "Order.content==coffee",
-            //                 "Order.content==print",
-            //                 "Order.content==project"
-            //             ]
-            //         }
-            //     };
-            //     console.log(gateway);
-            //
-            // })
-
+            let gateways = [];
             if(relations.childShapes){
                 let gateway_patten = /(.*?)Gateway/;
                 let flow_patten = /(.*?)Flow/;
                 let tmp = relations.childShapes;
                 tmp.each(function (relation) {
-                    // console.log("relation " + relation);
-                    if(flow_patten.test(relation.stencil.id)){
-                        // 取出所有的flow
-                        console.log("flow " + relation);
-                    }
                     if(gateway_patten.test(relation.stencil.id)){
-                        console.log("gateway " + relation);
+                        let gateway_template = {
+                            "id":"",
+                            "name":"",
+                            "type":"",
+                            "flow":{
+                                "id":"",
+                                "to" : []
+                            }
+                        };
+                        gateway_template["id"] = relation.resourceId;
+                        gateway_template["name"] = relation.properties["name"];
+                        let type = relation.stencil.id;
+                        let flow = {
+                            "id":"",
+                            "to":[]
+                        };
+
+                        if(/Start(.*?)Gateway/.test(type)) {
+                            gateway_template["type"] = "fork";
+                        }else {
+                            gateway_template["type"] = "join";
+                        }
+
+                        if(/Start(.*?)Gateway/.test(type)){
+                            for(let i=0;i<relation.outgoing.length;i++){
+                                let flowto = {
+                                    "id":"",
+                                    "condition":""
+                                };
+
+                                let edgeid = relation.outgoing[i].resourceId;
+                                let edge = $scope.getOutgoingShapeById(relations, edgeid);
+                                let _scene = $scope.getOutgoingShapeById(relations, edge.outgoing[0].resourceId);
+                                // scene 的id转换
+                                let _sceneid = _scene.properties["overrideid"];
+                                let sceneIndex = $scope.getSceneIndexById(_sceneid);
+                                let actionid = $scope.getFirstActionFromSceneByIndex(sceneIndex);
+                                if(actionid !== undefined){
+                                    flowto["id"] = actionid;
+                                }
+
+                                if(relation.properties["exclusivedefinition"] === "true"){
+                                    // todo 如果是条件网关，还需要要设置条件
+                                    flowto["condition"] = "true";
+                                }else {
+                                    flowto["condition"] = "true";
+                                }
+                                flow["to"].push(flowto);
+                            }
+                            gateway_template["flow"] = flow;
+                        }else{// End
+                            let flowto = {
+                                "id":"",
+                                "condition":""
+                            };
+                            let edgeid = relation.outgoing[0].resourceId;
+                            let edge = $scope.getOutgoingShapeById(relations, edgeid);
+                            let _scene = $scope.getOutgoingShapeById(relations, edge.outgoing[0].resourceId);
+                            // scene 的id转换
+                            let _sceneid = _scene.properties["overrideid"];
+                            let sceneIndex = $scope.getSceneIndexById(_sceneid);
+                            let actionid = $scope.getFirstActionFromSceneByIndex(sceneIndex);
+                            if(actionid !== undefined){
+                                flowto["id"] = actionid;
+                            }
+
+                            if(relation.properties["exclusivedefinition"] === "true"){
+                                // todo 如果是条件网关，还需要要设置条件
+                                flowto["condition"] = "true";
+                            }else {
+                                flowto["condition"] = "true";
+                            }
+                            flow["to"].push(flowto);
+                            gateway_template["flow"] = flow;
+                        }
+                        gateways.push(gateway_template);
                     }
+
                 })
 
             }
-            //console.log("gateways"+gateways);
-            return "gateways";
+            return gateways;
         };
 
         $scope.getConstraints = function(scenes){
