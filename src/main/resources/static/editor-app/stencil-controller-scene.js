@@ -8,6 +8,12 @@ angular.module('activitiModeler')
 
     $rootScope.scenesRelations = {};
 
+    const MessageSceneFlow = "MessageSceneFlow";
+    const StartParallelGateway = "StartParallelGateway";
+    const EndParallelGateway = "EndParallelGateway";
+    const StartExclusiveGateway = "StartExclusiveGateway";
+    const EndExclusiveGateway = "EndExclusiveGateway";
+
     $scope.getScenes = function () {
         // id: "sid-0ABA3F8C-7725-4D35-8E22-D0CD74494EBC"
         // lastselectionOverrideIds: [""]
@@ -19,8 +25,8 @@ angular.module('activitiModeler')
 
         return $scope.scenes;
     };
-    
-    $scope.getSceneRelations = function (){
+
+    $scope.getSceneRelations = function () {
         return $scope.scenesRelations;
     };
 
@@ -139,6 +145,7 @@ angular.module('activitiModeler')
             jQuery('#scenesRelationsShow').css('display', 'none');
             jQuery('#underlay-container').css('display', 'block');
             $rootScope.scenesRelations.childShapes = $scope.editor.getJSON().childShapes;
+            $rootScope.scenesRelations.sceneTree=$scope.getSceneTree();
         }
     }
 
@@ -178,5 +185,61 @@ angular.module('activitiModeler')
         return undefined;
     }
 
+    $scope.getSceneTree = function () {
+        if ($scope.scenesRelations.childShapes && $scope.scenesRelations.childShapes.length > 0) {
+            let shapeMap = new Map();
+            for (let i = 0; i < $scope.scenesRelations.childShapes.length; i++) {
+                let shape = $scope.scenesRelations.childShapes[i];
+                shapeMap.set(shape.resourceId, shape);
+            }
+            let tree = {id: "sceneTreeRoot", parent: null, children: []};
+            let treeNodes = new Map();
+            shapeMap.forEach((shape) => {
+                if (shape.stencil.id === "scene") {
+                    let children = $scope.getChildren(shapeMap, shape);
+                    let id = shape.properties['overrideid'];
+                    let node = treeNodes.get(id);
+                    if (node === undefined) {
+                        node = {id: id, parent: [], children: []};
+                    }
+
+                    for (let i = 0; i < children.length; i++) {
+                        let childId = children[i].id;
+                        let childNode = treeNodes.get(childId);
+                        if (childNode === undefined) {
+                            childNode = {id: id, parent: [], children: []}
+                        }
+                        childNode.parent.push(node);
+                        node.children.push(childNode);
+                        treeNodes.set(childId, childNode);
+                    }
+                    treeNodes.set(id, node);
+                }
+            });
+            treeNodes.forEach((node) => {
+                if (node.parent.length === 0) {
+                    tree.children.push(node);
+                }
+            });
+            return tree;
+        }
+    }
+
+    $scope.getChildren = function (shapeMap, shape) {
+        let children = [];
+        for (let i = 0; i < shape.outgoing.length; i++) {
+            let child = shapeMap.get(shape.outgoing[i].resourceId);
+            if (child !== undefined && child.stencil.id === MessageSceneFlow) {
+                children = children.concat($scope.getChildren(shapeMap, child));
+            } else if (child !== undefined &&
+                (child.stencil.id === StartParallelGateway || child.stencil.id === EndParallelGateway ||
+                    child.stencil.id === StartExclusiveGateway || child.stencil.id === EndExclusiveGateway)) {
+                children = children.concat($scope.getChildren(shapeMap, child));
+            } else if (child !== undefined && child.stencil.id === "scene") {
+                children.push({id: child.properties['overrideid']});
+            }
+        }
+        return children;
+    }
 
 };
