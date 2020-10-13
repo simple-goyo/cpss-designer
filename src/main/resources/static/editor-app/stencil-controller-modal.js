@@ -17,7 +17,7 @@ angular.module('activitiModeler')
         $modal(opts);
     };
 
-    $scope.selectControlNodeType = function (from,edge) {
+    $scope.selectControlNodeType = function (from, edge) {
         $scope.sceneFrom = from;
         $scope.sceneEdge = edge;
         var opts = {
@@ -46,11 +46,19 @@ angular.module('activitiModeler')
         $modal(opts);
     }
 
-    $scope.setShapeName= function () {
+    $scope.setShapeName = function () {
         var opts = {
-            template:  'editor-app/configuration/properties/propertyInitPopup.html?version=' + Date.now(),
+            template: 'editor-app/configuration/properties/propertyInitPopup.html?version=' + Date.now(),
             scope: $scope
         };
         $modal(opts);
     };
+
+    $scope.setEntitySpecificProperties = function () {
+        var opts = {
+            template: 'editor-app/popup/entity-specific-properties.html?version=' + Date.now(),
+            scope: $scope
+        };
+        $modal(opts);
+    }
 }

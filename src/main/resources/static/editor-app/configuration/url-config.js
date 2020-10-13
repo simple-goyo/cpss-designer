@@ -20,24 +20,29 @@ var KISBPM = KISBPM || {};
 
 KISBPM.URL = {
 
-    getModel: function(modelId) {
+    getModel: function (modelId) {
         return ACTIVITI.CONFIG.contextRoot + '/model/' + modelId + '/json';
     },
 
-    getStencilSet: function() {
+    getStencilSet: function () {
         return ACTIVITI.CONFIG.contextRoot + '/editor/stencilset?version=' + Date.now();
     },
 
-    putModel: function(modelId) {
+    putModel: function (modelId) {
         return ACTIVITI.CONFIG.contextRoot + '/model/' + modelId + '/save';
     },
 
-    getResources: function(){
+    getResources: function () {
         return ACTIVITI.CONFIG.contextRoot + '/resources?version=' + Date.now();
     },
 
     getResourceDetails: function (resName) {
-        return ACTIVITI.CONFIG.contextRoot + '/'+resName+'/funcs';
+        return ACTIVITI.CONFIG.contextRoot + '/' + resName + '/funcs';
+    },
+
+    getEntitySpecificProperties: function (resName) {
+        return ACTIVITI.CONFIG.contextRoot + '/' + resName + '/properties';
     }
+
 
 };

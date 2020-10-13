@@ -369,6 +369,18 @@ angular.module('activitiModeler')
 
             angular.module('activitiModeler').WorkerClass($rootScope, $scope);
 
+            /**
+             * Listen to double clicked events
+             * */
+            $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_DBLCLICK, function (event) {
+                let selectedShape = $scope.editor.getSelection()[0];
+                if (selectedShape.properties['oryx-entityspecificproperties']) {
+                    $scope.setEntitySpecificProperties();
+                    return true;
+                }
+
+
+            });
 
             /*
              * Listen to selection change events: show properties
@@ -1188,13 +1200,13 @@ angular.module('activitiModeler')
             }
         });
 
-        // $scope.addScene = function () {
-        //     var opts = {
-        //         template: 'editor-app/popups/scene-create.html?version=' + Date.now(),
-        //         scope: $scope
-        //     };
-        //     $modal(opts);
-        // }
+// $scope.addScene = function () {
+//     var opts = {
+//         template: 'editor-app/popups/scene-create.html?version=' + Date.now(),
+//         scope: $scope
+//     };
+//     $modal(opts);
+// }
 
         $scope.setSelectedSceneIndex = function (index) {
             $scope.selectedSceneIndex = index;
@@ -1240,7 +1252,7 @@ angular.module('activitiModeler')
                         $rootScope.scenesRelations.img = screenshot.toDataURL("image/jpeg");
                     }
                 });
-            }catch (e) {
+            } catch (e) {
                 console.log(e);
             }
 
@@ -1249,7 +1261,8 @@ angular.module('activitiModeler')
         angular.module('activitiModeler').SceneClass($rootScope, $scope);
         angular.module('activitiModeler').ActionSeqClass($rootScope, $scope, $timeout);
 
-    }]);
+    }])
+;
 
 
 var KISBPM = KISBPM || {};

@@ -4,11 +4,24 @@
   "description": "BPMN process editor",
   "propertyPackages": [
     {
+      "name": "entityspecificpropertiespackage",
+      "properties": [
+        {
+          "id": "entityspecificproperties",
+          "type": "complex",
+          "title": "特定实体的属性",
+          "value": "",
+          "description": "特定实体的属性",
+          "popular": true
+        }
+      ]
+    },
+    {
       "name": "traceablescenespackage",
       "properties": [
         {
           "id": "traceablescenes",
-          "type": "String",
+          "type": "complex",
           "title": "可回溯到的场景",
           "value": "",
           "description": "可回溯到的场景",
@@ -21,7 +34,7 @@
       "properties": [
         {
           "id": "traceableactions",
-          "type": "String",
+          "type": "complex",
           "title": "可回溯到的服务",
           "value": "",
           "description": "可回溯到的服务",
@@ -34,7 +47,7 @@
       "properties": [
         {
           "id": "gatewaycompany",
-          "type": "String",
+          "type": "complex",
           "title": "控制节点对应的控制节点的ID",
           "value": "",
           "description": "控制节点的起始对应",
@@ -1311,7 +1324,8 @@
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
-        "referenceentitypackage"
+        "referenceentitypackage",
+        "entityspecificpropertiespackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1344,7 +1358,8 @@
         "resourcespackage",
         "servicespackage",
         "workercontainspackage",
-        "referenceentitypackage"
+        "referenceentitypackage",
+        "entityspecificpropertiespackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1377,7 +1392,8 @@
         "resourcespackage",
         "servicespackage",
         "workercontainspackage",
-        "referenceentitypackage"
+        "referenceentitypackage",
+        "entityspecificpropertiespackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1408,7 +1424,8 @@
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
-        "referenceentitypackage"
+        "referenceentitypackage",
+        "entityspecificpropertiespackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1440,7 +1457,8 @@
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
-        "referenceentitypackage"
+        "referenceentitypackage",
+        "entityspecificpropertiespackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1472,7 +1490,8 @@
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
-        "referenceentitypackage"
+        "referenceentitypackage",
+        "entityspecificpropertiespackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1504,7 +1523,8 @@
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
-        "referenceentitypackage"
+        "referenceentitypackage",
+        "entityspecificpropertiespackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1535,7 +1555,8 @@
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
-        "referenceentitypackage"
+        "referenceentitypackage",
+        "entityspecificpropertiespackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1566,7 +1587,8 @@
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
-        "referenceentitypackage"
+        "referenceentitypackage",
+        "entityspecificpropertiespackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1597,7 +1619,8 @@
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
-        "referenceentitypackage"
+        "referenceentitypackage",
+        "entityspecificpropertiespackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1628,7 +1651,8 @@
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
-        "referenceentitypackage"
+        "referenceentitypackage",
+        "entityspecificpropertiespackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1659,7 +1683,8 @@
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
-        "nodeconditionpackage"
+        "nodeconditionpackage",
+        "entityspecificpropertiespackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [

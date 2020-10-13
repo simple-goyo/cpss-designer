@@ -140,11 +140,25 @@ KISBPM.PROPERTY_CONFIG =
             "readModeTemplateUrl": null,
             "writeModeTemplateUrl": null
         },
-        "oryx-nodecondition-complex":{
+        "oryx-nodecondition-complex": {
             "readModeTemplateUrl": "editor-app/configuration/properties/node-condition-display-template.html",
             "writeModeTemplateUrl": "editor-app/configuration/properties/node-condition-write-template.html"
-        }, "oryx-referenceentity-complex":{
+        }, "oryx-referenceentity-complex": {
             "readModeTemplateUrl": "editor-app/configuration/properties/reference-entity-display-template.html",
             "writeModeTemplateUrl": "editor-app/configuration/properties/reference-entity-write-template.html"
+        }, "oryx-entityspecificproperties-complex": {
+            "readModeTemplateUrl": null,
+            "writeModeTemplateUrl": null
+        }, "oryx-traceablescenes-complex": {
+            "readModeTemplateUrl": null,
+            "writeModeTemplateUrl": null
+        }, "oryx-traceableactions-complex": {
+            "readModeTemplateUrl": null,
+            "writeModeTemplateUrl": null
+        }, "oryx-gatewaycompany-complex": {
+            "readModeTemplateUrl": null,
+            "writeModeTemplateUrl": null
         }
+
+
     };
