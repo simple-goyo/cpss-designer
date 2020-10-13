@@ -56,7 +56,7 @@ angular.module('activitiModeler')
 
     $scope.setEntitySpecificProperties = function () {
         var opts = {
-            template: 'editor-app/popup/entity-specific-properties.html?version=' + Date.now(),
+            template: 'editor-app/popups/entity-specific-properties.html?version=' + Date.now(),
             scope: $scope
         };
         $modal(opts);

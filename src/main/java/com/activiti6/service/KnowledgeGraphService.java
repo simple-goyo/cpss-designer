@@ -86,6 +86,12 @@ public class KnowledgeGraphService {
         return retnJSON;
     }
 
+
+    public static String getResourceProps(String resName){
+        // todo 与知识图谱接口对接
+        return "{\"properties\":[\"location\",\"state\",\"servTime\",\"privilege\"]}";
+    }
+
     // 获取指定资源类型的能力、事件等信息
     public static String getResourceDetails(String resName){
         final String KGURL = KG_URL+"getResourceDetails";
@@ -275,8 +281,10 @@ public class KnowledgeGraphService {
 //        List<String> attri = Arrays.asList("\"inputParameter\"", "\"outputParameter\"", "\"accessAddress\"", "\"methodType\"");
 //        getInstanceAttributes( attri, "makeCoffee_coffeeMaker_roomD2008");
 //        getOrgByLocation("roomD2008_InterdisciplineBuilding2");
-        String a = getResourceDetails("Orders");
-        System.out.println(a);
+//        String a = getResourceDetails("Orders");
+
+            String job = getResourceProps("123");
+        System.out.println(job);
 
 //            getResourceList();
         }catch (Exception e){

@@ -374,12 +374,9 @@ angular.module('activitiModeler')
              * */
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_DBLCLICK, function (event) {
                 let selectedShape = $scope.editor.getSelection()[0];
-                if (selectedShape.properties['oryx-entityspecificproperties']) {
+                if (selectedShape.properties['oryx-entityspecificproperties']!==undefined) {
                     $scope.setEntitySpecificProperties();
-                    return true;
                 }
-
-
             });
 
             /*

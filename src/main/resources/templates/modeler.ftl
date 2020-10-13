@@ -298,6 +298,7 @@
 <script src="editor-app/configuration/properties-node-condition-controller.js" type="text/javascript"></script>
 <script src="editor-app/popups/js/scene-create-controller.js" type="text/javascript"></script>
 <script src="editor-app/popups/js/constraint-controller.js" type="text/javascript"></script>
+<script src="editor-app/popups/js/entity-specific-properties-controller.js" type="text/javascript"></script>
 <script src="editor-app/popups/js/select-control-node-type-controller.js" type="text/javascript"></script>
 <script src="editor-app/popups/js/scene-line-node-condition-initial-controller.js" type="text/javascript"></script>
 <script src="editor-app/configuration/properties-reference-entity-controller.js" type="text/javascript"></script>

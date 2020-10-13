@@ -112,6 +112,19 @@ public class ModelGetResourcesFromKG {
         }
     }
 
+    @RequestMapping(value="{resName}/properties", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public String getResourceProperties(@PathVariable String resName) throws UnsupportedEncodingException {
+        String retnList = getResourceProps(resName);
+        InputStream resourceDetailsStream = new ByteArrayInputStream(retnList.getBytes("utf-8"));
+
+        try {
+            return IOUtils.toString(resourceDetailsStream, "utf-8");
+        } catch (Exception e) {
+            throw new ActivitiException("Error while loading resources", e);
+        }
+    }
+
     @RequestMapping(value="loc/{locName}/funcs", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
     public String getResourceByLoc(@PathVariable String locName) throws UnsupportedEncodingException {

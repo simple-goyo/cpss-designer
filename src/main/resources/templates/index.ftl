@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8"/>
     <title>人机物编程模型设计器</title>
-
+    <link rel="stylesheet" href="editor-app/libs/bootstrap_3.1.1/css/bootstrap.min.css"/>
 </head>
 <body>
 <h2>
     <a href='/create?name=activiti&key=123456'>绘制流程</a>
 </h2>
 <div>
-    <table width="100%">
+    <table width="100%" class="table">
         <tr>
             <td width="10%">模型编号</td>
             <td width="10%">版本</td>

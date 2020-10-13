@@ -4,15 +4,17 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;
                 </button>
-                <h2></h2>
+                <h2>设置{{resName}}的特定属性</h2>
             </div>
             <hr>
             <div class="modal-body" id="sceneSetting">
 
-                <div ng-repeat="property in properties" class="row" style="margin-top: 3%">
-                    <label for="{{property}}" class="col-xs-3" style="float: left">{{property}}</label>
-                    <input class="col-xs-9" style="border-radius: 5px;float:left" placeholder="请输入{{property}}" id="{{property}}">
+                <div ng-repeat-start="(id,value) in properties" class="row" style="margin-top: 3%">
+                    <label for="{{id}}" class="col-xs-3" style="float: left">{{id}}</label>
+                    <input class="col-xs-9" style="border-radius: 5px;float:left" value="{{value}}"
+                           placeholder="请输入{{id}}" id="{{id}}">
                 </div>
+                <div ng-repeat-end></div>
             </div>
             <div class="modal-footer">
                 <button ng-click="close()" class="btn btn-primary" translate>ACTION.CANCEL</button>
