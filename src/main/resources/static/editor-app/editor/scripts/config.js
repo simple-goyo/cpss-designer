@@ -304,8 +304,8 @@ ORYX.CONFIG.NAMESPACE_SVG =				"http://www.w3.org/2000/svg";
 ORYX.CONFIG.NAMESPACE_STENCILSET =  	"http://b3mn.org/stencilset/bpmn2.0#";
 
 /* UI */
-ORYX.CONFIG.CANVAS_WIDTH =				1200;
-ORYX.CONFIG.CANVAS_HEIGHT =				900;
+ORYX.CONFIG.CANVAS_WIDTH =				1000;
+ORYX.CONFIG.CANVAS_HEIGHT =				800;
 ORYX.CONFIG.CANVAS_RESIZE_INTERVAL =	100;
 ORYX.CONFIG.CANVAS_MIN_WIDTH =  800;
 ORYX.CONFIG.CANVAS_MIN_HEIGHT =  300;
@@ -508,3 +508,16 @@ ORYX.CONFIG.FORM_ELEMENT_TYPE_ROOT = 				'http://b3mn.org/stencilset/xforms#XFor
 ORYX.CONFIG.FORM_ELEMENT_TYPE_GROUP = 				'http://b3mn.org/stencilset/xforms#Group';
 ORYX.CONFIG.FORM_ELEMENT_TYPE_REPEATING_GROUP =		'http://b3mn.org/stencilset/xforms#RepeatingGroup';
 ORYX.CONFIG.FORM_ELEMENT_TYPE_LABEL_FIELD = 		'http://b3mn.org/stencilset/xforms#LabelField';
+
+/* 界面上的文字 中文版 */
+ORYX.CONFIG.CYBERSSPACE = "CyberSpace"; // 信息空间
+ORYX.CONFIG.SOCIALPHYSICALSPACE = "SocialPysicalSpace"; // 社会物理空间
+ORYX.CONFIG.INTERACTIONSEQUENCE = "InteractionSequence"; //交互序列
+ORYX.CONFIG.SCENE_THUMBNAIL = "Scene Thumbnail"; // 场景缩略图
+ORYX.CONFIG.SCENE = "Scene"; // 场景
+ORYX.CONFIG.SCENE_RELATION = "Scene Relation"; // 场景关系
+ORYX.CONFIG.ENTITY = "Entity"; // 实体
+ORYX.CONFIG.RESOURCE_ENTITY = "Resource Entity";
+ORYX.CONFIG.ENTITY_PROPERTY = "Entity Property";
+
+ORYX.CONFIG.TOOLNAME = "Modeling Tool for CPS Applications"; // 人机物融合应用建模工具

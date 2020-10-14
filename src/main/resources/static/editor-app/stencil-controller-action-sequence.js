@@ -120,7 +120,7 @@ angular.module('activitiModeler')
 
     $scope.__createExitNode = function ($rootScope, $scope) {
         let itemId = "ExitPoint";
-        let positionOffset = {x: 1150, y: 300};//初始节点的位置
+        let positionOffset = {x: ORYX.CONFIG.CANVAS_WIDTH - 44, y: 300};//初始节点的位置
 
         positionOffset.y = jQuery('#canvasSection').height() * 0.34;
 
