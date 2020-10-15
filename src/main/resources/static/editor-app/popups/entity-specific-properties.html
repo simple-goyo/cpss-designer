@@ -9,12 +9,60 @@
             <hr>
             <div class="modal-body" id="sceneSetting">
 
-                <div ng-repeat-start="(id,value) in properties" class="row" style="margin-top: 3%">
+                <div ng-if="bindDynamically!==true" ng-repeat-start="(id,value) in properties" class="row"
+                     style="margin-top: 3%">
                     <label for="{{id}}" class="col-xs-3" style="float: left">{{id}}</label>
-                    <input class="col-xs-9" style="border-radius: 5px;float:left" value="{{value}}"
+                    <input class="col-xs-9" style="border-radius: 5px;float:left" value="{{value.text}}"
                            placeholder="请输入{{id}}" id="{{id}}">
                 </div>
                 <div ng-repeat-end></div>
+
+                <div ng-if="bindDynamically===true" ng-repeat-start="(id,value) in properties" class="row"
+                     style="margin-top: 3%">
+                    <label class="col-xs-3" style="float: left">{{id}}:</label>
+                    <select class="col-xs-3" style="border-radius: 5px;float:left;margin-right: 5px" id="{{id}}_rule">
+                        <option value="" selected>请选择规则</option>
+                        <option ng-repeat="rule in rules" value="{{rule}}" ng-selected="value.rule===rule" >{{rule}}
+                        </option>
+                    </select>
+                    <select class="col-xs-5" style="border-radius: 5px;float:left" id="{{id}}_target_entity">
+                        <option value="" selected>请选择目标实体</option>
+                        <option ng-repeat="entity in entities"
+                                value="{{entity}}"  ng-selected="value.entity.id===entity.id">{{entity.name}}:{{entity.id}}
+                        </option>
+                    </select>
+                </div>
+<!--                <div ng-if="bindDynamically!==true" ng-repeat-start="(id,value) in properties" class="row"-->
+<!--                     style="margin-top: 3%">-->
+<!--                    <label for="{{id}}" class="col-xs-3" style="float: left">{{id}}</label>-->
+<!--                    <input ng-model="properties[id].text" class="col-xs-9" style="border-radius: 5px;float:left" value="{{value.text}}"-->
+<!--                           placeholder="请输入{{id}}" id="{{id}}">-->
+<!--                </div>-->
+<!--                <div ng-repeat-end></div>-->
+
+<!--                <div ng-if="bindDynamically===true" ng-repeat-start="(id,value) in properties" class="row"-->
+<!--                     style="margin-top: 3%">-->
+<!--                    <label class="col-xs-3" style="float: left">{{id}}:</label>-->
+<!--                    <select class="col-xs-3" style="border-radius: 5px;float:left;margin-right: 5px" id="{{id}}_rule" ng-model="properties[id].rule">-->
+<!--                        <option value="" selected>请选择规则</option>-->
+<!--                        <option ng-repeat="rule in rules" value="{{rule}}" ng-selected="value.rule===rule" >{{rule}}</option>-->
+<!--                    </select>-->
+<!--                    <select class="col-xs-5" style="border-radius: 5px;float:left" ng-model="properties[id].entity" id="{{id}}_target_entity">-->
+<!--                        <option value="" selected>请选择目标实体</option>-->
+<!--                        <option ng-repeat="entity in entities"-->
+<!--                                value="{{entity}}"  ng-selected="value.entity.id===entity.id">{{entity.name}}:{{entity.id}}-->
+<!--                        </option>-->
+<!--                    </select>-->
+<!--                </div>-->
+                <div ng-repeat-end></div>
+                <div>
+                    <label>
+                        <input type="radio" ng-model="bindDynamically" ng-value="true">动态绑定
+                    </label>
+                    <label>
+                        <input type="radio" ng-model="bindDynamically" ng-value="false">自主设定
+                    </label>
+                </div>
             </div>
             <div class="modal-footer">
                 <button ng-click="close()" class="btn btn-primary" translate>ACTION.CANCEL</button>
