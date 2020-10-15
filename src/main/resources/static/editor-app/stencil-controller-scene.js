@@ -216,20 +216,13 @@ angular.module('activitiModeler')
      * tree:
      * {
      *     id:"sceneTreeRoot",
-     *     parent:null,
      *     children:[
      *         {
      *            id:"scene1Id",
-     *            parent:[
-     *            sceneTreeRootNode
-     *            ],
      *            children:[scene1IdNode]
      *         },
      *         {
      *              id:"scene2Id",
-     *            parent:[
-     *            sceneTreeRootNode
-     *            ],
      *            children:[scene2IdNode]
      *         }
      *     ]
@@ -237,21 +230,22 @@ angular.module('activitiModeler')
      *
      * node: {
      *      id:overrideid,
-     *      parent:[],
      *      children:[]
      * }
      *
-     * rootNode的parent为null
      * */
 
     $scope.getSceneTree = function () {
         if ($scope.scenesRelations.childShapes && $scope.scenesRelations.childShapes.length > 0) {
             let shapeMap = new Map();
+            let tree = {id: "sceneTreeRoot", children: [], childrenIds: []};
             for (let i = 0; i < $scope.scenesRelations.childShapes.length; i++) {
                 let shape = $scope.scenesRelations.childShapes[i];
                 shapeMap.set(shape.resourceId, shape);
+                if (shape.stencil.id === "scene") {
+                    tree.childrenIds.push(shape.properties['overrideid']);
+                }
             }
-            let tree = {id: "sceneTreeRoot", parent: null, children: []};
             let treeNodes = new Map();
             shapeMap.forEach((shape) => {
                 if (shape.stencil.id === "scene") {
@@ -259,27 +253,31 @@ angular.module('activitiModeler')
                     let id = shape.properties['overrideid'];
                     let node = treeNodes.get(id);
                     if (node === undefined) {
-                        node = {id: id, parent: [], children: []};
+                        node = {id: id, children: []};
                     }
 
                     for (let i = 0; i < children.length; i++) {
                         let childId = children[i].id;
+                        let index = tree.childrenIds.indexOf(childId);
+                        if (index !== -1) {
+                            tree.childrenIds.splice(index, 1);
+                        }
                         let childNode = treeNodes.get(childId);
                         if (childNode === undefined) {
-                            childNode = {id: childId, parent: [], children: []}
+                            childNode = {id: childId, children: []}
                         }
-                        childNode.parent.push(node);
                         node.children.push(childNode);
                         treeNodes.set(childId, childNode);
                     }
                     treeNodes.set(id, node);
                 }
             });
-            treeNodes.forEach((node) => {
-                if (node.parent.length === 0) {
+            tree.childrenIds.forEach((id) => {
+                let node = treeNodes.get(id);
+                if (node !== undefined)
                     tree.children.push(node);
-                }
             });
+            delete tree.childrenIds;
             return tree;
         }
     }
