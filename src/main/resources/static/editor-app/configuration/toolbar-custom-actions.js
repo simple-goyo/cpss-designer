@@ -406,6 +406,11 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             }
         }
 
+        // 获取ExclusiveGateway中的条件
+        $scope.getGatewayCondition = function(actionid) {
+            return "true";
+        };
+
         $scope.getServices = function(scenes, relations){
             let services = [];
             let service_list = $scope.getAllActionFromScenes(scenes, /(.*?)Action/, "UndefinedAction");
@@ -559,7 +564,8 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 
                                 if(relation.properties["exclusivedefinition"] === "true"){
                                     // todo 如果是条件网关，还需要要设置条件
-                                    flowto["condition"] = "true";
+                                    let condition = $scope.getGatewayCondition(actionid);
+                                    flowto["condition"] = condition;
                                 }else {
                                     flowto["condition"] = "true";
                                 }
@@ -584,7 +590,8 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 
                             if(relation.properties["exclusivedefinition"] === "true"){
                                 // todo 如果是条件网关，还需要要设置条件
-                                flowto["condition"] = "true";
+                                let condition = $scope.getGatewayCondition(actionid);
+                                flowto["condition"] = condition;
                             }else {
                                 flowto["condition"] = "true";
                             }
