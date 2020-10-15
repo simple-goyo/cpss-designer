@@ -27,6 +27,9 @@
     <link rel="stylesheet" href="editor-app/css/bootstrap-select.min.css" type="text/css"/>
     <link rel="stylesheet" href="editor-app/css/animate.css" type="text/css"/>
 
+    <#--    约束视图-->
+    <link rel="stylesheet" href="constraint-viewer/css/font-awesome.min.css">
+    <link rel="stylesheet" href="constraint-viewer/css/neo4jd3.min.css?v=0.0.1">
 </head>
 <body>
 
@@ -303,6 +306,10 @@
 <script src="editor-app/popups/js/scene-line-node-condition-initial-controller.js" type="text/javascript"></script>
 <script src="editor-app/configuration/properties-reference-entity-controller.js" type="text/javascript"></script>
 <script src="editor-app/libs/html2canvas.js" type="text/javascript"></script>
+<#--约束视图-->
+<script src="constraint-viewer/js/d3.min.js"></script>
+<script src="constraint-viewer/js/neo4jd3.js?v=0.0.1"></script>
+
 <script type="text/javascript" src="https://unpkg.com/canvg@3.0.4/lib/umd.js"></script>
 </body>
 </html>

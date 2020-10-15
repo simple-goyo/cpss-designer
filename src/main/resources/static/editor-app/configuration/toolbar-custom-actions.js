@@ -41,6 +41,9 @@ var SaveSceneCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         modelJson["properties"]["documentation"] = description;
         modelJson.scenes = $rootScope.scenes;
         modelJson.selectedSceneIndex = $rootScope.selectedSceneIndex;
+        delete $rootScope.scenesRelations.img;
+        delete $rootScope.scenesRelations.sceneTree; // todo 删除sceneTree，临时解决不能保存问题
+        console.log($rootScope.scenesRelations);
         modelJson.scenesRelations = $rootScope.scenesRelations;
         modelJson = JSON.stringify(modelJson);
 
@@ -281,6 +284,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 
         // 返回Scene中第一个Action
         $scope.getFirstActionFromSceneByIndex = function (index) {
+            if(index < 0) return undefined;
             let childShapes = $rootScope.scenes[index].childShapes;
             // get StartNoneEvent ID
             return $scope.getFirstActionFromScene(childShapes);
@@ -407,8 +411,32 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         }
 
         // 获取ExclusiveGateway中的条件
-        $scope.getGatewayCondition = function(actionid) {
-            return "true";
+        $scope.getGatewayCondition = function(relations, gateway) {
+            let condition = [];
+            let outgoings = gateway.outgoing;
+            for(let i=0;i<outgoings.length;i++){
+                let condition_template = {"id":"","condition":""};
+
+                let edgeid = outgoings[i].resourceId;
+                let edge = $scope.getOutgoingShapeById(relations, edgeid);
+                let nextScene = edge.getOutgoingShapeById(relations, edge.outgoing[0].resourceId);
+                // scene 的id转换
+                let _sceneid = nextScene.properties["overrideid"];
+                let sceneIndex = $scope.getSceneIndexById(_sceneid);
+                let actionid = $scope.getFirstActionFromSceneByIndex(sceneIndex);
+
+                if(actionid !== undefined){
+                    condition_template["id"] = actionid;
+                }
+
+                let nodeConditions = edge.properties["nodecondition"].nodeConditions;
+                if(nodeConditions.length > 0){
+                    condition_template["condition"] = nodeConditions[0]; // todo 需要样例做测试
+                }
+
+                condition.push(condition_template);
+            }
+            return condition;
         };
 
         $scope.getServices = function(scenes, relations){
@@ -551,22 +579,21 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                                     "condition":""
                                 };
 
-                                let edgeid = relation.outgoing[i].resourceId;
-                                let edge = $scope.getOutgoingShapeById(relations, edgeid);
-                                let _scene = $scope.getOutgoingShapeById(relations, edge.outgoing[0].resourceId);
-                                // scene 的id转换
-                                let _sceneid = _scene.properties["overrideid"];
-                                let sceneIndex = $scope.getSceneIndexById(_sceneid);
-                                let actionid = $scope.getFirstActionFromSceneByIndex(sceneIndex);
-                                if(actionid !== undefined){
-                                    flowto["id"] = actionid;
-                                }
-
-                                if(relation.properties["exclusivedefinition"] === "true"){
-                                    // todo 如果是条件网关，还需要要设置条件
-                                    let condition = $scope.getGatewayCondition(actionid);
+                                if(/(.*?)ExclusiveGateway/.test(relation.stencil.id)){
+                                    // 如果是条件网关，还需要要设置条件
+                                    let condition = $scope.getGatewayCondition(relations, relation);
                                     flowto["condition"] = condition;
                                 }else {
+                                    let edgeid = relation.outgoing[i].resourceId;
+                                    let edge = $scope.getOutgoingShapeById(relations, edgeid);
+                                    let _scene = $scope.getOutgoingShapeById(relations, edge.outgoing[0].resourceId);
+                                    // scene 的id转换
+                                    let _sceneid = _scene.properties["overrideid"];
+                                    let sceneIndex = $scope.getSceneIndexById(_sceneid);
+                                    let actionid = $scope.getFirstActionFromSceneByIndex(sceneIndex);
+                                    if(actionid !== undefined){
+                                        flowto["id"] = actionid;
+                                    }
                                     flowto["condition"] = "true";
                                 }
                                 flow["to"].push(flowto);
@@ -588,9 +615,9 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                                 flowto["id"] = actionid;
                             }
 
-                            if(relation.properties["exclusivedefinition"] === "true"){
-                                // todo 如果是条件网关，还需要要设置条件
-                                let condition = $scope.getGatewayCondition(actionid);
+                            if(/(.*?)ExclusiveGateway/.test(relation.stencil.id)){
+                                // 如果是条件网关，还需要要设置条件
+                                let condition = $scope.getGatewayCondition(relations, actionid);
                                 flowto["condition"] = condition;
                             }else {
                                 flowto["condition"] = "true";
