@@ -10,7 +10,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>人机物流程设计器</title>
+    <title>人机物融合应用建模工具</title>
     <meta name="description" content="">
     <meta name="viewport"
           content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, width=device-width">

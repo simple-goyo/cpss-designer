@@ -276,8 +276,10 @@ activitiModeler
                         // 自适应修改canvas里面的元素
                         oryxEditor.height(totalAvailable);
                         // 获取resize前后窗口height和width的差异
-                        let currentHeight = jQuery(window).height();
-                        let currentWidth = jQuery(window).width();
+                        let currentHeight = canvas.height();// jQuery(window).height();
+                        let currentWidth = canvas.width();//jQuery(window).width();
+
+                        console.log(canvas.height());
                         let hDiff = currentHeight / lastHeight;
                         let wDiff = currentWidth / lastWidth;
                         lastHeight = currentHeight;
@@ -286,6 +288,46 @@ activitiModeler
                         if ($rootScope.editor === undefined) return;
                         let nodes = $rootScope.editor._canvas.nodes;
                         nodes.forEach(function (node, i) {
+                            if("http://b3mn.org/stencilset/bpmn2.0#ExitPoint" === node._stencil._jsonStencil.id) {
+                                // 出口节点
+                                let TopLeft = node.bounds.a;
+                                let sizeX = node.bounds.b.x - node.bounds.a.x;
+                                let sizeY = node.bounds.b.y - node.bounds.a.y;
+
+                                let newTL = {x: 0, y: 0};
+                                let newBR = {x: 0, y: 0};
+                                newTL.y = TopLeft.y * hDiff;
+                                newTL.x = ORYX.CONFIG.CANVAS_WIDTH - 80;
+                                newBR.y = newTL.y + sizeY;
+                                newBR.x = newTL.x + sizeX;
+
+                                node.bounds.a = newTL;
+                                node.bounds.b = newBR;
+
+                                node.refresh();
+                                return ;
+                            }
+                            // if("http://b3mn.org/stencilset/bpmn2.0#UndefinedAction" === node._stencil._jsonStencil.id){
+                            //     debugger;
+                            // }
+                            if(/(.*?)Action/.test(node._stencil._jsonStencil.id)){
+                                let TopLeft = node.bounds.a;
+                                let sizeX = node.bounds.b.x - node.bounds.a.x;
+                                let sizeY = node.bounds.b.y - node.bounds.a.y;
+
+                                let newTL = {x: 0, y: 0};
+                                let newBR = {x: 0, y: 0};
+                                newTL.y = TopLeft.y * hDiff;
+                                newTL.x = TopLeft.x * wDiff;
+                                newBR.y = newTL.y + sizeY;
+                                newBR.x = newTL.x + sizeX;
+
+                                node.bounds.a = newTL;
+                                node.bounds.b = newBR;
+
+                                node.refresh();
+                                return ;
+                            }
                             let TopLeft = node.bounds.a;
                             let sizeX = node.bounds.b.x - node.bounds.a.x;
                             let sizeY = node.bounds.b.y - node.bounds.a.y;
