@@ -89,7 +89,8 @@ public class KnowledgeGraphService {
 
     public static String getResourceProps(String resName){
         // todo 与知识图谱接口对接
-        return "{\"properties\":[\"location\",\"state\",\"servTime\",\"privilege\"]}";
+//        return "{\"properties\":[\"location\",\"state\",\"servTime\",\"privilege\"]}";
+        return "{\"properties\":[\"location\"]}";
     }
 
     // 获取指定资源类型的能力、事件等信息

@@ -1,16 +1,53 @@
 var ConstraintController = ['$scope','$rootScope','$http', function ($scope, $rootScope, $http) {
     $scope.entities = [];
     $scope.entities.push({id:"0",name:"User",icon:"socialentity/person.png"});
+    let data_tempelate = {
+        "results": [
+        {
+            "columns": ["user", "entity"],
+            "data": [
+                {
+                    "graph": {
+                        "nodes": [],
+                        "relationships": []
+                    }
+                }
+            ]
+        }
+    ],
+        "errors": []
+    };
 
     $scope.close = function (){
         $scope.$hide();
     }
 
     $scope.retreiveData = function () {
+        let node_tempelate = {
+                "id": "8",
+                "labels": ["Project"],
+                "properties": {
+                    "name": "neo4jd3",
+                    "title": "neo4jd3.js",
+                    "description": "Neo4j graph visualization using D3.js.",
+                    "url": "https://eisman.github.io/neo4jd3"
+                }
+            };
+        let relationships_tempelate = {
+            "id": "7",
+            "type": "DEVELOPES",
+            "startNode": "1",
+            "endNode": "8",
+            "properties": {
+                "from": 1470002400000
+            }
+        };
+
         return "neo4jData.json";
     }
 
     $scope.init = function () {
+        let neo4jData = $scope.retreiveData();
         let neo4jd3 = new Neo4jd3('#neo4jd3', {
             highlight: [
                 {
@@ -24,7 +61,7 @@ var ConstraintController = ['$scope','$rootScope','$http', function ($scope, $ro
                 }
             ],
             minCollision: 60,
-            neo4jDataUrl: 'constraint-viewer/json/neo4jData.json',
+            neo4jData: neo4jData,
             nodeRadius: 25,
             onRelationshipDoubleClick: function(relationship) {
                 console.log('double click on relationship: ' + JSON.stringify(relationship));
@@ -39,47 +76,3 @@ var ConstraintController = ['$scope','$rootScope','$http', function ($scope, $ro
         $scope.init();
     }.bind(this), 500);
 }];
-// Neo4j_Data_Json = {
-//     "results": [
-//     {
-//         "columns": ["user", "entity"],
-//         "data": [
-//             {
-//                 "graph": {
-//                     "nodes": [
-//                         {
-//                             "id": "1",
-//                             "labels": ["User"],
-//                             "properties": {
-//                                 "userId": "eisman"
-//                             }
-//                         },
-//                         {
-//                             "id": "8",
-//                             "labels": ["Project"],
-//                             "properties": {
-//                                 "name": "neo4jd3",
-//                                 "title": "neo4jd3.js",
-//                                 "description": "Neo4j graph visualization using D3.js.",
-//                                 "url": "https://eisman.github.io/neo4jd3"
-//                             }
-//                         }
-//                     ],
-//                     "relationships": [
-//                         {
-//                             "id": "7",
-//                             "type": "DEVELOPES",
-//                             "startNode": "1",
-//                             "endNode": "8",
-//                             "properties": {
-//                                 "from": 1470002400000
-//                             }
-//                         }
-//                     ]
-//                 }
-//             }
-//         ]
-//     }
-// ],
-//     "errors": []
-// }

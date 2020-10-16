@@ -1684,6 +1684,7 @@
         "resourcespackage",
         "servicespackage",
         "nodeconditionpackage",
+        "referenceentitypackage",
         "entityspecificpropertiespackage"
       ],
       "hiddenPropertyPackages": [],
