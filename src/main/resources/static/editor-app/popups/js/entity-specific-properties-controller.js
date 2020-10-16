@@ -14,10 +14,7 @@ var EntitySpecificPropertiesController = ['$scope', '$rootScope', '$http', funct
                     if (shapes !== undefined && shapes.length > 0) {
                         shapes.forEach((shape) => {
                             let stencilId = shape.stencil.id;
-                            if (stencilId === "Person" || stencilId === "Person_Worker" || stencilId === "Group" || stencilId === "Organization"
-                                || stencilId === "PysicalObject" || stencilId === "Robot" || stencilId === "Device"
-                                || stencilId === "CloudApp" || stencilId === "MobileApp" || stencilId === "EmbeddedApp" || stencilId === "CyberObject"
-                                || stencilId === "Room") {
+                            if ($scope.isEntity(stencilId)) {
                                 relatedEntities.push({
                                     name: shape.properties["name"],
                                     id: shape.properties["overrideid"]
@@ -28,9 +25,26 @@ var EntitySpecificPropertiesController = ['$scope', '$rootScope', '$http', funct
                 }
             });
         }
+        $scope.editor.getJSON().childShapes.forEach((shape) => {
+            if (shape.properties["overrideid"] !== selectedShape.properties["oryx-overrideid"]) {
+                let stencilId = shapce.stencil.id;
+                if ($scope.isEntity(stencilId)) {
+                    relatedEntities.push({
+                        name: shape.properties["name"],
+                        id: shape.properties["overrideid"]
+                    });
+                }
+            }
+        })
         return relatedEntities;
     }
 
+    $scope.isEntity = function (stencilId) {
+        return stencilId === "Person" || stencilId === "Person_Worker" || stencilId === "Group" || stencilId === "Organization"
+            || stencilId === "PysicalObject" || stencilId === "Robot" || stencilId === "Device"
+            || stencilId === "CloudApp" || stencilId === "MobileApp" || stencilId === "EmbeddedApp" || stencilId === "CyberObject"
+            || stencilId === "Room";
+    }
 
     $scope.entities = $scope.getRelatedEntities();
     let olderProperties = selectedShape.properties['oryx-entityspecificproperties'];
