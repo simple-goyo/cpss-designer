@@ -27,7 +27,7 @@ var EntitySpecificPropertiesController = ['$scope', '$rootScope', '$http', funct
         }
         $scope.editor.getJSON().childShapes.forEach((shape) => {
             if (shape.properties["overrideid"] !== selectedShape.properties["oryx-overrideid"]) {
-                let stencilId = shapce.stencil.id;
+                let stencilId = shape.stencil.id;
                 if ($scope.isEntity(stencilId)) {
                     relatedEntities.push({
                         name: shape.properties["name"],
