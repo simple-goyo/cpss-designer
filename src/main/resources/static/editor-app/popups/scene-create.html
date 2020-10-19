@@ -4,13 +4,13 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;
                 </button>
-                <h2>新建场景</h2>
+                <h2 translate>SCENE.CREATE</h2>
             </div>
             <hr>
             <div class="modal-body" id="sceneSetting">
                 <div class="row">
-                    <label for="sceneName" class="col-xs-3" style="float: left">场景名：</label>
-                    <input id="sceneName" class="col-xs-9" style="border-radius: 5px;float: right" placeholder="请输入场景名称">
+                    <label for="sceneName" class="col-xs-3" style="float: left" translate>SCENE.NAME</label>
+                    <input id="sceneName" class="col-xs-9" style="border-radius: 5px;float: right" placeholder="{{'SCENE.NAME.PLACEHOLDER'| translate}}">
                 </div>
 <!--                <div class="row" style="margin-top:3%">-->
 <!--                    <label for="sceneType" class="col-xs-3" style="float: left">场景类型： </label>-->
@@ -21,7 +21,7 @@
 <!--                </div>-->
                 <div ng-repeat="property in properties" class="row" style="margin-top: 3%">
                     <label for="{{property}}" class="col-xs-3" style="float: left">{{property}}</label>
-                    <input class="col-xs-9" style="border-radius: 5px;float:left" placeholder="请输入{{property}}" id="{{property}}">
+                    <input class="col-xs-9" style="border-radius: 5px;float:left" placeholder="{{'SCENE.PROPERTY.INPUT.PLACEHOLDER'|translate}}{{property}}" id="{{property}}">
                 </div>
             </div>
             <div class="modal-footer">
