@@ -17,7 +17,7 @@
             <div class="modal-body" id="conditionInitial" style="height: 250px;overflow: scroll">
                 <div class="row" ng-repeat="nodeCondition in nodeConditions">
                     <select ng-if="$index>0" id="combination{{$index+1}}" style="width:15%;margin-right:1%">
-                        <option value="">请选择逻辑符号</option>
+                        <option value="">{{'SCENE.LINE.NODE.NODECONDITION' | translate}}</option>
                         <option ng-repeat="combination in combinations"
                                 ng-if="nodeCondition.combination==combination" value="{{combination}}" selected>{{combination}}
                         </option>
@@ -25,9 +25,9 @@
                                 ng-if="nodeCondition.combination!=combination" value="{{combination}}">{{combination}}
                         </option>
                     </select>
-                    <label for="property{{$index+1}}" style="width:10%">属性{{$index + 1}}</label>
+                    <label for="property{{$index+1}}" style="width:10%">{{'SCENE.LINE.NODE.PROPERTY'| translate}}{{$index + 1}}</label>
                     <select style="width:15%;margin-right:1%" id="property{{$index+1}}">
-                        <option value="">请选择属性</option>
+                        <option value="">{{'SCENE.LINE.NODE.PROPERTY.SELECT'| translate}}</option>
                         <option ng-repeat="property in properties" ng-if="property==nodeCondition.property"
                                 value="{{property}}" selected>{{property}}
                         </option>
@@ -36,9 +36,9 @@
                         </option>
                     </select>
 
-                    <label for="condition{{$index+1}}" style="width:10%">条件：</label>
+                    <label for="condition{{$index+1}}" style="width:10%">{{'SCENE.LINE.NODE.CONDITION' | translate}}</label>
                     <select style="width:15%;margin-right:1%" id="condition{{$index+1}}">
-                        <option value="">请选择条件</option>
+                        <option value="">{{'SCENE.LINE.NODE.CONDITION.SELECT'|translate}}</option>
                         <option ng-repeat="condition in conditions" ng-if="condition==nodeCondition.condition"
                                 value="{{condition}}" selected> {{condition}}
                         </option>
@@ -47,9 +47,9 @@
                         </option>
                     </select>
 
-                    <label for="value{{$index+1}}" style="width:10%">属性值：</label>
+                    <label for="value{{$index+1}}" style="width:10%">{{'SCENE.LINE.NODE.PROPERTY.LABEL'|translate}}</label>
                     <input id="value{{$index+1}}"
-                           style="border-radius: 5px;width:15%" value="{{nodeCondition.value}}" placeholder="请输入属性值">
+                           style="border-radius: 5px;width:15%" value="{{nodeCondition.value}}" placeholder="{{'SCENE.LINE.NODE.PROPERTY.PLACEHOLDER'|translate}}">
                     <hr>
                 </div>
             </div>

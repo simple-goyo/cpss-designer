@@ -8,7 +8,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <label for="controlNodeType" class="col-xs-3" style="float: left">控制节点类型</label>
+                    <label for="controlNodeType" class="col-xs-3" style="float: left">{{'CONTROLLER.NODE.TYPE'| translate}}</label>
                     <select id="controlNodeType" class="col-xs-9" style="border-radius: 5px;float: right"
                             ng-model="selectedControlNodeId">
                         <option ng-repeat="type in controlNodeType" value="{{type.id}}">{{type.name}}</option>

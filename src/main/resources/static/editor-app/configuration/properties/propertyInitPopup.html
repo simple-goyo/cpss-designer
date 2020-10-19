@@ -12,7 +12,7 @@
                     <div class="form-group">
                         <label class="col-xs-3" style="float: left" >{{'PROPERTY.SERVICES.RESOURCE.VALUE' | translate}}</label>
                         <select class="form-control col-xs-8" style="float: right" ng-model="selectedRes">
-                            <option value="" selected="selected">---请选择所需资源---</option>
+                            <option value="" selected="selected">{{'PROPERTY.SERVICES.RESOURCE.SELECT' | translate}}</option>
                             <option ng-repeat="x in resources" value="{{x.name}}">{{x.name}}</option>
                         </select>
                     </div>
