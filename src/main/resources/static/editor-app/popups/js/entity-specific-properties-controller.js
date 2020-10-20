@@ -60,11 +60,6 @@ var EntitySpecificPropertiesController = ['$scope', '$rootScope', '$http', funct
     $scope.entities = $scope.getRelatedEntities();
     $scope.data = $scope.getData();
     let olderProperties = selectedShape.properties['oryx-entityspecificproperties'];
-    if (olderProperties !== "" && olderProperties.bindDynamically !== undefined) {
-        $scope.bindDynamically = olderProperties.bindDynamically;
-    } else {
-        $scope.bindDynamically = false;
-    }
     $http({
         method: 'GET',
         url: KISBPM.URL.getEntitySpecificProperties($scope.resName)
@@ -73,7 +68,14 @@ var EntitySpecificPropertiesController = ['$scope', '$rootScope', '$http', funct
         if (data.properties !== undefined && data.properties.length > 0) {
             data.properties.forEach((property) => {
                 if (olderProperties === "" || olderProperties.properties === undefined || olderProperties.properties[property] === undefined) {
-                    $scope.properties[property] = {type: "entity", data: "", text: "", entity: "", rule: ""};
+                    $scope.properties[property] = {
+                        bindDynamically: false,
+                        type: "entity",
+                        data: "",
+                        text: "",
+                        entity: "",
+                        rule: ""
+                    };
                 } else
                     $scope.properties[property] = olderProperties.properties[property];
             });
@@ -84,7 +86,6 @@ var EntitySpecificPropertiesController = ['$scope', '$rootScope', '$http', funct
 
     $scope.save = function () {
         let entitySpecificProperties = {};
-        entitySpecificProperties.bindDynamically = $scope.bindDynamically;
         for (let property in $scope.properties) {
             if ($scope.properties[property].entity !== "") {
                 if ($scope.properties[property].entity.name === undefined)

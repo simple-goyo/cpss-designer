@@ -7,58 +7,61 @@
                 <h2>{{'ENTITY.SPECIAL.PROPERTY.TITLE' | translate}} {{resName}}</h2>
             </div>
             <div class="modal-body" id="sceneSetting">
-                <div>
-                    <label class="radio" style="display: inline-block;">
-                        <input type="radio" ng-model="bindDynamically"
-                               ng-value="true">{{'ENTITY.SPECIAL.PROPERTY.DYNAMIC' | translate}}
-                    </label>
-                    <label class="radio" style="display: inline-block;">
-                        <input type="radio" ng-model="bindDynamically"
-                               ng-value="false">{{'ENTITY.SPECIAL.PROPERTY.CUSTOM' | translate}}
-                    </label>
-                </div>
+                <div ng-repeat-start="(id,value) in properties">
+                    <div>
+                        <label class="radio" style="display: inline-block;">
+                            <input type="radio" ng-model="properties[id].bindDynamically"
+                                   ng-value="true">{{'ENTITY.SPECIAL.PROPERTY.DYNAMIC' | translate}}
+                        </label>
+                        <label class="radio" style="display: inline-block;">
+                            <input type="radio" ng-model="properties[id].bindDynamically"
+                                   ng-value="false">{{'ENTITY.SPECIAL.PROPERTY.CUSTOM' | translate}}
+                        </label>
+                    </div>
+                    <div ng-if="properties[id].bindDynamically!==true" class="row"
+                         style="margin-top: 3%">
+                        <label for="{{id}}" class="col-xs-3" style="float: left">{{id}}</label>
 
-                <div ng-if="bindDynamically!==true" ng-repeat-start="(id,value) in properties" class="row"
-                     style="margin-top: 3%">
-                    <label for="{{id}}" class="col-xs-3" style="float: left">{{id}}</label>
+                        <input ng-model="properties[id].text" class="col-xs-9" style="border-radius: 5px;float:left"
+                               placeholder="{{'ENTITY.SPECIAL.PROPERTY.INPUT.PLACEHOLDER' | translate}}{{id}}"
+                               id="{{id}}">
+                    </div>
 
-                    <input ng-model="properties[id].text" class="col-xs-9" style="border-radius: 5px;float:left"
-                           placeholder="{{'ENTITY.SPECIAL.PROPERTY.INPUT.PLACEHOLDER' | translate}}{{id}}" id="{{id}}">
+                    <div ng-if="properties[id].bindDynamically===true" class="row"
+                         style="margin-top: 3%">
+                        <label class="col-xs-2" style="float: left">{{id}}</label>
+                        <select class="col-xs-3" style="border-radius: 5px;float:left;margin-right: 5px"
+                                ng-model="properties[id].rule">
+                            <option value="" selected>{{'ENTITY.SPECIAL.PROPERTY.RULE.SELECT' | translate}}</option>
+                            <option ng-repeat="rule in rules" value="{{rule}}" ng-selected="value.rule===rule">{{rule}}
+                            </option>
+                        </select>
+                        <select class="col-xs-2" ng-model="properties[id].type"
+                                style="border-radius: 5px;float:left;margin-right: 5px">
+                            <option value="entity">{{'ENTITY.SPECIAL.PROPERTY.TYPE.ENTITY' | translate}}</option>
+                            <option value="data">{{'ENTITY.SPECIAL.PROPERTY.TYPE.DATA' | translate}}</option>
+                        </select>
+                        <select ng-if="properties[id].type==='data'" class="col-xs-4"
+                                style="border-radius: 5px;float:left"
+                                ng-model="properties[id].data">
+                            <option value="" selected>{{'ENTITY.SPECIAL.PROPERTY.TARGET.DATA' | translate}}</option>
+                            <option ng-repeat="ele in data" value="{{ele.name}}" ng-selected="ele.name===value.data">
+                                {{ele.name}}
+                            </option>
+                        </select>
+                        <select ng-if="properties[id].type==='entity'" class="col-xs-4"
+                                style="border-radius: 5px;float:left"
+                                ng-model="properties[id].entity">
+                            <option value="" selected>{{'ENTITY.SPECIAL.PROPERTY.TARGET.ENTITY' | translate}}</option>
+                            <option ng-repeat="entity in entities"
+                                    value="{{entity}}" ng-selected="entity.id===value.entity.id">
+                                {{entity.name}}:{{entity.id}}
+                            </option>
+                        </select>
+                    </div>
+                    <hr>
                 </div>
                 <div ng-repeat-end></div>
-
-                <div ng-if="bindDynamically===true" ng-repeat-start="(id,value) in properties" class="row"
-                     style="margin-top: 3%">
-                    <label class="col-xs-2" style="float: left">{{id}}</label>
-                    <select class="col-xs-3" style="border-radius: 5px;float:left;margin-right: 5px"
-                            ng-model="properties[id].rule">
-                        <option value="" selected>{{'ENTITY.SPECIAL.PROPERTY.RULE.SELECT' | translate}}</option>
-                        <option ng-repeat="rule in rules" value="{{rule}}" ng-selected="value.rule===rule">{{rule}}
-                        </option>
-                    </select>
-                    <select class="col-xs-2" ng-model="properties[id].type"
-                            style="border-radius: 5px;float:left;margin-right: 5px">
-                        <option value="entity">{{'ENTITY.SPECIAL.PROPERTY.TYPE.ENTITY' | translate}}</option>
-                        <option value="data">{{'ENTITY.SPECIAL.PROPERTY.TYPE.DATA' | translate}}</option>
-                    </select>
-                    <select ng-if="properties[id].type==='data'" class="col-xs-4" style="border-radius: 5px;float:left"
-                            ng-model="properties[id].data">
-                        <option value="" selected>{{'ENTITY.SPECIAL.PROPERTY.TARGET.DATA' | translate}}</option>
-                        <option ng-repeat="ele in data" value="{{ele.name}}" ng-selected="ele.name===value.data">
-                            {{ele.name}}
-                        </option>
-                    </select>
-                    <select ng-if="properties[id].type==='entity'" class="col-xs-4"
-                            style="border-radius: 5px;float:left"
-                            ng-model="properties[id].entity">
-                        <option value="" selected>{{'ENTITY.SPECIAL.PROPERTY.TARGET.ENTITY' | translate}}</option>
-                        <option ng-repeat="entity in entities"
-                                value="{{entity}}" ng-selected="entity.id===value.entity.id">{{entity.name}}:{{entity.id}}
-                        </option>
-                    </select>
-                </div>
-                <div ng-repeat-end></div>
-
             </div>
             <div class="modal-footer">
                 <button ng-click="close()" class="btn btn-primary" translate>ACTION.CANCEL</button>
