@@ -14,7 +14,7 @@
                         <div class="col-xs-9" ng-repeat="Service in entity.Services">
                             <select class="form-control" ng-model="selectedFunction"
                                     ng-change="changeFunction(selectedFunction)">
-                                <option value="{}" selected="selected">---请选择服务---</option>
+                                <option value="{}" selected="selected" translate>PROPERTY.SERVICES.SELECT.PLACEHOLDER</option>
                                 <option ng-repeat="x in functions" value="{{x}}">{{x.name}}</option>
                             </select>
                             <!--                            <i class="glyphicon glyphicon-minus clickable-property"-->
@@ -32,7 +32,7 @@
 
                             <select style="width:178px; position: absolute;left: 0"
                                     ng-model="$parent.modelInput[param]">
-                                <option selected>请选择{{param}}</option>
+                                <option selected>{{'PROPERTY.SERVICES.SELECT'|translate}}{{param}}</option>
                                 <option ng-repeat="parameter in visibleParameters" value="{{parameter.name}}">
                                     {{parameter.name}}
                                 </option>
@@ -40,7 +40,7 @@
 
                             <input type="text"
                                    style="width:160px;position:absolute;border: 0;border-radius: 5px;left: 2px;height: 16px;top:1px;"
-                                   placeholder="请输入{{param}}"
+                                   placeholder="{{'PROPERTY.SERVICES.INPUT'|translate}}{{param}}"
                                    id="{{param}}" ng-model="$parent.modelInput[param]">
                         </div>
                     </div>

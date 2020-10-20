@@ -4,10 +4,13 @@ var ThingGetOrLeaveController = ['$scope', '$modal', function ($scope, $modal) {
     $scope.thingCanLeave = [];
     var userShape = undefined;
     for (var i = 0; i < $scope.outputStatus.length; i++) {
-        if ($scope.outputStatus[i].type !== "用户" && $scope.outputStatus[i].type !== "工人") {
+        if ($scope.outputStatus[i].type !== "用户" && $scope.outputStatus[i].type !== "工人"||
+            $scope.outputStatus[i].type !== "User" && $scope.outputStatus[i].type !== "Worker") {
             $scope.thingCanLeave[$scope.thingCanLeave.length] = $scope.outputStatus[i];
-            if ($scope.thingCanLeave[$scope.thingCanLeave.length - 1].name === '咖啡机') {
+            if ($scope.thingCanLeave[$scope.thingCanLeave.length - 1].name === '咖啡机'){
                 $scope.thingCanLeave[$scope.thingCanLeave.length - 1].name = '咖啡';
+            }else if($scope.thingCanLeave[$scope.thingCanLeave.length - 1].name === 'CoffeeMaker') {
+                $scope.thingCanLeave[$scope.thingCanLeave.length - 1].name = 'coffee';
             }
         } else {
             userShape = $scope.getShapeById($scope.outputStatus[i].id);
@@ -16,10 +19,13 @@ var ThingGetOrLeaveController = ['$scope', '$modal', function ($scope, $modal) {
 
     $scope.thingCanGet = [];
     for (var i = 0; i < $scope.neibor.length; i++) {
-        if ($scope.neibor[i].type !== "用户" && $scope.neibor[i].type !== "工人") {
+        if ($scope.outputStatus[i].type !== "用户" && $scope.outputStatus[i].type !== "工人"||
+            $scope.outputStatus[i].type !== "User" && $scope.outputStatus[i].type !== "Worker") {
             $scope.thingCanGet[$scope.thingCanGet.length] = $scope.neibor[i];
             if ($scope.thingCanGet[$scope.thingCanGet.length - 1].name === '咖啡机') {
                 $scope.thingCanGet[$scope.thingCanGet.length - 1].name = '咖啡';
+            }else if($scope.thingCanGet[$scope.thingCanGet.length - 1].name === 'CoffeeMaker'){
+                $scope.thingCanGet[$scope.thingCanGet.length - 1].name = 'coffee';
             }
         }
     }

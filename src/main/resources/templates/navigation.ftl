@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8"/>
-    <title>人机物融合应用</title>
+    <title>CPSS Application Modeling Tool</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="editor-app/libs/bootstrap_3.1.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="css/navigation.css"/>
@@ -12,7 +12,7 @@
     <div class="row" ng-controller="NavbarCtrl">
         <nav class="navbar navbar-default" role="navigation">
             <div class="navbar-header">
-                <a class="navbar-brand" href="/" rel="external nofollow" >人机物融合应用平台</a>
+                <a class="navbar-brand" href="/" rel="external nofollow" >CPSS Application Platform</a>
             </div>
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav">

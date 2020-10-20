@@ -103,14 +103,14 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
         // this._drawUnderlay(X1, "4%", X2-X1,"22%", this.underlayNode,"信息社会物理空间");
 
 
-        this._drawUnderlay(X1, "4%", X2-X1,"67%", this.underlayNode,"信息空间");
+        this._drawUnderlay(X1, "4%", X2-X1,"67%", this.underlayNode,ORYX.CONFIG.CYBERSSPACE);
 
-        this._drawLine(X1, "22%", X2-X1+30,"22%", this.underlayNode,"社会物理空间");
+        this._drawLine(X1, "22%", X2-X1+30,"22%", this.underlayNode,ORYX.CONFIG.SOCIALPHYSICALSPACE);
 
         // 交互序列
-        this._drawUnderlay(X1, "80%", X2-X1,"20%", this.underlayNode,"交互序列");
+        this._drawUnderlay(X1, "80%", X2-X1,"20%", this.underlayNode,ORYX.CONFIG.INTERACTIONSEQUENCE);
 
-        this._drawUnderlay(X1,"4%",X2-X1,"87%",this.scenesRelationsShow,"场景关系")
+        this._drawUnderlay(X1,"4%",X2-X1,"87%",this.scenesRelationsShow,ORYX.CONFIG.SCENE_RELATION)
 
         this.node = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.rootNode,
             ['g', {},

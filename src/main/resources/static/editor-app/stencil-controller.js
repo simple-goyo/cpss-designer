@@ -31,6 +31,35 @@ angular.module('activitiModeler')
         // 最新的线两端
         $scope.latestfromto = {'from': undefined, 'to': undefined};
 
+        // 资源与人机物三种Action的对应（固定不变）
+        // const constTypeOfResource = [
+        //     {name: "设备", type: "PhysicalAction"},
+        //     {name: "物品", type: "PhysicalAction"},
+        //     {name: "机器人", type: "PhysicalAction"},
+        //     {name: "用户", type: "SocialAction"},
+        //     {name: "工人", type: "SocialAction"},
+        //     {name: "人群", type: "SocialAction"},
+        //     {name: "组织", type: "SocialAction"},
+        //     {name: "云应用", type: "CyberAction"},
+        //     {name: "移动应用", type: "CyberAction"},
+        //     {name: "嵌入式应用", type: "CyberAction"},
+        //     {name: "信息对象", type: "CyberAction"}
+        // ];
+
+        const constTypeOfResource = [
+            {name: "Device", type: "PhysicalAction"},
+            {name: "PysicalItem", type: "PhysicalAction"},
+            {name: "Robot", type: "PhysicalAction"},
+            {name: "User", type: "SocialAction"},
+            {name: "Worker", type: "SocialAction"},
+            {name: "Group", type: "SocialAction"},
+            {name: "Organization", type: "SocialAction"},
+            {name: "CloudApp", type: "CyberAction"},
+            {name: "MobileApp", type: "CyberAction"},
+            {name: "EmbeddedApp", type: "CyberAction"},
+            {name: "CyberEntity", type: "CyberAction"}
+        ];
+
         angular.module('activitiModeler').UIClass($rootScope, $scope, $timeout);
         angular.module('activitiModeler').RouterClass($rootScope, $scope);
         angular.module('activitiModeler').ModalClass($rootScope, $scope, $modal);
@@ -184,12 +213,12 @@ angular.module('activitiModeler')
                     }
                 }
 
-                var stencilVisibleGroup = ["社会实体", "信息实体", "物理实体", "空间实体", "节点列表"];
+                var stencilVisibleGroup = ["SocialEntity", "CyberEntity", "PhysicalEntity", "SpaceEntity"];
                 for (var i = 0; i < stencilItemGroups.length; i++) {
                     if (stencilItemGroups[i].paletteItems && stencilItemGroups[i].paletteItems.length === 0) {
                         stencilItemGroups[i].visible = false;
                     }
-                    // if (stencilItemGroups[i].name !== "社会实体" && stencilItemGroups[i].name !== "信息实体" && stencilItemGroups[i].name !== "物理实体") {
+                    // if (stencilItemGroups[i].name !== "SocialEntity" && stencilItemGroups[i].name !== "CyberEntity" && stencilItemGroups[i].name !== "PhysicalEntity") {
                     //     stencilItemGroups[i].visible = false;
                     // }
                     if (!stencilVisibleGroup.includes(stencilItemGroups[i].name)) {
@@ -290,7 +319,8 @@ angular.module('activitiModeler')
                     for (var i = 0; i < $scope.inputStatus.length; i++) {
                         var id = $scope.inputStatus[i].id;
                         var shape = $scope.getShapeById(id);
-                        if ($scope.inputStatus[i].type === "工人" || $scope.inputStatus[i].type === "用户") {
+                        if ($scope.inputStatus[i].type === "工人" || $scope.inputStatus[i].type === "用户" ||
+                            $scope.inputStatus[i].type === "Worker" || $scope.inputStatus[i].type === "User") {
                             userShape = shape;
                             userOriginPosition = $scope.inputStatus[i].position;
                         }
@@ -878,19 +908,6 @@ angular.module('activitiModeler')
             var resourceHeap = {};
 
             var getResourceIdbyType = function (type) {
-                // 资源与人机物三种Action的对应（固定不变）
-                var constTypeOfResource = [
-                    {name: "设备", type: "PhysicalAction"},
-                    {name: "物品", type: "PhysicalAction"},
-                    {name: "机器人", type: "PhysicalAction"},
-                    {name: "用户", type: "SocialAction"},
-                    {name: "工人", type: "SocialAction"},
-                    {name: "云应用", type: "CyberAction"},
-                    {name: "移动应用", type: "CyberAction"},
-                    {name: "嵌入式应用", type: "CyberAction"},
-                    {name: "信息对象", type: "CyberAction"}
-                ];
-
                 for (var i = 0; i < constTypeOfResource.length; i++) {
                     if (type === constTypeOfResource[i].name) {
                         return constTypeOfResource[i].type;

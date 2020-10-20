@@ -140,17 +140,32 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
     $scope.servicesDetails = [];
 
     // 资源与人机物三种Action的对应（固定不变）
+    // $scope.constTypeOfResource = [
+    //     {name: "设备", type: "PhysicalAction"},
+    //     {name: "物品", type: "PhysicalAction"},
+    //     {name: "机器人", type: "PhysicalAction"},
+    //     {name: "用户", type: "SocialAction"},
+    //     {name: "工人", type: "SocialAction"},
+    //     {name: "人群", type: "SocialAction"},
+    //     {name: "组织", type: "SocialAction"},
+    //     {name: "云应用", type: "CyberAction"},
+    //     {name: "移动应用", type: "CyberAction"},
+    //     {name: "嵌入式应用", type: "CyberAction"},
+    //     {name: "信息对象", type: "CyberAction"}
+    // ];
+
     $scope.constTypeOfResource = [
-        {name: "设备", type: "PhysicalAction"},
-        {name: "物品", type: "PhysicalAction"},
-        {name: "机器人", type: "PhysicalAction"},
-        {name: "用户", type: "SocialAction"},
-        {name: "工人", type: "SocialAction"},
-        {name: "组织", type: "SocialAction"},
-        {name: "云应用", type: "CyberAction"},
-        {name: "移动应用", type: "CyberAction"},
-        {name: "嵌入式应用", type: "CyberAction"},
-        {name: "信息对象", type: "CyberAction"}
+        {name: "Device", type: "PhysicalAction"},
+        {name: "PysicalItem", type: "PhysicalAction"},
+        {name: "Robot", type: "PhysicalAction"},
+        {name: "User", type: "SocialAction"},
+        {name: "Worker", type: "SocialAction"},
+        {name: "Group", type: "SocialAction"},
+        {name: "Organization", type: "SocialAction"},
+        {name: "CloudApp", type: "CyberAction"},
+        {name: "MobileApp", type: "CyberAction"},
+        {name: "EmbeddedApp", type: "CyberAction"},
+        {name: "CyberEntity", type: "CyberAction"}
     ];
 
     var selectedShapeActionType = undefined;
@@ -205,7 +220,7 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
     let res_entity = {"id": "", "name": "", "type": ""};
     if($scope.latestfromto["from"]){
         prop = $scope.latestfromto["from"].properties["oryx-type"];
-        if (prop && prop === "工人") {
+        if (prop && (prop === "工人" || prop === "worker")) {
             res_entity.id = $scope.latestfromto["from"].properties["oryx-overrideid"];
             res_entity.name = $scope.latestfromto["from"].properties["oryx-name"];
             res_entity.type = $scope.latestfromto["from"].properties["oryx-type"];

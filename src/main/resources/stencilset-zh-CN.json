@@ -9,7 +9,7 @@
         {
           "id": "entityspecificproperties",
           "type": "complex",
-          "title": "constraints",
+          "title": "特定实体的属性",
           "value": "",
           "description": "特定实体的属性",
           "popular": true
@@ -22,7 +22,7 @@
         {
           "id": "traceablescenes",
           "type": "complex",
-          "title": "traceablescenes",
+          "title": "可回溯到的场景",
           "value": "",
           "description": "可回溯到的场景",
           "popular": true
@@ -61,7 +61,7 @@
         {
           "id": "referenceentity",
           "type": "complex",
-          "title": "referencedEntity",
+          "title": "引用实体",
           "value": "",
           "description": "引用其他场景中的实体的标识",
           "popular": true
@@ -74,7 +74,7 @@
         {
           "id": "nodecondition",
           "type": "complex",
-          "title": "nodeCondition",
+          "title": "节点条件",
           "value": "",
           "description": "节点条件判断",
           "popular": true
@@ -100,7 +100,7 @@
         {
           "id": "workercontains",
           "type": "complex",
-          "title": "carriedRes",
+          "title": "携带的资源",
           "value": "",
           "description": "Action中工人携带的资源",
           "popular": true
@@ -139,7 +139,7 @@
         {
           "id": "startevent",
           "type": "String",
-          "title": "StartMark",
+          "title": "开始标记",
           "value": "",
           "description": "开始标记",
           "popular": true
@@ -178,7 +178,7 @@
         {
           "id": "owner",
           "type": "complex",
-          "title": "possessions",
+          "title": "拥有的物品",
           "value": "",
           "description": "指定拥有的物品，如：[{Id}]",
           "popular": true
@@ -191,7 +191,7 @@
         {
           "id": "ownedbywho",
           "type": "complex",
-          "title": "owner",
+          "title": "被谁拥有",
           "value": "",
           "description": "指定被谁拥有，如：{Id}",
           "popular": true
@@ -204,7 +204,7 @@
         {
           "id": "actioninputstatus",
           "type": "complex",
-          "title": "actioninputstatus",
+          "title": "动作输入状态",
           "value": "",
           "description": "指定输入状态，如：[{Id,Type,name,position}]",
           "popular": true
@@ -217,7 +217,7 @@
         {
           "id": "actionoutputstatus",
           "type": "complex",
-          "title": "actionoutputstatus",
+          "title": "动作输出状态",
           "value": "",
           "description": "指定输出状态，如：[{Id,Type,name,position}]",
           "popular": true
@@ -230,7 +230,7 @@
         {
           "id": "process_id",
           "type": "String",
-          "title": "process_id",
+          "title": "流程名称",
           "value": "process",
           "description": "流程的特殊唯一的名称标识",
           "popular": true
@@ -256,7 +256,7 @@
         {
           "id": "condition",
           "type": "String",
-          "title": "condition",
+          "title": "条件",
           "value": "",
           "description": "条件表达式，用于分支判断",
           "popular": true
@@ -269,7 +269,7 @@
         {
           "id": "activityelement",
           "type": "Complex",
-          "title": "activityelement",
+          "title": "活动元素",
           "value": "",
           "description": "action中对应的活动对象",
           "popular": true
@@ -282,7 +282,7 @@
         {
           "id": "type",
           "type": "String",
-          "title": "type",
+          "title": "类型",
           "value": "",
           "description": "实体类型",
           "popular": true
@@ -295,7 +295,7 @@
         {
           "id": "input",
           "type": "Complex",
-          "title": "input",
+          "title": "输入",
           "value": "",
           "description": "action所需的输入对象",
           "popular": true
@@ -308,7 +308,7 @@
         {
           "id": "output",
           "type": "Complex",
-          "title": "output",
+          "title": "输出",
           "value": "",
           "description": "action所需的输出对象",
           "popular": true
@@ -321,7 +321,7 @@
         {
           "id": "currentscene",
           "type": "Complex",
-          "title": "currentscene",
+          "title": "场景资源",
           "value": "",
           "description": "保存当前场景中的所有资源",
           "popular": true
@@ -334,7 +334,7 @@
         {
           "id": "name",
           "type": "String",
-          "title": "name",
+          "title": "名称",
           "value": "",
           "description": "元素名称",
           "popular": true,
@@ -348,7 +348,7 @@
         {
           "id": "documentation",
           "type": "Text",
-          "title": "documentation",
+          "title": "描述",
           "value": "",
           "description": "元素描述",
           "popular": true
@@ -1042,7 +1042,7 @@
         {
           "id": "initiator",
           "type": "String",
-          "title": "initiator",
+          "title": "发起人",
           "value": "",
           "description": "Initiator of the process.",
           "popular": true
@@ -1215,7 +1215,7 @@
         {
           "id": "events",
           "type": "Complex",
-          "title": "events",
+          "title": "实体事件",
           "value": "",
           "description": "实体会产生的事件",
           "popular": true
@@ -1241,7 +1241,7 @@
         {
           "id": "services",
           "type": "Complex",
-          "title": "services",
+          "title": "服务",
           "value": "",
           "description": "执行任务所需要服务",
           "popular": true
@@ -1291,7 +1291,15 @@
       "propertyPackages": [
         "process_idpackage",
         "namepackage",
-        "documentationpackage"
+        "documentationpackage",
+        "typepackage",
+        "process_authorpackage",
+        "process_versionpackage",
+        "process_namespacepackage",
+        "executionlistenerspackage",
+        "eventlistenerspackage",
+        "signaldefinitionspackage",
+        "messagedefinitionspackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": []
@@ -1299,7 +1307,7 @@
     {
       "type": "node",
       "id": "Person",
-      "title": "User",
+      "title": "用户",
       "description": "人资源",
       "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\"m19,19c4.14375,0 7.5,-3.35625 7.5,-7.5s-3.35625,-7.5 -7.5,-7.5s-7.5,3.35625 -7.5,7.5s3.35625,7.5 7.5,7.5zm0,3.75c-5.00625,0 -15,2.5125 -15,7.5l0,3.75l30,0l0,-3.75c0,-4.9875 -9.99375,-7.5 -15,-7.5z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
       "icon": "socialentity/person.png",
@@ -1312,7 +1320,7 @@
         "documentationpackage",
         "typepackage",
         "ownerpackage",
-
+        "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
@@ -1332,7 +1340,7 @@
     {
       "type": "node",
       "id": "Person_Worker",
-      "title": "Worker",
+      "title": "工人",
       "description": "人资源",
       "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg \n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"40\"\n   height=\"40\"\n   version=\"1.0\">\n\t<defs></defs>\n\t<oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  \t</oryx:magnets>\n  \t<g pointer-events=\"fill\">\n\t<path id=\"path1\" d=\"m39.350433,32.911472l0,1.046478c0,2.166431 -7.757564,4.021889 -7.757564,4.021889l-3.232349,-0.300764c0,0 -5.169211,-0.473127 -8.404057,-0.473127c-3.230095,0 -8.404058,0.473127 -8.404058,0.473127l-3.20865,0.293809c0,0 -7.781262,-1.856393 -7.781262,-4.014934l0,-1.046478c0,-2.013463 3.586482,-4.045429 7.789791,-5.603778c0.203598,-0.075303 2.729506,10.392647 2.729506,10.392647l1.117109,-0.021267c0,0 -2.158433,-10.807993 -1.93936,-10.881468c1.163531,-0.389442 1.929004,-0.754452 3.073527,-1.056599c0.424559,-0.113199 2.454265,-0.919904 1.318819,-3.092265c-2.629718,-1.961746 -4.421101,-3.862456 -4.421101,-8.148639l19.51234,0c0,4.241777 -1.837135,6.160098 -4.44949,8.124564l0.015109,0c-1.110469,2.464387 0.665441,3.04884 0.948236,3.11585c1.132583,0.274014 2.260109,0.702289 3.39647,1.057089c0.281577,0.087786 -1.939421,10.881468 -1.939421,10.881468l1.180589,-0.023184c0,0 2.407783,-10.433709 2.654025,-10.345477c4.267032,1.528834 7.801793,3.546488 7.801793,5.601058l0,0zm-8.271494,-22.925332c0,-4.925564 -9.165388,-7.388123 -9.165388,-7.388123c-1.298045,-0.427829 -2.586525,-0.330368 -3.914177,0c0,0 -9.165754,2.16224 -9.165754,7.388123c0,0.781292 -1.937533,0.613567 -2.578605,3.084909l27.403442,0c-1.166638,-2.488418 -2.579519,-2.303617 -2.579519,-3.084909l0,0zm0,0\" fill=\"#585858\" stroke=\"none\" />\n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
       "icon": "socialentity/person_worker.png",
@@ -1345,7 +1353,7 @@
         "documentationpackage",
         "typepackage",
         "ownerpackage",
-        
+        "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
@@ -1366,7 +1374,7 @@
     {
       "type": "node",
       "id": "Group",
-      "title": "Group",
+      "title": "人群",
       "description": "人资源",
       "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg \n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"40\"\n   height=\"40\"\n   version=\"1.0\">\n\t<defs></defs>\n\t<oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  \t</oryx:magnets>\n <g>\n  <title>Layer 1</title>\n  <path d=\"m28.03125,22.82264l-0.975,2.53585c3.16875,2.53585 4.875,7.60755 4.875,12.67924l1.95,0c0,-6.15849 -2.19375,-11.95472 -5.85,-15.21509zm-8.775,-22.82264c-4.3875,0 -7.8,5.43396 -7.8,11.95472c0,4.34717 1.4625,7.96981 3.65625,10.14339c-4.3875,2.17358 -7.8,8.69434 -7.8,16.30188l1.95,0c0,-7.96981 4.63125,-14.85283 10.2375,-14.85283c4.3875,0 8.04375,-5.43396 8.04375,-11.95472s-3.9,-11.59245 -8.2875,-11.59245l0,0.00001zm0,20.64905c-3.16875,0 -5.85,-3.98491 -5.85,-8.69434c0,-4.70943 2.68125,-8.69434 5.85,-8.69434c3.16875,0 5.85,3.98491 5.85,8.69434c0.24375,4.70943 -2.4375,8.69434 -5.85,8.69434zm14.38125,-7.24528c0,-5.0717 -2.68125,-9.41887 -6.3375,-9.41887c0.24375,0.72453 0.73125,1.81132 0.975,2.53585c2.19375,0.72453 3.65625,3.62264 3.65625,6.88302c0,3.98491 -2.19375,7.24528 -4.875,7.24528c-0.4875,1.08679 -0.975,1.81132 -1.4625,2.53585c0.4875,0 0.975,-0.36226 1.4625,-0.36226c3.65625,0 6.58125,-4.34717 6.58125,-9.41887zm0.73125,8.69434l-0.73125,2.17358c2.4375,2.17358 3.9,6.15849 3.9,10.14339l1.4625,0c0,-5.0717 -1.70625,-9.78113 -4.63125,-12.31698l0,0.00001zm-34.36875,12.31698l1.70625,0c0,-4.34717 1.4625,-8.33207 3.9,-10.14339l-0.975,-2.17358c-2.925,2.53585 -4.63125,7.24528 -4.63125,12.31698l0,-0.00001zm13.1625,-11.59245c-0.4875,-0.72453 -0.975,-1.44906 -1.4625,-2.53585c-2.68125,0 -4.875,-3.26038 -4.875,-7.24528c0,-3.26038 1.70625,-6.15849 3.65625,-6.88302c0.4875,-0.72453 0.73125,-1.44906 0.975,-2.53585c-3.4125,0 -6.3375,4.34717 -6.3375,9.41887c0,5.0717 2.925,9.41887 6.3375,9.41887c0.73125,0.36226 1.21875,0.36226 1.70625,0.36226z\" id=\"svg_1\" stroke=\"null\"/>\n </g>\n</svg>",
       "icon": "socialentity/group.png",
@@ -1379,7 +1387,7 @@
         "documentationpackage",
         "typepackage",
         "ownerpackage",
-        
+        "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
@@ -1400,7 +1408,7 @@
     {
       "type": "node",
       "id": "Organization",
-      "title": "Organization",
+      "title": "组织",
       "description": "组织资源",
       "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\"m5.684211,16.857142l0,12.333333l5.526316,0l0,-12.333333l-5.526316,0zm11.052632,0l0,12.333333l5.526316,0l0,-12.333333l-5.526316,0zm-14.736842,21.142857l35,0l0,-5.285714l-35,0l0,5.285714zm25.789474,-21.142857l0,12.333333l5.526316,0l0,-12.333333l-5.526316,0zm-8.289474,-15.857142l-17.5,8.809524l0,3.523809l35,0l0,-3.523809l-17.5,-8.809524z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
       "icon": "socialentity/organization.png",
@@ -1412,7 +1420,7 @@
         "namepackage",
         "documentationpackage",
         "typepackage",
-        
+        "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
@@ -1432,7 +1440,7 @@
     {
       "type": "node",
       "id": "Device",
-      "title": "Device",
+      "title": "设备",
       "description": "设备资源",
       "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\"m19.640998,20.909092l0,-1.818182l2.075533,-1.454545c0.188685,-0.181818 0.188685,-0.363636 0.188685,-0.545455l-1.886848,-3.090909c-0.188685,-0.181818 -0.37737,-0.363636 -0.566054,-0.181818l-2.452903,0.727273c-0.566054,-0.363636 -1.132109,-0.727273 -1.698163,-0.909091l-0.37737,-2.363636c0,-0.181818 -0.188685,-0.363636 -0.566054,-0.363636l-3.773696,0c-0.188685,0 -0.37737,0.181818 -0.566054,0.363636l-0.37737,2.363636c-0.566054,0.181818 -1.132109,0.545455 -1.698163,0.909091l-2.452903,-0.909091c-0.188685,0 -0.37737,0 -0.566054,0.181818l-1.886848,3.090909c-0.188685,0.181818 0,0.363636 0.188685,0.545455l2.075533,1.454545l0,1.818182l-2.075533,1.454545c-0.188685,0.363636 -0.188685,0.545455 -0.188685,0.727273l1.886848,3.090909c0.188685,0.181818 0.37737,0.363636 0.566054,0.181818l2.641587,-0.727273c0.566054,0.363636 1.132109,0.727273 1.698163,0.909091l0.37737,2.363636c-0.188685,0.181818 0.188685,0.363636 0.37737,0.363636l3.773696,0c0.188685,0 0.37737,-0.181818 0.566054,-0.363636l0.37737,-2.363636c0.566054,-0.181818 1.132109,-0.545455 1.698163,-0.909091l2.452903,0.909091c0.188685,0 0.37737,0 0.566054,-0.181818l1.886848,-3.090909c0.188685,-0.181818 0,-0.363636 -0.188685,-0.545455l-2.075533,-1.636364zm-7.170023,2.727273c-2.075533,0 -3.773696,-1.636364 -3.773696,-3.636364s1.698163,-3.636364 3.773696,-3.636364s3.773696,1.636364 3.773696,3.636364s-1.698163,3.636364 -3.773696,3.636364zm20.755329,-23.636364l-18.868481,0c-2.075533,0 -3.773696,1.636364 -3.773696,3.636364l0,5.454546l3.773696,0l0,-3.636364l18.868481,0l0,29.09091l-18.868481,0l0,-3.636364l-3.773696,0l0,5.454546c0,2 1.698163,3.636364 3.773696,3.636364l18.868481,0c2.075533,0 3.773696,-1.636364 3.773696,-3.636364l0,-32.727274c0,-2 -1.698163,-3.636364 -3.773696,-3.636364z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
       "icon": "physicalentity/device.png",
@@ -1445,7 +1453,7 @@
         "documentationpackage",
         "typepackage",
         "ownedbywhopackage",
-        
+        "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
@@ -1465,7 +1473,7 @@
     {
       "type": "node",
       "id": "PysicalObject",
-      "title": "PysicalItem",
+      "title": "物品",
       "description": "物品",
       "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\"m23,13.43636l-2,-1.72727l-8,6.90909l-8,-6.90909l-2,1.72727l8,6.90909l-8,6.90909l2,1.72727l8,-6.90909l8,6.90909l2,-1.72727l-8,-6.90909l8,-6.90909zm12,-12.43636l-20,0c-2.2,0 -4,1.55455 -4,3.45455l0,5.18182l4,0l0,-3.45455l20,0l0,27.63636l-20,0l0,-3.45455l-4,0l0,5.18182c0,1.9 1.8,3.45455 4,3.45455l20,0c2.2,0 4,-1.55455 4,-3.45455l0,-31.09091c0,-1.9 -1.8,-3.45455 -4,-3.45455z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
       "icon": "physicalentity/pysicalobject.png",
@@ -1478,7 +1486,40 @@
         "documentationpackage",
         "typepackage",
         "ownedbywhopackage",
-        
+        "executionlistenerspackage",
+        "initiatorpackage",
+        "resourcespackage",
+        "servicespackage",
+        "referenceentitypackage",
+        "entityspecificpropertiespackage"
+      ],
+      "hiddenPropertyPackages": [],
+      "roles": [
+        "sequence_start",
+        "message_start",
+        "message_end",
+        "Startevents_all",
+        "StartEventsMorph",
+        "all"
+      ]
+    },
+    {
+      "type": "node",
+      "id": "Robot",
+      "title": "机器人",
+      "description": "机器人",
+      "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\"m9.6,29.999999c0,0.916667 0.855,1.666667 1.9,1.666667l1.9,0l0,5.833333c0,1.383333 1.273,2.5 2.85,2.5s2.85,-1.116667 2.85,-2.5l0,-5.833333l3.8,0l0,5.833333c0,1.383333 1.273,2.5 2.85,2.5s2.85,-1.116667 2.85,-2.5l0,-5.833333l1.9,0c1.045,0 1.9,-0.75 1.9,-1.666667l0,-16.666666l-22.8,0l0,16.666666zm-4.75,-16.666666c-1.577,0 -2.85,1.116667 -2.85,2.5l0,11.666666c0,1.383333 1.273,2.5 2.85,2.5s2.85,-1.116667 2.85,-2.5l0,-11.666666c0,-1.383333 -1.273,-2.5 -2.85,-2.5zm32.3,0c-1.577,0 -2.85,1.116667 -2.85,2.5l0,11.666666c0,1.383333 1.273,2.5 2.85,2.5s2.85,-1.116667 2.85,-2.5l0,-11.666666c0,-1.383333 -1.273,-2.5 -2.85,-2.5zm-9.443,-9.733333l2.47,-2.166667c0.38,-0.333333 0.38,-0.85 0,-1.183333c-0.38,-0.333333 -0.969,-0.333333 -1.349,0l-2.812,2.466667c-1.501,-0.666667 -3.211,-1.05 -5.016,-1.05c-1.824,0 -3.534,0.383333 -5.054,1.05l-2.831,-2.466667c-0.38,-0.333333 -0.969,-0.333333 -1.349,0c-0.38,0.333333 -0.38,0.85 0,1.183333l2.489,2.183333c-2.812,1.816667 -4.655,4.733333 -4.655,8.05l22.8,0c0,-3.316667 -1.843,-6.25 -4.693,-8.066666zm-10.507,4.733333l-1.9,0l0,-1.666667l1.9,0l0,1.666667zm9.5,0l-1.9,0l0,-1.666667l1.9,0l0,1.666667z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
+      "icon": "physicalentity/robot.png",
+      "groups": [
+        "PhysicalEntity"
+      ],
+      "propertyPackages": [
+        "overrideidpackage",
+        "namepackage",
+        "documentationpackage",
+        "typepackage",
+        "ownedbywhopackage",
+        "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
@@ -1498,7 +1539,7 @@
     {
       "type": "node",
       "id": "CloudApp",
-      "title": "CloudApp",
+      "title": "云应用",
       "description": "云应用",
       "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\" m32.250002,17.325001c-1.133333,-6.46875 -6.183334,-11.325001 -12.250001,-11.325001c-4.816667,0 -9.000001,3.075 -11.083334,7.575c-5.016667,0.6 -8.916667,5.38125 -8.916667,11.175001c0,6.20625 4.483334,11.250001 10.000001,11.250001l21.666668,0c4.6,0 8.333334,-4.2 8.333334,-9.375c0,-4.95 -3.416667,-8.9625 -7.75,-9.3z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
       "icon": "cyberentity/cloudapp.png",
@@ -1510,7 +1551,7 @@
         "namepackage",
         "documentationpackage",
         "typepackage",
-        
+        "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
@@ -1530,7 +1571,7 @@
     {
       "type": "node",
       "id": "MobileApp",
-      "title": "MobileApp",
+      "title": "移动应用",
       "description": "移动应用",
       "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\" m28,1l-16,0c-3.32,0 -6,2.314545 -6,5.181818l0,27.636364c0,2.867273 2.68,5.181818 6,5.181818l16,0c3.32,0 6,-2.314545 6,-5.181818l0,-27.636364c0,-2.867273 -2.68,-5.181818 -6,-5.181818zm-4,34.545455l-8,0l0,-1.727273l8,0l0,1.727273zm6.5,-5.181818l-21,0l0,-24.181818l21,0l0,24.181818z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
       "icon": "cyberentity/deviceapp.png",
@@ -1542,7 +1583,39 @@
         "namepackage",
         "documentationpackage",
         "typepackage",
-        
+        "executionlistenerspackage",
+        "initiatorpackage",
+        "resourcespackage",
+        "servicespackage",
+        "referenceentitypackage",
+        "entityspecificpropertiespackage"
+      ],
+      "hiddenPropertyPackages": [],
+      "roles": [
+        "sequence_start",
+        "message_start",
+        "message_end",
+        "Startevents_all",
+        "StartEventsMorph",
+        "all"
+      ]
+    },
+    {
+      "type": "node",
+      "id": "EmbeddedApp",
+      "title": "嵌入式应用",
+      "description": "嵌入式应用",
+      "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\" m34.399999,0l-28.799999,0c-1.98,0 -3.6,1.8 -3.6,4l0,32c0,2.2 1.62,4 3.6,4l28.799999,0c1.98,0 3.6,-1.8 3.6,-4l0,-32c0,-2.2 -1.62,-4 -3.6,-4zm0,36l-28.799999,0l0,-32l28.799999,0l0,32zm-3.6,-28l-9,0c-1.98,0 -3.6,1.8 -3.6,4l0,4.56c-1.08,0.7 -1.8,1.96 -1.8,3.44c0,2.2 1.62,4 3.6,4s3.6,-1.8 3.6,-4c0,-1.48 -0.72,-2.76 -1.8,-3.44l0,-4.56l5.4,0l0,16l-14.4,0l0,-16l3.6,0l0,-4l-7.2,0l0,24l21.599999,0l0,-24z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
+      "icon": "cyberentity/embeddedapp.png",
+      "groups": [
+        "CyberEntity"
+      ],
+      "propertyPackages": [
+        "overrideidpackage",
+        "namepackage",
+        "documentationpackage",
+        "typepackage",
+        "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
@@ -1562,7 +1635,7 @@
     {
       "type": "node",
       "id": "CyberObject",
-      "title": "CyberObject",
+      "title": "信息对象",
       "description": "信息对象",
       "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\" m4.454545,7.909091l-3.454545,0l0,27.636364c0,1.9 1.554545,3.454545 3.454545,3.454545l27.636364,0l0,-3.454545l-27.636364,0l0,-27.636364zm19,17.272727l3.454545,0l0,-17.272727l-6.909091,0l0,3.454545l3.454545,0l0,13.818182zm12.090909,-24.181818l-24.181818,0c-1.9,0 -3.454545,1.554545 -3.454545,3.454545l0,24.181818c0,1.9 1.554545,3.454545 3.454545,3.454545l24.181818,0c1.9,0 3.454545,-1.554545 3.454545,-3.454545l0,-24.181818c0,-1.9 -1.554545,-3.454545 -3.454545,-3.454545zm0,27.636364l-24.181818,0l0,-24.181818l24.181818,0l0,24.181818z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
       "icon": "cyberentity/cyberobject.png",
@@ -1574,7 +1647,7 @@
         "namepackage",
         "documentationpackage",
         "typepackage",
-        
+        "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
@@ -1594,7 +1667,7 @@
     {
       "type": "node",
       "id": "Room",
-      "title": "Room",
+      "title": "房间",
       "description": "房间",
       "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg \n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"40\"\n   height=\"40\"\n   version=\"1.0\">\n\t<defs></defs>\n\t<oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  \t</oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \t d=\"m39.45635,16.93755l-16.65138,-15.53154c-0.62927,-0.56274 -1.40375,-0.90038 -2.17823,-0.90038s-1.54897,0.33764 -2.17823,0.90038l-17.90991,16.60075c-0.48405,0.45019 -0.53246,1.23802 -0.19362,1.80076c0.19362,0.28137 0.53246,0.50646 0.87129,0.50646c0.24203,0 0.48405,-0.11255 0.67767,-0.28137l3.09793,-2.86996l0,18.90797c0,1.85703 1.30694,3.37642 2.90431,3.37642l25.36431,0c0.77448,0 1.50056,-0.33764 2.08142,-1.01293c0.53246,-0.61901 0.87129,-1.51939 0.87129,-2.41977l0,-4.61444c0,-0.73156 -0.48405,-1.2943 -1.11332,-1.2943s-1.11332,0.56274 -1.11332,1.2943l0,4.61444c0,0.45019 -0.33884,0.84411 -0.72608,0.84411l-8.61612,0l0,-8.83497c0,-1.23802 -0.43565,-2.41977 -1.16172,-3.32015c-0.77448,-0.90038 -1.74259,-1.35057 -2.85591,-1.35057c-2.22664,0 -4.01763,2.08213 -4.01763,4.67072l0,8.83497l-8.66453,0c-0.38724,0 -0.72608,-0.39392 -0.72608,-0.84411l0,-20.93382l12.58534,-11.64866c0.48405,-0.45019 1.11332,-0.45019 1.59737,0l12.63375,11.76121l0,6.07756c0,0.73156 0.48405,1.2943 1.11332,1.2943s1.11332,-0.56274 1.11332,-1.2943l0,-3.99543l1.79099,1.68821c0.48405,0.45019 1.16172,0.33764 1.54897,-0.22509c0.38724,-0.56274 0.29043,-1.40684 -0.14522,-1.80076zm-20.6206,11.08592c0,-1.18175 0.82289,-2.08213 1.79099,-2.08213c0.48405,0 0.9197,0.22509 1.25853,0.61901c0.33884,0.39392 0.53246,0.90038 0.53246,1.46312l0,8.83497l-3.63039,0l0,-8.83497l0.04841,0z\"\n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
       "icon": "spaceentity/room.png",
@@ -1606,7 +1679,7 @@
         "namepackage",
         "documentationpackage",
         "typepackage",
-        
+        "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
@@ -1627,7 +1700,7 @@
     {
       "type": "node",
       "id": "EntryPoint",
-      "title": "Entry",
+      "title": "入口节点",
       "description": "入口节点",
       "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   xmlns=\"http://www.w3.org/2000/svg\"\n   version=\"1.0\"\n   width=\"40\"\n   height=\"40\">\n   \n  <oryx:magnets>\n    <oryx:magnet\n       oryx:default=\"yes\"\n       oryx:cy=\"16\"\n       oryx:cx=\"16\" />\n  </oryx:magnets>\n <g stroke=\"null\">\n  <title style=\"vector-effect: non-scaling-stroke;\" stroke=\"null\">Layer 1</title>\n  <g stroke=\"null\" id=\"svg_3\">\n    <rect stroke=\"null\" fill=\"none\" id=\"canvas_background\" height=\"42\" width=\"42\" y=\"-1\" x=\"-1\"/>\n   <path stroke=\"null\" id=\"svg_1\" p-id=\"10292\" fill=\"#515151\" d=\"m19.95965,0c-10.97781,0 -19.95966,8.9646 -19.95966,19.92134s8.98185,19.92134 19.95966,19.92134s19.95966,-8.9646 19.95966,-19.92134s-8.98185,-19.92134 -19.95966,-19.92134zm0,37.51853c-9.64717,0 -17.63103,-7.96854 -17.63103,-17.59719s7.98386,-17.59719 17.63103,-17.59719s17.63103,7.96854 17.63103,17.59719s-7.98386,17.59719 -17.63103,17.59719z\"/>\n   <path stroke=\"null\" id=\"svg_2\" p-id=\"10293\" fill=\"#515151\" d=\"m19.46066,10.4587c-0.66532,-0.66404 -1.6633,-0.66404 -2.32863,0s-0.66532,1.66011 0,2.32416l7.15221,7.13848l-7.15221,7.13848c-0.66532,0.66404 -0.66532,1.66011 0,2.32416c0.33266,0.33202 0.83165,0.49803 1.16431,0.49803s0.83165,-0.16601 1.16431,-0.49803l8.31652,-8.30056c0.66532,-0.66404 0.66532,-1.66011 0,-2.32416l-8.31652,-8.30056z\"/>\n  </g>\n </g>\n</svg>",
       "icon": "gateway/entry.png",
@@ -1639,7 +1712,7 @@
         "namepackage",
         "documentationpackage",
         "typepackage",
-        
+        "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
@@ -1658,7 +1731,7 @@
     {
       "type": "node",
       "id": "ExitPoint",
-      "title": "Exit",
+      "title": "出口节点",
       "description": "出口节点",
       "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   xmlns=\"http://www.w3.org/2000/svg\"\n   version=\"1.0\"\n   width=\"40\"\n   height=\"40\">\n   \n  <oryx:magnets>\n    <oryx:magnet\n       oryx:default=\"yes\"\n       oryx:cy=\"16\"\n       oryx:cx=\"16\" />\n  </oryx:magnets>\n <g>\n  <title>Layer 1</title>\n  <path stroke=\"null\" id=\"svg_1\" p-id=\"6723\" d=\"m19.89943,0c10.99001,0 19.89943,8.96516 19.89943,20.02394s-8.90942,20.02394 -19.89943,20.02394s-19.89943,-8.96516 -19.89943,-20.02394s8.90942,-20.02394 19.89943,-20.02394zm-5.92008,10.98202c-1.06351,1.16584 -0.9209,2.92238 0.3195,3.92136l7.73424,6.23857l-7.73314,6.22522c-1.2404,0.99897 -1.38522,2.7544 -0.32171,3.92136c1.0613,1.16695 2.92964,1.30156 4.17114,0.3037l9.04318,-7.28093c0.17246,-0.13906 0.33387,-0.29035 0.48201,-0.45276c1.59527,-1.74876 1.3808,-4.38302 -0.4798,-5.88259l-9.04318,-7.29316c-1.2404,-1.0012 -3.10873,-0.86659 -4.17225,0.30036l0,-0.00111z\"/>\n </g>\n</svg>",
       "icon": "gateway/exit.png",
@@ -1670,7 +1743,7 @@
         "namepackage",
         "documentationpackage",
         "typepackage",
-        
+        "executionlistenerspackage",
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
@@ -1811,9 +1884,10 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
-        
+        "executionlistenerspackage",
         "initiatorpackage",
-
+        "formkeydefinitionpackage",
+        "formpropertiespackage",
         "resourcespackage",
         "starteventpackage",
         "currentscenepackage"
@@ -1841,9 +1915,10 @@
         "namepackage",
         "typepackage",
         "documentationpackage",
-        
+        "executionlistenerspackage",
         "initiatorpackage",
-
+        "formkeydefinitionpackage",
+        "formpropertiespackage",
         "resourcespackage",
         "currentscenepackage",
         "traceablescenespackage"
@@ -1874,7 +1949,7 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
-        
+        "executionlistenerspackage",
         "timercycledefinitionpackage",
         "timerdatedefinitionpackage",
         "timerdurationdefinitionpackage"
@@ -1901,7 +1976,7 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
-        
+        "executionlistenerspackage",
         "signalrefpackage"
       ],
       "hiddenPropertyPackages": [],
@@ -1927,7 +2002,7 @@
         "namepackage",
         "documentationpackage",
         "activityelementpackage",
-        
+        "executionlistenerspackage",
         "messagerefpackage"
       ],
       "hiddenPropertyPackages": [],
@@ -1955,7 +2030,7 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
-        
+        "executionlistenerspackage",
         "errorrefpackage"
       ],
       "hiddenPropertyPackages": [],
@@ -2055,7 +2130,7 @@
         "documentationpackage",
         "asynchronousdefinitionpackage",
         "exclusivedefinitionpackage",
-        
+        "executionlistenerspackage",
         "multiinstance_typepackage",
         "multiinstance_cardinalitypackage",
         "multiinstance_collectionpackage",
@@ -2063,7 +2138,7 @@
         "multiinstance_conditionpackage",
         "isforcompensationpackage",
         "usertaskassignmentpackage",
-
+        "formkeydefinitionpackage",
         "duedatedefinitionpackage",
         "prioritydefinitionpackage",
         "formpropertiespackage",
@@ -2093,7 +2168,7 @@
         "documentationpackage",
         "asynchronousdefinitionpackage",
         "exclusivedefinitionpackage",
-        
+        "executionlistenerspackage",
         "multiinstance_typepackage",
         "multiinstance_cardinalitypackage",
         "multiinstance_collectionpackage",
@@ -2132,7 +2207,7 @@
         "documentationpackage",
         "asynchronousdefinitionpackage",
         "exclusivedefinitionpackage",
-        
+        "executionlistenerspackage",
         "multiinstance_typepackage",
         "multiinstance_cardinalitypackage",
         "multiinstance_collectionpackage",
@@ -2164,7 +2239,7 @@
         "documentationpackage",
         "asynchronousdefinitionpackage",
         "exclusivedefinitionpackage",
-        
+        "executionlistenerspackage",
         "multiinstance_typepackage",
         "multiinstance_cardinalitypackage",
         "multiinstance_collectionpackage",
@@ -2200,7 +2275,7 @@
         "documentationpackage",
         "asynchronousdefinitionpackage",
         "exclusivedefinitionpackage",
-        
+        "executionlistenerspackage",
         "multiinstance_typepackage",
         "multiinstance_cardinalitypackage",
         "multiinstance_collectionpackage",
@@ -2232,7 +2307,7 @@
         "documentationpackage",
         "asynchronousdefinitionpackage",
         "exclusivedefinitionpackage",
-        
+        "executionlistenerspackage",
         "multiinstance_typepackage",
         "multiinstance_cardinalitypackage",
         "multiinstance_collectionpackage",
@@ -2264,7 +2339,7 @@
         "documentationpackage",
         "asynchronousdefinitionpackage",
         "exclusivedefinitionpackage",
-        
+        "executionlistenerspackage",
         "multiinstance_typepackage",
         "multiinstance_cardinalitypackage",
         "multiinstance_collectionpackage",
@@ -2304,7 +2379,7 @@
         "documentationpackage",
         "asynchronousdefinitionpackage",
         "exclusivedefinitionpackage",
-        
+        "executionlistenerspackage",
         "multiinstance_typepackage",
         "multiinstance_cardinalitypackage",
         "multiinstance_collectionpackage",
@@ -2337,7 +2412,7 @@
         "documentationpackage",
         "asynchronousdefinitionpackage",
         "exclusivedefinitionpackage",
-        
+        "executionlistenerspackage",
         "multiinstance_typepackage",
         "multiinstance_cardinalitypackage",
         "multiinstance_collectionpackage",
@@ -2373,7 +2448,7 @@
         "documentationpackage",
         "asynchronousdefinitionpackage",
         "exclusivedefinitionpackage",
-        
+        "executionlistenerspackage",
         "multiinstance_typepackage",
         "multiinstance_cardinalitypackage",
         "multiinstance_collectionpackage",
@@ -2404,7 +2479,8 @@
         "namepackage",
         "documentationpackage",
         "asynchronousdefinitionpackage",
-        "exclusivedefinitionpackage"
+        "exclusivedefinitionpackage",
+        "executionlistenerspackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -2428,7 +2504,7 @@
         "documentationpackage",
         "asynchronousdefinitionpackage",
         "exclusivedefinitionpackage",
-        
+        "executionlistenerspackage",
         "callactivitycalledelementpackage",
         "callactivityinparameterspackage",
         "callactivityoutparameterspackage",
@@ -2771,7 +2847,7 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
-        
+        "executionlistenerspackage",
         "timercycledefinitionpackage",
         "timerdatedefinitionpackage",
         "timerdurationdefinitionpackage"
@@ -2798,7 +2874,7 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
-        
+        "executionlistenerspackage",
         "signalrefpackage"
       ],
       "hiddenPropertyPackages": [],
@@ -2823,7 +2899,7 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
-        
+        "executionlistenerspackage",
         "messagerefpackage"
       ],
       "hiddenPropertyPackages": [],
@@ -2847,7 +2923,8 @@
       "propertyPackages": [
         "overrideidpackage",
         "namepackage",
-        "documentationpackage"
+        "documentationpackage",
+        "executionlistenerspackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -2871,7 +2948,7 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
-        
+        "executionlistenerspackage",
         "signalrefpackage"
       ],
       "hiddenPropertyPackages": [],
@@ -2895,7 +2972,8 @@
       "propertyPackages": [
         "overrideidpackage",
         "namepackage",
-        "documentationpackage"
+        "documentationpackage",
+        "executionlistenerspackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -2918,7 +2996,7 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
-        
+        "executionlistenerspackage",
         "errorrefpackage"
       ],
       "hiddenPropertyPackages": [],
@@ -2941,7 +3019,8 @@
       "propertyPackages": [
         "overrideidpackage",
         "namepackage",
-        "documentationpackage"
+        "documentationpackage",
+        "executionlistenerspackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -2964,7 +3043,7 @@
         "overrideidpackage",
         "namepackage",
         "documentationpackage",
-        
+        "executionlistenerspackage",
         "terminateAllpackage"
       ],
       "hiddenPropertyPackages": [],
@@ -3043,7 +3122,7 @@
         "namepackage",
         "documentationpackage",
         "conditionsequenceflowpackage",
-        
+        "executionlistenerspackage",
         "conditionpackage",
         "defaultflowpackage"
       ],
@@ -3073,7 +3152,7 @@
         "namepackage",
         "documentationpackage",
         "conditionsequenceflowpackage",
-        
+        "executionlistenerspackage",
         "conditionpackage",
         "defaultflowpackage"
       ],

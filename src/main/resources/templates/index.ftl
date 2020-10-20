@@ -2,21 +2,21 @@
 <html>
 <head>
     <meta charset="UTF-8"/>
-    <title>人机物编程模型设计器</title>
+    <title >CPSS Application Modeling Tool</title>
     <link rel="stylesheet" href="editor-app/libs/bootstrap_3.1.1/css/bootstrap.min.css"/>
 </head>
 <body>
 <h2>
-    <a href='/create?name=activiti&key=123456'>绘制流程</a>
+    <a href='/create?name=activiti&key=123456'>Design</a>
 </h2>
 <div>
     <table width="100%" class="table">
         <tr>
-            <td width="10%">模型编号</td>
-            <td width="10%">版本</td>
-            <td width="20%">模型名称</td>
-            <td width="20%">模型key</td>
-            <td width="40%">操作</td>
+            <td width="10%">ModelId</td>
+            <td width="10%">Version</td>
+            <td width="20%">ModelName</td>
+            <td width="20%">Modelkey</td>
+            <td width="40%">Operation</td>
         </tr>
 <#--            <#if modelList??>-->
 <#--                <@paging_macro.paging pagingList=modelList url="/index"/>-->
@@ -28,11 +28,11 @@
                 <td width="20%"><#if (model.name)??>${model.name}<#else> </#if></td>
                 <td width="20%"><#if (model.key)??>${model.key}<#else> </#if></td>
                 <td width="40%">
-                    <a href="/editor?modelId=${model.id}">编辑</a>
-                    <a href="/publish?modelId=${model.id}">发布</a>
-                    <a href="/revokePublish?modelId=${model.id}">撤销</a>
+                    <a href="/editor?modelId=${model.id}">Edit</a>
+                    <a href="/publish?modelId=${model.id}">Publish</a>
+                    <a href="/revokePublish?modelId=${model.id}">Revoke</a>
 <#--                    <a href="/delete?modelId=${model.id}">删除</a>-->
-                    <a href="javascript:void(0)" onclick="deleteModel(${model.id})">删除</a>
+                    <a href="javascript:void(0)" onclick="deleteModel(${model.id})">Delete</a>
                     <script>
                         function deleteModel(id){
                             var url = "/delete?modelId=" + id;

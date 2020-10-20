@@ -7,7 +7,7 @@
                 <h2 translate>PROPERTY.INPUT.SELECT</h2>
             </div>
             <div class="modal-body">
-                <select ng-multiple="true" ui-select2 ng-model="selectedItems" multiple data-placeholder="-- 请选择 --"
+                <select ng-multiple="true" ui-select2 ng-model="selectedItems" multiple data-placeholder="{{'PROPERTY.INPUT.POPUP.PLACEHOLDER' | translate}}"
                         style="height:200px" class="form-control">
                     <optgroup data-ng-repeat="a in items" label="{{a.name}}">
                         <option data-ng-repeat="b in a.specialties" value="{{b}}">{{b.name}}</option>

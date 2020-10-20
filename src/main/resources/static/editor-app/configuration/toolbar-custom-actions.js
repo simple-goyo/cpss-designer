@@ -655,6 +655,27 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         };
 
 
+        $scope.upLoadModel = function (json) {
+            let url = "https://www.cpss2019.fun:5001/save_app_class_new";
+            json = JSON.stringify(json);
+            // Update
+            $http({
+                method: 'POST',
+                ignoreErrors: false,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                data: json,
+                url: url
+
+            }).success(function (data) {
+                console.log("模型保存成功!")
+            })
+                .error(function (data) {
+                    console.log("模型保存失败!")
+            });
+        }
         $scope.createModelFile = function (scenes, relations) {
             let jsonObj = {
                 "id": "",
@@ -704,6 +725,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             jsonObj["constraint"] = constraint;
 
             console.log(JSON.stringify(jsonObj));
+            $scope.upLoadModel(jsonObj);
             $scope.close();
 
             return scenes;

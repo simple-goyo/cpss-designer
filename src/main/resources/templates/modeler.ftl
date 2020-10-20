@@ -10,7 +10,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>人机物融合应用建模工具</title>
+    <title>CPSS Application Modeling Tool</title>
     <meta name="description" content="">
     <meta name="viewport"
           content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, width=device-width">
@@ -36,7 +36,7 @@
 <div class="navbar navbar-fixed-top navbar-inverse" role="navigation" id="main-header">
     <div class="navbar-header">
         <a href="" ng-click="backToLanding()" class="navbar-brand">
-            <span style="margin-left: 50px;">人机物融合应用建模工具</span></a>
+            <span style="margin-left: 50px;">CPSS Application Modeling Tool</span></a>
     </div>
 </div>
 

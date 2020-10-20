@@ -35,15 +35,15 @@
             <a ng-click="entityInfoShowState.toggle()" id="entityInfoShowStateFlag">
                 <i ng-show="entityInfoShowState.show" class="glyphicon"
                    ng-class="{'glyphicon-chevron-left': !entityInfoShowState.show, 'glyphicon-chevron-right': entityInfoShowState.show}"></i>
-                <span ng-show="!entityInfoShowState.show">实体</span>
+                <span ng-show="!entityInfoShowState.show">Entity</span>
             </a>
             <a ng-click="sceneShowState.toggle()" id="sceneShowStateFlag">
                 <i ng-show="sceneShowState.show" class="glyphicon"
                    ng-class="{'glyphicon-chevron-right': !sceneShowState.show, 'glyphicon-chevron-left': sceneShowState.show}"></i>
-                <span ng-show="!sceneShowState.show">场景</span>
+                <span ng-show="!sceneShowState.show">Scene</span>
             </a>
             <div class="col-xs-3" ng-if="entityInfoShowState.show" id="wrappers">
-                <h4 ng-if="selectedSceneIndex>-1" style="text-align: center">资源实体</h4>
+                <h4 ng-if="selectedSceneIndex>-1" style="text-align: center">Resource Entity</h4>
                 <hr ng-if="selectedSceneIndex>-1">
                 <div id="paletteHelpWrapper" class="top" ng-if="selectedSceneIndex>-1">
                     <div class="stencils" id="paletteSection" style="overflow: auto;">
@@ -80,7 +80,7 @@
                     </div>
                 </div>
                 <div id="splitLine" class="line" ng-mousedown="clickLine($event)"></div>
-                <h4 style="text-align: center">实体属性</h4>
+                <h4 style="text-align: center">Properties</h4>
                 <hr>
                 <div id="propertiesHelpWrapper" class="bottomWrapper">
                     <div class="propertySection" id="propertySection"
@@ -198,11 +198,11 @@
                 </div>
             </div>
             <div id="multipleSceneWrapper" style="text-align: center" class="col-xs-2" ng-if="sceneShowState.show">
-                <h4>场景缩略图</h4>
+                <h4>{{'SCENE.MULTIPLE.VIEW' | translate}}</h4>
                 <!--                <button ng-click="addScene()" class="btn btn-primary">新建场景</button>-->
                 <hr>
                 <div ng-class="isSelectedScene(-1)">
-                    <h6>场景关系</h6>
+                    <h6>{{'SCENE.RELATION'| translate}}</h6>
                     <img onerror="this.src='static/editor-app/images/logo.png'" alt="场景关系建立" id="sceneRelations"
                          type="image" class="img-thumbnail" style="width:120px;height:80px"
                          src="{{scenesRelations.img}}" ng-click="changeScene(-1)"/>

@@ -28,7 +28,7 @@ angular.module('activitiModeler')
         let item = $scope.getStencilItemById(ui.draggable[0].id);
         if ($scope.dragCanContain) {
             // var group = $scope.findGroupNameByStencilItem(ui.draggable[0].id);
-            // if (group.name === "物理实体") {
+            // if (group.name === "PhysicalEntity") {
             //     setting = true;
             // }
             // setting = true;
