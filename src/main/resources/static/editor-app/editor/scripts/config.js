@@ -511,7 +511,7 @@ ORYX.CONFIG.FORM_ELEMENT_TYPE_LABEL_FIELD = 		'http://b3mn.org/stencilset/xforms
 
 /* 界面上的文字 中文版 */
 ORYX.CONFIG.CYBERSSPACE = "CyberSpace"; // 信息空间
-ORYX.CONFIG.SOCIALPHYSICALSPACE = "SocialPysicalSpace"; // 社会物理空间
+ORYX.CONFIG.SOCIALPHYSICALSPACE = "SocialPhysicalSpace"; // 社会物理空间
 ORYX.CONFIG.INTERACTIONSEQUENCE = "InteractionSequence"; //交互序列
 ORYX.CONFIG.SCENE_THUMBNAIL = "Scene Thumbnail"; // 场景缩略图
 ORYX.CONFIG.SCENE = "Scene"; // 场景

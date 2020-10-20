@@ -48,7 +48,7 @@ var ReferenceEntityPopupController = ['$rootScope','$scope', function ($rootScop
 
 
 var ReferenceEntityDisplayController = ['$scope','$rootScope', function ($scope,$rootScope) {
-    $scope.referenceEntityShow = " 未引用实体";
+    $scope.referenceEntityShow = "  Unreferenced Entity";
     let id = $scope.property.value;
     if (!id || id === "")
         return;

@@ -17,25 +17,25 @@ angular.module('activitiModeler')
                 }
 
                 let resTemp = resProperties;
-                resTemp["oryx-type"] = "信息对象";
+                resTemp["oryx-type"] = "CyberObject";
                 resTemp["oryx-InParam"] = serviceOutputDetials;
                 resTemp["oryx-OutParam"] = serviceOutputDetials;
                 $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], serviceOutput, resTemp);
             }
 
             if (actionName === 'finish making coffee') {
-                $scope.createResource($scope, shape, "PysicalObject");
+                $scope.createResource($scope, shape, "PhysicalObject");
 
                 let resTemp = resProperties;
-                resTemp["oryx-type"] = "物品";
+                resTemp["oryx-type"] = "PhysicalItem";
                 $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], serviceOutput, resTemp);
             }
 
             if (actionName === 'finish printing') {
-                $scope.createResource($scope, shape, "PysicalObject");
+                $scope.createResource($scope, shape, "PhysicalObject");
 
                 let resTemp = resProperties;
-                resTemp["oryx-type"] = "物品";
+                resTemp["oryx-type"] = "PhysicalItem";
                 $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "file", resTemp);
             }
 
@@ -43,7 +43,7 @@ angular.module('activitiModeler')
                 $scope.createResource($scope, shape, "CyberObject");
 
                 let resTemp = resProperties;
-                resTemp["oryx-type"] = "信息对象";
+                resTemp["oryx-type"] = "CyberObject";
                 $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "message", resTemp);
             }
         }
@@ -125,10 +125,12 @@ angular.module('activitiModeler')
                     property.value = $scope.editor.getSelection()[0].id;
                     $scope.updatePropertyInModel(property);
                     break;
+                case "name":
                 case "名称":
                     property.value = actionName;
                     $scope.updatePropertyInModel(property);
                     break;
+                case "activityelement":
                 case "活动元素":
                     property.value = {
                         "id": res_entity.id,
@@ -137,11 +139,13 @@ angular.module('activitiModeler')
                     };
                     $scope.updatePropertyInModel(property);
                     break;
+                case "actioninputstatus":
                 case "动作输入状态":
                     property.value = modelInput;
                     $scope.inputStatus = [];
                     $scope.updatePropertyInModel(property);
                     break;
+                case "actionoutputstatus":
                 case "动作输出状态":
                     property.value = Output;
                     $scope.outputStatus = [];
@@ -176,10 +180,12 @@ angular.module('activitiModeler')
                     newShapeId = property.value;
                     $scope.updatePropertyInModel(property);
                     break;
+                case "name":
                 case "名称":
                     property.value = actionName;
                     $scope.updatePropertyInModel(property);
                     break;
+                case "activityelement":
                 case "活动元素":
                     property.value = {
                         "id": selectItem.properties["oryx-overrideid"],
@@ -188,11 +194,13 @@ angular.module('activitiModeler')
                     };
                     $scope.updatePropertyInModel(property);
                     break;
+                case "actioninputstatus":
                 case "动作输入状态":
                     property.value = $scope.inputStatus;
                     $scope.inputStatus = [];
                     $scope.updatePropertyInModel(property);
                     break;
+                case "actionoutputstatus":
                 case "动作输出状态":
                     property.value = $scope.outputStatus;
                     $scope.outputStatus = [];

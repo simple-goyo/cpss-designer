@@ -61,7 +61,7 @@
         {
           "id": "referenceentity",
           "type": "complex",
-          "title": "referencedEntity",
+          "title": "refEntity",
           "value": "",
           "description": "引用其他场景中的实体的标识",
           "popular": true
@@ -1464,11 +1464,11 @@
     },
     {
       "type": "node",
-      "id": "PysicalObject",
-      "title": "PysicalItem",
+      "id": "PhysicalObject",
+      "title": "PhysicalItem",
       "description": "物品",
       "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\"m23,13.43636l-2,-1.72727l-8,6.90909l-8,-6.90909l-2,1.72727l8,6.90909l-8,6.90909l2,1.72727l8,-6.90909l8,6.90909l2,-1.72727l-8,-6.90909l8,-6.90909zm12,-12.43636l-20,0c-2.2,0 -4,1.55455 -4,3.45455l0,5.18182l4,0l0,-3.45455l20,0l0,27.63636l-20,0l0,-3.45455l-4,0l0,5.18182c0,1.9 1.8,3.45455 4,3.45455l20,0c2.2,0 4,-1.55455 4,-3.45455l0,-31.09091c0,-1.9 -1.8,-3.45455 -4,-3.45455z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
-      "icon": "physicalentity/pysicalobject.png",
+      "icon": "physicalentity/PhysicalObject.png",
       "groups": [
         "PhysicalEntity"
       ],
@@ -1829,7 +1829,7 @@
     {
       "type": "node",
       "id": "scene",
-      "title": "场景",
+      "title": "scene",
       "description": "A start event without a specific trigger",
       "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg width=\"80\"\nheight=\"80\"\nxmlns=\"http://www.w3.org/2000/svg\"\nxmlns:oryx=\"http://www.b3mn.org/oryx\" version=\"1.0\" >\n<defs></defs>\n<oryx:magnets>\n<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n</oryx:magnets>\n<g>\n<path d=\"m4.71838,35.14956l72.65459,0l0,41.26243l-72.65459,0l0,-41.26243zm26.80661,-1.65047l-7.21753,-8.25258l-8.2085,0l7.21758,8.25258l8.20846,0l-0.00001,0zm16.41681,0l-7.21759,-8.25258l-8.2085,0l7.21755,8.25258l8.20848,0l0.00004,0l0.00002,0zm16.41685,0l-7.21758,-8.25258l-8.20847,0l7.21754,8.25258l8.2085,0l0,0l0.00001,0zm0.99078,-8.25258l7.21762,8.25258l4.80592,0l0,-8.25258l-12.02351,0l-0.00002,0zm-50.24137,8.25258l-7.21757,-8.25258l-3.17218,0l0,8.25258l10.38975,0l-0.00002,0l0.00002,0zm48.51272,-28.50762l-8.08371,1.6298l-5.8547,9.56009l8.08386,-1.62978l5.85453,-9.56008l0,-0.00002l0,0l-0.00002,0l0.00002,0l0.00002,-0.00002l0,0.00001zm-16.16736,3.25949l-8.08371,1.62978l-5.85454,9.56018l8.08356,-1.6298l5.85469,-9.56016l0,0l0,0zm-16.16741,3.25955l-8.08379,1.62971l-5.85462,9.56016l8.08376,-1.6298l5.85466,-9.56008l0,0l-0.00001,0.00001z\" id=\"svg_1\" stroke=\"null\"/>\n<path d=\"m9.68343,22.69396l5.73805,-8.01433l-11.42148,1.96957l1.22836,6.81294l4.45504,-0.76818l0,-0.00004l0,0.00002l0.00002,0l0,0l0,0.00002l0.00001,0zm64.25933,-18.10595l-3.06196,0.52799l-5.73795,8.01427l10.02814,-1.72931l-1.22826,-6.81295l0.00004,0.00002l0,0.00002l0,0l0,-0.00002l-0.00002,-0.00002l0.00001,0z\" id=\"svg_2\" stroke=\"null\"/>\n<text font-size=\"11\"\nid=\"text_name\"\nx=\"35\" y=\"70\"\noryx:align=\"top center\"\nstroke=\"#373e48\"\n></text>\n</g>\n</svg>",
       "icon": "scene/scene.png",

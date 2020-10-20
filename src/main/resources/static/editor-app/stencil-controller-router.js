@@ -299,7 +299,7 @@ angular.module('activitiModeler')
 
     $scope.findTraceableScenes = function (shape) {
         let traceableScenes = [];
-        if (shape.properties['oryx-type'] === "场景") {
+        if (shape.properties['oryx-type'] === "场景" || shape.properties['oryx-type'] === "scene") {
             traceableScenes.push(shape.id);
         }
         for (let i = 0; i < shape.incoming.length; i++) {

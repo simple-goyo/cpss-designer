@@ -83,7 +83,7 @@ var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $s
 	if($scope.latestfromto["from"]){
 		prop = $scope.latestfromto["from"].properties["oryx-type"];
 
-		if (prop && prop === "工人"){
+		if (prop && (prop === "工人" || prop === "Worker")){
 			res_entity = $scope.latestfromto["from"].properties["oryx-name"];
 			$scope.getResourcesfromKG(res_entity);
 		}else{
@@ -184,10 +184,12 @@ var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $s
 					newShapeId = property.value;
 					$scope.updatePropertyInModel(property);
 					break;
+				case "name":
 				case "名称":
 					property.value = actionName;
 					$scope.updatePropertyInModel(property);
 					break;
+				case "activityelement":
 				case "活动元素":
 					property.value = {
 						"id": selectItem.properties["oryx-overrideid"],
@@ -196,11 +198,13 @@ var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $s
 					};
 					$scope.updatePropertyInModel(property);
 					break;
+				case "actioninputstatus":
 				case "动作输入状态":
 					property.value = $scope.inputStatus;
 					$scope.inputStatus = [];
 					$scope.updatePropertyInModel(property);
 					break;
+				case "actionoutputstatus":
 				case "动作输出状态":
 					property.value = $scope.outputStatus;
 					$scope.outputStatus = [];

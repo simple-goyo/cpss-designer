@@ -48,7 +48,7 @@ angular.module('activitiModeler')
 
         const constTypeOfResource = [
             {name: "Device", type: "PhysicalAction"},
-            {name: "PysicalItem", type: "PhysicalAction"},
+            {name: "PhysicalItem", type: "PhysicalAction"},
             {name: "Robot", type: "PhysicalAction"},
             {name: "User", type: "SocialAction"},
             {name: "Worker", type: "SocialAction"},
@@ -57,7 +57,7 @@ angular.module('activitiModeler')
             {name: "CloudApp", type: "CyberAction"},
             {name: "MobileApp", type: "CyberAction"},
             {name: "EmbeddedApp", type: "CyberAction"},
-            {name: "CyberEntity", type: "CyberAction"}
+            {name: "CyberObject", type: "CyberAction"}
         ];
 
         angular.module('activitiModeler').UIClass($rootScope, $scope, $timeout);
@@ -779,7 +779,7 @@ angular.module('activitiModeler')
                 }
 
                 let shape = $scope.editor.getSelection()[0];
-                if (shape.properties["oryx-type"] === "场景") {
+                if (shape.properties["oryx-type"] === "场景" || shape.properties["oryx-type"] === "scene") {
                     $scope.deleteScene(shape);
                 } else if ($scope.isGateway(shape)) {
                     $scope.deleteGateway(shape);
@@ -852,7 +852,7 @@ angular.module('activitiModeler')
             $scope.adjustTraceableScenes = function () {
                 let shapes = [$scope.editor.getCanvas()][0];
                 for (let i = 0; i < shapes.length; i++) {
-                    if (shapes[i].properties['oryx-type'] === "场景") {
+                    if (shapes[i].properties['oryx-type'] === "场景"||shapes[i].properties['oryx-type'] === "scene") {
                         let traceableScenes = $scope.findTraceableScenes(shapes[i]);
                         traceableScenes.splice(traceableScenes.indexOf(shapes[i].id), 1);
                         shapes[i].setProperty("oryx-traceablescenes", traceableScenes);

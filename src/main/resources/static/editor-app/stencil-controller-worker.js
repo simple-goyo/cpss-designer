@@ -131,7 +131,7 @@ angular.module('activitiModeler')
                 for (var i = 0; i < resourceConnect.length; i++) {
                     var line = resourceConnect[i];
                     var from = $scope.getShapeById(line['from']);
-                    if (from && from.properties['oryx-type'] && from.properties['oryx-type'] === "工人") {
+                    if (from && from.properties['oryx-type'] && (from.properties['oryx-type'] === "工人" || from.properties['oryx-type'] === "Worker")) {
                         var fromBounds = line['fromBounds'];
                         var position = {
                             x: (fromBounds.a.x + fromBounds.b.x) / 2.0,

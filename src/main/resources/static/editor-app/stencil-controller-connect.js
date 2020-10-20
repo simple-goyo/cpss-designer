@@ -26,14 +26,16 @@ angular.module('activitiModeler')
             if ($scope.isGateway(from) || $scope.isGateway(to)) {
                 return;
             }
-            if(to.properties['oryx-type'] === "出口节点"){
+            if(to.properties['oryx-type'] === "出口节点" ||to.properties['oryx-type'] === "Exit"){
                 return;
             }
-            if (from.properties['oryx-type'] === "场景" && to.properties['oryx-type'] === "场景") {
+            if ((from.properties['oryx-type'] === "场景" && to.properties['oryx-type'] === "场景")||
+                (from.properties['oryx-type'] === "scene" && to.properties['oryx-type'] === "scene")
+            ) {
                 $scope.connectScene(from, edge, to);
                 return;
             }
-            if (from.properties['oryx-type'] === "工人") {
+            if (from.properties['oryx-type'] === "工人" || from.properties['oryx-type'] === "Worker") {
                 $scope.editor.setSelection(from);
             } else
                 $scope.editor.setSelection(to);
@@ -194,7 +196,7 @@ angular.module('activitiModeler')
         for (var i = 0; i < resourceConnect.length; i++) {
             var line = resourceConnect[i];
             var from = $scope.getShapeById(line['from']);
-            if (from && from.properties['oryx-type'] && from.properties['oryx-type'] === "工人") {
+            if (from && from.properties['oryx-type'] && (from.properties['oryx-type'] === "工人" || from.properties['oryx-type'] === "Worker")) {
                 return true;
             }
         }
@@ -214,7 +216,7 @@ angular.module('activitiModeler')
             var to = $scope.getShapeById(line['to']);
             if (from != null && to != null) {
                 var toBounds = line['toBounds'];
-                if (from.properties['oryx-type'] && from.properties['oryx-type'] === "工人") {
+                if (from.properties['oryx-type'] && (from.properties['oryx-type'] === "工人" || from.properties['oryx-type'] === "Worker")) {
                     var width = Math.abs(toBounds.a.x - toBounds.b.x);
                     var padding = 20;
                     // var height = Math.abs(toBounds.a.y - toBounds.b.y);

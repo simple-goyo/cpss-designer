@@ -226,13 +226,13 @@ angular.module('activitiModeler')
         $scope.dropTargetElement = undefined;
         for (var index = 0; index < $scope.selectedItem.properties.length; index++) {
             var property = $scope.selectedItem.properties[index];
-            if (property.title === "名称") {
+            if (property.title === "名称" || property.title === "name") {
                 $scope.nameProperty = property;
             } else if (property.title === "Id") {
                 var entities = [$scope.editor.getCanvas()][0].children;
                 property.value = entities[entities.length - 1].id;
                 $scope.updatePropertyInModel(property);
-            } else if (property.title === "类型" && item.name !== undefined) {
+            } else if ((property.title === "类型" || property.title === "type") && item.name !== undefined) {
                 property.value = item.name;
                 $scope.updatePropertyInModel(property);
             }

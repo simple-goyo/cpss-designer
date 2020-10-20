@@ -1078,11 +1078,11 @@
       ]
     },{
       "type": "node",
-      "id": "PysicalObject",
+      "id": "PhysicalObject",
       "title": "物品",
       "description": "物品",
       "view": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"400\"\n   height=\"400\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n <path id=\"path1\"   \td=\"m23,13.43636l-2,-1.72727l-8,6.90909l-8,-6.90909l-2,1.72727l8,6.90909l-8,6.90909l2,1.72727l8,-6.90909l8,6.90909l2,-1.72727l-8,-6.90909l8,-6.90909zm12,-12.43636l-20,0c-2.2,0 -4,1.55455 -4,3.45455l0,5.18182l4,0l0,-3.45455l20,0l0,27.63636l-20,0l0,-3.45455l-4,0l0,5.18182c0,1.9 1.8,3.45455 4,3.45455l20,0c2.2,0 4,-1.55455 4,-3.45455l0,-31.09091c0,-1.9 -1.8,-3.45455 -4,-3.45455z\"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n </g>\n</svg>",
-      "icon": "physicalentity/pysicalobject.png",
+      "icon": "physicalentity/PhysicalObject.png",
       "groups": [
         "PhysicalEntity"
       ],

@@ -6,8 +6,17 @@
                 </button>
                 <h2>{{'ENTITY.SPECIAL.PROPERTY.TITLE' | translate}} {{resName}}</h2>
             </div>
-            <hr>
             <div class="modal-body" id="sceneSetting">
+                <div>
+                    <label class="radio" style="display: inline-block;">
+                        <input type="radio" ng-model="bindDynamically"
+                               ng-value="true">{{'ENTITY.SPECIAL.PROPERTY.DYNAMIC' | translate}}
+                    </label>
+                    <label class="radio" style="display: inline-block;">
+                        <input type="radio" ng-model="bindDynamically"
+                               ng-value="false">{{'ENTITY.SPECIAL.PROPERTY.CUSTOM' | translate}}
+                    </label>
+                </div>
 
                 <div ng-if="bindDynamically!==true" ng-repeat-start="(id,value) in properties" class="row"
                      style="margin-top: 3%">
@@ -49,16 +58,7 @@
                     </select>
                 </div>
                 <div ng-repeat-end></div>
-                <div>
-                    <label>
-                        <input type="radio" ng-model="bindDynamically"
-                               ng-value="true">{{'ENTITY.SPECIAL.PROPERTY.DYNAMIC' | translate}}
-                    </label>
-                    <label>
-                        <input type="radio" ng-model="bindDynamically"
-                               ng-value="false">{{'ENTITY.SPECIAL.PROPERTY.CUSTOM' | translate}}
-                    </label>
-                </div>
+
             </div>
             <div class="modal-footer">
                 <button ng-click="close()" class="btn btn-primary" translate>ACTION.CANCEL</button>

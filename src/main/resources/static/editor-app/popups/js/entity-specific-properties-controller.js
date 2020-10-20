@@ -1,7 +1,8 @@
 var EntitySpecificPropertiesController = ['$scope', '$rootScope', '$http', function ($scope, $rootScope, $http) {
     let selectedShape = $scope.editor.getSelection()[0];
-    $scope.resName = selectedShape.properties["oryx-type"] === "房间" ? "Room" : selectedShape.properties['oryx-name'];
-    $scope.rules = ["靠近", "远离", "大于", "小于", "等于"];
+    $scope.resName = (selectedShape.properties["oryx-type"] === "房间" || selectedShape.properties["oryx-type"] === "Room") ? "Room" : selectedShape.properties['oryx-name'];
+    // $scope.rules = ["靠近", "远离", "大于", "小于", "等于"];
+    $scope.rules = ["Near", "Include", "LocatedIn"];
     $scope.getRelatedEntities = function () {
         let relatedEntities = [];
         let sceneId = $rootScope.scenes[$rootScope.selectedSceneIndex].id;
@@ -51,7 +52,7 @@ var EntitySpecificPropertiesController = ['$scope', '$rootScope', '$http', funct
 
     $scope.isEntity = function (stencilId) {
         return stencilId === "Person" || stencilId === "Person_Worker" || stencilId === "Group" || stencilId === "Organization"
-            || stencilId === "PysicalObject" || stencilId === "Robot" || stencilId === "Device"
+            || stencilId === "PhysicalObject" || stencilId === "Robot" || stencilId === "Device"
             || stencilId === "CloudApp" || stencilId === "MobileApp" || stencilId === "EmbeddedApp" || stencilId === "CyberObject"
             || stencilId === "Room";
     }

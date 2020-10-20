@@ -156,7 +156,7 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
 
     $scope.constTypeOfResource = [
         {name: "Device", type: "PhysicalAction"},
-        {name: "PysicalItem", type: "PhysicalAction"},
+        {name: "PhysicalItem", type: "PhysicalAction"},
         {name: "Robot", type: "PhysicalAction"},
         {name: "User", type: "SocialAction"},
         {name: "Worker", type: "SocialAction"},
@@ -165,7 +165,7 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
         {name: "CloudApp", type: "CyberAction"},
         {name: "MobileApp", type: "CyberAction"},
         {name: "EmbeddedApp", type: "CyberAction"},
-        {name: "CyberEntity", type: "CyberAction"}
+        {name: "CyberObject", type: "CyberAction"}
     ];
 
     var selectedShapeActionType = undefined;
@@ -220,7 +220,7 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
     let res_entity = {"id": "", "name": "", "type": ""};
     if($scope.latestfromto["from"]){
         prop = $scope.latestfromto["from"].properties["oryx-type"];
-        if (prop && (prop === "工人" || prop === "worker")) {
+        if (prop && (prop === "工人" || prop === "Worker")) {
             res_entity.id = $scope.latestfromto["from"].properties["oryx-overrideid"];
             res_entity.name = $scope.latestfromto["from"].properties["oryx-name"];
             res_entity.type = $scope.latestfromto["from"].properties["oryx-type"];
