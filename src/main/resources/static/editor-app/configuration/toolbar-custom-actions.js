@@ -233,7 +233,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         };
 
         $scope.close = function () {
-            let properties = $scope.getAllEntitySpecificProperties($scope.getScenes());
+            //let properties = $scope.getAllEntitySpecificProperties($scope.getScenes());
             $scope.$hide();
         };
 
@@ -636,23 +636,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         };
 
         $scope.getConstraints = function (scenes) {
-            let constraint_template = {
-                "entity": {
-                    "anchor": {
-                        "id": "eeeee-10",
-                        "name": "投影仪"
-                    },
-                    "adjustable": {
-                        "id": "sppp-01",
-                        "name": "会议室"
-                    }
-                },
-                "flow": {
-                    "from": "sppp-01",
-                    "to": "eeeee-10",
-                    "condition": "包含"
-                }
-            };
+            return $scope.getAllEntitySpecificProperties(scenes);
         };
 
         $scope.getAllEntitySpecificProperties = function (scenes) {

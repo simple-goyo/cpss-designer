@@ -97,7 +97,7 @@ public class KnowledgeGraphService {
     public static String getResourceDetails(String resName){
         final String KGURL = KG_URL+"getResourceDetails";
         //String resName = "CoffeeMaker";
-        String reqParam = "?resourceType="+resName+"&filePath="+filePath;
+        String reqParam = "?resourceType="+resName;//+"&filePath="+filePath;
         String query;
         String retn;
 
@@ -282,10 +282,10 @@ public class KnowledgeGraphService {
 //        List<String> attri = Arrays.asList("\"inputParameter\"", "\"outputParameter\"", "\"accessAddress\"", "\"methodType\"");
 //        getInstanceAttributes( attri, "makeCoffee_coffeeMaker_roomD2008");
 //        getOrgByLocation("roomD2008_InterdisciplineBuilding2");
-//        String a = getResourceDetails("Orders");
+        String a = getResourceDetails("Orders");
 
-            String job = getResourceProps("123");
-        System.out.println(job);
+//            String job = getResourceProps("123");
+        System.out.println(a);
 
 //            getResourceList();
         }catch (Exception e){
