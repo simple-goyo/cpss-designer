@@ -404,7 +404,7 @@ angular.module('activitiModeler')
              * */
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_DBLCLICK, function (event) {
                 let selectedShape = $scope.editor.getSelection()[0];
-                if (selectedShape.properties['oryx-entityspecificproperties']!==undefined) {
+                if (selectedShape.properties['oryx-entityspecificproperties'] !== undefined) {
                     $scope.setEntitySpecificProperties();
                 }
             });
@@ -637,10 +637,10 @@ angular.module('activitiModeler')
                                 if (whichItem.properties[i].key === "oryx-activityelement" || whichItem.properties[i].key === "oryx-startevent") return;
                             }
 
-                            if((stencilItem.id === 'ExitPoint')||(stencilItem.id === 'EntryPoint'&& obj.id !== 'resource-line-button')) {
+                            if ((stencilItem.id === 'ExitPoint') || (stencilItem.id === 'EntryPoint' && obj.id !== 'resource-line-button')) {
                                 return;
                             }
-                            if(stencilItem.id === 'scene' && obj.id !== 'resource-line-button') {
+                            if (stencilItem.id === 'scene' && obj.id !== 'resource-line-button') {
                                 return;
                             }
 
@@ -664,6 +664,42 @@ angular.module('activitiModeler')
                 }
             });
 
+            //add listener to do operations for dbClick to change scene name
+            $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_PROPERTY_CHANGED, function (event) {
+                let shape = event.elements[0];
+                let selectedShape = $scope.editor.getSelection()[0];
+                if (shape !== undefined && selectedShape !== undefined && shape.id === selectedShape.id) {
+                    //update scene's name in scenes
+                    if (shape._stencil._jsonStencil.title === "scene" && event.name === "oryx-name") {
+                        $rootScope.scenes.forEach((scene) => {
+                            if (scene.id === shape.id) {
+                                $scope.safeApply(
+                                    function () {
+                                        scene.name = event.value;
+                                    }
+                                );
+                            }
+                        });
+                    }
+                    //update value to ensure showing the latest property value
+                    $scope.safeApply(function () {
+                        if ($scope.selectedItem !== undefined && $scope.selectedItem !== null) {
+                            $scope.selectedItem.title = event.value;
+                            if ($scope.selectedItem.properties && $scope.selectedItem.properties.length > 0) {
+                                $scope.selectedItem.properties.forEach((property) => {
+                                    if (property.key === event.name) {
+                                        property.value = event.value;
+                                        property.noValue = (event.value === undefined
+                                            || event.value === null
+                                            || event.value.length === 0);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+
             if (!$rootScope.stencilInitialized) {
                 KISBPM.eventBus.addListener(KISBPM.eventBus.EVENT_TYPE_HIDE_SHAPE_BUTTONS, function (event) {
                     jQuery('.Oryx_button').each(function (i, obj) {
@@ -676,15 +712,26 @@ angular.module('activitiModeler')
                  */
                 KISBPM.eventBus.addListener(KISBPM.eventBus.EVENT_TYPE_PROPERTY_VALUE_CHANGED, function (event) {
                     if (event.property && event.property.key) {
-                        // If the name property is been updated, we also need to change the title of the currently selected item
-                        if (event.property.key === 'oryx-name' && $scope.selectedItem !== undefined && $scope.selectedItem !== null) {
-                            $scope.selectedItem.title = event.newValue;
-                        }
 
                         // Update "no value" flag
                         event.property.noValue = (event.property.value === undefined
                             || event.property.value === null
                             || event.property.value.length === 0);
+
+                        // If the name property is been updated, we also need to change the title of the currently selected item
+                        if (event.property.key === 'oryx-name' && $scope.selectedItem !== undefined && $scope.selectedItem !== null) {
+                            $scope.selectedItem.title = event.newValue;
+                        }
+                        if ($scope.selectedItem !== undefined && $scope.selectedItem !== null
+                            && $scope.selectedItem.properties && $scope.selectedItem.properties.length > 0) {
+                            $scope.selectedItem.properties.forEach((property) => {
+                                if (property.key === event.property.key) {
+                                    property.value = event.newValue;
+                                    property.noValue = event.property.noValue;
+                                }
+                            });
+                        }
+
                     }
                 });
 
@@ -852,7 +899,7 @@ angular.module('activitiModeler')
             $scope.adjustTraceableScenes = function () {
                 let shapes = [$scope.editor.getCanvas()][0];
                 for (let i = 0; i < shapes.length; i++) {
-                    if (shapes[i].properties['oryx-type'] === "场景"||shapes[i].properties['oryx-type'] === "scene") {
+                    if (shapes[i].properties['oryx-type'] === "场景" || shapes[i].properties['oryx-type'] === "scene") {
                         let traceableScenes = $scope.findTraceableScenes(shapes[i]);
                         traceableScenes.splice(traceableScenes.indexOf(shapes[i].id), 1);
                         shapes[i].setProperty("oryx-traceablescenes", traceableScenes);

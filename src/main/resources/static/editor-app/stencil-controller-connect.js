@@ -26,10 +26,10 @@ angular.module('activitiModeler')
             if ($scope.isGateway(from) || $scope.isGateway(to)) {
                 return;
             }
-            if(to.properties['oryx-type'] === "出口节点" ||to.properties['oryx-type'] === "Exit"){
+            if (to.properties['oryx-type'] === "出口节点" || to.properties['oryx-type'] === "Exit") {
                 return;
             }
-            if ((from.properties['oryx-type'] === "场景" && to.properties['oryx-type'] === "场景")||
+            if ((from.properties['oryx-type'] === "场景" && to.properties['oryx-type'] === "场景") ||
                 (from.properties['oryx-type'] === "scene" && to.properties['oryx-type'] === "scene")
             ) {
                 $scope.connectScene(from, edge, to);
@@ -126,6 +126,8 @@ angular.module('activitiModeler')
         };
         var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
         $scope.editor.executeCommands(command);
+        let edge = $scope.editor.getSelection()[0].incoming[0];
+        edge.setProperty('oryx-overrideid',edge.id);
         KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
         $scope.editor.setSelection(connectedShape);
         $scope.editor.getCanvas().update();
@@ -298,6 +300,7 @@ angular.module('activitiModeler')
         var cPoint = magnet ? magnet.bounds.center() : from.bounds.midPoint();
         edge.dockers.first().setReferencePoint(cPoint);
         edge.dockers.last().setDockedShape(to);
+        edge.setProperty('oryx-overrideid',edge.id);
         magnet = to.getDefaultMagnet();
         var ePoint = magnet ? magnet.bounds.center() : to.bounds.midPoint();
         edge.dockers.last().setReferencePoint(ePoint);

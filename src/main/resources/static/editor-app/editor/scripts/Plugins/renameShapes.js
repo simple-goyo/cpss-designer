@@ -146,7 +146,12 @@ ORYX.Plugins.RenameShapes = Clazz.extend({
 		textInput.className = 'x-form-textarea x-form-field x_form_text_set_absolute';
 		textInput.value = shape.properties[propId];
 		this.oldValueText = shape.properties[propId];
-		document.getElementById('canvasSection').appendChild(textInput);
+
+		// Double click to rename scene shape but other entity can't rename by double click
+		if (shape._stencil._jsonStencil.title === "scene"){
+			document.getElementById('canvasSection').appendChild(textInput);
+		}
+		// document.getElementById('canvasSection').appendChild(textInput);
 		this.shownTextField = textInput;
 
 
