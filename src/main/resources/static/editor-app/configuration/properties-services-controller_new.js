@@ -290,7 +290,7 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
         res_entity.name = $scope.selectedItem.title;
         res_entity.id = $scope.selectedItem.properties["oryx-overrideid"];
         res_entity.type = $scope.selectedItem.properties["oryx-type"];
-        $scope.getResourcesfromKG(res_entity);
+        $scope.getResourcesfromKG(res_entity.name);
     }
 
 
