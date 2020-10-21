@@ -51,7 +51,7 @@ var KisBpmServicesPopupCtrl = ['$scope', function ($scope) {
     };
 }];
 
-var paramParser = function (rawParam) {
+var paramParser_bak = function (rawParam) {
     // 测试字符串 [{"mode":"","level":"","num":"","action":""}]
     let str = "";
     let oldStr = "";
@@ -89,6 +89,31 @@ var paramParser = function (rawParam) {
     return keyList;
 
 
+};
+
+var paramParser = function (rawParam) {
+    // 测试字符串 ["mode","level","num","action"]
+    let str = "";
+    let keyList = [];
+    if (rawParam[0] === '[') {
+        str = rawParam.substring(1, rawParam.length - 1);
+    } else {
+        str = rawParam;
+    }
+    let splitedList = str.split(',');
+    splitedList.forEach(function (value) {
+        // // value == "mode":""
+        // let key_value = value.split(':');
+        // let key = key_value[0];
+        // if (key[0] === '\"' || key[0] === '\'') {
+        //     key = key.substring(1, key.length - 1);
+        // }
+
+        keyList.push(value);
+    });
+
+    // console.log(str);
+    return keyList;
 };
 
 var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, $scope, $http) {
@@ -177,7 +202,7 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
     $scope.getResourcesfromKG = function (resName) {
         $http({
             method: 'GET',
-            url: KISBPM.URL.getResourceDetails(res_entity.name)
+            url: KISBPM.URL.getResourceDetails(resName)
         }).success(function (data, status, headers, config) {
             console.log(JSON.stringify(data));
 
@@ -196,8 +221,18 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
                 }; // 加入下拉框中
 
                 // 获取函数的参数
-                $scope.resourceInputs[i] = paramParser(data.service[i].inputParameter[0]);
-                $scope.resourceOutputs[i] = paramParser(data.service[i].outputParameter[0]);
+                if(data.service[i].inputParameter[0] !== ""){
+                    $scope.resourceInputs[i] = data.service[i].inputParameter;
+                }
+                else{
+                    $scope.resourceInputs[i] = [];
+                }
+                if(data.service[i].outputParameter[0] !== ""){
+                    $scope.resourceOutputs[i] = data.service[i].outputParameter;
+                }else{
+                    $scope.resourceOutputs[i] = [];
+                }
+
 
                 // 设置output参数，output决定是否有输出
                 $scope.output[i] = data.service[i].output;
