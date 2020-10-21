@@ -139,7 +139,7 @@ var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $s
 			}
 		}
 		let paramter = $scope.resourceEvents[index].output;
-		paramter = paramter.replace("[","").replace("]","").split(/,\s*/);
+		//paramter = paramter.replace("[","").replace("]","").split(/,\s*/);
 		$scope.insertParameters(sceneId, action.id, paramter);
 
 		$scope.close();

@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import static com.activiti6.constant.UrlConstant.KG_URL;
 import static com.activiti6.utils.HttpClientHelper.postJSON;
@@ -26,6 +29,29 @@ import static com.activiti6.utils.HttpClientHelper.postJSON;
 
 public class KnowledgeGraphService {
     static final String filePath = "/home/k8s-node1/KG/data/hct_Ontology_20200810.ttl";
+
+    public static String parseRegString(String str){
+        // [name,local,num] -> ["name","local","num"]
+        List<String> retnList = new ArrayList<>();
+        String v = "";
+        if ( !str.isEmpty() && str.charAt(0) == '[') {
+             v = str.substring(1, str.length()-1);
+        }else{
+            v = str;
+        }
+        String[] splitedStrs = v.split(",");
+        if(splitedStrs.length == 1){
+            Collections.addAll(retnList, "\""+v+"\"");
+        }else{
+            for(int i=0;i < splitedStrs.length;i++){
+                splitedStrs[i] = "\""+ splitedStrs[i].trim() +"\"";
+            }
+            Collections.addAll(retnList, splitedStrs);
+        }
+
+        System.out.println(retnList.toString());
+        return retnList.toString();
+    }
 
     public static List<String> parseString(String str){
         List<String> retnList = new ArrayList<>();
@@ -97,7 +123,7 @@ public class KnowledgeGraphService {
     public static String getResourceDetails(String resName){
         final String KGURL = KG_URL+"getResourceDetails";
         //String resName = "CoffeeMaker";
-        String reqParam = "?resourceType="+resName+"&filePath="+filePath;
+        String reqParam = "?resourceType="+resName;//+"&filePath="+filePath;
         String query;
         String retn;
 
@@ -139,10 +165,45 @@ public class KnowledgeGraphService {
 //        tmp.put("name", parseString(job.getString("resourceEvent")).get(0).replace("\"",""));
 //        List<String> resEve = new ArrayList<String>();
 //        resEve.add(tmp.toString());
-        List<String> resEve = parseString(job.getString("resourceEvent"));
-        List<String> resCat = parseString(job.getString("resourceCategory"));
-        List<String> resServs = parseString(job.getString("resourceCapability"));
+        String resourceEvent = job.getString("resourceEvent");
+        String pattern = "\"\\\\\\\\\\\\\"\\[(.*?)\\]\\\\\\\\\\\\\"\"";
+        String newresourceEvent = "";
 
+        try{
+            Pattern p = Pattern.compile(pattern);
+            Matcher m = p.matcher(resourceEvent);
+            if(m.find()){
+                System.out.println("Found value: " + m.group(1));
+                newresourceEvent = m.replaceAll(parseRegString(m.group(1)));
+            }else{
+                newresourceEvent = resourceEvent;
+            }
+            //newresourceEvent = resourceEvent.replaceAll(pattern, "\\[$1\\]");
+        }catch (PatternSyntaxException e){
+            newresourceEvent = resourceEvent;
+        }
+
+        String resEve = newresourceEvent;
+        List<String> resCat = parseString(job.getString("resourceCategory"));
+        String resourceCapability = job.getString("resourceCapability");
+
+
+        String newresourceCapability = "";
+        try{
+            String pattern2 = "\\[\"\\\\\\\\\\\\\"\\[(.*?)\\]\\\\\\\\\\\\\"\"\\]";
+            Pattern p = Pattern.compile(pattern2);
+            Matcher m = p.matcher(resourceCapability);
+            if(m.find()){
+                System.out.println("Found value: " + m.group(1));
+                newresourceCapability = m.replaceAll(parseRegString(m.group(1)));
+            }
+            // newresourceCapability = resourceCapability.replaceAll(pattern, "$1");
+        }catch (PatternSyntaxException e){
+            newresourceCapability = resourceCapability;
+        }
+
+        String resServs = newresourceCapability;
+        System.out.println(resServs);
 
         // resourceService中有以下几个参数
         //   output——输出
@@ -282,10 +343,10 @@ public class KnowledgeGraphService {
 //        List<String> attri = Arrays.asList("\"inputParameter\"", "\"outputParameter\"", "\"accessAddress\"", "\"methodType\"");
 //        getInstanceAttributes( attri, "makeCoffee_coffeeMaker_roomD2008");
 //        getOrgByLocation("roomD2008_InterdisciplineBuilding2");
-//        String a = getResourceDetails("Orders");
+        String a = getResourceDetails("CoffeeMaker");
 
-            String job = getResourceProps("123");
-        System.out.println(job);
+//            String job = getResourceProps("123");
+        System.out.println(a);
 
 //            getResourceList();
         }catch (Exception e){

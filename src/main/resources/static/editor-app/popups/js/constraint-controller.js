@@ -1,6 +1,8 @@
 var ConstraintController = ['$scope','$rootScope','$http', function ($scope, $rootScope, $http) {
     $scope.entities = [];
-    $scope.entities.push({id:"0",name:"User",icon:"socialentity/person.png"});
+    // $scope.entities.push({id:"0",name:"User",icon:"socialentity/person.png"});
+
+    let scenes = $scope.getScenes();
     let data_tempelate = {
         "results": [
         {
@@ -42,6 +44,13 @@ var ConstraintController = ['$scope','$rootScope','$http', function ($scope, $ro
                 "from": 1470002400000
             }
         };
+        // bindDynamically: false,
+        // type: "entity",
+        // data: "",
+        // text: "",
+        // entity: "",
+        // rule: ""
+        let properties = $scope.getAllEntitySpecificProperties(scenes);
 
         return "neo4jData.json";
     }

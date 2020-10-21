@@ -23,7 +23,7 @@ angular.module('activitiModeler')
                 $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], serviceOutput, resTemp);
             }
 
-            if (actionName === 'finish making coffee') {
+            if (actionName === 'FinishMakingCoffee') {
                 $scope.createResource($scope, shape, "PhysicalObject");
 
                 let resTemp = resProperties;
@@ -31,7 +31,7 @@ angular.module('activitiModeler')
                 $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], serviceOutput, resTemp);
             }
 
-            if (actionName === 'finish printing') {
+            if (actionName === 'FinishPrinting') {
                 $scope.createResource($scope, shape, "PhysicalObject");
 
                 let resTemp = resProperties;
@@ -39,13 +39,22 @@ angular.module('activitiModeler')
                 $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "file", resTemp);
             }
 
-            if (actionName === 'meeting reminder') {
+            if (actionName === 'MeetingReminder') {
                 $scope.createResource($scope, shape, "CyberObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
                 $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "message", resTemp);
+            }else{
+                $scope.createResource($scope, shape, "CyberObject");
+
+                let resTemp = resProperties;
+                resTemp["oryx-type"] = "CyberObject";
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], actionName, resTemp);
             }
+
+
+
         }
     };
 
