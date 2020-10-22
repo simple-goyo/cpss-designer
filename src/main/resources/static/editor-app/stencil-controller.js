@@ -842,13 +842,20 @@ angular.module('activitiModeler')
                 let shape = $scope.editor.getSelection()[0];
                 if (shape.properties["oryx-type"] === "场景" || shape.properties["oryx-type"] === "scene") {
                     $scope.deleteScene(shape);
+                    $scope.adjustTraceableScenes();
                 } else if ($scope.isGateway(shape)) {
                     $scope.deleteGateway(shape);
+                    $scope.adjustTraceableScenes();
                 } else if ($scope.isAction(shape)) {
                     $scope.deleteAction(shape);
+                } else if ($scope.isMessageFlow(shape)) {
+                    $scope.deleteMessageFlow(shape);
                 }
                 KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
 
+                if ($scope.isMessageSceneFlow(shape)) {
+                    $scope.adjustTraceableScenes();
+                }
                 if ($rootScope.selectedSceneIndex > -1) {
                     $rootScope.scenes[$rootScope.selectedSceneIndex].childShapes = $scope.editor.getJSON().childShapes;
                 } else if ($rootScope.selectedSceneIndex === -1) {
@@ -858,68 +865,6 @@ angular.module('activitiModeler')
                 // $scope.editor.deleteShape(shapeToRemove);
                 // KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
             };
-
-            $scope.deleteAction = function (action) {
-                let sceneId = $rootScope.scenes[$rootScope.selectedSceneIndex].id;
-                $scope.deleteParametersInAction(sceneId, action.id);
-                $scope.editor.deleteShape(action);
-            }
-
-            $scope.deleteGateway = function (shape) {
-                while (shape.incoming.length > 0) {
-                    $scope.editor.deleteShape(shape.incoming[0]);
-                }
-                while (shape.outgoing.length > 0) {
-                    $scope.editor.deleteShape(shape.outgoing[0]);
-                }
-
-                let companyId = shape.properties["oryx-gatewaycompany"];
-                if (companyId !== undefined && companyId !== "") {
-                    let company = $scope.getShapeById(companyId);
-                    if (company !== undefined) {
-                        if ($scope.isStartGateway(shape)) {
-                            $scope.deleteGateway(company);
-                            $scope.editor.deleteShape(company);
-                        } else {
-                            company.setProperty("oryx-gatewaycompany", "");
-                        }
-                    }
-                }
-                $rootScope.scenesRelations.childShapes = $scope.editor.getJSON().childShapes;
-                $rootScope.scenesRelations.sceneTree = $scope.getSceneTree();
-                $scope.adjustTraceableScenes();
-            }
-
-            $scope.deleteScene = function (shape) {
-                while (shape.incoming.length > 0) {
-                    $scope.editor.deleteShape(shape.incoming[0]);
-                }
-                while (shape.outgoing.length > 0) {
-                    $scope.editor.deleteShape(shape.outgoing[0]);
-                }
-                for (let i = 0; i < $rootScope.scenes.length; i++) {
-                    let scene = $rootScope.scenes[i];
-                    if (scene.id === shape.id) {
-                        $rootScope.scenes.splice(i, 1);
-                        break;
-                    }
-                }
-                $scope.deleteParametersInScene(shape.id);
-                $rootScope.scenesRelations.childShapes = $scope.editor.getJSON().childShapes;
-                $rootScope.scenesRelations.sceneTree = $scope.getSceneTree();
-                $scope.adjustTraceableScenes();
-            }
-
-            $scope.adjustTraceableScenes = function () {
-                let shapes = [$scope.editor.getCanvas()][0];
-                for (let i = 0; i < shapes.length; i++) {
-                    if (shapes[i].properties['oryx-type'] === "场景" || shapes[i].properties['oryx-type'] === "scene") {
-                        let traceableScenes = $scope.findTraceableScenes(shapes[i]);
-                        traceableScenes.splice(traceableScenes.indexOf(shapes[i].id), 1);
-                        shapes[i].setProperty("oryx-traceablescenes", traceableScenes);
-                    }
-                }
-            }
 
             $scope.quickAddItem = function (newItemId) {
                 $scope.safeApply(function () {

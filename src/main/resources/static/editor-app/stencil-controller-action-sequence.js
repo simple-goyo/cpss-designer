@@ -6,6 +6,7 @@ angular.module('activitiModeler')
     const CyberAction = "CyberAction";
     const SocialAction = "SocialAction";
     const StartMessageEvent = "StartMessageEvent";
+    const UndefinedAction = "UndefinedAction";
     const DefaultEvent = "DefaultEvent";
 
     /**
@@ -266,6 +267,41 @@ angular.module('activitiModeler')
             || id === namespace + CyberAction
             || id === namespace + SocialAction
             || id === namespace + StartMessageEvent
-            || id === namespace + DefaultEvent;
+            || id === namespace + DefaultEvent
+            || id === namespace + UndefinedAction;
+    }
+
+    $scope.deleteAction = function (action) {
+        let sceneId = $rootScope.scenes[$rootScope.selectedSceneIndex].id;
+        $scope.deleteParametersInAction(sceneId, action.id);
+        let shape = $scope.getNextAction(action);
+        while (shape != null) {
+            let position = shape.bounds.center();
+            position.x -= 145;
+            shape.bounds.centerMoveTo(position);
+            shape = $scope.getNextAction(shape);
+        }
+        let lastAction = $scope.getLastAction(action);
+        let nextAction = $scope.getNextAction(action);
+        if (nextAction !== null) {
+            jQuery('#' + nextAction.id + 'bg_frame').attr({"fill": "#04FF8E"});
+            $scope.setHighlightedShape(nextAction.id);
+            $scope.toDoAboutResourceLineAfterChangingAction(action);
+            $scope.connectWithSequenceFlow(lastAction, nextAction);
+        } else {
+            if (lastAction !== null) {
+                if (lastAction._stencil._jsonStencil.id !== lastAction._stencil._namespace + "StartNoneEvent") {
+                    jQuery('#' + lastAction.id + 'bg_frame').attr({"fill": "#04FF8E"});
+                }
+                $scope.setHighlightedShape(lastAction.id);
+                $scope.toDoAboutResourceLineAfterChangingAction(action);
+            }
+        }
+        while (action.incoming.length > 0) {
+            $scope.editor.deleteShape(action.incoming[0]);
+        }
+        while (action.outgoing.length > 0) {
+            $scope.editor.deleteShape(action.outgoing[0]);
+        }
     }
 };
