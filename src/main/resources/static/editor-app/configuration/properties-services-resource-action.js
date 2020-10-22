@@ -45,13 +45,14 @@ angular.module('activitiModeler')
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
                 $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "message", resTemp);
-            }else{
-                $scope.createResource($scope, shape, "CyberObject");
-
-                let resTemp = resProperties;
-                resTemp["oryx-type"] = "CyberObject";
-                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], actionName, resTemp);
             }
+                // else{
+            //     $scope.createResource($scope, shape, "CyberObject");
+            //
+            //     let resTemp = resProperties;
+            //     resTemp["oryx-type"] = "CyberObject";
+            //     $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], actionName, resTemp);
+            // }
 
 
 
