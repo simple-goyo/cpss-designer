@@ -15,13 +15,18 @@ angular.module('activitiModeler')
 
     $scope.getParameters = function (sceneId, actionId) {
         let actionsInScene = $scope.parameterPool.get(sceneId);
-        return actionsInScene.get(actionId);
+        if (actionsInScene !== undefined)
+            return actionsInScene.get(actionId);
+        else
+            return undefined;
     }
 
     $scope.deleteParametersInAction = function (sceneId, actionId) {
         let actionsInScene = $scope.parameterPool.get(sceneId);
-        actionsInScene.delete(actionId);
-        $scope.parameterPool.set(sceneId, actionsInScene)
+        if (actionsInScene !== undefined) {
+            actionsInScene.delete(actionId);
+            $scope.parameterPool.set(sceneId, actionsInScene);
+        }
     }
 
     $scope.deleteParametersInScene = function (sceneId) {
