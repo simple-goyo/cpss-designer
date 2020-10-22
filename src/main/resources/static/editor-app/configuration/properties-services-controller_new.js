@@ -265,7 +265,8 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
                     selectedShapeActionType = $scope.constTypeOfResource[i].type;
                 }
             }
-            $scope.getResourcesfromKG(res_entity.name);
+            $scope.getResourcesfromKG("CrowdsourcingWorker");
+            // $scope.getResourcesfromKG(res_entity.name);
         } else {
             res_entity.id = $scope.latestfromto["to"].properties["oryx-overrideid"];
             res_entity.name = $scope.latestfromto["to"].properties["oryx-name"];

@@ -84,8 +84,9 @@ var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $s
 		prop = $scope.latestfromto["from"].properties["oryx-type"];
 
 		if (prop && (prop === "工人" || prop === "Worker")){
-			res_entity = $scope.latestfromto["from"].properties["oryx-name"];
-			$scope.getResourcesfromKG(res_entity);
+			// res_entity = $scope.latestfromto["from"].properties["oryx-name"];
+			// $scope.getResourcesfromKG(res_entity);
+			$scope.getResourcesfromKG("CrowdsourcingWorker");
 		}else{
 			res_entity = $scope.latestfromto["to"].properties["oryx-name"];
 			$scope.getResourcesfromKG(res_entity);

@@ -196,6 +196,8 @@ public class KnowledgeGraphService {
             if(m.find()){
                 System.out.println("Found value: " + m.group(1));
                 newresourceCapability = m.replaceAll(parseRegString(m.group(1)));
+            }else{
+                newresourceCapability = resourceCapability;
             }
             // newresourceCapability = resourceCapability.replaceAll(pattern, "$1");
         }catch (PatternSyntaxException e){
@@ -203,6 +205,9 @@ public class KnowledgeGraphService {
         }
 
         String resServs = newresourceCapability;
+        if (resServs.isEmpty()){
+            resServs = "[]";
+        }
         System.out.println(resServs);
 
         // resourceService中有以下几个参数
@@ -343,7 +348,7 @@ public class KnowledgeGraphService {
 //        List<String> attri = Arrays.asList("\"inputParameter\"", "\"outputParameter\"", "\"accessAddress\"", "\"methodType\"");
 //        getInstanceAttributes( attri, "makeCoffee_coffeeMaker_roomD2008");
 //        getOrgByLocation("roomD2008_InterdisciplineBuilding2");
-        String a = getResourceDetails("CoffeeMaker");
+        String a = getResourceDetails("Light");
 
 //            String job = getResourceProps("123");
         System.out.println(a);
