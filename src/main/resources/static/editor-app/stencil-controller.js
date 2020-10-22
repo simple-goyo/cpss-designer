@@ -482,7 +482,11 @@ angular.module('activitiModeler')
                                 selectedShape.properties[key] = true;
                             }
 
-                            if (KISBPM.CONFIG.showRemovedProperties == false && property.isHidden()) {
+                            // if (KISBPM.CONFIG.showRemovedProperties == false && property.isHidden()) {
+                            //     continue;
+                            // }
+
+                            if (KISBPM.CONFIG.showRemovedProperties == false && $scope.isHiddenProperty(property.id())) {
                                 continue;
                             }
 
@@ -506,7 +510,7 @@ angular.module('activitiModeler')
                             if (propertyConfig.readModeTemplateUrl !== undefined && propertyConfig.readModeTemplateUrl !== null) {
                                 currentProperty.readModeTemplateUrl = propertyConfig.readModeTemplateUrl + '?version=' + $rootScope.staticIncludeVersion;
                             }
-                            if (propertyConfig.writeModeTemplateUrl !== null && propertyConfig.writeModeTemplateUrl !== null) {
+                            if (propertyConfig.writeModeTemplateUrl !== undefined && propertyConfig.writeModeTemplateUrl !== null) {
                                 currentProperty.writeModeTemplateUrl = propertyConfig.writeModeTemplateUrl + '?version=' + $rootScope.staticIncludeVersion;
                             }
 
@@ -543,6 +547,14 @@ angular.module('activitiModeler')
                     });
                 }
             });
+
+            //hide hidden properties
+            $scope.isHiddenProperty = function (propertyId) {
+                let hiddenProperties = ["ownedbywho", "owner", "actioninputstatus", "actionoutputstatus",
+                    "resourceline", "workercontains", "entityspecificproperties", "traceablescenes",
+                    "traceableactions", "gatewaycompany", "contain_resource", "animation", "startevent", "animate_direction", "aciton_type"];
+                return hiddenProperties.includes(propertyId);
+            }
 
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_SELECTION_CHANGED, function (event) {
                 KISBPM.eventBus.dispatch(KISBPM.eventBus.EVENT_TYPE_HIDE_SHAPE_BUTTONS);
@@ -684,7 +696,9 @@ angular.module('activitiModeler')
                     //update value to ensure showing the latest property value
                     $scope.safeApply(function () {
                         if ($scope.selectedItem !== undefined && $scope.selectedItem !== null) {
-                            $scope.selectedItem.title = event.value;
+                            if (event.name === "oryx-name") {
+                                $scope.selectedItem.title = event.value;
+                            }
                             if ($scope.selectedItem.properties && $scope.selectedItem.properties.length > 0) {
                                 $scope.selectedItem.properties.forEach((property) => {
                                     if (property.key === event.name) {
