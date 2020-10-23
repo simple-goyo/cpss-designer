@@ -54,7 +54,61 @@ angular.module('activitiModeler')
                 resTemp["oryx-type"] = "CyberObject";
                 $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "BodyMovement", resTemp);
             }
-                // else{
+
+            if (actionName === 'Notifications') {
+                $scope.createResource($scope, shape, "CyberObject");
+
+                let resTemp = resProperties;
+                resTemp["oryx-type"] = "CyberObject";
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "Notifications", resTemp);
+            }
+
+            if (actionName === 'WeightUpdated') {
+                $scope.createResource($scope, shape, "CyberObject");
+
+                let resTemp = resProperties;
+                resTemp["oryx-type"] = "CyberObject";
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "WeightUpdated", resTemp);
+            }
+
+            if (actionName === 'FinishBoiling') {
+                $scope.createResource($scope, shape, "CyberObject");
+
+                let resTemp = resProperties;
+                resTemp["oryx-type"] = "CyberObject";
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "FinishBoiling", resTemp);
+            }
+
+            if (actionName === 'FallDown') {
+                $scope.createResource($scope, shape, "CyberObject");
+
+                let resTemp = resProperties;
+                resTemp["oryx-type"] = "CyberObject";
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "FallDown", resTemp);
+            }
+
+            if (actionName === 'DoorOpen') {
+                $scope.createResource($scope, shape, "CyberObject");
+
+                let resTemp = resProperties;
+                resTemp["oryx-type"] = "CyberObject";
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "DoorOpen", resTemp);
+            }
+
+            if (actionName === 'FinishPunching') {
+                $scope.createResource($scope, shape, "CyberObject");
+
+                let resTemp = resProperties;
+                resTemp["oryx-type"] = "CyberObject";
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "FinishPunching", resTemp);
+            }
+
+
+
+
+
+
+            // else{
             //     $scope.createResource($scope, shape, "CyberObject");
             //
             //     let resTemp = resProperties;

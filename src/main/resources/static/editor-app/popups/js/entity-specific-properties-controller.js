@@ -1,6 +1,6 @@
 var EntitySpecificPropertiesController = ['$scope', '$rootScope', '$http', function ($scope, $rootScope, $http) {
     let selectedShape = $scope.editor.getSelection()[0];
-    $scope.resName = (selectedShape.properties["oryx-type"] === "房间" || selectedShape.properties["oryx-type"] === "Room") ? "Room" : selectedShape.properties['oryx-name'];
+    $scope.resName = "";
     // $scope.rules = ["靠近", "远离", "大于", "小于", "等于"];
     $scope.rules = ["Near", "Include", "LocatedIn"];
     $scope.getRelatedEntities = function () {
@@ -60,9 +60,20 @@ var EntitySpecificPropertiesController = ['$scope', '$rootScope', '$http', funct
     $scope.entities = $scope.getRelatedEntities();
     $scope.data = $scope.getData();
     let olderProperties = selectedShape.properties['oryx-entityspecificproperties'];
+
+    $scope.getResName = function (){
+        if(selectedShape.properties["oryx-type"] === "房间" || selectedShape.properties["oryx-type"] === "Room"){
+            return "Room";
+        }else if(selectedShape.properties["oryx-type"] === "工人" || selectedShape.properties["oryx-type"] === "Worker"){
+            return "CrowdsourcingWorker";
+        }else {
+            return selectedShape.properties['oryx-name'];
+        }
+    }
+
     $http({
         method: 'GET',
-        url: KISBPM.URL.getEntitySpecificProperties($scope.resName)
+        url: KISBPM.URL.getEntitySpecificProperties($scope.getResName())
     }).success(function (data, status, headers, config) {
         $scope.properties = {};
         if (data.properties !== undefined && data.properties.length > 0) {

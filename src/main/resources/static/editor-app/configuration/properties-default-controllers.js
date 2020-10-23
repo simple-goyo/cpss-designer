@@ -204,7 +204,7 @@ var propertyInitController = ['$scope', '$http', function ($scope ,$http) {
         // 提供一个下拉框，提供开发者选择
         // console.log($scope.selectedRes);
         // 社会资源的名称在不在知识图谱中，需要手动自定义
-        console.log($scope.ResourceType);
+        // console.log($scope.ResourceType);
         if($scope.isSettingbyKG){
             $scope.nameProperty.value = $scope.selectedRes;        //$scope.selectedRes表示选中的资源
         }

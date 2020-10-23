@@ -11,10 +11,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -114,9 +111,43 @@ public class KnowledgeGraphService {
 
 
     public static String getResourceProps(String resName){
-        // todo 与知识图谱接口对接
-//        return "{\"properties\":[\"location\",\"state\",\"servTime\",\"privilege\"]}";
-        return "{\"properties\":[\"location\"]}";
+        // todo 众包获取不到属性
+        final String KGURL = KG_URL+"getResourceProperties";
+        //String resName = "CoffeeMaker";
+        String reqParam = "?resourceType="+resName;//+"&filePath="+filePath;
+        String query;
+        String retn;
+
+        JSONObject job;
+        JSONObject retnJSON = new JSONObject();
+
+        try{
+            query = postJSON( KGURL+reqParam,"");
+        }catch (Exception e){
+            e.printStackTrace();
+            query = "";
+        }
+        job = JSON.parseObject(query);
+        String props = job.getString("resourceProperty");
+        if(!props.isEmpty() && props.charAt(0) == '['){
+            props = props.substring(1, props.length()-1);
+        }
+        JSONObject jsonprops = JSON.parseObject(props);
+        Set<String> keySet = jsonprops.keySet();
+        List<String> listprops = new ArrayList<>(keySet);
+
+        for(int i=0;i< listprops.size();i++){
+            String key = listprops.get(i);
+            if(jsonprops.getString(key).isEmpty()){
+                listprops.remove(i);
+                i--;
+            }
+        }
+
+        retnJSON.put("properties", listprops);
+        //System.out.println(retnJSON.toJSONString());
+        //return "{\"properties\":[\"location\"]}";
+        return retnJSON.toJSONString();
     }
 
     // 获取指定资源类型的能力、事件等信息
@@ -130,22 +161,22 @@ public class KnowledgeGraphService {
         JSONObject job;
         JSONArray retnJSON = new JSONArray();
 
-        /*
-         *  众包worker的details暂时先写死，处理完直接返回
-         * */
-        //////////////////////////众包///////////////////////////////
-        if( resName.length()>=6 && resName.toLowerCase().startsWith("worker")){
-
-            retn = "{\"name\":\"CrowdSouring\",\"service\":[{\"output\":\"[]\",\"input\":[],\"inputParameter\":\"[]\",\"Capability\":\"get item\",\"outputParameter\":\"[]\"},{\"output\":\"[]\",\"input\":[],\"inputParameter\":\"[]\",\"Capability\":\"deliver item\",\"outputParameter\":\"[]\"},{\"output\":\"[]\",\"input\":[],\"inputParameter\":\"[\\\"task\\\"]\",\"Capability\":\"perform task\",\"outputParameter\":\"[]\"}],\"event\":\"[]\",\"capability\":\"[]\",\"category\":\"[\\\"SocialEntity\\\"]\"}";
-            InputStream resourceDetailsStream = new ByteArrayInputStream(retn.getBytes(StandardCharsets.UTF_8));
-
-            try {
-                return IOUtils.toString(resourceDetailsStream, "utf-8");
-            } catch (Exception e) {
-                throw new ActivitiException("Error while loading resources", e);
-            }
-        }
-        //////////////////////////众包///////////////////////////////
+//        /*
+//         *  众包worker的details暂时先写死，处理完直接返回
+//         * */
+//        //////////////////////////众包///////////////////////////////
+//        if( resName.length()>=6 && resName.toLowerCase().startsWith("worker")){
+//
+//            retn = "{\"name\":\"CrowdSouring\",\"service\":[{\"output\":\"[]\",\"input\":[],\"inputParameter\":\"[]\",\"Capability\":\"get item\",\"outputParameter\":\"[]\"},{\"output\":\"[]\",\"input\":[],\"inputParameter\":\"[]\",\"Capability\":\"deliver item\",\"outputParameter\":\"[]\"},{\"output\":\"[]\",\"input\":[],\"inputParameter\":\"[\\\"task\\\"]\",\"Capability\":\"perform task\",\"outputParameter\":\"[]\"}],\"event\":\"[]\",\"capability\":\"[]\",\"category\":\"[\\\"SocialEntity\\\"]\"}";
+//            InputStream resourceDetailsStream = new ByteArrayInputStream(retn.getBytes(StandardCharsets.UTF_8));
+//
+//            try {
+//                return IOUtils.toString(resourceDetailsStream, "utf-8");
+//            } catch (Exception e) {
+//                throw new ActivitiException("Error while loading resources", e);
+//            }
+//        }
+//        //////////////////////////众包///////////////////////////////
 
         try{
             query = postJSON( KGURL+reqParam,"");
@@ -348,9 +379,9 @@ public class KnowledgeGraphService {
 //        List<String> attri = Arrays.asList("\"inputParameter\"", "\"outputParameter\"", "\"accessAddress\"", "\"methodType\"");
 //        getInstanceAttributes( attri, "makeCoffee_coffeeMaker_roomD2008");
 //        getOrgByLocation("roomD2008_InterdisciplineBuilding2");
-        String a = getResourceDetails("Light");
+        //String a = getResourceDetails("Light");
 
-//            String job = getResourceProps("123");
+        String a = getResourceProps("CoffeeMaker");
         System.out.println(a);
 
 //            getResourceList();
