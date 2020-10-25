@@ -263,13 +263,18 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             return action_list;
         };
 
-        $scope.getEdgebyId = function (edgeid) {
-            let edges = $scope.editor.getCanvas().getChildEdges(true);
-            for (let i = 0; i < edges.length; i++) {
-                if (edgeid === edges[i].resourceId) {
-                    return edges[i];
+        $scope.getEdgebyId = function (edgeid, scene_index) {
+            //console.log($rootScope.scenes[scene_index]);
+
+            for(let index=0; index < $rootScope.scenes.length; index++){
+                let childshapes = $rootScope.scenes[index].childShapes
+                for (let i = 0; i < childshapes.length; i++) {
+                    if (edgeid === childshapes[i].resourceId) {
+                        return childshapes[i];
+                    }
                 }
             }
+
             return undefined;
         };
 
@@ -308,10 +313,18 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         }
         $scope.getOutgoingShapeById = function (relations, sceneid) {
             let retn = undefined;
-            relations.childShapes.each(function (shape) {
-                if (shape.properties["overrideid"] === sceneid || shape.resourceId === sceneid)
-                    retn = shape;
-            });
+
+            for(let i=0;i<$scope.scenes.length;i++){
+                let sceneid = $scope.scenes[i].id;
+                relations.childShapes.each(function (shape) {
+                    if (shape.properties["overrideid"] === sceneid || shape.resourceId === sceneid){
+                        retn = shape;
+                    }
+                });
+                if(retn !== undefined){
+                    break;
+                }
+            }
 
             return retn;
         }
@@ -361,11 +374,13 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 let flow_tempate = {"id": "", "to": "", "condition": ""};
                 let flowid = outgoing[0].resourceId;
                 let flowto = "";
-                let edge = $scope.getEdgebyId(flowid);
+                let scene_index = $scope.getSceneIndexByAction(service.resourceId);
+                let edge = $scope.getEdgebyId(flowid, scene_index);
 
                 // hiddenProperties: Hash
                 // oryx-type: "http://b3mn.org/stencilset/bpmn2.0#SequenceEventFlow"
-                if (edge !== undefined && edge.hiddenProperties["oryx-type"] === "http://b3mn.org/stencilset/bpmn2.0#SequenceEventFlow") {
+                if(edge !== undefined && edge.stencil.id === "SequenceEventFlow"){
+               // if (edge !== undefined && edge.hiddenProperties["oryx-type"] === "http://b3mn.org/stencilset/bpmn2.0#SequenceEventFlow") {
                     // 事件流
                     console.log("事件流,不加入flow中");
                 } else {
