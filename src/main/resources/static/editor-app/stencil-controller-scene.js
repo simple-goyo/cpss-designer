@@ -113,6 +113,12 @@ angular.module('activitiModeler')
             $scope.storeSceneInfo();
         }
         if (index !== $rootScope.selectedSceneIndex) {
+            let chck_result = $scope.checkScene(index, $rootScope.selectedSceneIndex);
+            if(!chck_result){
+                //index = $rootScope.selectedSceneIndex;
+                alert("Please connect to ExitPoint before switching the scene.")
+                return;
+            }
             $scope.takeScreenshot($rootScope.selectedSceneIndex);
             for (let i = 0; i < shapes.length; i++) {
                 $scope.editor.deleteShape(shapes[i]);

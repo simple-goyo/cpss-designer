@@ -1278,6 +1278,7 @@ angular.module('activitiModeler')
 
         }
 
+        angular.module('activitiModeler').CheckClass($rootScope, $scope);
         angular.module('activitiModeler').SceneClass($rootScope, $scope);
         angular.module('activitiModeler').ActionSeqClass($rootScope, $scope, $timeout);
 
