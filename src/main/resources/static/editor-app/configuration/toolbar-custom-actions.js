@@ -248,19 +248,47 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 
         $scope.getAllActionFromScenes = function (scenes, patten, exclude) {
             let action_list = [];
-            scenes.each(function (s) {
-                if (s.childShapes) {
-                    let len = s.childShapes.length;
-                    if (len) {
-                        for (let i = 0; i < len; i++)
-                            if (exclude !== s.childShapes[i].stencil.id && patten.test(s.childShapes[i].stencil.id)) {
-                                action_list.push(s.childShapes[i]);
-                            }
+            if(exclude.source !== undefined){
+                scenes.each(function (s) {
+                    if (s.childShapes) {
+                        let len = s.childShapes.length;
+                        if (len) {
+                            for (let i = 0; i < len; i++)
+                                if (!exclude.test(s.childShapes[i].stencil.id) && patten.test(s.childShapes[i].stencil.id)) {
+                                    action_list.push(s.childShapes[i]);
+                                }
+                        }
                     }
-                }
-            });
+                });
+
+
+            }else if(typeof(exclude) === "object" && exclude!==null){
+                scenes.each(function (s) {
+                    if (s.childShapes) {
+                        let len = s.childShapes.length;
+                        if (len) {
+                            for (let i = 0; i < len; i++){
+                                if(patten.test(s.childShapes[i].stencil.id)){
+                                    let isnotinclude = true;
+                                    for(let j=0;j<exclude.length;j++){
+                                        if (exclude[j].test(s.childShapes[i].stencil.id)) {
+                                            isnotinclude = false;
+                                        }
+                                    }
+                                    if(isnotinclude){
+                                        action_list.push(s.childShapes[i]);
+                                    }
+
+                                }
+                            }
+
+                        }
+                    }
+                });
+            }
 
             return action_list;
+
         };
 
         $scope.getEdgebyId = function (edgeid, scene_index) {
@@ -455,9 +483,22 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             return condition;
         };
 
+        // 获取资源
+        $scope.getResourceById = function(resourceId, resource_list){
+            let resource = undefined;
+            resource_list.each(function (value) {
+                if(resourceId === value.resourceId || resourceId === value.properties["overrideid"]){
+                    resource = value;
+                }
+            })
+            return resource;
+        };
+
+
         $scope.getServices = function (scenes, relations) {
             let services = [];
-            let service_list = $scope.getAllActionFromScenes(scenes, /(.*?)Action/, "UndefinedAction");
+            let service_list = $scope.getAllActionFromScenes(scenes, /(.*?)Action/, /UndefinedAction/);
+            let resource_list = $scope.getAllActionFromScenes(scenes, /(.*?)/, [/(.*?)Action/, /(.*?)Event/, /(.*?)Gateway/, /(.*?)Point/, /(.*?)Flow/]);
 
             service_list.forEach(function (service) {
                 let action_template = {
@@ -475,6 +516,13 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 let name = service.properties["name"];
                 // enactedBy
                 let enactedBy = service.properties["activityelement"];
+                // 判断entity是否是被引用的实体
+                let resShape = $scope.getResourceById(enactedBy.id, resource_list);
+                if(resShape !== undefined && resShape.properties["referenceentity"] && resShape.properties["referenceentity"] !== ""){
+                    enactedBy["id"] = resShape.properties["overrideid"];
+                    enactedBy["name"] = resShape.properties["name"];
+                    enactedBy["type"] = resShape.properties["type"];
+                }
                 // type
                 let type = service.stencil.id
                 // input
@@ -506,7 +554,8 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         $scope.getEvents = function (scenes, relations) {
             let events = [];
 
-            let event_list = $scope.getAllActionFromScenes(scenes, /^(.*?)Event$/, "StartNoneEvent");
+            let event_list = $scope.getAllActionFromScenes(scenes, /^(.*?)Event$/, /StartNoneEvent/);
+            let resource_list = $scope.getAllActionFromScenes(scenes, /(.*?)/, [/(.*?)Action/, /(.*?)Event/, /(.*?)Gateway/, /(.*?)Point/, /(.*?)Flow/]);
             event_list.forEach(function (event) {
                 let event_template = {
                     "id": "aaaaa-12",
@@ -528,6 +577,13 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 let name = event.properties["name"];
                 // enactedBy
                 let enactedBy = event.properties["activityelement"];
+                // 判断entity是否是被引用的实体
+                let resShape = $scope.getResourceById(enactedBy.id, resource_list);
+                if(resShape !== undefined && resShape.properties["referenceentity"] && resShape.properties["referenceentity"] !== ""){
+                    enactedBy["id"] = resShape.properties["overrideid"];
+                    enactedBy["name"] = resShape.properties["name"];
+                    enactedBy["type"] = resShape.properties["type"];
+                }
                 // type
                 let type = event.stencil.id
                 // input
