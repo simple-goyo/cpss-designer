@@ -138,6 +138,19 @@ angular.module('activitiModeler')
         }
     };
 
+    $scope.isShapeInScene = function (shape, sceneId) {
+        for(let i=0;i<$rootScope.scenes.length;i++){
+            if($rootScope.scenes[i].id === sceneId){
+                let childShapes = $rootScope.scenes[i].childShapes;
+                for(let j=0;j<childShapes.length;j++){
+                    if(childShapes[j] === shape){return true;}
+                }
+            }
+        }
+        return false;
+    };
+
+
     $scope.createScene = function () {
         var itemId = "scene";
 

@@ -71,9 +71,18 @@ var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $s
 				$scope.events[$scope.events.length] = {id:$scope.events.length, name: $scope.resourceEvents[i].name}; // 加入下拉框中
 			}
 
+			// 如果是空，则不让用户选择
+			if($scope.events.length === 0){
+				alert("No events found in this resource entity!");
+				return false;
+			}
+			//console.log($scope.resourceOutputs);
+			return true;
+
 
 		}).error(function (data, status, headers, config) {
 			console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
+			return false;
 		});
 	}
 
@@ -86,14 +95,26 @@ var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $s
 		if (prop && (prop === "工人" || prop === "Worker")){
 			// res_entity = $scope.latestfromto["from"].properties["oryx-name"];
 			// $scope.getResourcesfromKG(res_entity);
-			$scope.getResourcesfromKG("CrowdsourcingWorker");
+			let result = $scope.getResourcesfromKG("CrowdsourcingWorker");
+			if(!result) {
+				$scope.close();
+				return;
+			}
 		}else{
 			res_entity = $scope.latestfromto["to"].properties["oryx-name"];
-			$scope.getResourcesfromKG(res_entity);
+			let result = $scope.getResourcesfromKG(res_entity);
+			if(!result) {
+				$scope.close();
+				return;
+			}
 		}
 	}else{
 		res_entity = $scope.selectedItem.title;
-		$scope.getResourcesfromKG(res_entity);
+		let result = $scope.getResourcesfromKG(res_entity);
+		if(!result) {
+			$scope.close();
+			return;
+		}
 	}
 
 	$scope.selectedEvent = "";

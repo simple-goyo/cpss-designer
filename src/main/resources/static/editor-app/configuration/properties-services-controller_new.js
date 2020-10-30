@@ -119,7 +119,7 @@ var paramParser = function (rawParam) {
 var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, $scope, $http) {
     var ActivityElement;
     var shape = $scope.selectedShape;
-
+    $scope.latestLine.parent = $scope.latestLineParent;
     let sceneId = $rootScope.scenes[$rootScope.selectedSceneIndex].id;
     let action = $scope.editor.getSelection()[0];
     $scope.visibleParameters = $scope.getVisibleParameters(sceneId,
@@ -244,10 +244,17 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
                 $scope.servicesDetails[i] = data.service[i];
             }
 
+            // 如果是空，则不让用户选择
+            if($scope.functions.length === 0){
+                alert("No function found in this resource entity!");
+                return false;
+            }
             //console.log($scope.resourceOutputs);
+            return true;
 
         }).error(function (data, status, headers, config) {
             console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
+            return false;
         });
     };
 
@@ -265,8 +272,12 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
                     selectedShapeActionType = $scope.constTypeOfResource[i].type;
                 }
             }
-            $scope.getResourcesfromKG("CrowdsourcingWorker");
-            // $scope.getResourcesfromKG(res_entity.name);
+            let result = $scope.getResourcesfromKG("CrowdsourcingWorker");
+            if(!result) {
+                $scope.$hide();
+                $scope.deleteConnectedLinebyEdge($scope.latestLine);
+                return;
+            }
         } else {
             res_entity.id = $scope.latestfromto["to"].properties["oryx-overrideid"];
             res_entity.name = $scope.latestfromto["to"].properties["oryx-name"];
@@ -279,19 +290,27 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
                 }
             }
             if (selectedShapeActionType === undefined) {
-                $scope.close();
+                $scope.$hide();
                 return;
             }
             console.log(res_entity.name);
-            $scope.getResourcesfromKG(res_entity.name);
-
+            let result = $scope.getResourcesfromKG(res_entity.name);
+            if(!result) {
+                $scope.$hide();
+                $rootScope.editor.deleteShape($scope.latestLine);
+                return;
+            }
         }
     }
     else{
         res_entity.name = $scope.selectedItem.title;
         res_entity.id = $scope.selectedItem.properties["oryx-overrideid"];
         res_entity.type = $scope.selectedItem.properties["oryx-type"];
-        $scope.getResourcesfromKG(res_entity.name);
+        let result = $scope.getResourcesfromKG(res_entity.name);
+        if(!result) {
+            $scope.$hide();
+            return;
+        }
     }
 
 
@@ -301,7 +320,7 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
         && $scope.property.value.length > 0) {
         $scope.entity = {};
         $scope.entity.Services = [];
-        for (var i = 0; i < $scope.property.value.length; i++) {
+        for (let i = 0; i < $scope.property.value.length; i++) {
             $scope.entity.Services[$scope.entity.Services.length] = {value: $scope.property.value[i].function};
         }
     } else {

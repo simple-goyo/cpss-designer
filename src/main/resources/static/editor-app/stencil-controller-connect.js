@@ -29,6 +29,11 @@ angular.module('activitiModeler')
             if (to.properties['oryx-type'] === "出口节点" || to.properties['oryx-type'] === "Exit") {
                 return;
             }
+            if (from.properties['oryx-type'] === "房间"||from.properties['oryx-type'] === "Room"){
+                alert("Room cannot connect to other entity!")
+                $scope.deleteConnectedLinebyEdge(edge);
+                return;
+            }
             if ((from.properties['oryx-type'] === "场景" && to.properties['oryx-type'] === "场景") ||
                 (from.properties['oryx-type'] === "scene" && to.properties['oryx-type'] === "scene")
             ) {
@@ -41,6 +46,7 @@ angular.module('activitiModeler')
                 $scope.editor.setSelection(to);
             $scope.editor.getCanvas().update();
             $scope.latestLine = edge;
+            $scope.latestLineParent = edge.parent;
             $scope.latestfromto['from'] = from;
             $scope.latestfromto['to'] = to;
 
@@ -247,6 +253,10 @@ angular.module('activitiModeler')
             $scope.connectResourceByMessageFlow(from, to);
         }
     };
+
+    $scope.deleteConnectedLinebyEdge = function (edge){
+        $scope.editor.deleteShape(edge);
+    }
 
     /**
      * 用于切换action时删除上一个Action的资源连线
