@@ -29,11 +29,11 @@
 
                     <div ng-if="properties[id].bindDynamically===true" class="row"
                          style="margin-top: 3%">
-                        <label class="col-xs-2" style="float: left">{{id}}</label>
+                        <label class="col-xs-2" style="float: left" ng-model="id">{{id}}</label>
                         <select class="col-xs-3" style="border-radius: 5px;float:left;margin-right: 5px"
                                 ng-model="properties[id].rule">
                             <option value="" selected>{{'ENTITY.SPECIAL.PROPERTY.RULE.SELECT' | translate}}</option>
-                            <option ng-repeat="rule in rules" value="{{rule}}" ng-selected="value.rule===rule">{{rule}}
+                            <option ng-repeat="rule in rules[id]" value="{{rule}}" ng-selected="value.rule===rule">{{rule}}
                             </option>
                         </select>
                         <select class="col-xs-2" ng-model="properties[id].type"

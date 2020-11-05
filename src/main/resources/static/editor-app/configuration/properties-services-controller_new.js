@@ -119,7 +119,7 @@ var paramParser = function (rawParam) {
 var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, $scope, $http) {
     var ActivityElement;
     var shape = $scope.selectedShape;
-    $scope.latestLine.parent = $scope.latestLineParent;
+
     let sceneId = $rootScope.scenes[$rootScope.selectedSceneIndex].id;
     let action = $scope.editor.getSelection()[0];
     $scope.visibleParameters = $scope.getVisibleParameters(sceneId,
@@ -198,6 +198,22 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
     $scope.functions = [];
     let functionType;
 
+    $scope.getCrowdsourcingInput = function(){
+        let items=[];
+        for (let i = 0; i < $scope.scenes.length; i++) {
+            if (i !== $scope.getSelectedSceneIndex()) {
+                let childrenShapes = $scope.scenes[i].childShapes;
+                for (let j = 0; j < childrenShapes.length; j++) {
+                    let shape = childrenShapes[j];
+                    if(shape.properties["type"] === "PhysicalItem"){
+                        items.push({"name":shape.properties["name"]});
+                    }
+                }
+            }
+        }
+        return items;
+    };
+
     // 判断连线源头是否为worker，如果是worker则另外处理
     $scope.getResourcesfromKG = function (resName) {
         $http({
@@ -205,6 +221,13 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
             url: KISBPM.URL.getResourceDetails(resName)
         }).success(function (data, status, headers, config) {
             console.log(JSON.stringify(data));
+
+            // 如果是空，则不让用户选择
+            if(data.service.length === 0){
+                alert("No function found in this resource entity!");
+                $scope.$hide();
+                $rootScope.editor.deleteShape($scope.latestLine);
+            }
 
             // 解析得到functions，包括其中的参数
             for (let i = 0; i < data.service.length; i++) {
@@ -244,11 +267,6 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
                 $scope.servicesDetails[i] = data.service[i];
             }
 
-            // 如果是空，则不让用户选择
-            if($scope.functions.length === 0){
-                alert("No function found in this resource entity!");
-                return false;
-            }
             //console.log($scope.resourceOutputs);
             return true;
 
@@ -260,9 +278,11 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
 
     let prop;
     let res_entity = {"id": "", "name": "", "type": ""};
-    if($scope.latestfromto["from"]){
+    if($scope.latestfromto["from"]){ // 有连线
+        $scope.latestLine.parent = $scope.latestLineParent;
         prop = $scope.latestfromto["from"].properties["oryx-type"];
         if (prop && (prop === "工人" || prop === "Worker")) {
+            // 众包
             res_entity.id = $scope.latestfromto["from"].properties["oryx-overrideid"];
             res_entity.name = $scope.latestfromto["from"].properties["oryx-name"];
             res_entity.type = $scope.latestfromto["from"].properties["oryx-type"];
@@ -272,12 +292,9 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
                     selectedShapeActionType = $scope.constTypeOfResource[i].type;
                 }
             }
-            let result = $scope.getResourcesfromKG("CrowdsourcingWorker");
-            if(!result) {
-                $scope.$hide();
-                $scope.deleteConnectedLinebyEdge($scope.latestLine);
-                return;
-            }
+            $scope.getResourcesfromKG("CrowdsourcingWorker");
+            // 众包的参数要根据画布上的item决定, 而不是变量值
+            $scope.visibleParameters = $scope.getCrowdsourcingInput();
         } else {
             res_entity.id = $scope.latestfromto["to"].properties["oryx-overrideid"];
             res_entity.name = $scope.latestfromto["to"].properties["oryx-name"];
@@ -295,22 +312,22 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
             }
             console.log(res_entity.name);
             let result = $scope.getResourcesfromKG(res_entity.name);
-            if(!result) {
-                $scope.$hide();
-                $rootScope.editor.deleteShape($scope.latestLine);
-                return;
-            }
+            // if(!result) {
+            //     $scope.$hide();
+            //     $rootScope.editor.deleteShape($scope.latestLine);
+            //     return;
+            // }
         }
     }
-    else{
+    else{ // 没有连线
         res_entity.name = $scope.selectedItem.title;
         res_entity.id = $scope.selectedItem.properties["oryx-overrideid"];
         res_entity.type = $scope.selectedItem.properties["oryx-type"];
         let result = $scope.getResourcesfromKG(res_entity.name);
-        if(!result) {
-            $scope.$hide();
-            return;
-        }
+        // if(!result) {
+        //     $scope.$hide();
+        //     return;
+        // }
     }
 
 

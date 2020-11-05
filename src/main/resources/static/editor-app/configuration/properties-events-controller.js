@@ -32,7 +32,7 @@ var KisBPMEventsCtrl = [ '$scope', '$modal', function($scope, $modal) {
     $modal(opts);
 }];
 
-var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $scope, $http) {
+var EventsPopupCtrl = ['$rootScope', '$scope', '$http', '$timeout', function($rootScope, $scope, $http, $timeout) {
 	var ActivityElement;
 	let sceneId = $rootScope.scenes[$rootScope.selectedSceneIndex].id;
 	var selectedResourceEntity = $scope.selectedShape;
@@ -61,8 +61,14 @@ var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $s
 	$scope.resourceEvents = [];
 	let eventType = selectedShapeEventType;
 	$scope.getResourcesfromKG = function (resName) {
-		$http({method: 'GET', url: KISBPM.URL.getResourceDetails(resName)}).success(function (data, status, headers, config) {
+		$http({method: 'GET', url: KISBPM.URL.getResourceDetails(resName)})
+			.success(function (data, status, headers, config) {
 			console.log(JSON.stringify(data));
+			// 如果是空，则不让用户选择
+			if(data.event.length === 0){
+				alert("No event found in this resource entity!");
+				$scope.$hide();
+			}
 
 			// 解析得到event，包括其中的参数
 			for(let i=0;i<data.event.length;i++){
@@ -71,18 +77,14 @@ var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $s
 				$scope.events[$scope.events.length] = {id:$scope.events.length, name: $scope.resourceEvents[i].name}; // 加入下拉框中
 			}
 
-			// 如果是空，则不让用户选择
-			if($scope.events.length === 0){
-				alert("No events found in this resource entity!");
-				return false;
-			}
 			//console.log($scope.resourceOutputs);
-			return true;
-
+			return $scope.events.length !== 0;
 
 		}).error(function (data, status, headers, config) {
 			console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));
 			return false;
+		}).then(function (result) {
+			console.log("结束");
 		});
 	}
 
@@ -96,25 +98,31 @@ var EventsPopupCtrl = [ '$rootScope', '$scope','$http',  function($rootScope, $s
 			// res_entity = $scope.latestfromto["from"].properties["oryx-name"];
 			// $scope.getResourcesfromKG(res_entity);
 			let result = $scope.getResourcesfromKG("CrowdsourcingWorker");
-			if(!result) {
-				$scope.close();
-				return;
-			}
+			// // 如果是空，则不让用户选择
+			// if(!result){
+			// 	alert("No events found in this resource entity!");
+			// 	$scope.$hide();
+			// 	return;
+			// }
 		}else{
 			res_entity = $scope.latestfromto["to"].properties["oryx-name"];
 			let result = $scope.getResourcesfromKG(res_entity);
-			if(!result) {
-				$scope.close();
-				return;
-			}
+			// // 如果是空，则不让用户选择
+			// if(!result){
+			// 	alert("No events found in this resource entity!");
+			// 	$scope.$hide();
+			// 	return;
+			// }
 		}
 	}else{
 		res_entity = $scope.selectedItem.title;
 		let result = $scope.getResourcesfromKG(res_entity);
-		if(!result) {
-			$scope.close();
-			return;
-		}
+		// // 如果是空，则不让用户选择
+		// if(!result){
+		// 	alert("No events found in this resource entity!");
+		// 	$scope.$hide();
+		// 	return;
+		// }
 	}
 
 	$scope.selectedEvent = "";

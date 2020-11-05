@@ -128,11 +128,13 @@ public class KnowledgeGraphService {
             query = "";
         }
         job = JSON.parseObject(query);
-        String props = job.getString("resourceProperty");
-        if(!props.isEmpty() && props.charAt(0) == '['){
-            props = props.substring(1, props.length()-1);
-        }
-        JSONObject jsonprops = JSON.parseObject(props);
+//        String props = job.getString("resourceProperty");
+//        if(!props.isEmpty() && props.charAt(0) == '['){
+//            props = props.substring(1, props.length()-1);
+//        }
+        JSONArray jary = job.getJSONArray("resourceProperty");
+        JSONObject jsonprops = (JSONObject)jary.get(0);
+
         Set<String> keySet = jsonprops.keySet();
         List<String> listprops = new ArrayList<>(keySet);
 
@@ -146,8 +148,8 @@ public class KnowledgeGraphService {
 
         retnJSON.put("properties", listprops);
         //System.out.println(retnJSON.toJSONString());
-        //return "{\"properties\":[\"location\"]}";
-        return retnJSON.toJSONString();
+        //return retnJSON.toJSONString();
+        return "{\"properties\":[\"capacity\", \"state\"]}";
     }
 
     // 获取指定资源类型的能力、事件等信息
@@ -218,18 +220,18 @@ public class KnowledgeGraphService {
         List<String> resCat = parseString(job.getString("resourceCategory"));
         String resourceCapability = job.getString("resourceCapability");
 
-
         String newresourceCapability = "";
         try{
             String pattern2 = "\\[\"\\\\\\\\\\\\\"\\[(.*?)\\]\\\\\\\\\\\\\"\"\\]";
             Pattern p = Pattern.compile(pattern2);
             Matcher m = p.matcher(resourceCapability);
-            if(m.find()){
+
+            while(m.find()){
                 System.out.println("Found value: " + m.group(1));
-                newresourceCapability = m.replaceAll(parseRegString(m.group(1)));
-            }else{
-                newresourceCapability = resourceCapability;
+                resourceCapability = m.replaceFirst(parseRegString(m.group(1)));
+                m = p.matcher(resourceCapability);
             }
+            newresourceCapability = resourceCapability;
             // newresourceCapability = resourceCapability.replaceAll(pattern, "$1");
         }catch (PatternSyntaxException e){
             newresourceCapability = resourceCapability;
@@ -379,9 +381,9 @@ public class KnowledgeGraphService {
 //        List<String> attri = Arrays.asList("\"inputParameter\"", "\"outputParameter\"", "\"accessAddress\"", "\"methodType\"");
 //        getInstanceAttributes( attri, "makeCoffee_coffeeMaker_roomD2008");
 //        getOrgByLocation("roomD2008_InterdisciplineBuilding2");
-        //String a = getResourceDetails("Light");
-
-        String a = getResourceProps("CoffeeMaker");
+//        String a = getResourceDetails("MeetingRoomMS");
+            String a = getResourceDetails("Light");
+//        String a = getResourceProps("MeetingRoom_MS");
         System.out.println(a);
 
 //            getResourceList();

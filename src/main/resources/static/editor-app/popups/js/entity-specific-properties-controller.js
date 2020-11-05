@@ -3,6 +3,12 @@ var EntitySpecificPropertiesController = ['$scope', '$rootScope', '$http', funct
     $scope.resName = "";
     // $scope.rules = ["靠近", "远离", "大于", "小于", "等于"];
     $scope.rules = ["Near", "Include", "LocatedIn"];
+    $scope.rules = {
+        "location":["Near", "Include", "LocatedIn"],
+        "capacity":["==", ">=", "<="],
+        "state":["On", "Off"]
+    };
+
     $scope.getRelatedEntities = function () {
         let relatedEntities = [];
         let sceneId = $rootScope.scenes[$rootScope.selectedSceneIndex].id;
