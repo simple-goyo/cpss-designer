@@ -21,10 +21,14 @@
                     <div ng-if="properties[id].bindDynamically!==true" class="row"
                          style="margin-top: 3%">
                         <label for="{{id}}" class="col-xs-3" style="float: left">{{id}}</label>
-
-                        <input ng-model="properties[id].text" class="col-xs-9" style="border-radius: 5px;float:left"
+                        <input ng-if="(id!=='location')" ng-model="properties[id].text" class="col-xs-9" style="border-radius: 5px;float:left"
                                placeholder="{{'ENTITY.SPECIAL.PROPERTY.INPUT.PLACEHOLDER' | translate}}{{id}}"
                                id="{{id}}">
+                        <select ng-if="(id==='location')" class="col-xs-9" style="border-radius: 5px;margin-right: 5px" ng-model="properties[id].text">
+                            <option value="" selected>{{'ENTITY.SPECIAL.PROPERTY.LOCATION.SELECT' | translate}}</option>
+                            <option ng-repeat="location in locations" value="{{location}}" ng-selected="properties[id].text">{{location}}
+                            </option>
+                        </select>
                     </div>
 
                     <div ng-if="properties[id].bindDynamically===true" class="row"

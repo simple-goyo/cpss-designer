@@ -47,9 +47,8 @@ angular.module('activitiModeler')
     }
 
 
-    $scope.checkScene = function(index, currentSceneIndex){
+    $scope.checkExitPoint = function(currentSceneIndex){
         if(currentSceneIndex === -1) return true; // 关系页面不做检查
-        console.log("index: "+index);
         console.log("currentSceneIndex: "+currentSceneIndex);
         let childShapes = $rootScope.scenes[currentSceneIndex].childShapes;
 
@@ -70,4 +69,50 @@ angular.module('activitiModeler')
 
         return false;
     }
+
+    $scope.checkEntryPoint = function(currentSceneIndex){
+        if(currentSceneIndex === -1) return true; // 关系页面不做检查
+        console.log("currentSceneIndex: "+currentSceneIndex);
+        let childShapes = $rootScope.scenes[currentSceneIndex].childShapes;
+
+        // 获取出口节点信息
+        for(let i=0;i<childShapes.length;i++){
+            //console.log(childShapes[i]);
+            if(childShapes[i].stencil.id === "EntryPoint"){
+                return childShapes[i].outgoing.length > 0;
+            }
+            // if(childShapes[i].stencil.id === "MessageFlow"){
+            //     // 查看是否连接EntryPoint
+            //     let resId = childShapes[i].outgoing[0].resourceId;
+            //     let shape = $scope.getShapebyId_multiScene(resId,currentSceneIndex);
+            //     if(shape !== undefined && shape.stencil.id ==="EntryPoint"){
+            //         return true;
+            //     }else if($scope.inLastScene(shape)){
+            //         return true;
+            //     }
+            // }
+        }
+
+        return false;
+    }
+
+    $scope.checkScene = function(currentSceneIndex){
+        let chck_result = $scope.checkExitPoint(currentSceneIndex);
+        if(!chck_result){
+            //index = $rootScope.selectedSceneIndex;
+            alert("Please connect to ExitPoint before switching the scene.")
+            return false;
+        }
+
+        $scope.checkEntryPoint(currentSceneIndex);
+        if(!chck_result){
+            //index = $rootScope.selectedSceneIndex;
+            alert("Please connect to EntryPoint before switching the scene.")
+            return false;
+        }
+
+        return true;
+
+    }
+
 }

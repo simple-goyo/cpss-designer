@@ -40,6 +40,8 @@ var EventsPopupCtrl = ['$rootScope', '$scope', '$http', '$timeout', function($ro
 
 	var selectedShapeEventType = "DefaultEvent";
 
+	$scope.eventPayloads = [];
+
 	// Put json representing entity on scope
 	if ($scope.property !== undefined && $scope.property.value !== undefined && $scope.property.value !== null
 		&& $scope.property.value.length > 0)
@@ -75,6 +77,12 @@ var EventsPopupCtrl = ['$rootScope', '$scope', '$http', '$timeout', function($ro
 				// 获取函数名
 				$scope.resourceEvents[i] = {name:data.event[i].name, type:eventType, output:data.event[i].payload};
 				$scope.events[$scope.events.length] = {id:$scope.events.length, name: $scope.resourceEvents[i].name}; // 加入下拉框中
+
+				if(data.event[i].payload !== ""){
+					$scope.eventPayloads[i] = data.event[i].payload;
+				}else{
+					$scope.eventPayloads[i] = [];
+				}
 			}
 
 			//console.log($scope.resourceOutputs);
@@ -159,15 +167,16 @@ var EventsPopupCtrl = ['$rootScope', '$scope', '$http', '$timeout', function($ro
 		jQuery('#' + newShapeId + 'bg_frame').attr({"fill": "#04FF8E"}); //高亮显示
 		HighlightedShape = $scope.getHighlightedShape();
 
-		$scope.replaceAction($scope, $scope.selectedEvent, selectedShapeEventType);
-		let action = $scope.editor.getSelection()[0];
-
 		let index = -1;
 		for (let j = 0; j < $scope.events.length; j++) {
 			if ($scope.events[j].name === $scope.selectedEvent) {
 				index = j;
 			}
 		}
+
+		$scope.replaceAction($scope, $scope.selectedEvent, selectedShapeEventType, $scope.eventPayloads[index]);
+		let action = $scope.editor.getSelection()[0];
+
 		let paramter = $scope.resourceEvents[index].output;
 		//paramter = paramter.replace("[","").replace("]","").split(/,\s*/);
 		$scope.insertParameters(sceneId, action.id, paramter);
@@ -192,7 +201,7 @@ var EventsPopupCtrl = ['$rootScope', '$scope', '$http', '$timeout', function($ro
 	angular.module('activitiModeler').ResActionClass($rootScope, $scope);
 
 	// 替换Action
-	$scope.replaceAction = function($scope, actionName, eventType) {
+	$scope.replaceAction = function($scope, actionName, eventType, payload) {
 		if(HighlightedShape === undefined) return;// 如果没有高亮，直接返回
 
 		let selectItem = selectedResourceEntity; // $scope.editor.getSelection()[0];
@@ -228,16 +237,15 @@ var EventsPopupCtrl = ['$rootScope', '$scope', '$http', '$timeout', function($ro
 					};
 					$scope.updatePropertyInModel(property);
 					break;
-				case "actioninputstatus":
-				case "动作输入状态":
-					property.value = $scope.inputStatus;
-					$scope.inputStatus = [];
-					$scope.updatePropertyInModel(property);
-					break;
+				// case "actioninputstatus":
+				// case "动作输入状态":
+				// 	property.value = $scope.inputStatus;
+				// 	$scope.inputStatus = [];
+				// 	$scope.updatePropertyInModel(property);
+				// 	break;
 				case "actionoutputstatus":
 				case "动作输出状态":
-					property.value = $scope.outputStatus;
-					$scope.outputStatus = [];
+					property.value = payload;
 					$scope.updatePropertyInModel(property);
 					break;
 				default:break;

@@ -112,44 +112,44 @@ public class KnowledgeGraphService {
 
     public static String getResourceProps(String resName){
         // todo 众包获取不到属性
-        final String KGURL = KG_URL+"getResourceProperties";
-        //String resName = "CoffeeMaker";
-        String reqParam = "?resourceType="+resName;//+"&filePath="+filePath;
-        String query;
-        String retn;
-
-        JSONObject job;
-        JSONObject retnJSON = new JSONObject();
-
-        try{
-            query = postJSON( KGURL+reqParam,"");
-        }catch (Exception e){
-            e.printStackTrace();
-            query = "";
-        }
-        job = JSON.parseObject(query);
-//        String props = job.getString("resourceProperty");
-//        if(!props.isEmpty() && props.charAt(0) == '['){
-//            props = props.substring(1, props.length()-1);
+//        final String KGURL = KG_URL+"getResourceProperties";
+//        //String resName = "CoffeeMaker";
+//        String reqParam = "?resourceType="+resName;//+"&filePath="+filePath;
+//        String query;
+//        String retn;
+//
+//        JSONObject job;
+//        JSONObject retnJSON = new JSONObject();
+//
+//        try{
+//            query = postJSON( KGURL+reqParam,"");
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            query = "";
 //        }
-        JSONArray jary = job.getJSONArray("resourceProperty");
-        JSONObject jsonprops = (JSONObject)jary.get(0);
-
-        Set<String> keySet = jsonprops.keySet();
-        List<String> listprops = new ArrayList<>(keySet);
-
-        for(int i=0;i< listprops.size();i++){
-            String key = listprops.get(i);
-            if(jsonprops.getString(key).isEmpty()){
-                listprops.remove(i);
-                i--;
-            }
-        }
-
-        retnJSON.put("properties", listprops);
+//        job = JSON.parseObject(query);
+////        String props = job.getString("resourceProperty");
+////        if(!props.isEmpty() && props.charAt(0) == '['){
+////            props = props.substring(1, props.length()-1);
+////        }
+//        JSONArray jary = job.getJSONArray("resourceProperty");
+//        JSONObject jsonprops = (JSONObject)jary.get(0);
+//
+//        Set<String> keySet = jsonprops.keySet();
+//        List<String> listprops = new ArrayList<>(keySet);
+//
+//        for(int i=0;i< listprops.size();i++){
+//            String key = listprops.get(i);
+//            if(jsonprops.getString(key).isEmpty()){
+//                listprops.remove(i);
+//                i--;
+//            }
+//        }
+//
+//        retnJSON.put("properties", listprops);
         //System.out.println(retnJSON.toJSONString());
         //return retnJSON.toJSONString();
-        return "{\"properties\":[\"capacity\", \"state\"]}";
+        return "{\"properties\":[\"location\", \"capacity\", \"state\"]}";
     }
 
     // 获取指定资源类型的能力、事件等信息
@@ -371,6 +371,24 @@ public class KnowledgeGraphService {
         return job;
     }
 
+    public static JSONObject getValidLocations(){
+        final String KGURL = KG_URL+"getLocationInstances";
+        String query;
+
+        JSONObject job;
+
+        try{
+            query = postJSON( KGURL,"");
+        }catch (Exception e){
+            e.printStackTrace();
+            query = "";
+        }
+
+        job = JSON.parseObject(query);
+        return job;
+
+    }
+
 
     public static void main(String[] args) {
         //// 接口测试
@@ -381,10 +399,11 @@ public class KnowledgeGraphService {
 //        List<String> attri = Arrays.asList("\"inputParameter\"", "\"outputParameter\"", "\"accessAddress\"", "\"methodType\"");
 //        getInstanceAttributes( attri, "makeCoffee_coffeeMaker_roomD2008");
 //        getOrgByLocation("roomD2008_InterdisciplineBuilding2");
-//        String a = getResourceDetails("MeetingRoomMS");
-            String a = getResourceDetails("Light");
+        String a = getResourceDetails("MeetingRoomMS");
+//            String a = getResourceDetails("Light");
 //        String a = getResourceProps("MeetingRoom_MS");
-        System.out.println(a);
+//            JSONObject a = getValidLocations();
+            System.out.println(a);
 
 //            getResourceList();
         }catch (Exception e){

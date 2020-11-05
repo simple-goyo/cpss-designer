@@ -137,7 +137,7 @@ var ConstraintController = ['$scope','$rootScope','$http', function ($scope, $ro
             "errors":[]
         }
 
-        data = $scope.buildKGGraph();
+        let data = $scope.buildKGGraph();
         return data;
     }
 

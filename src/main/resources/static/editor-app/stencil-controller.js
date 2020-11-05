@@ -97,9 +97,9 @@ angular.module('activitiModeler')
                 // var quickMenuDefinition = ['UserTask', 'EndNoneEvent', 'ExclusiveGateway',
                 //     'CatchTimerEvent', 'ThrowNoneEvent', 'TextAnnotation',
                 //     'SequenceFlow', 'Association'];
-                var quickMenuDefinition = ['ConstraintFlow'];
-                var ignoreForPaletteDefinition = ['SequenceFlow', 'SequenceEventFlow', 'MessageFlow', 'Association', 'DataAssociation', 'DataStore', 'SendTask'];
-                var quickMenuItems = ['ConstraintFlow'];
+                var quickMenuDefinition = [];
+                var ignoreForPaletteDefinition = ['SequenceFlow', 'SequenceEventFlow', 'MessageFlow', 'Association', 'DataAssociation', 'DataStore', 'SendTask', 'ConstraintFlow'];
+                var quickMenuItems = [];
 
                 var morphRoles = [];
                 for (var i = 0; i < data.rules.morphingRules.length; i++) {
@@ -550,7 +550,7 @@ angular.module('activitiModeler')
 
             //hide hidden properties
             $scope.isHiddenProperty = function (propertyId) {
-                let hiddenProperties = ["ownedbywho", "owner", "actioninputstatus", "actionoutputstatus",
+                let hiddenProperties = ["ownedbywho", "owner",
                     "resourceline", "workercontains", "entityspecificproperties", "traceablescenes",
                     "traceableactions", "gatewaycompany", "contain_resource", "animation", "startevent", "animate_direction", "aciton_type"];
                 return hiddenProperties.includes(propertyId);

@@ -113,11 +113,9 @@ angular.module('activitiModeler')
             $scope.storeSceneInfo();
         }
         if (index !== $rootScope.selectedSceneIndex) {
-            let chck_result = $scope.checkScene(index, $rootScope.selectedSceneIndex);
-            if(!chck_result){
-                //index = $rootScope.selectedSceneIndex;
-                alert("Please connect to ExitPoint before switching the scene.")
-                return;
+            let result = $scope.checkScene($rootScope.selectedSceneIndex);
+            if(!result){
+                return false;
             }
             $scope.takeScreenshot($rootScope.selectedSceneIndex);
             for (let i = 0; i < shapes.length; i++) {
@@ -130,6 +128,7 @@ angular.module('activitiModeler')
                 $scope.restoreScene(index);
             }
         }
+        return true;
     };
 
     $scope.isSelectedScene = function (index) {
@@ -153,7 +152,10 @@ angular.module('activitiModeler')
 
     $scope.createScene = function () {
         var itemId = "scene";
-
+        let result = $scope.checkScene($rootScope.selectedSceneIndex);
+        if(!result){
+            return false;
+        }
         var containedStencil = undefined;
         var stencilSets = $scope.editor.getStencilSets().values();
         for (var i = 0; i < stencilSets.length; i++) {
@@ -183,6 +185,8 @@ angular.module('activitiModeler')
         let scene = $scope.editor.getSelection()[0];
         scene.setProperty("oryx-overrideid", scene.id);
         scene.setProperty("oryx-type", "场景");
+
+        return true;
     }
 
     $scope.hideScenesRelations = function () {

@@ -1,8 +1,9 @@
 var EntitySpecificPropertiesController = ['$scope', '$rootScope', '$http', function ($scope, $rootScope, $http) {
     let selectedShape = $scope.editor.getSelection()[0];
+    $scope.locations = $rootScope.locations;
     $scope.resName = "";
     // $scope.rules = ["靠近", "远离", "大于", "小于", "等于"];
-    $scope.rules = ["Near", "Include", "LocatedIn"];
+    // $scope.rules = ["Near", "Include", "LocatedIn"];
     $scope.rules = {
         "location":["Near", "Include", "LocatedIn"],
         "capacity":["==", ">=", "<="],

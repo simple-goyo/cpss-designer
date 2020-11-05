@@ -71,6 +71,15 @@ activitiModeler
 
             $rootScope.staticIncludeVersion = Date.now();
 
+            $rootScope.locations = [];
+
+            $http({method: 'GET', url: KISBPM.URL.getLocations()}).success(function (data) {
+                console.log("locations:  "+JSON.stringify(data));
+                $rootScope.locations = data["locations"];
+            }).error(function (data) {
+                console.log(("failed to get location"))
+            })
+
             /**
              * A 'safer' apply that avoids concurrent updates (which $apply allows).
              */

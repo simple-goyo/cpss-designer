@@ -528,7 +528,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 // input
                 let input = service.properties["actioninputstatus"];
                 // output
-                let output = service.properties["output"];
+                let output = service.properties["actionoutputstatus"];
                 // flow
 
                 let flow = $scope.getOutgoingAction(service, service.outgoing, relations);
@@ -589,7 +589,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 // input
                 let input = event.properties["actioninputstatus"];
                 // output
-                let output = event.properties["output"];
+                let output = event.properties["actionoutputstatus"];
                 // flow
                 let flowid = "";
                 let flowto = "";

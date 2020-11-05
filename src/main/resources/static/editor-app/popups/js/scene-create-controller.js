@@ -27,15 +27,15 @@ var SceneCreateController = ['$scope', '$rootScope', function ($scope, $rootScop
     // }
     $scope.save = function () {
         let newScene = {};
-        var nameValue = document.getElementById("sceneName").value;
+        let nameValue = document.getElementById("sceneName").value;
         if (!nameValue || nameValue === "") {
             return;
         }
         newScene.name = nameValue;
         newScene.properties = {};
         for (let i = 0; i < $scope.properties.length; i++) {
-            var property = $scope.properties[i];
-            var propertyValue = document.getElementById(property).value;
+            let property = $scope.properties[i];
+            let propertyValue = document.getElementById(property).value;
             if (!propertyValue || propertyValue === "")
                 return;
             newScene.properties[property] = propertyValue;
@@ -44,7 +44,11 @@ var SceneCreateController = ['$scope', '$rootScope', function ($scope, $rootScop
             $rootScope.scenes = [];
         }
         $scope.changeScene(-1);
-        $scope.createScene();
+        let result = $scope.createScene();
+        if(!result){
+            $scope.$hide();
+            return;
+        }
 
         let scene = $scope.editor.getSelection()[0];
         scene.setProperty("oryx-name", nameValue);

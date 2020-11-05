@@ -2,6 +2,7 @@ package com.activiti6.editor.controller;
 
 import com.activiti6.service.KnowledgeGraphService;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.activiti.engine.ActivitiException;
 import org.apache.commons.io.IOUtils;
 import org.springframework.web.bind.annotation.*;
@@ -139,32 +140,18 @@ public class ModelGetResourcesFromKG {
     }
 
 
-
-    @RequestMapping(value="/resource/{rid}/services", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+    @RequestMapping(value="/loc/get", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
-    public String getResourceServices(@PathVariable String rid){
-        // String retnStr = getResourceType("Eleme");
-        return "";
-    }
+    public String getLocation() throws UnsupportedEncodingException {
+        JSONObject retnList = getValidLocations();
+        InputStream resourceDetailsStream = new ByteArrayInputStream(retnList.toString().getBytes("utf-8"));
 
-    @RequestMapping(value="/resource/{rid}/events", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-    @ResponseBody
-    public String getResourceEvents(@PathVariable String rid){
-        // String retnStr = getResourceType("Eleme");
-        return "";
-    }
+        try {
+            return IOUtils.toString(resourceDetailsStream, "utf-8");
+        } catch (Exception e) {
+            throw new ActivitiException("Error while loading resources", e);
+        }
 
-    @RequestMapping(value="/resource/{rid}/capabilities", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-    @ResponseBody
-    public String getResourceCapabilities(@PathVariable String rid){
-        // String retnStr = getResourceType("Eleme");
-        return "";
-    }
-
-    @RequestMapping(value="/resource/{rid}/property", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-    @ResponseBody
-    public String getPropertyByLocation(@PathVariable String loc){
-        return "";
     }
 
 }

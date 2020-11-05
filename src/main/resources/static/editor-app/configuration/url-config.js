@@ -42,6 +42,10 @@ KISBPM.URL = {
 
     getEntitySpecificProperties: function (resName) {
         return ACTIVITI.CONFIG.contextRoot + '/' + resName + '/properties';
+    },
+
+    getLocations: function() {
+        return ACTIVITI.CONFIG.contextRoot +'/loc/get';
     }
 
 
