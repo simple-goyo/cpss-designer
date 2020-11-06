@@ -111,6 +111,13 @@ angular.module('activitiModeler')
                 $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "FinishPunching", resTemp);
             }
 
+            if (actionName === 'BookTickets') {
+                $scope.createResource($scope, selectedShape, "CyberObject");
+
+                let resTemp = resProperties;
+                resTemp["oryx-type"] = "CyberObject";
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "Ticket", resTemp);
+            }
 
 
 
@@ -291,7 +298,6 @@ angular.module('activitiModeler')
         }
         $scope.setHighlightedShape(newShapeId);
         jQuery('#' + newShapeId + 'bg_frame').attr({"fill":"#04FF8E"}); //高亮显示
-
 
         $scope.workerContainsActionIdUpdate(HighlightedShape.id, newShapeId);
 

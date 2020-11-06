@@ -405,7 +405,6 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
             }
         }
         // 给Action设置属性值(service及参数)
-
         //$scope.setActionProperty($scope, res_entity, $scope.selectedFunction, $scope.modelInput, $scope.resourceOutputs[i]);
 
         $scope.updateActionProperty($scope, res_entity, $scope.selectedFunction, $scope.modelInput, $scope.resourceOutputs[index]);

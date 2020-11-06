@@ -232,8 +232,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         };
 
         $scope.close = function () {
-            let properties = $rootScope.getAllEntitySpecificProperties($scope.getScenes());
-            debugger;
+            // let properties = $rootScope.getAllEntitySpecificProperties($scope.getScenes());
             $scope.$hide();
         };
 
@@ -707,10 +706,34 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         };
 
         $scope.getConstraints = function (scenes) {
-            return $rootScope.getAllEntitySpecificProperties(scenes);
+            return $scope.getAllEntitySpecificProperties(scenes);
         };
 
-
+        $scope.getAllEntitySpecificProperties = function (scenes) {
+            let allEntitySpecificProperties = [];
+            if (scenes !== undefined && scenes.length > 0) {
+                scenes.forEach((scene) => {
+                    let shapes = scene.childShapes;
+                    if (shapes !== undefined && shapes.length > 0) {
+                        shapes.forEach((shape) => {
+                            let entitySpecificProperties = shape.properties['entityspecificproperties'];
+                            if (entitySpecificProperties !== undefined && entitySpecificProperties !== "") {
+                                let id = shape.properties['overrideid'];
+                                let name = shape.properties['name'];
+                                let type = shape.properties['type'];
+                                allEntitySpecificProperties.push({
+                                    id: id,
+                                    name:name,
+                                    type:type,
+                                    entitySpecificProperties: entitySpecificProperties
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+            return allEntitySpecificProperties;
+        }
 
         $scope.upLoadModel = function (json) {
             let url = "https://www.cpss2019.fun:5001/save_app_class_new";
