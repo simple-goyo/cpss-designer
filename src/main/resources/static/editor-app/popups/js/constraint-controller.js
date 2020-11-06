@@ -55,6 +55,65 @@ var ConstraintController = ['$scope','$rootScope','$http', function ($scope, $ro
         return RelationTemp;
     }
 
+// [
+//     {
+//         "id":"sid-0E15C52B-2E1E-4108-B982-2347B31A0191",
+//         "name":"Camera",
+//         "type":"Device",
+//         "entitySpecificProperties":{
+//             "properties":{
+//                 "location":{
+//                     "bindDynamically":true,
+//                     "type":"entity",
+//                     "data":"",
+//                     "text":"",
+//                     "entity":{
+//                         "name":"会议室",
+//                         "id":"sid-13D5BF2E-B5E2-4B68-ACAE-7F9CCBDB3D44",
+//                         "$$hashKey":"0ER"
+//                     },
+//                     "rule":"LocatedIn"
+//                 },
+//                 "capacity":{
+//                     "bindDynamically":false,
+//                     "type":"entity",
+//                     "data":"",
+//                     "text":"",
+//                     "entity":"",
+//                     "rule":""
+//                 },
+//                 "state":{
+//                     "bindDynamically":false,
+//                     "type":"entity",
+//                     "data":"",
+//                     "text":"",
+//                     "entity":"",
+//                     "rule":""
+//                 }
+//             }
+//         }
+//     }
+// ]
+    let nodes = [];
+    let relationships = [];
+    $scope.isNodeExist = function (node){
+        return node in nodes;
+    }
+
+    $scope.generateId = function() {
+        let res = [], hex = '0123456789ABCDEF';
+
+        for (let i = 0; i < 36; i++) res[i] = Math.floor(Math.random()*0x10);
+
+        res[14] = 4;
+        res[19] = (res[19] & 0x3) | 0x8;
+
+        for (let i = 0; i < 36; i++) res[i] = hex[res[i]];
+
+        res[8] = res[13] = res[18] = res[23] = '-';
+
+        return "sid-" + res.join('');
+    };
 
     $scope.buildKGGraph = function (){
         let dataTemp = {
@@ -70,20 +129,89 @@ var ConstraintController = ['$scope','$rootScope','$http', function ($scope, $ro
             "errors":[]
         }
 
-        let nodes = [];
-        let relationships = [];
+        let properties = $rootScope.getAllEntitySpecificProperties(scenes);
+        properties.forEach(function (property) {
+            let id = property.id;// 当前entity的id
+            let name = property.name;
+            let type = property.type;
+            let sp = property.entitySpecificProperties;
 
-        let node1 = $scope.getKGNode("1", "Room");
-        let node2 = $scope.getKGNode("2", "State", {"name":"Room.state"});
-        let node3 = $scope.getKGNode("3", "Capacity", {"name":"Room.capacity"});
-        nodes.push(node1);
-        nodes.push(node2);
-        nodes.push(node3);
+            // 创建startnode
+            let startnode = $scope.getKGNode(id, type, {"name":name});
+            if(!$scope.isNodeExist(startnode)){
+                nodes.push(startnode);
+            }
 
-        let rela1 = $scope.getKGRelationship("1", "On", "1","2");
-        let rela2 = $scope.getKGRelationship("2", "GreaterThan", "1","3");
-        relationships.push(rela1);
-        relationships.push(rela2);
+            // 创建relationship与endnode
+            let p = sp['properties'];
+            for(let key in p){
+                switch (key){
+                    case "location":
+                    case "capacity":
+                    case "state":
+//                     "bindDynamically":true,
+//                     "type":"entity",
+//                     "data":"",
+//                     "text":"",
+//                     "entity":{
+//                         "name":"会议室",
+//                         "id":"sid-13D5BF2E-B5E2-4B68-ACAE-7F9CCBDB3D44",
+//                         "$$hashKey":"0ER"
+//                     },
+//                     "rule":"LocatedIn"
+                        let loc = p[key];
+                        if(loc["bindDynamically"]){
+                            if(loc["type"] === "entity" && loc["entity"] !== ""){
+                                let endnode = $scope.getKGNode(loc["entity"].id, loc["entity"].type, {"name":loc["entity"].name});
+                                if(!$scope.isNodeExist(endnode)){
+                                    nodes.push(endnode);
+                                }
+
+                                let rela = $scope.getKGRelationship(relationships.length.toString(), loc["rule"], id, loc["entity"].id);
+                                relationships.push(rela);
+                            }else if(loc["type"] === "data" && loc["data"] !== "" ){ // loc["type"] === "data"
+                                let endnodeid = $scope.generateId();
+                                let endnode = $scope.getKGNode(endnodeid, loc["data"]);
+                                if(!$scope.isNodeExist(endnode)){
+                                    nodes.push(endnode);
+                                }
+
+                                let rela = $scope.getKGRelationship(relationships.length.toString(), loc["rule"], id, endnodeid);
+                                relationships.push(rela);
+                            }
+                        }else if(loc["text"] !== ""){// 自定义的内容
+                            let endnodeid = $scope.generateId();
+                            let endnode = $scope.getKGNode(endnodeid, key);
+                            if(!$scope.isNodeExist(endnode)){
+                                nodes.push(endnode);
+                            }
+
+                            let rela = $scope.getKGRelationship(relationships.length.toString(), loc["text"], id, endnodeid);
+                            relationships.push(rela);
+                        }
+
+                        break;
+                    default:
+                        alert('Unknown Key '+ key);
+                        break;
+                }
+
+            }
+
+
+        });
+
+        // let node1 = $scope.getKGNode("1", "Room");
+        // let node2 = $scope.getKGNode("2", "State", {"name":"Room.state"});
+        // let node3 = $scope.getKGNode("3", "Capacity", {"name":"Room.capacity"});
+        // nodes.push(node1);
+        // nodes.push(node2);
+        // nodes.push(node3);
+        //
+        // let rela1 = $scope.getKGRelationship("1", "On", "1","2");
+        // let rela2 = $scope.getKGRelationship("2", "GreaterThan", "1","3");
+        // relationships.push(rela1);
+        // relationships.push(rela2);
 
         dataTemp["results"][0]["data"][0]["graph"]["nodes"] = nodes;
         dataTemp["results"][0]["data"][0]["graph"]["relationships"] = relationships;
@@ -97,7 +225,7 @@ var ConstraintController = ['$scope','$rootScope','$http', function ($scope, $ro
         // text: "",
         // entity: "",
         // rule: ""
-        // let properties = $scope.getAllEntitySpecificProperties(scenes);
+        // let properties = $rootScope.getAllEntitySpecificProperties(scenes);
 
         let data0 = {
             "results":[{
@@ -143,7 +271,7 @@ var ConstraintController = ['$scope','$rootScope','$http', function ($scope, $ro
 
     $scope.init = function () {
         let neo4jData = $scope.retreiveData();
-        console.log(JSON.stringify(neo4jData));
+        // console.log(JSON.stringify(neo4jData));
         let neo4jd3 = new Neo4jd3('#neo4jd3', {
             highlight: [
                 {

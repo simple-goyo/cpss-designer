@@ -221,7 +221,6 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         $scope.scenes = [];
 
         let modelMetaData = $scope.editor.getModelMetaData();
-        console.log($rootScope.editor);
         let description = '';
         if (modelMetaData.description) {
             description = modelMetaData.description;
@@ -233,7 +232,8 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         };
 
         $scope.close = function () {
-            //let properties = $scope.getAllEntitySpecificProperties($scope.getScenes());
+            let properties = $rootScope.getAllEntitySpecificProperties($scope.getScenes());
+            debugger;
             $scope.$hide();
         };
 
@@ -707,30 +707,10 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         };
 
         $scope.getConstraints = function (scenes) {
-            return $scope.getAllEntitySpecificProperties(scenes);
+            return $rootScope.getAllEntitySpecificProperties(scenes);
         };
 
-        $scope.getAllEntitySpecificProperties = function (scenes) {
-            let allEntitySpecificProperties = [];
-            if (scenes !== undefined && scenes.length > 0) {
-                scenes.forEach((scene) => {
-                    let shapes = scene.childShapes;
-                    if (shapes !== undefined && shapes.length > 0) {
-                        shapes.forEach((shape) => {
-                            let entitySpecificProperties = shape.properties['entityspecificproperties'];
-                            let id = shape.properties['overrideid'];
-                            if (entitySpecificProperties !== undefined && entitySpecificProperties !== "") {
-                                allEntitySpecificProperties.push({
-                                    id: id,
-                                    entitySpecificProperties: entitySpecificProperties
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-            return allEntitySpecificProperties;
-        }
+
 
         $scope.upLoadModel = function (json) {
             let url = "https://www.cpss2019.fun:5001/save_app_class_new";

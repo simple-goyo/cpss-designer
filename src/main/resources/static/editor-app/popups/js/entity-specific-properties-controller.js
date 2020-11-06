@@ -10,6 +10,32 @@ var EntitySpecificPropertiesController = ['$scope', '$rootScope', '$http', funct
         "state":["On", "Off"]
     };
 
+    $rootScope.getAllEntitySpecificProperties = function (scenes) {
+        let allEntitySpecificProperties = [];
+        if (scenes !== undefined && scenes.length > 0) {
+            scenes.forEach((scene) => {
+                let shapes = scene.childShapes;
+                if (shapes !== undefined && shapes.length > 0) {
+                    shapes.forEach((shape) => {
+                        let entitySpecificProperties = shape.properties['entityspecificproperties'];
+                        if (entitySpecificProperties !== undefined && entitySpecificProperties !== "") {
+                            let id = shape.properties['overrideid'];
+                            let name = shape.properties['name'];
+                            let type = shape.properties['type'];
+                            allEntitySpecificProperties.push({
+                                id: id,
+                                name:name,
+                                type:type,
+                                entitySpecificProperties: entitySpecificProperties
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        return allEntitySpecificProperties;
+    }
+
     $scope.getRelatedEntities = function () {
         let relatedEntities = [];
         let sceneId = $rootScope.scenes[$rootScope.selectedSceneIndex].id;
@@ -25,6 +51,7 @@ var EntitySpecificPropertiesController = ['$scope', '$rootScope', '$http', funct
                             if ($scope.isEntity(stencilId)) {
                                 relatedEntities.push({
                                     name: shape.properties["name"],
+                                    type: shape.properties["type"],
                                     id: shape.properties["overrideid"]
                                 });
                             }
@@ -39,6 +66,7 @@ var EntitySpecificPropertiesController = ['$scope', '$rootScope', '$http', funct
                 if ($scope.isEntity(stencilId)) {
                     relatedEntities.push({
                         name: shape.properties["name"],
+                        type: shape.properties["type"],
                         id: shape.properties["overrideid"]
                     });
                 }
@@ -117,5 +145,6 @@ var EntitySpecificPropertiesController = ['$scope', '$rootScope', '$http', funct
     $scope.close = function () {
         $scope.$hide();
     }
-
-}]
+}];
+var activitiModule = angular.module('activitiModeler');
+activitiModule.controller('EntitySpecificPropertiesController', EntitySpecificPropertiesController);
