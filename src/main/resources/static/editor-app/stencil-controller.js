@@ -641,8 +641,9 @@ angular.module('activitiModeler')
                         jQuery('.Oryx_button').each(function (i, obj) {
                             // 如果是Action则过滤掉服务、事件等。即显示delete-button，morph-button，play-button和SequenceFlow
                             // 如果是资源则过滤掉箭头和morph-button。即显示delete-button，service-button，event-button
-                            // 如果是ExitPoint和EntryPoint，不显示其他，只显示连线
-                            // 如果是Scene，不显示其他，只显示连线
+                            //   如果是ExitPoint和EntryPoint，不显示其他，只显示连线
+                            //   如果是Scene，不显示其他，只显示连线
+                            //   如果是worker（Person_Worker_new），则增加一条连线
                             //console.log($scope.selectedItem.title);
                             let whichItem = $scope.selectedItem;
                             for (let i = 0; i < whichItem.properties.length; i++) {
@@ -653,6 +654,10 @@ angular.module('activitiModeler')
                                 return;
                             }
                             if (stencilItem.id === 'scene' && obj.id !== 'resource-line-button') {
+                                return;
+                            }
+
+                            if (stencilItem.id !== 'Person_Worker_new' && obj.id === 'interaction-line-button') {
                                 return;
                             }
 

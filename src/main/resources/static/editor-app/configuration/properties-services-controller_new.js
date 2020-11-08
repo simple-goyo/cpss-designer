@@ -119,6 +119,7 @@ var paramParser = function (rawParam) {
 var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, $scope, $http) {
     var ActivityElement;
     var shape = $scope.selectedShape;
+    var isWorker = false;
 
     let sceneId = $rootScope.scenes[$rootScope.selectedSceneIndex].id;
     let action = $scope.editor.getSelection()[0];
@@ -286,6 +287,7 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
             res_entity.id = $scope.latestfromto["from"].properties["oryx-overrideid"];
             res_entity.name = $scope.latestfromto["from"].properties["oryx-name"];
             res_entity.type = $scope.latestfromto["from"].properties["oryx-type"];
+
             let functionType = $scope.latestfromto["from"].properties["oryx-type"];
             for (let i = 0; i < $scope.constTypeOfResource.length; i++) {
                 if ($scope.constTypeOfResource[i].name === functionType) {
@@ -310,26 +312,38 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
                 $scope.$hide();
                 return;
             }
-            console.log(res_entity.name);
-            let result = $scope.getResourcesfromKG(res_entity.name);
-            // if(!result) {
-            //     $scope.$hide();
-            //     $rootScope.editor.deleteShape($scope.latestLine);
-            //     return;
-            // }
+            // console.log(res_entity.name);
+            if(res_entity.name === "worker"){
+                isWorker = true;
+                $scope.getResourcesfromKG("CrowdsourcingWorker");
+                // 众包的参数要根据画布上的item决定, 而不是变量值
+                $scope.visibleParameters = $scope.getCrowdsourcingInput();
+            }
+            else {
+                $scope.getResourcesfromKG(res_entity.name);
+            }
         }
     }
     else{ // 没有连线
         res_entity.name = $scope.selectedItem.title;
         res_entity.id = $scope.selectedItem.properties["oryx-overrideid"];
         res_entity.type = $scope.selectedItem.properties["oryx-type"];
-        let result = $scope.getResourcesfromKG(res_entity.name);
+        if(res_entity.name === "worker"){
+            isWorker = true;
+            $scope.getResourcesfromKG("CrowdsourcingWorker");
+            // 众包的参数要根据画布上的item决定, 而不是变量值
+            $scope.visibleParameters = $scope.getCrowdsourcingInput();
+        }
+        else {
+            $scope.getResourcesfromKG(res_entity.name);
+        }
+
+        //let result = $scope.getResourcesfromKG(res_entity.name);
         // if(!result) {
         //     $scope.$hide();
         //     return;
         // }
     }
-
 
 
     // Put json representing entity on scope
@@ -434,6 +448,7 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
         // }
 
         $scope.close();
+        $scope.createInteractionLine(selectedShape);
     };
 
     angular.module('activitiModeler').ResActionClass($rootScope, $scope);

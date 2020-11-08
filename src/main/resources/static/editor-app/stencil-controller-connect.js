@@ -16,6 +16,11 @@ angular.module('activitiModeler')
             return;
 
         var nameSpace = edge.getStencil().namespace();
+        if(edge.getStencil()._jsonStencil["id"] === nameSpace + "InteractionFlow")
+        {
+            $scope.HandleInteractionFlow(edge);
+            return;
+        }
         if (edge.getStencil()._jsonStencil["id"] !== nameSpace + "MessageFlow"
             && edge.getStencil()._jsonStencil["id"] !== nameSpace + "MessageSceneFlow")
             return;
@@ -92,7 +97,7 @@ angular.module('activitiModeler')
                 toBounds: to.bounds
             }];
 
-            var action = $scope.getHighlightedShape();
+            let action = $scope.getHighlightedShape();
             if (action) {
                 action.setProperty("oryx-resourceline", resourceConnect);
             }
@@ -137,6 +142,57 @@ angular.module('activitiModeler')
         KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
         $scope.editor.setSelection(connectedShape);
         $scope.editor.getCanvas().update();
+    };
+
+    /*
+    * 创建InteractionFlow
+    * */
+    $scope.createInteractionLine = function (selectedShape){
+        let connectedShape = selectedShape;
+
+        let stencil = connectedShape.getStencil();
+        stencil._jsonStencil.defaultAlign = "south";//设置messageFlow在下方生成
+        let lineId = "InteractionFlow";
+        let option = {
+            type: stencil._jsonStencil["id"],
+            namespace: stencil.namespace(),
+            connectedShape: connectedShape,
+            parent: connectedShape.parent,
+            containedStencil: stencil,
+            connectingType: stencil.namespace() + lineId
+        };
+        let command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
+        $scope.editor.executeCommands(command);
+        let edge = $scope.editor.getSelection()[0].incoming[0];
+        edge.setProperty('oryx-overrideid', edge.id);
+        KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
+        $scope.editor.setSelection(connectedShape);
+        $scope.editor.getCanvas().update();
+    };
+
+    /*
+    * 处理InteractionFlow
+    * */
+    $scope.HandleInteractionFlow = function (edge){
+        let from = edge.incoming[0];
+        let to = edge.outgoing[0];
+        if(from&&to){
+            // to————worker要去的地方，worker要和谁进行交互
+            // from——要关联的worker
+
+            // 往workertargetpackage中保存to的内容
+            // let worker = from;
+            // worker.setProperty("oryx-workertarget", to);
+
+            let action = $scope.getHighlightedShape();
+            if (action) {
+                action.setProperty("oryx-workertarget", to);
+            }
+            $scope.editor.getCanvas().update();
+            $scope.editor.updateSelection();
+
+        }
+        console.log(edge);
     };
 
     /**

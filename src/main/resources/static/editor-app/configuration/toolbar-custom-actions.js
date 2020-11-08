@@ -505,6 +505,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                     "name": "",
                     "enactedBy": {"id": "eeeee-5", "name": "众包工人"},
                     "type": "DeviceOperation",
+                    "interaction":{"id": "交互对象资源ID", "name":"交互对象"},
                     "input": "",
                     "output": "",
                     "flow": {"id": "", "to": "", "condition": ""}
@@ -523,7 +524,16 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                     enactedBy["type"] = resShape.properties["type"];
                 }
                 // type
-                let type = service.stencil.id
+                let type = service.stencil.id;
+                // interaction
+                let interaction = {};
+                if(enactedBy.type === "worker"){
+                    let workertarget = service.properties["workertarget"];
+                    console.log(workertarget);
+                    interaction["id"] = "";
+                    interaction["name"] = "";
+                }
+
                 // input
                 let input = service.properties["actioninputstatus"];
                 // output
@@ -540,6 +550,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 action_template["name"] = name;
                 action_template["enactedBy"] = enactedBy;
                 action_template["type"] = type;
+                action_template["interaction"] = interaction;
                 action_template["input"] = input;
                 action_template["output"] = output;
                 action_template["flow"] = flow;
