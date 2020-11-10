@@ -360,7 +360,7 @@ angular.module('activitiModeler')
                                     };
                             }
                             if ($scope.neibor && $scope.neibor.length !== 0) {
-                                $scope.popupThingGetOrLeave();
+                                // $scope.popupThingGetOrLeave();
                             }
                         }
 

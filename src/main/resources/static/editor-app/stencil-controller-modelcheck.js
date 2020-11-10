@@ -55,6 +55,12 @@ angular.module('activitiModeler')
         // 获取出口节点信息
         for(let i=0;i<childShapes.length;i++){
             //console.log(childShapes[i]);
+            // 如果节点中最后一个Action对应的资源是worker, 则允许不连接出口节点
+            if(childShapes[i].stencil.id === "SocialAction" && childShapes[i].outgoing.length === 0){
+                if(childShapes[i].properties["activityelement"].type !== undefined && childShapes[i].properties["activityelement"].type === "Worker"){
+                    return true;
+                }
+            }
             if(childShapes[i].stencil.id === "MessageFlow"){
                 // 查看是否连接ExitPoint
                 let resId = childShapes[i].outgoing[0].resourceId;

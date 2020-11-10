@@ -503,9 +503,9 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 let action_template = {
                     "id": "",
                     "name": "",
-                    "enactedBy": {"id": "eeeee-5", "name": "众包工人"},
+                    "enactedBy": {"id": "eeeee-5", "name": "众包工人", "type":"Worker"},
                     "type": "DeviceOperation",
-                    "interaction":{"id": "交互对象资源ID", "name":"交互对象"},
+                    "interaction":{"id": "交互对象资源ID", "name":"user123", "type":"User"},
                     "input": "",
                     "output": "",
                     "flow": {"id": "", "to": "", "condition": ""}
@@ -527,11 +527,11 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 let type = service.stencil.id;
                 // interaction
                 let interaction = {};
-                if(enactedBy.type === "worker"){
+                if(enactedBy.type === "Worker"){
                     let workertarget = service.properties["workertarget"];
-                    console.log(workertarget);
-                    interaction["id"] = "";
-                    interaction["name"] = "";
+                    interaction["id"] = workertarget.properties["overrideid"];
+                    interaction["name"] = workertarget.properties["name"];
+                    interaction["type"] = workertarget.properties["type"];
                 }
 
                 // input
@@ -600,9 +600,6 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 let input = event.properties["actioninputstatus"];
                 // output
                 let output = event.properties["actionoutputstatus"];
-                // flow
-                let flowid = "";
-                let flowto = "";
 
                 let flow = $scope.getOutgoingAction(event, event.outgoing, relations);
                 // if(event.outgoing.length){
@@ -619,7 +616,6 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 event_template["flow"] = flow;
                 events.push(event_template);
             })
-            console.log("events" + events);
             return events;
         };
 

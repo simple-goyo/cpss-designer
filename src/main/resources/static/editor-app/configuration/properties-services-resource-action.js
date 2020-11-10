@@ -123,6 +123,8 @@ angular.module('activitiModeler')
 
 
 
+
+
             // else{
             //     $scope.createResource($scope, shape, "CyberObject");
             //

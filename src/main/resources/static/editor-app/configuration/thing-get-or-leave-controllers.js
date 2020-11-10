@@ -84,22 +84,25 @@ var ThingGetOrLeaveController = ['$scope', '$modal', function ($scope, $modal) {
 
     $scope.close = function () {
         $scope.selectedShape = userShape;
-        if (!userShape.properties["oryx-services"]) {
-            $scope.property = {
-                key: "oryx-services",
-                value: []
-            };
-        } else {
-            $scope.property = {
-                key: "oryx-services",
-                value: userShape.properties["oryx-services"]
+        if(userShape !== undefined){
+            if (!userShape.properties["oryx-services"]) {
+                $scope.property = {
+                    key: "oryx-services",
+                    value: []
+                };
+            } else {
+                $scope.property = {
+                    key: "oryx-services",
+                    value: userShape.properties["oryx-services"]
+                }
             }
+            var opts = {
+                template: "editor-app/configuration/properties/services-popup_new.html",
+                scope: $scope
+            };
+            $modal(opts);
         }
-        var opts = {
-            template: "editor-app/configuration/properties/services-popup_new.html",
-            scope: $scope
-        };
-        $modal(opts);
+
         $scope.$hide();
     };
 }];
