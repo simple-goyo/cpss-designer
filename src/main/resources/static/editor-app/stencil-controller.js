@@ -300,7 +300,7 @@ angular.module('activitiModeler')
             $scope.editor.registerOnEvent(ORYX.CONFIG.EVENT_MOUSEUP, function (event) {
                 var action = $scope.getHighlightedShape();
                 if (action) {
-                    action.setProperty("oryx-resourceline", $scope.getResourceConnect());
+                    action.setProperty("oryx-resourceline", $scope.getResourceConnectedByMessageFlow());
                 }
                 // 选都没选中，直接返回
                 if ($scope.selectedItem.auditData !== undefined) {
@@ -389,7 +389,7 @@ angular.module('activitiModeler')
                             $scope.lastHighlightedId = item.id;
                             $scope.HighlightedItem = item;
 
-                            $scope.toDoAboutResourceLineAfterChangingAction(lastSelectedAction);
+                            $scope.makeFinishingTouchesOfChangingAction(lastSelectedAction);
                         }
                     }
                 }
@@ -731,7 +731,7 @@ angular.module('activitiModeler')
                  */
                 KISBPM.eventBus.addListener(KISBPM.eventBus.EVENT_TYPE_PROPERTY_VALUE_CHANGED, function (event) {
                     if (event.property && event.property.key) {
-                        
+
                         // If the name property is been updated, we also need to change the title of the currently selected item
                         if (event.property.key === 'oryx-name' && $scope.selectedItem !== undefined && $scope.selectedItem !== null) {
                             $scope.selectedItem.title = event.newValue;
@@ -846,8 +846,8 @@ angular.module('activitiModeler')
                     $scope.deleteAction(shape);
                 } else if ($scope.isMessageFlow(shape)) {
                     $scope.deleteMessageFlow(shape);
-                } else if ($scope.isInteractionFlow(shape)){
-                    $scope.deleteMessageFlow(shape);
+                } else if ($scope.isInteractionFlow(shape)) {
+                    $scope.deleteInteractionFlow(shape);
                 }
                 KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
 

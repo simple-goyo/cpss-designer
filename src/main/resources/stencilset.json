@@ -1739,8 +1739,8 @@
         "animatedirectionpackage",
         "currentscenepackage",
         "resourcelinepackage",
-        "interactionlinepackage",
-        "traceableactionspackage"
+        "traceableactionspackage",
+        "interactionlinepackage"
       ],
       "hiddenPropertyPackages": [
         "workertargetpackage",
@@ -2026,10 +2026,12 @@
         "animatedirectionpackage",
         "currentscenepackage",
         "resourcelinepackage",
+        "interactionlinepackage",
         "traceableactionspackage"
       ],
       "hiddenPropertyPackages": [
         "resourcelinepackage",
+        "interactionlinepackage",
         "animatedirectionpackage",
         "traceableactionspackage"
       ],
@@ -2064,10 +2066,13 @@
         "animatedirectionpackage",
         "currentscenepackage",
         "resourcelinepackage",
+        "interactionlinepackage",
         "traceableactionspackage"
       ],
       "hiddenPropertyPackages": [
+        "resourcelinepackage",
         "workertargetpackage",
+        "interactionlinepackage",
         "animatedirectionpackage",
         "traceableactionspackage"
       ],
