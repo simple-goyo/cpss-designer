@@ -369,7 +369,7 @@ angular.module('activitiModeler')
                         // 两个阶段的要求
                         // 1.选中的Action，高亮(被选中元素高亮，未选中元素取消高亮)
                         // 2.选中的Action，显示当前画布
-                        // 1
+
                         shape = $scope.selectedItem;
                         for (i = shape.properties.length; i > 0; i--) {
                             if (shape.properties[i - 1].key === "oryx-activityelement") break;
