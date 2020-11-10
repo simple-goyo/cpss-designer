@@ -16,8 +16,7 @@ angular.module('activitiModeler')
             return;
 
         var nameSpace = edge.getStencil().namespace();
-        if(edge.getStencil()._jsonStencil["id"] === nameSpace + "InteractionFlow")
-        {
+        if (edge.getStencil()._jsonStencil["id"] === nameSpace + "InteractionFlow") {
             $scope.HandleInteractionFlow(edge);
             return;
         }
@@ -34,7 +33,7 @@ angular.module('activitiModeler')
             if (to.properties['oryx-type'] === "出口节点" || to.properties['oryx-type'] === "Exit") {
                 return;
             }
-            if (from.properties['oryx-type'] === "房间"||from.properties['oryx-type'] === "Room"){
+            if (from.properties['oryx-type'] === "房间" || from.properties['oryx-type'] === "Room") {
                 alert("Room cannot connect to other entity!")
                 $scope.deleteConnectedLinebyEdge(edge);
                 return;
@@ -102,7 +101,7 @@ angular.module('activitiModeler')
                 action.setProperty("oryx-resourceline", resourceConnect);
             }
 
-            $scope.toDoAboutResourceLineAfterChangingAction(lastSelectedAction);
+            $scope.makeFinishingTouchesOfChangingAction(lastSelectedAction);
             // 设置服务前，将连线的资源输入进去
             // 目前的输入默认是连线连进去的资源
             $scope.setService();
@@ -147,9 +146,14 @@ angular.module('activitiModeler')
     /*
     * 创建InteractionFlow
     * */
-    $scope.createInteractionLine = function (selectedShape){
+    $scope.createInteractionLine = function (selectedShape) {
         let connectedShape = selectedShape;
-
+        if (!connectedShape) {
+            connectedShape = $scope.editor.getSelection()[0];
+        }
+        if (!$scope.isWorker(connectedShape)) {
+            return;
+        }
         let stencil = connectedShape.getStencil();
         stencil._jsonStencil.defaultAlign = "south";//设置messageFlow在下方生成
         let lineId = "InteractionFlow";
@@ -173,10 +177,10 @@ angular.module('activitiModeler')
     /*
     * 处理InteractionFlow
     * */
-    $scope.HandleInteractionFlow = function (edge){
+    $scope.HandleInteractionFlow = function (edge) {
         let from = edge.incoming[0];
         let to = edge.outgoing[0];
-        if(from&&to){
+        if (from && to) {
             // to————worker要去的地方，worker要和谁进行交互
             // from——要关联的worker
 
@@ -186,6 +190,23 @@ angular.module('activitiModeler')
 
             let action = $scope.getHighlightedShape();
             if (action) {
+
+                let bounds = from.bounds;
+                let fromBounds = {a: {x: bounds.a.x, y: bounds.a.y}, b: {x: bounds.b.x, y: bounds.b.y}}
+                let newInteractionFlowConnect = [{
+                    from: from.id,
+                    fromBounds: fromBounds,
+                    to: to.id,
+                    toBounds: to.bounds
+                }];
+
+                let interactionFlowConnects = action.properties['oryx-interactionline'];
+                if (interactionFlowConnects) {
+                    interactionFlowConnects[interactionFlowConnects.length] = newInteractionFlowConnect;
+                } else {
+                    action.setProperty("oryx-interactionline", newInteractionFlowConnect)
+                }
+
                 action.setProperty("oryx-workertarget", to);
             }
             $scope.editor.getCanvas().update();
@@ -196,13 +217,13 @@ angular.module('activitiModeler')
     };
 
     /**
-     * 获取当前动作的被连线的资源
+     * 获取当前动作的被Message连线的资源
      * **/
-    $scope.getResourceConnect = function () {
-        let connectedLines = $scope.getConnectedLines();
-        var resourceConnect = [];
-        for (var i = 0; i < connectedLines.length; i++) {
-            let edge = connectedLines[i];
+    $scope.getResourceConnectedByMessageFlow = function () {
+        let messageFlowConnectLines = $scope.getMessageFlowConnectLines();
+        var MessageFlowConnect = [];
+        for (var i = 0; i < messageFlowConnectLines.length; i++) {
+            let edge = messageFlowConnectLines[i];
             if (edge) {
                 var from = edge.incoming[0] ? edge.incoming[0].id : null;
                 var to = edge.outgoing[0] ? edge.outgoing[0].id : null;
@@ -216,7 +237,7 @@ angular.module('activitiModeler')
                 if (to != null) {
                     toBounds = $scope.getShapeById(to).bounds;
                 }
-                resourceConnect[resourceConnect.length] = {
+                MessageFlowConnect[MessageFlowConnect.length] = {
                     from: from,
                     fromBounds: fromBounds,
                     to: to,
@@ -225,20 +246,27 @@ angular.module('activitiModeler')
 
             }
         }
-        return resourceConnect;
+        return MessageFlowConnect;
     };
 
     /**
      * 在Action切换后，更新对应的资源连线————删除上一个Action的资源连线，创建当前Action的资源连线
      * */
-    $scope.toDoAboutResourceLineAfterChangingAction = function (lastSelectedAction) {
+    $scope.makeFinishingTouchesOfChangingAction = function (lastSelectedAction) {
         var action = $scope.getHighlightedShape();
         if (action === lastSelectedAction || !lastSelectedAction)
             return;
         $scope.deleteConnectedLines();
-        var resourceConnect = action.properties['oryx-resourceline'];
-        if (resourceConnect) {
-            $scope.createConnectedLines(resourceConnect);
+        var messageFlowConnects = action.properties['oryx-resourceline'];
+
+        if (messageFlowConnects) {
+            $scope.createMessageFlowConnectedLines(messageFlowConnects);
+        }
+
+        let interactionFlowConnects = action.properties['oryx-interactionline'];
+
+        if (interactionFlowConnects) {
+            $scope.createInteractionFlowConnectedLines(interactionFlowConnects);
         }
 
         $scope.workerRestore(action, lastSelectedAction);
@@ -301,16 +329,25 @@ angular.module('activitiModeler')
     /**
      * 用于切换action时生成对应Action的资源连线
      * */
-    $scope.createConnectedLines = function (resourceConnect) {
-        for (var i = 0; i < resourceConnect.length; i++) {
-            var line = resourceConnect[i];
+    $scope.createMessageFlowConnectedLines = function (messageFlowConnects) {
+        for (var i = 0; i < messageFlowConnects.length; i++) {
+            var line = messageFlowConnects[i];
             var from = $scope.getShapeById(line['from']);
             var to = $scope.getShapeById(line['to']);
             $scope.connectResourceByMessageFlow(from, to);
         }
     };
 
-    $scope.deleteConnectedLinebyEdge = function (edge){
+    $scope.createInteractionFlowConnectedLines = function (interactionFlowConnects) {
+        for (var i = 0; i < interactionFlowConnects.length; i++) {
+            var line = interactionFlowConnects[i];
+            var from = $scope.getShapeById(line['from']);
+            var to = $scope.getShapeById(line['to']);
+            $scope.connectResourceWithInteractionFlow(from, to);
+        }
+    };
+
+    $scope.deleteConnectedLinebyEdge = function (edge) {
         $scope.editor.deleteShape(edge);
     }
 
@@ -320,8 +357,9 @@ angular.module('activitiModeler')
     $scope.deleteConnectedLines = function () {
         let shapes = [$scope.editor.getCanvas()][0].children;
         for (let i = 0; i < shapes.length; i++) {
-            let flag = shapes[i]._stencil._namespace + "MessageFlow";
-            if (flag === shapes[i]._stencil._jsonStencil.id) {
+            let messageFlow = shapes[i]._stencil._namespace + "MessageFlow";
+            let interactionFlow = shapes[i]._stencil._namespace + "InteractionFlow";
+            if (messageFlow === shapes[i]._stencil._jsonStencil.id || interactionFlow === shapes[i]._stencil._jsonStencil.id) {
                 $scope.editor.deleteShape(shapes[i]);
             }
         }
@@ -330,7 +368,7 @@ angular.module('activitiModeler')
     /**
      * 获取当前action中的资源连线
      * */
-    $scope.getConnectedLines = function () {
+    $scope.getMessageFlowConnectLines = function () {
         let connectedLines = [];
         let shapes = [$scope.editor.getCanvas()][0].children;
         for (let i = 0; i < shapes.length; i++) {
@@ -352,6 +390,10 @@ angular.module('activitiModeler')
     $scope.connectResourceByMessageSceneFlow = function (from, to) {
         return $scope.connectResourceWithSpecificLine(from, to, "MessageSceneFlow")
     };
+
+    $scope.connectResourceWithInteractionFlow = function (from, to) {
+        return $scope.connectResourceWithSpecificLine(from, to, "InteractionFlow")
+    }
 
     $scope.connectResourceWithSpecificLine = function (from, to, lineId) {
         if (!from || !to)
@@ -383,6 +425,10 @@ angular.module('activitiModeler')
         return shape._stencil._namespace + "MessageFlow" === shape._stencil._jsonStencil.id;
     }
 
+    $scope.isInteractionFlow = function (shape) {
+        return shape._stencil._namespace + "InteractionFlow" === shape._stencil._jsonStencil.id;
+    }
+
     $scope.deleteMessageFlow = function (messageFlow) {
         if (messageFlow.outgoing !== undefined && messageFlow.outgoing !== null
             && messageFlow.outgoing.length > 0
@@ -391,6 +437,27 @@ angular.module('activitiModeler')
             $scope.editor.setSelection(action);
             $scope.editor.updateSelection();
             $scope.deleteShape();
+        }
+    }
+
+    $scope.deleteInteractionFlow = function (interactionFlow) {
+        if (interactionFlow.outgoing !== undefined && interactionFlow.outgoing !== null
+            && interactionFlow.outgoing.length > 0
+            && interactionFlow.outgoing[0] !== undefined && interactionFlow.outgoing[0] !== null) {
+            let action = $scope.getHighlightedShape();
+            if (action) {
+                let interactionFlowConnects = action.properties['oryx-interactionline'];
+                for (let i = 0; i < interactionFlowConnects.length; i++) {
+                    let line = interactionFlowConnects[i];
+                    let fromId = line['from'];
+                    let toId = line['to'];
+                    if (fromId === interactionFlow.incoming[0].id && toId === interactionFlow.outgoing[0].id) {
+                        interactionFlowConnects.splice(i, 1);
+                        break;
+                    }
+                }
+                action.setProperty("oryx-interactionline", interactionFlowConnects);
+            }
         }
     }
 

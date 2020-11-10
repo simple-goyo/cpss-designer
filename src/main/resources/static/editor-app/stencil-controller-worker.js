@@ -1,6 +1,6 @@
 'use strict';
 angular.module('activitiModeler')
-    .WorkerClass = function($rootScope, $scope){
+    .WorkerClass = function ($rootScope, $scope) {
 
     /**
      * 工人携带指定的资源
@@ -256,4 +256,9 @@ angular.module('activitiModeler')
             }
         }
     };
+
+    $scope.isWorker = function (shape) {
+        return shape._stencil._namespace + "Person_Worker" === shape._stencil._jsonStencil.id
+            || shape._stencil._namespace + "Person_Worker_new" === shape._stencil._jsonStencil.id;
+    }
 };

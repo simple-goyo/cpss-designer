@@ -234,7 +234,7 @@ angular.module('activitiModeler')
             // $scope.setHighlightedShape(newShapeId);
             // jQuery('#' + newShapeId + 'bg_frame').attr({"fill": "#04FF8E"}); //高亮显示
 
-            // $scope.toDoAboutResourceLineAfterChangingAction(lastSelectedAction);
+            // $scope.makeFinishingTouchesOfChangingAction(lastSelectedAction);
 
 
             // $scope.editor.getSelection()[0].properties['oryx-overrideid'] = $scope.editor.getSelection()[0].id;//为创建的未定义的动作提供id
@@ -286,7 +286,7 @@ angular.module('activitiModeler')
         if (nextAction !== null) {
             jQuery('#' + nextAction.id + 'bg_frame').attr({"fill": "#04FF8E"});
             $scope.setHighlightedShape(nextAction.id);
-            $scope.toDoAboutResourceLineAfterChangingAction(action);
+            $scope.makeFinishingTouchesOfChangingAction(action);
             $scope.connectWithSequenceFlow(lastAction, nextAction);
         } else {
             if (lastAction !== null) {
@@ -294,7 +294,7 @@ angular.module('activitiModeler')
                     jQuery('#' + lastAction.id + 'bg_frame').attr({"fill": "#04FF8E"});
                 }
                 $scope.setHighlightedShape(lastAction.id);
-                $scope.toDoAboutResourceLineAfterChangingAction(action);
+                $scope.makeFinishingTouchesOfChangingAction(action);
             }
         }
         while (action.incoming.length > 0) {
