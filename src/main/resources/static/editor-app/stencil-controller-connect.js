@@ -241,7 +241,13 @@ angular.module('activitiModeler')
             $scope.createConnectedLines(resourceConnect);
         }
 
-        $scope.workerRestore(action, lastSelectedAction);
+        if($scope.containsWorkerLine(action)){
+            $scope.workerRestore(action, lastSelectedAction);
+
+            // 删除上一个Action的InteractionLine
+            //
+        }
+
         var lastAction = $scope.getLastAction(action);
         if (lastAction)
             $scope.workerMove(lastAction);
@@ -345,14 +351,6 @@ angular.module('activitiModeler')
     /**
      * 根据给定的from和to创建连线
      * */
-    $scope.connectResourceByMessageFlow = function (from, to) {
-        $scope.connectResourceWithSpecificLine(from, to, "MessageFlow")
-    };
-
-    $scope.connectResourceByMessageSceneFlow = function (from, to) {
-        return $scope.connectResourceWithSpecificLine(from, to, "MessageSceneFlow")
-    };
-
     $scope.connectResourceWithSpecificLine = function (from, to, lineId) {
         if (!from || !to)
             return;
@@ -374,6 +372,17 @@ angular.module('activitiModeler')
         $scope.editor.getCanvas().update();
         return edge;
     }
+    $scope.connectResourceByMessageFlow = function (from, to) {
+        $scope.connectResourceWithSpecificLine(from, to, "MessageFlow")
+    };
+
+    $scope.connectResourceByMessageSceneFlow = function (from, to) {
+        return $scope.connectResourceWithSpecificLine(from, to, "MessageSceneFlow")
+    };
+
+    $scope.connectResourceByInteractionFlow = function (from, to) {
+        return $scope.connectResourceWithSpecificLine(from, to, "InteractionFlow")
+    };
 
     $scope.connectWithSequenceFlow = function (from, to) {
         $scope.connectResourceWithSpecificLine(from, to, "SequenceFlow");
@@ -388,6 +397,7 @@ angular.module('activitiModeler')
             && messageFlow.outgoing.length > 0
             && messageFlow.outgoing[0] !== undefined && messageFlow.outgoing[0] !== null) {
             let action = $scope.getHighlightedShape();
+
             $scope.editor.setSelection(action);
             $scope.editor.updateSelection();
             $scope.deleteShape();
@@ -397,5 +407,10 @@ angular.module('activitiModeler')
     $scope.isMessageSceneFlow = function (shape) {
         return shape._stencil._namespace + "MessageSceneFlow" === shape._stencil._jsonStencil.id;
     }
+
+    $scope.isInteractionFlow = function (shape) {
+        return shape._stencil._namespace + "InteractionFlow" === shape._stencil._jsonStencil.id;
+    }
+
 
 };

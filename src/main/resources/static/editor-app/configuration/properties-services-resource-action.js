@@ -24,7 +24,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'FinishMakingCoffee') {
-                $scope.createResource($scope, shape, "PhysicalObject");
+                $scope.createResource($scope, selectedShape, "PhysicalObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "PhysicalItem";
@@ -32,7 +32,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'FinishPrinting') {
-                $scope.createResource($scope, shape, "PhysicalObject");
+                $scope.createResource($scope, selectedShape, "PhysicalObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "PhysicalItem";
@@ -40,7 +40,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'MeetingReminder') {
-                $scope.createResource($scope, shape, "CyberObject");
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
@@ -48,7 +48,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'BodyMovement') {
-                $scope.createResource($scope, shape, "CyberObject");
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
@@ -56,7 +56,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'HumanDetection') {
-                $scope.createResource($scope, shape, "CyberObject");
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
@@ -64,7 +64,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'Notifications') {
-                $scope.createResource($scope, shape, "CyberObject");
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
@@ -72,7 +72,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'WeightUpdated') {
-                $scope.createResource($scope, shape, "CyberObject");
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
@@ -80,7 +80,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'FinishBoiling') {
-                $scope.createResource($scope, shape, "CyberObject");
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
@@ -88,7 +88,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'FallDown') {
-                $scope.createResource($scope, shape, "CyberObject");
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
@@ -96,7 +96,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'DoorOpen') {
-                $scope.createResource($scope, shape, "CyberObject");
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
@@ -104,7 +104,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'FinishPunching') {
-                $scope.createResource($scope, shape, "CyberObject");
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";

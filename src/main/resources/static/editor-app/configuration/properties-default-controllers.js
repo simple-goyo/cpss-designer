@@ -188,12 +188,20 @@ var propertyInitController = ['$scope', '$http', function ($scope ,$http) {
     // 请求知识图谱，获取对应的资源，如下单应用、咖啡机等
     $http({method: 'GET', url: KISBPM.URL.getResources()}).success(function (data, status, headers, config) {
         let k=0;
+        let resources = [];
         for(let i=0; i< data.length;i++){
             if(data[i].type === selectedShapeFunctionType){
-                $scope.resources[k] = data[i];
+                resources[k] = data[i];
                 k++;
             }
         }
+        resources.sort(function(a, b){
+
+            return a.name[0].charCodeAt() - b.name[0].charCodeAt();
+        })
+        $scope.resources = resources;
+        console.log( $scope.resources);
+
         // console.log(JSON.stringify($scope.resources));
     }).error(function (data, status, headers, config) {
         console.log('Something went wrong when fetching Resources:' + JSON.stringify(data));

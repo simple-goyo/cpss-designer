@@ -846,6 +846,8 @@ angular.module('activitiModeler')
                     $scope.deleteAction(shape);
                 } else if ($scope.isMessageFlow(shape)) {
                     $scope.deleteMessageFlow(shape);
+                } else if ($scope.isInteractionFlow(shape)){
+                    $scope.deleteMessageFlow(shape);
                 }
                 KISBPM.TOOLBAR.ACTIONS.deleteItem({'$scope': $scope});
 
