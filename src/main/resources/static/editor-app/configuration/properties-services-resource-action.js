@@ -6,6 +6,9 @@ angular.module('activitiModeler')
 
     // 有些信息服务能够自动生成信息对象
     $scope.AutoGenerateResource = function($scope, actionName, serviceOutput, serviceOutputDetials, selectedShape){
+        if(selectedShape === undefined){
+            selectedShape = shape;
+        }
         // 服务的output中有值
         if( serviceOutput.length > 0){   // 当选择点咖啡服务时，会生成一个订单对象.length > 0){
             // 当选择点咖啡服务时，会生成一个订单对象
@@ -24,7 +27,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'FinishMakingCoffee') {
-                $scope.createResource($scope, shape, "PhysicalObject");
+                $scope.createResource($scope, selectedShape, "PhysicalObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "PhysicalItem";
@@ -32,7 +35,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'FinishPrinting') {
-                $scope.createResource($scope, shape, "PhysicalObject");
+                $scope.createResource($scope, selectedShape, "PhysicalObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "PhysicalItem";
@@ -40,7 +43,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'MeetingReminder') {
-                $scope.createResource($scope, shape, "CyberObject");
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
@@ -48,7 +51,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'BodyMovement') {
-                $scope.createResource($scope, shape, "CyberObject");
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
@@ -56,7 +59,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'HumanDetection') {
-                $scope.createResource($scope, shape, "CyberObject");
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
@@ -64,7 +67,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'Notifications') {
-                $scope.createResource($scope, shape, "CyberObject");
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
@@ -72,7 +75,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'WeightUpdated') {
-                $scope.createResource($scope, shape, "CyberObject");
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
@@ -80,7 +83,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'FinishBoiling') {
-                $scope.createResource($scope, shape, "CyberObject");
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
@@ -88,7 +91,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'FallDown') {
-                $scope.createResource($scope, shape, "CyberObject");
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
@@ -96,7 +99,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'DoorOpen') {
-                $scope.createResource($scope, shape, "CyberObject");
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
@@ -104,7 +107,7 @@ angular.module('activitiModeler')
             }
 
             if (actionName === 'FinishPunching') {
-                $scope.createResource($scope, shape, "CyberObject");
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
@@ -119,7 +122,21 @@ angular.module('activitiModeler')
                 $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "Ticket", resTemp);
             }
 
+            if (actionName === 'GetAirQuality') {
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
+                let resTemp = resProperties;
+                resTemp["oryx-type"] = "CyberObject";
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "AQI", resTemp);
+            }
+
+            if (actionName === 'ReceivedMsg') {
+                $scope.createResource($scope, selectedShape, "CyberObject");
+
+                let resTemp = resProperties;
+                resTemp["oryx-type"] = "CyberObject";
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "Message", resTemp);
+            }
 
 
 

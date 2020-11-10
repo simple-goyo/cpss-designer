@@ -86,7 +86,7 @@ var EntitySpecificPropertiesController = ['$scope', '$rootScope', '$http', funct
     }
 
     $scope.isEntity = function (stencilId) {
-        return stencilId === "Person" || stencilId === "Person_Worker" || stencilId === "Group" || stencilId === "Organization"
+        return stencilId === "Person" || stencilId === "Person_Worker" || stencilId === "Person_Worker_new" || stencilId === "Group" || stencilId === "Organization"
             || stencilId === "PhysicalObject" || stencilId === "Robot" || stencilId === "Device"
             || stencilId === "CloudApp" || stencilId === "MobileApp" || stencilId === "EmbeddedApp" || stencilId === "CyberObject"
             || stencilId === "Room";

@@ -33,12 +33,13 @@ var KisBPMEventsCtrl = [ '$scope', '$modal', function($scope, $modal) {
 }];
 
 var EventsPopupCtrl = ['$rootScope', '$scope', '$http', '$timeout', function($rootScope, $scope, $http, $timeout) {
-	var ActivityElement;
+	let ActivityElement;
+	let isWorker=false;
 	let sceneId = $rootScope.scenes[$rootScope.selectedSceneIndex].id;
-	var selectedResourceEntity = $scope.selectedShape;
-	var HighlightedShape = $scope.getHighlightedShape();
+	let selectedResourceEntity = $scope.selectedShape;
+	let HighlightedShape = $scope.getHighlightedShape();
 
-	var selectedShapeEventType = "DefaultEvent";
+	let selectedShapeEventType = "DefaultEvent";
 
 	$scope.eventPayloads = [];
 
@@ -102,29 +103,36 @@ var EventsPopupCtrl = ['$rootScope', '$scope', '$http', '$timeout', function($ro
 	if($scope.latestfromto["from"]){
 		prop = $scope.latestfromto["from"].properties["oryx-type"];
 
-		if (prop && (prop === "工人" || prop === "Worker")){
+		// if (prop && (prop === "工人" || prop === "Worker")){
 			// res_entity = $scope.latestfromto["from"].properties["oryx-name"];
 			// $scope.getResourcesfromKG(res_entity);
-			let result = $scope.getResourcesfromKG("CrowdsourcingWorker");
-			// // 如果是空，则不让用户选择
-			// if(!result){
-			// 	alert("No events found in this resource entity!");
-			// 	$scope.$hide();
-			// 	return;
-			// }
-		}else{
-			res_entity = $scope.latestfromto["to"].properties["oryx-name"];
-			let result = $scope.getResourcesfromKG(res_entity);
-			// // 如果是空，则不让用户选择
-			// if(!result){
-			// 	alert("No events found in this resource entity!");
-			// 	$scope.$hide();
-			// 	return;
-			// }
-		}
+			// let result = $scope.getResourcesfromKG("CrowdsourcingWorker");
+
+		// }else{
+			let type = $scope.latestfromto["to"].properties["oryx-type"];
+			if(type === "Worker"){
+				isWorker = true;
+				$scope.getResourcesfromKG("CrowdsourcingWorker");
+				// 众包的参数要根据画布上的item决定, 而不是变量值
+				$scope.visibleParameters = $scope.getCrowdsourcingInput();
+			}else{
+				res_entity = $scope.latestfromto["to"].properties["oryx-name"];
+				$scope.getResourcesfromKG(res_entity);
+			}
+
+
+		// }
 	}else{
+		let type = $scope.selectedItem.properties["oryx-type"];
 		res_entity = $scope.selectedItem.title;
-		let result = $scope.getResourcesfromKG(res_entity);
+		if(type === "Worker"){
+			isWorker = true;
+			$scope.getResourcesfromKG("CrowdsourcingWorker");
+			// 众包的参数要根据画布上的item决定, 而不是变量值
+			$scope.visibleParameters = $scope.getCrowdsourcingInput();
+		}else{
+			$scope.getResourcesfromKG(res_entity);
+		}
 		// // 如果是空，则不让用户选择
 		// if(!result){
 		// 	alert("No events found in this resource entity!");
