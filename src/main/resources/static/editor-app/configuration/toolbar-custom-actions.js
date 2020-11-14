@@ -338,20 +338,21 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             }
             return undefined;
         }
+
         $scope.getOutgoingShapeById = function (relations, sceneid) {
             let retn = undefined;
 
-            for(let i=0;i<$scope.scenes.length;i++){
-                let sceneid = $scope.scenes[i].id;
+            //for(let i=0;i<$scope.scenes.length;i++){
+                //let sceneid = $scope.scenes[i].id;
                 relations.childShapes.each(function (shape) {
                     if (shape.properties["overrideid"] === sceneid || shape.resourceId === sceneid){
                         retn = shape;
                     }
                 });
-                if(retn !== undefined){
-                    break;
-                }
-            }
+                // if(retn !== undefined){
+                //     break;
+                // }
+            //}
 
             return retn;
         }
