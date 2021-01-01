@@ -463,7 +463,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 
                 let edgeid = outgoings[i].resourceId;
                 let edge = $scope.getOutgoingShapeById(relations, edgeid);
-                let nextScene = edge.getOutgoingShapeById(relations, edge.outgoing[0].resourceId);
+                let nextScene = $scope.getOutgoingShapeById(relations, edge.outgoing[0].resourceId);
                 // scene 的id转换
                 let _sceneid = nextScene.properties["overrideid"];
                 let sceneIndex = $scope.getSceneIndexById(_sceneid);
