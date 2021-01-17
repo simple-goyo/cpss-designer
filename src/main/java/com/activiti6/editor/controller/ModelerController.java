@@ -110,7 +110,8 @@ public class ModelerController{
 
 	@RequestMapping(value="/getModelList", method=RequestMethod.GET)
 	@ResponseBody
-	public List<JSONObject> getModelList(){
+	public List<JSONObject> getModelList(HttpServletResponse response){
+		response.setHeader("Access-Control-Allow-Origin", "*");
 		List<Model> list = new ArrayList<Model>();
 		list = repositoryService.createModelQuery().list();
 
