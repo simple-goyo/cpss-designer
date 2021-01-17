@@ -6,6 +6,7 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSONObject;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
@@ -105,6 +106,30 @@ public class ModelerController{
 		modelAndView.addObject("modelList", list);
         modelAndView.addObject("modelSize", list.size());
         return modelAndView;
+	}
+
+	@RequestMapping(value="/getModelList", method=RequestMethod.GET)
+	@ResponseBody
+	public List<JSONObject> getModelList(){
+		List<Model> list = new ArrayList<Model>();
+		list = repositoryService.createModelQuery().list();
+
+		// list 按照模型id从小到大排序
+		Model[] models = new Model[list.size()];
+		models = list.toArray(models);
+		models = MergeSort(models);
+		list = Arrays.asList(models);
+
+		List<JSONObject> jo = new ArrayList<JSONObject>();
+
+		for (Model model : list) {
+			JSONObject tmpjo = new JSONObject();
+			tmpjo.put("id", model.getId());
+			tmpjo.put("name", model.getName());
+			tmpjo.put("description", model.getMetaInfo());
+			jo.add(tmpjo);
+		}
+		return jo;
 	}
 //
 //	/**
