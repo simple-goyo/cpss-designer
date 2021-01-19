@@ -410,7 +410,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 if(edge !== undefined && edge.stencil.id === "SequenceEventFlow"){
                // if (edge !== undefined && edge.hiddenProperties["oryx-type"] === "http://b3mn.org/stencilset/bpmn2.0#SequenceEventFlow") {
                     // 事件流
-                    console.log("事件流,不加入flow中");
+                    // console.log("事件流,不加入flow中");
                 } else {
                     flow_tempate["id"] = flowid;
                     flow_tempate["to"] = edge.outgoing[0].resourceId;
@@ -423,32 +423,31 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 let scene_index = $scope.getSceneIndexByAction(service.resourceId);
 
                 let sceneNum = $scope.getNumberOfScene();
-                if (scene_index === sceneNum - 1) {
-                    // 最后一个scene
-                    // do nothing
-                } else {
+                // 跳过最后一个scene
+                if (scene_index !== sceneNum - 1)  {
                     // 获取下一个node————gateway或scene，node和node之间存在edge
                     let this_scene = $scope.scenes[scene_index];
                     let next_scene = $scope.scenes[scene_index + 1];
 
                     let shape = $scope.getOutgoingShapeById(relations, this_scene.id);
-                    let edgeid = shape.outgoing[0].resourceId;
+                    if(shape.outgoing[0] !== undefined){
+                        let edgeid = shape.outgoing[0].resourceId;
 
-                    let edge = $scope.getOutgoingShapeById(relations, edgeid);
-                    let next_node = $scope.getOutgoingShapeById(relations, edge.outgoing[0].resourceId);
+                        let edge = $scope.getOutgoingShapeById(relations, edgeid);
+                        let next_node = $scope.getOutgoingShapeById(relations, edge.outgoing[0].resourceId);
 
-                    if (next_scene.id === next_node["properties"].overrideid) {
-                        // scene，获取scene中第一个action的id
-                        let actionid = $scope.getFirstActionFromSceneByIndex(scene_index + 1);
-                        flow_tempate["id"] = edgeid;
-                        flow_tempate["to"] = actionid;
-                    } else {
-                        // gateway，直接给出gateway的id
-                        let gatewayid = next_node.resourceId;
-                        flow_tempate["id"] = edgeid;
-                        flow_tempate["to"] = gatewayid;
+                        if (next_scene.id === next_node["properties"].overrideid) {
+                            // scene，获取scene中第一个action的id
+                            let actionid = $scope.getFirstActionFromSceneByIndex(scene_index + 1);
+                            flow_tempate["id"] = edgeid;
+                            flow_tempate["to"] = actionid;
+                        } else {
+                            // gateway，直接给出gateway的id
+                            let gatewayid = next_node.resourceId;
+                            flow_tempate["id"] = edgeid;
+                            flow_tempate["to"] = gatewayid;
+                        }
                     }
-
                 }
                 return flow_tempate;
             }
