@@ -619,6 +619,46 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             return events;
         };
 
+        $scope.getFromActionId = function (childShapes, gateway_id) {
+            let actionids = []
+            let edges = []
+            let edges2 = []
+            for(let i=0;i<childShapes.length;i++){
+                let outgo = childShapes[i].outgoing
+                for(let j=0; outgo!==undefined && j<outgo.length;j++){
+                    if(outgo[j].resourceId === gateway_id){
+                        let edgeid = childShapes[i].resourceId
+                        edges.push(edgeid)
+                    }
+                }
+            }
+
+            for(let k=0;k<edges.length;k++){
+                for(let i=0;i<childShapes.length;i++){
+                    let outgo = childShapes[i].outgoing
+                    for(let j=0; outgo!==undefined && j<outgo.length;j++){
+                        if(outgo[j].resourceId === edges[k]){
+                            let actionid = childShapes[i].resourceId
+                            edges2.push(actionid)
+                        }
+                    }
+                }
+            }
+
+            for(let k=0;k<edges2.length;k++){
+                for(let i=0;i<childShapes.length;i++){
+                    let outgo = childShapes[i].outgoing
+                    for(let j=0; outgo!==undefined && j<outgo.length;j++){
+                        if(outgo[j].resourceId === edges2[k]){
+                            let actionid = childShapes[i].resourceId
+                            actionids.push(actionid)
+                        }
+                    }
+                }
+            }
+
+            return actionids
+        }
         $scope.getGateways = function (scenes, relations, service, event) {
             let gateways = [];
             if (relations.childShapes) {
@@ -707,13 +747,23 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
 
                             // from
                             let gateway_id = relation.resourceId;
+                            // let fromflowids = $scope.getFromActionId(relations.childShapes, gateway_id);
+                            // for(let i=0;i<fromflowids.length;i++){
+                            //     let flowfrom = {
+                            //         "id": "",
+                            //         "condition":"true"
+                            //     }
+                            //     flowfrom["id"] = fromflowids[i];
+                            //     flow["from"].push(flowfrom);
+                            // }
+
                             for(let i=0;i<service.length;i++){
                                 if(gateway_id === service[i].flow.to){
                                     let flowfrom = {
                                         "id": "",
                                         "condition":"true"
                                     }
-                                    flowfrom["id"] = service[i].flow.id;
+                                    flowfrom["id"] = service[i].id;
                                     flow["from"].push(flowfrom);
                                 }
                             }
@@ -723,7 +773,7 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                                         "id": "",
                                         "condition":"true"
                                     }
-                                    flowfrom["id"] = event[i].flow.id;
+                                    flowfrom["id"] = event[i].id;
                                     flow["from"].push(flowfrom);
                                 }
                             }
