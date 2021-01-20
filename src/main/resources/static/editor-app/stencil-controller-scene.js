@@ -141,7 +141,7 @@ angular.module('activitiModeler')
         for(let i=0;i<$rootScope.scenes.length;i++){
             if($rootScope.scenes[i].id === sceneId){
                 let childShapes = $rootScope.scenes[i].childShapes;
-                for(let j=0;j<childShapes.length;j++){
+                for(let j=0;childShapes !== undefined && j<childShapes.length;j++){
                     if(childShapes[j] === shape){return true;}
                 }
             }

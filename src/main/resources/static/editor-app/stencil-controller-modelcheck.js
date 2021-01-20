@@ -35,6 +35,7 @@ angular.module('activitiModeler')
         let nodeList = [];
         return $scope.getChildrenSceneNode(nodeList, sceneTree);
     }
+
     $scope.inLastScene = function (shape){
         // 判断是否为最后一个Scene，如果是则不需要连线
         let lastScenesId = $scope.getLastScenesId();
@@ -61,7 +62,8 @@ angular.module('activitiModeler')
                     return true;
                 }
             }
-            if(childShapes[i].stencil.id === "MessageFlow"){
+
+            if(childShapes[i].stencil.id === "MessageFlow" && childShapes[i].outgoing.length > 0){
                 // 查看是否连接ExitPoint
                 let resId = childShapes[i].outgoing[0].resourceId;
                 let shape = $scope.getShapebyId_multiScene(resId,currentSceneIndex);
