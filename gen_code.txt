@@ -1,0 +1,4 @@
+pyerz -t "cpss-designer" -i "E:\Java_Proj\cpss-designer\src\main\resources\static\editor-app" -i "E:\Java_Proj\cpss-designer\src\main\java"  -o cpss-designer.docx
+
+
+java -jar Source2Docx-1.1.jar /src .java begin.docx end.docx

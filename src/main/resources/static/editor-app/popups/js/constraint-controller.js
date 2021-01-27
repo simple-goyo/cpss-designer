@@ -115,6 +115,32 @@ var ConstraintController = ['$scope','$rootScope','$http', function ($scope, $ro
         return "sid-" + res.join('');
     };
 
+    $scope.customgetAllEntitySpecificProperties = function (scenes) {
+        let allEntitySpecificProperties = [];
+        if (scenes !== undefined && scenes.length > 0) {
+            scenes.forEach((scene) => {
+                let shapes = scene.childShapes;
+                if (shapes !== undefined && shapes.length > 0) {
+                    shapes.forEach((shape) => {
+                        let entitySpecificProperties = shape.properties['entityspecificproperties'];
+                        if (entitySpecificProperties !== undefined && entitySpecificProperties !== "") {
+                            let id = shape.properties['overrideid'];
+                            let name = shape.properties['name'];
+                            let type = shape.properties['type'];
+                            allEntitySpecificProperties.push({
+                                id: id,
+                                name:name,
+                                type:type,
+                                entitySpecificProperties: entitySpecificProperties
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        return allEntitySpecificProperties;
+    }
+
     $scope.buildKGGraph = function (){
         let dataTemp = {
             "results":[{
@@ -129,7 +155,8 @@ var ConstraintController = ['$scope','$rootScope','$http', function ($scope, $ro
             "errors":[]
         }
 
-        let properties = $rootScope.getAllEntitySpecificProperties(scenes);
+        let properties = $scope.customgetAllEntitySpecificProperties(scenes);
+
         properties.forEach(function (property) {
             let id = property.id;// 当前entity的id
             let name = property.name;
@@ -171,7 +198,7 @@ var ConstraintController = ['$scope','$rootScope','$http', function ($scope, $ro
                                 relationships.push(rela);
                             }else if(loc["type"] === "data" && loc["data"] !== "" ){ // loc["type"] === "data"
                                 let endnodeid = $scope.generateId();
-                                let endnode = $scope.getKGNode(endnodeid, loc["data"]);
+                                let endnode = $scope.getKGNode(endnodeid, loc["data"], {"name":loc["data"]});
                                 if(!$scope.isNodeExist(endnode)){
                                     nodes.push(endnode);
                                 }
@@ -181,7 +208,7 @@ var ConstraintController = ['$scope','$rootScope','$http', function ($scope, $ro
                             }
                         }else if(loc["text"] !== ""){// 自定义的内容
                             let endnodeid = $scope.generateId();
-                            let endnode = $scope.getKGNode(endnodeid, key);
+                            let endnode = $scope.getKGNode(endnodeid, key, {"name":key});
                             if(!$scope.isNodeExist(endnode)){
                                 nodes.push(endnode);
                             }
@@ -308,8 +335,10 @@ var ConstraintController = ['$scope','$rootScope','$http', function ($scope, $ro
                 'Address': 'constraint-viewer/img/twemoji/1f3e0.svg',
                 'BirthDate': 'constraint-viewer/img/twemoji/1f5d3.svg',
                 'Capacity': 'constraint-viewer/img/twemoji/1f36a.svg',
+                'peoplenum': 'constraint-viewer/img/peoplenum.svg',
                 'CreditCard': 'constraint-viewer/img/twemoji/1f4b3.svg',
                 'Room': 'constraint-viewer/img/twemoji/1f4bb.svg',
+                'location': 'constraint-viewer/img/map.svg',
                 'Email': 'constraint-viewer/img/twemoji/2709.svg',
                 'Git': 'constraint-viewer/img/twemoji/1f5c3.svg',
                 'Github': 'constraint-viewer/img/twemoji/1f5c4.svg',
@@ -318,6 +347,7 @@ var ConstraintController = ['$scope','$rootScope','$http', function ($scope, $ro
                 'Issues': 'constraint-viewer/img/twemoji/1f4a9.svg',
                 'Language': 'constraint-viewer/img/twemoji/1f1f1-1f1f7.svg',
                 'State': 'constraint-viewer/img/twemoji/2699.svg',
+                'state': 'constraint-viewer/img/twemoji/2699.svg',
                 'Password': 'constraint-viewer/img/twemoji/1f511.svg',
                 'Project|name|d3': 'constraint-viewer/img/twemoji/32-20e3.svg',
                 'Project|name|neo4j': 'constraint-viewer/img/twemoji/33-20e3.svg',
