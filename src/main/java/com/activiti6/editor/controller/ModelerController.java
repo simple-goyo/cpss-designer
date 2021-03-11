@@ -90,7 +90,7 @@ public class ModelerController{
 		return result;
 	}
 
-	@RequestMapping("index")
+	@RequestMapping(value="/index", method={RequestMethod.GET, RequestMethod.POST})
 	public ModelAndView index(ModelAndView modelAndView) {
         modelAndView.setViewName("index");
 
@@ -159,7 +159,7 @@ public class ModelerController{
      * @param name 模型名称
      * @param key 模型key
      */
-    @RequestMapping("/create")
+    @RequestMapping(value="/create", method={RequestMethod.GET, RequestMethod.POST})
     public void create(HttpServletResponse response,String name,String key) throws IOException {
     	logger.info("创建模型入参name：{},key:{}",name,key);
         Model model = repositoryService.newModel();
@@ -203,7 +203,7 @@ public class ModelerController{
      * @return
      */
     @ResponseBody
-    @RequestMapping("/publish")
+    @RequestMapping(value="/publish", method={RequestMethod.GET, RequestMethod.POST})
     public Object publish(String modelId){
     	logger.info("流程部署入参modelId：{}",modelId);
     	Map<String, String> map = new HashMap<String, String>();
@@ -239,7 +239,7 @@ public class ModelerController{
      * @return
      */
     @ResponseBody
-    @RequestMapping("/revokePublish")
+    @RequestMapping(value="/revokePublish", method={RequestMethod.GET, RequestMethod.POST})
     public Object revokePublish(String modelId){
     	logger.info("撤销发布流程入参modelId：{}",modelId);
     	Map<String, String> map = new HashMap<String, String>();
@@ -268,7 +268,7 @@ public class ModelerController{
      * @return
      */
     @ResponseBody
-    @RequestMapping("/delete")
+    @RequestMapping(value="/delete", method={RequestMethod.GET, RequestMethod.POST})
     public Object deleteProcessInstance(String modelId){
     	logger.info("删除流程实例入参modelId：{}",modelId);
     	Map<String, String> map = new HashMap<String, String>();
