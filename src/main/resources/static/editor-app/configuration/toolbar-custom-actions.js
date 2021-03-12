@@ -821,7 +821,8 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
         }
 
         $scope.upLoadModel = function (json) {
-            let url = "https://www.cpss2019.fun:5001/save_app_class_new";
+            //let url = "https://www.cpss2019.fun:5001/save_app_class_new";
+            let url = KISBPM.URL.genModel();
             json = JSON.stringify(json);
             // Update
             $http({

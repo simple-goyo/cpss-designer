@@ -25,4 +25,9 @@ public class UrlConstant {
 
     public static final String KG_URL = "http://106.15.102.123:21910/KG201910/";
 
+    // 执行平台URL地址
+    public static final String PLATFORM_IP = "https://www.cpss2019.fun";
+    public static final String PLATFORM_PORT = "5001";
+    public static final String PLATFORM_URL= String.format("%s:%s/", PLATFORM_IP, PLATFORM_PORT);
+
 }

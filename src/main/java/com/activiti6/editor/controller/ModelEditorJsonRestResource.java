@@ -1,5 +1,9 @@
 package com.activiti6.editor.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RepositoryService;
@@ -20,6 +24,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * 获取model的节点信息，编辑器根据返回的json进行绘图
  * liuzhize 2019年3月7日下午3:29:15
  */
+@Api(tags = {"模型下载"})
 @RestController
 @RequestMapping("service")
 public class ModelEditorJsonRestResource implements ModelDataJsonConstants {
@@ -37,27 +42,30 @@ public class ModelEditorJsonRestResource implements ModelDataJsonConstants {
    * @return
    */
   @SuppressWarnings("deprecation")
+
+  @ApiOperation(value = "获取应用模型")
+  @ApiImplicitParam(name="modelId", value="模型Id", dataType="int", paramType = "path", defaultValue="527501", required = true)
 @RequestMapping(value="/model/{modelId}/json", method = RequestMethod.GET, produces = "application/json")
-  public ObjectNode getEditorJson(@PathVariable String modelId) {
-    ObjectNode modelNode = null;
-    Model model = repositoryService.getModel(modelId);
-    if (model != null) {
-      try {
-        if (StringUtils.isNotEmpty(model.getMetaInfo())) {
-          modelNode = (ObjectNode) objectMapper.readTree(model.getMetaInfo());
-        } else {
-          modelNode = objectMapper.createObjectNode();
-          modelNode.put(MODEL_NAME, model.getName());
-        }
-        modelNode.put(MODEL_ID, model.getId());
-        ObjectNode editorJsonNode = (ObjectNode) objectMapper.readTree(
-            new String(repositoryService.getModelEditorSource(model.getId()), "utf-8"));
-        modelNode.put("model", editorJsonNode);
-      } catch (Exception e) {
-        LOGGER.error("Error creating model JSON", e);
-        throw new ActivitiException("Error creating model JSON", e);
+public ObjectNode getEditorJson(@PathVariable String modelId) {
+  ObjectNode modelNode = null;
+  Model model = repositoryService.getModel(modelId);
+  if (model != null) {
+    try {
+      if (StringUtils.isNotEmpty(model.getMetaInfo())) {
+        modelNode = (ObjectNode) objectMapper.readTree(model.getMetaInfo());
+      } else {
+        modelNode = objectMapper.createObjectNode();
+        modelNode.put(MODEL_NAME, model.getName());
       }
+      modelNode.put(MODEL_ID, model.getId());
+      ObjectNode editorJsonNode = (ObjectNode) objectMapper.readTree(
+          new String(repositoryService.getModelEditorSource(model.getId()), "utf-8"));
+      modelNode.put("model", editorJsonNode);
+    } catch (Exception e) {
+      LOGGER.error("Error creating model JSON", e);
+      throw new ActivitiException("Error creating model JSON", e);
     }
-    return modelNode;
+  }
+  return modelNode;
   }
 }

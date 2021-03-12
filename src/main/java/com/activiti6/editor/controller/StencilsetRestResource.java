@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.InputStream;
 
@@ -23,6 +24,7 @@ public class StencilsetRestResource {
  * 获取流程json文件
  * @return
  */
+  @ApiIgnore
   @RequestMapping(value="/editor/stencilset", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
   @ResponseBody
   public String getStencilset() {

@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
@@ -29,6 +32,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import springfox.documentation.annotations.ApiIgnore;
 
 import static com.activiti6.constant.StencilsetJson.NAMESPACE_STENCILSET;
 
@@ -36,6 +40,7 @@ import static com.activiti6.constant.StencilsetJson.NAMESPACE_STENCILSET;
  * 流程控制器
  * liuzhize 2019年3月7日下午3:28:14
  */
+@Api(tags = {"模型控制器"})
 @Controller
 public class ModelerController{
 
@@ -90,6 +95,7 @@ public class ModelerController{
 		return result;
 	}
 
+	@ApiOperation(value = "首页")
 	@RequestMapping(value="/index", method={RequestMethod.GET, RequestMethod.POST})
 	public ModelAndView index(ModelAndView modelAndView) {
         modelAndView.setViewName("index");
@@ -108,6 +114,7 @@ public class ModelerController{
         return modelAndView;
 	}
 
+	@ApiOperation(value = "获取模型列表")
 	@RequestMapping(value="/getModelList", method=RequestMethod.GET)
 	@ResponseBody
 	public List<JSONObject> getModelList(HttpServletResponse response){
@@ -147,6 +154,7 @@ public class ModelerController{
      * 跳转编辑器页面
      * @return
      */
+    @ApiIgnore
     @GetMapping("editor")
     public String editor(){
         return "modeler";
@@ -159,6 +167,7 @@ public class ModelerController{
      * @param name 模型名称
      * @param key 模型key
      */
+	@ApiOperation(value = "新建模型")
     @RequestMapping(value="/create", method={RequestMethod.GET, RequestMethod.POST})
     public void create(HttpServletResponse response,String name,String key) throws IOException {
     	logger.info("创建模型入参name：{},key:{}",name,key);
@@ -196,12 +205,13 @@ public class ModelerController{
 		}
         logger.info("创建模型完善ModelEditorSource结束");
     }
-    
+
     /**
      * 发布流程
      * @param modelId 模型ID
      * @return
      */
+	@ApiIgnore
     @ResponseBody
     @RequestMapping(value="/publish", method={RequestMethod.GET, RequestMethod.POST})
     public Object publish(String modelId){
@@ -235,9 +245,9 @@ public class ModelerController{
     /**
      * 撤销流程定义
      * @param modelId 模型ID
-     * @param result
      * @return
      */
+	@ApiIgnore
     @ResponseBody
     @RequestMapping(value="/revokePublish", method={RequestMethod.GET, RequestMethod.POST})
     public Object revokePublish(String modelId){
@@ -260,20 +270,23 @@ public class ModelerController{
 		logger.info("撤销发布流程出参map：{}",map);
         return map;
     }
-    
+
+
+
     /**
      * 删除流程实例
      * @param modelId 模型ID
-     * @param result
      * @return
      */
+	@ApiOperation(value = "删除模型")
+	@ApiImplicitParam(name = "modelId", value = "模型ID", dataType="int", paramType = "path", defaultValue = "527504", required = true)
     @ResponseBody
     @RequestMapping(value="/delete", method={RequestMethod.GET, RequestMethod.POST})
     public Object deleteProcessInstance(String modelId){
-    	logger.info("删除流程实例入参modelId：{}",modelId);
+    	logger.info("删除流程实例入参modelId：{}", modelId);
     	Map<String, String> map = new HashMap<String, String>();
 		Model modelData = repositoryService.getModel(modelId);
-		if(null != modelData){
+		if(null != modelData && !modelId.equals("527501")){
 			try {
 					repositoryService.deleteModel(modelId); // 之前缺少这行代码，导致删不掉模型
 

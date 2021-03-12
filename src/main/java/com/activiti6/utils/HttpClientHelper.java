@@ -1,5 +1,9 @@
 package com.activiti6.utils;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -87,8 +91,6 @@ public class HttpClientHelper {
      * @return 成功:返回json字符串<br/>
      */
     public static String postJSON(String strURL, String params) {
-//        System.out.println(strURL);
-//        System.out.println(params);
         BufferedReader reader = null;
         try {
             URL url = new URL(strURL);// 创建连接
@@ -122,5 +124,52 @@ public class HttpClientHelper {
         }
         return "error"; // 自定义错误信息
     }
+
+    /*
+     * 处理https GET/POST请求
+     * 请求地址、请求方法、参数
+     * */
+    public static String httpsRequest(String requestUrl, String requestMethod, String outputStr){
+        StringBuffer buffer=null;
+        try{
+            //创建SSLContext
+            SSLContext sslContext=SSLContext.getInstance("SSL");
+            TrustManager[] tm={new MyX509TrustManager()};
+            //初始化
+            sslContext.init(null, tm, new java.security.SecureRandom());;
+            //获取SSLSocketFactory对象
+            SSLSocketFactory ssf=sslContext.getSocketFactory();
+            URL url=new URL(requestUrl);
+            HttpsURLConnection conn=(HttpsURLConnection)url.openConnection();
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setUseCaches(false);
+            conn.setRequestMethod(requestMethod);
+            conn.setRequestProperty("Content-Type", "application/json"); // 设置发送数据的格式
+            //设置当前实例使用的SSLSoctetFactory
+            conn.setSSLSocketFactory(ssf);
+            conn.connect();
+            //往服务器端写内容
+            if(null!=outputStr){
+                OutputStream os=conn.getOutputStream();
+                os.write(outputStr.getBytes("utf-8"));
+                os.close();
+            }
+
+            //读取服务器端返回的内容
+            InputStream is=conn.getInputStream();
+            InputStreamReader isr=new InputStreamReader(is,"utf-8");
+            BufferedReader br=new BufferedReader(isr);
+            buffer=new StringBuffer();
+            String line=null;
+            while((line=br.readLine())!=null){
+                buffer.append(line);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return buffer.toString();
+    }
+
 
 }

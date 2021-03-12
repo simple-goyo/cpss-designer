@@ -431,9 +431,10 @@ var SaveModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
             }).success(function (data) {
                 console.log("模型保存成功!")
             })
-                .error(function (data) {
-                    console.log("模型保存失败!")
-                });
+
+            .error(function (data) {
+                console.log("模型保存失败!")
+            });
 
         };
 

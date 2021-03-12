@@ -3,6 +3,9 @@ package com.activiti6.editor.controller;
 import com.activiti6.service.KnowledgeGraphService;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.activiti.engine.ActivitiException;
 import org.apache.commons.io.IOUtils;
 import org.springframework.web.bind.annotation.*;
@@ -53,11 +56,12 @@ import static com.activiti6.service.KnowledgeGraphService.*;
 //         "cyberResourceTypes":"[NeteaseNews, Eleme, Meituan, Keep, Orders, DZH]",
 //         "physicalResourceTypes":"[CoffeeMaker, ElectricKettle, WaterDispenser,WeighingScale, AirCleaner]"
 //     }
-
+@Api(tags = {"图谱查询接口"})
 @RestController
 @RequestMapping("service")
 public class ModelGetResourcesFromKG {
 
+    @ApiOperation(value = "获取所有资源")
     @RequestMapping(value="/resources", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
     public String getResources() throws UnsupportedEncodingException {
@@ -100,6 +104,8 @@ public class ModelGetResourcesFromKG {
         }
     }
 
+    @ApiOperation(value = "获取当前资源的所有服务和事件")
+    @ApiImplicitParam(name = "resName", value="资源名称",  dataType="string", paramType = "path", defaultValue = "CoffeeMaker", required = true)
     @RequestMapping(value="{resName}/funcs", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
     public String getResourceFunc(@PathVariable String resName) throws UnsupportedEncodingException {
@@ -113,6 +119,8 @@ public class ModelGetResourcesFromKG {
         }
     }
 
+    @ApiOperation(value = "获取当前资源的属性")
+    @ApiImplicitParam(name = "resName", value="资源名称",  dataType="string", paramType = "path", defaultValue = "CoffeeMaker", required = true)
     @RequestMapping(value="{resName}/properties", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
     public String getResourceProperties(@PathVariable String resName) throws UnsupportedEncodingException {
@@ -126,6 +134,8 @@ public class ModelGetResourcesFromKG {
         }
     }
 
+    @ApiOperation(value = "通过位置获取资源")
+    @ApiImplicitParam(name="locName", value = "位置名称", dataType="string", paramType = "path", defaultValue = "roomD2008_InterdisciplineBuilding2", required = true)
     @RequestMapping(value="loc/{locName}/funcs", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
     public String getResourceByLoc(@PathVariable String locName) throws UnsupportedEncodingException {
@@ -140,6 +150,7 @@ public class ModelGetResourcesFromKG {
     }
 
 
+    @ApiOperation(value = "获取所有位置信息")
     @RequestMapping(value="/loc/get", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
     public String getLocation() throws UnsupportedEncodingException {
