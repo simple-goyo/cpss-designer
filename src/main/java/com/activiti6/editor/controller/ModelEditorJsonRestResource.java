@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * 获取model的节点信息，编辑器根据返回的json进行绘图
  * liuzhize 2019年3月7日下午3:29:15
  */
-@Api(tags = {"模型下载"})
+@Api(tags = {"模型加载"})
 @RestController
 @RequestMapping("service")
 public class ModelEditorJsonRestResource implements ModelDataJsonConstants {
