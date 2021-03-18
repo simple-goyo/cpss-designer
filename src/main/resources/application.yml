@@ -52,3 +52,4 @@ server.ssl.keyStoreType: PKCS12
 #证书别名
 server.ssl.keyAlias: tomcat
 
+server.max-http-header-size: 102400
