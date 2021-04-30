@@ -279,7 +279,7 @@ public class ModelerController{
      * @return
      */
 	@ApiOperation(value = "删除模型")
-	@ApiImplicitParam(name = "modelId", value = "模型ID", dataType="int", paramType = "path", defaultValue = "527504", required = true)
+	@ApiImplicitParam(name = "modelId", value = "模型ID", dataType="int", paramType = "path", defaultValue = "537501", required = true)
     @ResponseBody
     @RequestMapping(value="/delete", method={RequestMethod.GET, RequestMethod.POST})
     public Object deleteProcessInstance(String modelId){
