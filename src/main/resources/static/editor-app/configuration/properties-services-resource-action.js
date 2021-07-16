@@ -138,9 +138,21 @@ angular.module('activitiModeler')
                 $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "Message", resTemp);
             }
 
+            if (actionName === 'UploadData') {
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
+                let resTemp = resProperties;
+                resTemp["oryx-type"] = "CyberObject";
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "Data", resTemp);
+            }
 
+            if (actionName === 'AssignTask') {
+                $scope.createResource($scope, selectedShape, "CyberObject");
 
+                let resTemp = resProperties;
+                resTemp["oryx-type"] = "CyberObject";
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "Task", resTemp);
+            }
 
             // else{
             //     $scope.createResource($scope, shape, "CyberObject");
