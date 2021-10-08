@@ -143,7 +143,7 @@ angular.module('activitiModeler')
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
-                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "Data", resTemp);
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "违章数据", resTemp);
             }
 
             if (actionName === 'AssignTask') {
@@ -151,7 +151,7 @@ angular.module('activitiModeler')
 
                 let resTemp = resProperties;
                 resTemp["oryx-type"] = "CyberObject";
-                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "Task", resTemp);
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "处理任务", resTemp);
             }
 
             // else{

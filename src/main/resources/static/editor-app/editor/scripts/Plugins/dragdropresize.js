@@ -610,6 +610,8 @@ ORYX.Plugins.DragDropResize = ORYX.Plugins.AbstractPlugin.extend({
 
 		var undockEdgeCommand = ORYX.Core.Command.extend({
 			construct: function(moveShapes){
+				if(moveShapes[0].properties["oryx-gragable"] !== undefined && moveShapes[0].properties["oryx-gragable"] === false )
+					return;
 				this.dockers = moveShapes.collect(function(shape){ return shape instanceof ORYX.Core.Controls.Docker ? {docker:shape, dockedShape:shape.getDockedShape(), refPoint:shape.referencePoint} : undefined }).compact();
 			},			
 			execute: function(){

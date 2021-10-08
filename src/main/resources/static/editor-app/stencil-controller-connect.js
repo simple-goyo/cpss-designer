@@ -434,6 +434,9 @@ angular.module('activitiModeler')
             && messageFlow.outgoing.length > 0
             && messageFlow.outgoing[0] !== undefined && messageFlow.outgoing[0] !== null) {
             let action = $scope.getHighlightedShape();
+            if (action === undefined) {
+                return;
+            }
 
             $scope.editor.setSelection(action);
             $scope.editor.updateSelection();

@@ -171,7 +171,7 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
     //     {name: "物品", type: "PhysicalAction"},
     //     {name: "机器人", type: "PhysicalAction"},
     //     {name: "用户", type: "SocialAction"},
-    //     {name: "工人", type: "SocialAction"},
+    //     {name: "工人", type: "SocialAction"},drag
     //     {name: "人群", type: "SocialAction"},
     //     {name: "组织", type: "SocialAction"},
     //     {name: "云应用", type: "CyberAction"},
@@ -219,7 +219,7 @@ var ServicesPopupCtrl = ['$rootScope', '$scope', '$http', function ($rootScope, 
     $scope.getResourcesfromKG = function (resName) {
         $http({
             method: 'GET',
-            url: KISBPM.URL.getResourceDetails(resName)
+            url: KISBPM.URL.getResourceDetails(encodeURIComponent(resName))
         }).success(function (data, status, headers, config) {
             console.log(JSON.stringify(data));
 

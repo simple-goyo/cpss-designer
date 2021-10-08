@@ -356,10 +356,53 @@ div.propertySection {
 .propertySection.collapsed .selected-item-title {
     border: none;
 }
+.multiSceneHighlighted {
+    background-color: #cfebff;
+    border-radius: 5px;
+    border: 1px solid #5bb3ff;
+    margin-right: 16px;
+}
+
+.multiSceneNormal {
+    background-color: #fefeff;
+    border-radius: 5px;
+    border: 1px solid #919191;
+    margin-right: 18px;
+}
 
 .sceneHighlighted {
-    background-color: #b3dbff;
+    margin-top: 10px;
+    background-color: #cfebff;
+    border-radius: 5px;
+    border: 1px solid #5bb3ff;
 }
+
+.sceneNormal {
+    margin-top: 10px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    border: 1px solid #919191;
+
+}
+
+.sceneSplitLine {
+    /*position: absolute;*/
+    margin-top: 10px;
+    margin-bottom: 0px;
+    /*margin-left: 0px;*/
+    /*margin-right: 0px;*/
+    width:100%;
+    /*float:right;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    background-color: #e8e8e8;
+    /*bottom: 0;*/
+    height: 3px;
+    /*z-index: 200;*/
+    /*cursor: ns-resize;*/
+}
+
 
 .canvasPart {
     fill: #ffffff;

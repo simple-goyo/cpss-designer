@@ -106,7 +106,7 @@
 <script src="editor-app/editor/i18n/translation_en_us.js" type="text/javascript"></script>
 <script src="editor-app/editor/i18n/translation_signavio_en_us.js" type="text/javascript"></script>
 <#--	<script src="editor-app/editor/oryx.debug.js" type="text/javascript"></script>-->
-<#--	oryx -->
+<#-- oryx begin -->
 <script src="editor-app/editor/scripts/kickstart.js" type="text/javascript"></script>
 <script src="editor-app/editor/scripts/clazz.js" type="text/javascript"></script>
 <script src="editor-app/editor/scripts/config.js" type="text/javascript"></script>
@@ -243,7 +243,7 @@
 <script src="editor-app/editor/scripts/Plugins/Layouter/containerLayouter.js" type="text/javascript"></script>
 <script src="editor-app/editor/scripts/Plugins/Layouter/edgeLayouter.js" type="text/javascript"></script>
 <script src="editor-app/editor/scripts/oryx.js" type="text/javascript"></script>
-<#--	oryx -->
+<#-- oryx end -->
 
 <script src="editor-app/app.js"></script>
 

@@ -103,14 +103,14 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
         // this._drawUnderlay(X1, "4%", X2-X1,"22%", this.underlayNode,"信息社会物理空间");
 
 
-        this._drawUnderlay(X1, "4%", X2-X1,"67%", this.underlayNode,ORYX.CONFIG.CYBERSSPACE);
+        this._drawUnderlay(X1, "4%", X2-X1,"67%", this.underlayNode,ORYX.CONFIG.CYBERSSPACE, "fill:#FAFFFFFF;");
 
-        this._drawLine(X1, "22%", X2-X1+30,"22%", this.underlayNode,ORYX.CONFIG.SOCIALPHYSICALSPACE);
+        this._drawLine(X1, "22%", X2-X1+30,"22%", this.underlayNode,ORYX.CONFIG.SOCIALPHYSICALSPACE, "fill:#CECDCFFF;stroke-width:2;stroke-dasharray:5;stroke:#000000");
 
         // 交互序列
-        this._drawUnderlay(X1, "80%", X2-X1,"20%", this.underlayNode,ORYX.CONFIG.INTERACTIONSEQUENCE);
+        this._drawUnderlay(X1, "80%", X2-X1,"20%", this.underlayNode,ORYX.CONFIG.INTERACTIONSEQUENCE, "fill:#FCFFFFFF;");
 
-        this._drawUnderlay(X1,"4%",X2-X1,"87%",this.scenesRelationsShow,ORYX.CONFIG.SCENE_RELATION)
+        this._drawUnderlay(X1,"4%",X2-X1,"87%", this.scenesRelationsShow,ORYX.CONFIG.SCENE_RELATION, "fill:#F2FCFCFF;")
 
         this.node = ORYX.Editor.graft("http://www.w3.org/2000/svg", this.rootNode,
             ['g', {},
@@ -180,7 +180,7 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
         return str;
     },
 
-    _drawUnderlay: function (x, y, width, height, parrentNode, spaceName) {
+    _drawUnderlay: function (x, y, width, height, parrentNode, spaceName, style) {
 
         ORYX.Editor.graft("http://www.w3.org/2000/svg", parrentNode,
             ['rect', {
@@ -191,6 +191,7 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
                 rx: 5,
                 ry: 5,
                 "class": "canvasPart",
+                style: style,
                 visibility: "visible"
             }]);
 
@@ -202,7 +203,7 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
         this.newSpace.textContent = spaceName;
     },
 
-    _drawLine: function (x1,y1,x2,y2,parrentNode, spaceName){
+    _drawLine: function (x1,y1,x2,y2,parrentNode, spaceName, style){
         ORYX.Editor.graft("http://www.w3.org/2000/svg", parrentNode,
             ['line', {
             x1:x1,
@@ -211,7 +212,7 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
             y2:y2,
             rx:3,
             ry:3,
-            style: "fill:#CECDCFFF;stroke-width:2;stroke-dasharray:5;stroke:#000000",
+            style: style,
             visibility: "visible"
         }]);
 

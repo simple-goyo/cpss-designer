@@ -134,6 +134,16 @@ angular.module('activitiModeler')
     $scope.isSelectedScene = function (index) {
         if (index === $rootScope.selectedSceneIndex) {
             return "sceneHighlighted";
+        }else{
+            return "sceneNormal"
+        }
+    };
+
+    $scope.isSelectedMultiScene = function (index) {
+        if (index === $rootScope.selectedSceneIndex) {
+            return "multiSceneHighlighted";
+        }else{
+            return "multiSceneNormal"
         }
     };
 

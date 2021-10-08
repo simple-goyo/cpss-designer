@@ -208,13 +208,15 @@
                 <h4>{{'SCENE.MULTIPLE.VIEW' | translate}}</h4>
                 <!--                <button ng-click="addScene()" class="btn btn-primary">新建场景</button>-->
                 <hr>
-                <div ng-class="isSelectedScene(-1)">
+                <div ng-class="isSelectedMultiScene(-1)">
                     <h6>{{'SCENE.RELATION'| translate}}</h6>
                     <img onerror="this.src='static/editor-app/images/logo.png'" alt="场景关系建立" id="sceneRelations"
                          type="image" class="img-thumbnail" style="width:120px;height:80px"
                          src="{{scenesRelations.img}}" ng-click="changeScene(-1)"/>
-                    <hr style="border:1px dotted #eee">
+                    <hr style="border: 0px">
+<!--                    <hr style="border:1px dotted #eee">-->
                 </div>
+                <div id="splitScene" class="sceneSplitLine"></div>
                 <div id="sceneSection" style="overflow: scroll">
 
                     <div ng-if="scenes.length>=1" ng-repeat="scene in scenes" ng-class="isSelectedScene({{$index}})">
@@ -222,7 +224,8 @@
                         <img onerror="this.src='static/editor-app/images/logo.png'" alt="{{scene.name}}"
                              id="{{scene.id}}" type="image" class="img-thumbnail" style="width:120px;height:80px"
                              src="{{scene.img}}" ng-click="changeScene($index)"/>
-                        <hr style="border:1px dashed #eee">
+<!--                    <hr style="border:1px dashed #eee">-->
+                        <hr style="border: 0px">
                     </div>
                 </div>
             </div>

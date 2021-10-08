@@ -23,7 +23,7 @@ public class UrlConstant {
         return serviceURL;
     }
 
-    public static final String KG_URL = "http://106.15.102.123:21910/KG201910/";
+    public static final String KG_URL = "http://106.15.102.123:21910/KG201910/"; //图谱服务网址 106.15.102.123
 
     // 执行平台URL地址
     public static final String PLATFORM_IP = "https://www.cpss2019.fun";

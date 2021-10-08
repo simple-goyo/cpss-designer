@@ -1,5 +1,6 @@
 package com.activiti6.service;
 
+import com.activiti6.utils.URLPaser;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -156,7 +157,8 @@ public class KnowledgeGraphService {
     public static String getResourceDetails(String resName){
         final String KGURL = KG_URL+"getResourceDetails";
         //String resName = "CoffeeMaker";
-        String reqParam = "?resourceType="+resName;//+"&filePath="+filePath;
+
+        String reqParam = "?resourceType="+URLPaser.encode(resName);//+"&filePath="+filePath;
         String query;
         String retn;
 

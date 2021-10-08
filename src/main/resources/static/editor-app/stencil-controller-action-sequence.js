@@ -90,6 +90,8 @@ angular.module('activitiModeler')
             $scope.__createStartNode($rootScope, $scope);
             $scope.__createEntryNode($rootScope, $scope);
             $scope.__createExitNode($rootScope, $scope);
+
+            $scope.editor.setSelection([]); // unfocus
         }
     };
 
@@ -104,19 +106,20 @@ angular.module('activitiModeler')
         let containedStencil = $scope.fetchStentil(itemId);
         if (!containedStencil) return;
 
-        var option = {
+        let option = {
             type: namespace + itemId,
             namespace: namespace,
 
             positionController: positionOffset,
             containedStencil: containedStencil
         };
-        var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
+        let command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
         $scope.editor.executeCommands([command]);
         // $scope.editor.getSelection()[0].properties['oryx-overrideid'] = $scope.editor.getSelection()[0].id;//为创建的初始化节点提供id
         let entryPoint = $scope.editor.getSelection()[0];
         entryPoint.setProperty("oryx-overrideid", entryPoint.id);
-        entryPoint.setProperty("oryx-type", "入口节点");
+        entryPoint.setProperty("oryx-dragable", false);
+        entryPoint.setProperty("oryx-type", "Entry"); //入口节点
     };
 
     $scope.__createExitNode = function ($rootScope, $scope) {
@@ -130,19 +133,21 @@ angular.module('activitiModeler')
         let containedStencil = $scope.fetchStentil(itemId);
         if (!containedStencil) return;
 
-        var option = {
+        let option = {
             type: namespace + itemId,
             namespace: namespace,
 
             positionController: positionOffset,
             containedStencil: containedStencil
         };
-        var command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
+        let command = new KISBPM.CreateCommand(option, undefined, undefined, $scope.editor);
         $scope.editor.executeCommands([command]);
         // $scope.editor.getSelection()[0].properties['oryx-overrideid'] = $scope.editor.getSelection()[0].id;//为创建的初始化节点提供id
         let exitPoint = $scope.editor.getSelection()[0];
         exitPoint.setProperty("oryx-overrideid", exitPoint.id);
-        exitPoint.setProperty("oryx-type", "出口节点");
+        exitPoint.setProperty("oryx-dragable", false);
+        exitPoint.setProperty("oryx-type", "Exit");//出口节点
+
     };
 
     $scope.__createStartNode = function ($rootScope, $scope) {
@@ -170,6 +175,8 @@ angular.module('activitiModeler')
         // $scope.editor.getSelection()[0].properties['oryx-overrideid'] = $scope.editor.getSelection()[0].id;//为创建的初始化节点提供id
         let startNoneEvent = $scope.editor.getSelection()[0];
         startNoneEvent.setProperty("oryx-overrideid", startNoneEvent.id);
+        startNoneEvent.setProperty("oryx-dragable", false);
+        startNoneEvent.setProperty("oryx-type", "StartNode");
     };
 
     $scope.__createNormalAction = function ($rootScope, $scope) {
