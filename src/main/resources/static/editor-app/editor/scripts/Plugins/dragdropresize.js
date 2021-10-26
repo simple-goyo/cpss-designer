@@ -246,7 +246,10 @@ ORYX.Plugins.DragDropResize = ORYX.Plugins.AbstractPlugin.extend({
 	*/
 	handleMouseMove: function(event) {
 		// If dragging is not enabled, go return
-		if(!this.dragEnable) { return };
+		if(!this.dragEnable
+			|| (this.currentShapes[0].properties["oryx-draggable"] !== undefined
+			&& this.currentShapes[0].properties["oryx-draggable"] === "false")
+		) { return ;}
 		// If Dragging is initialized
 		if(this.dragIntialized) {
 			// Raise Event: Drag will be started
@@ -607,11 +610,8 @@ ORYX.Plugins.DragDropResize = ORYX.Plugins.AbstractPlugin.extend({
 	 *
 	 */
 	beforeDrag: function(){
-
 		var undockEdgeCommand = ORYX.Core.Command.extend({
 			construct: function(moveShapes){
-				if(moveShapes[0].properties["oryx-gragable"] !== undefined && moveShapes[0].properties["oryx-gragable"] === false )
-					return;
 				this.dockers = moveShapes.collect(function(shape){ return shape instanceof ORYX.Core.Controls.Docker ? {docker:shape, dockedShape:shape.getDockedShape(), refPoint:shape.referencePoint} : undefined }).compact();
 			},			
 			execute: function(){
@@ -627,10 +627,8 @@ ORYX.Plugins.DragDropResize = ORYX.Plugins.AbstractPlugin.extend({
 				})
 			}
 		});
-		
-		this._undockedEdgesCommand = new undockEdgeCommand( this.toMoveShapes );
-		this._undockedEdgesCommand.execute();	
-		
+		this._undockedEdgesCommand = new undockEdgeCommand(this.toMoveShapes);
+		this._undockedEdgesCommand.execute();
 	},
 
 	hideAllLabels: function(shape) {

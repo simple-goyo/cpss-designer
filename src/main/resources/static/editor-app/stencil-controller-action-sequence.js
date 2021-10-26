@@ -118,7 +118,7 @@ angular.module('activitiModeler')
         // $scope.editor.getSelection()[0].properties['oryx-overrideid'] = $scope.editor.getSelection()[0].id;//为创建的初始化节点提供id
         let entryPoint = $scope.editor.getSelection()[0];
         entryPoint.setProperty("oryx-overrideid", entryPoint.id);
-        entryPoint.setProperty("oryx-dragable", false);
+        entryPoint.setProperty("oryx-draggable", "false");
         entryPoint.setProperty("oryx-type", "Entry"); //入口节点
     };
 
@@ -145,7 +145,7 @@ angular.module('activitiModeler')
         // $scope.editor.getSelection()[0].properties['oryx-overrideid'] = $scope.editor.getSelection()[0].id;//为创建的初始化节点提供id
         let exitPoint = $scope.editor.getSelection()[0];
         exitPoint.setProperty("oryx-overrideid", exitPoint.id);
-        exitPoint.setProperty("oryx-dragable", false);
+        exitPoint.setProperty("oryx-draggable", "false");
         exitPoint.setProperty("oryx-type", "Exit");//出口节点
 
     };
@@ -175,7 +175,7 @@ angular.module('activitiModeler')
         // $scope.editor.getSelection()[0].properties['oryx-overrideid'] = $scope.editor.getSelection()[0].id;//为创建的初始化节点提供id
         let startNoneEvent = $scope.editor.getSelection()[0];
         startNoneEvent.setProperty("oryx-overrideid", startNoneEvent.id);
-        startNoneEvent.setProperty("oryx-dragable", false);
+        startNoneEvent.setProperty("oryx-draggable", "false");
         startNoneEvent.setProperty("oryx-type", "StartNode");
     };
 

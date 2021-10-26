@@ -82,6 +82,19 @@
       ]
     },
     {
+      "name": "draggablepackage",
+      "properties": [
+        {
+          "id": "draggable",
+          "type": "Boolean",
+          "title": "是否可拖动",
+          "value": "false",
+          "description": "判断是否可拖动",
+          "popular": true
+        }
+      ]
+    },
+    {
       "name": "containresourcepackage",
       "properties": [
         {
@@ -1707,7 +1720,8 @@
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
-        "nodeconditionpackage"
+        "nodeconditionpackage",
+        "draggablepackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1738,7 +1752,8 @@
         "initiatorpackage",
         "resourcespackage",
         "servicespackage",
-        "nodeconditionpackage"
+        "nodeconditionpackage",
+        "draggablepackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [
@@ -1888,7 +1903,8 @@
 
         "resourcespackage",
         "starteventpackage",
-        "currentscenepackage"
+        "currentscenepackage",
+        "draggablepackage"
       ],
       "hiddenPropertyPackages": [],
       "roles": [

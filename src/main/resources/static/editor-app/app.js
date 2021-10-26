@@ -278,7 +278,7 @@ activitiModeler
                         jQuery('#paletteSection').height(totalAvailable / 2);
                         //设置属性编辑栏的高度
                         jQuery('#propertySection').height(totalAvailable / 2);
-                        jQuery('#sceneSection').height(totalAvailable - 100);
+                        jQuery('#sceneSection').height(totalAvailable * 0.7);
 
                         // Update positions of the resize-markers, according to the canvas
 
