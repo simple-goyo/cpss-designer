@@ -311,6 +311,7 @@
   "PROPERTY.NODE.CONDITION.ADD": "Add condition",
   "PROPERTY.NODE.CONDITION.COMBINE": "Condition combination：",
   "PROPERTY.REFERENCE.ENTITY": "Reference to",
+  "PROPERTY.REFERENCE.ENTITY.ID": "Entity ID: ",
   "PROPERTY.REFERENCE.ENTITY.SELECT": "Please select the referenced entity",
   "PROPERTY.REFERENCE.ENTITY.NULL": "No entity avaliable for reference",
   "CONSTRAINT.VIEW": "Restriction Preview",

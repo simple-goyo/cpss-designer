@@ -10,7 +10,7 @@
 
                 <div class="row row-no-gutter">
                     <div class="form-group">
-                        <label class="col-xs-3" style="float:left;font-size: 16px">{{'PROPERTY.EVENTS.TITLE' | translate}}</label>
+                        <label class="col-xs-3" style="float:none;font-size: 16px;padding-left: 12px;padding-top: 8px;">{{'PROPERTY.EVENTS.TITLE' | translate}}</label>
                         <div class="col-xs-9" ng-repeat="listener in entity.listeners">
                             <select class="form-control" ng-model="selectedEvent" ng-change="changeEvent(selectedEvent)">
                                 <option value="{}" selected="selected">{{'PROPERTY.EVENTS.SELECT'| translate}}</option>

@@ -10,24 +10,19 @@
                 <div class="form-group">
                     <div class="row">
                         <label class="col-xs-3"
-                               style="float:left;font-size: 16px">{{'PROPERTY.SERVICES.FUNCTION.VALUE' | translate}}</label>
+                               style="float:none;font-size: 16px">{{'PROPERTY.SERVICES.FUNCTION.VALUE' | translate}}</label>
                         <div class="col-xs-9" ng-repeat="Service in entity.Services">
                             <select class="form-control" ng-model="selectedFunction"
                                     ng-change="changeFunction(selectedFunction)">
                                 <option value="{}" selected="selected" translate>PROPERTY.SERVICES.SELECT.PLACEHOLDER</option>
                                 <option ng-repeat="x in functions" value="{{x}}">{{x.name}}</option>
                             </select>
-                            <!--                            <i class="glyphicon glyphicon-minus clickable-property"-->
-                            <!--                               ng-click="removeServiceValue($index)"></i>-->
-                            <!--                            <i ng-if="$index == (entity.Services.length - 1)"-->
-                            <!--                               class="glyphicon glyphicon-plus clickable-property"-->
-                            <!--                               ng-click="addServiceValue($index)"></i>-->
                         </div>
 
                     </div>
                     <hr>
-                    <div class="row" ng-repeat="param in serviceParams" style="margin-top:6px">
-                        <label class="col-xs-3" style="float:left">{{param}}</label>
+                    <div class="row" ng-repeat="param in serviceParams" style="margin-top:10px">
+                        <label class="col-xs-3" style="float:none">{{param}}</label>
                         <div class="col-xs-8" style="position:relative;">
 
                             <select style="width:178px; position: absolute;left: 0"
@@ -38,7 +33,7 @@
                                 </option>
                             </select>
 
-                            <input type="text"
+                            <input type="text" class="form-control"
                                    style="width:160px;position:absolute;border: 0;border-radius: 5px;left: 2px;height: 16px;top:1px;"
                                    placeholder="{{'PROPERTY.SERVICES.INPUT'|translate}}{{param}}"
                                    id="{{param}}" ng-model="$parent.modelInput[param]">

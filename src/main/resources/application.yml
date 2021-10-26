@@ -34,7 +34,7 @@ server:
 spring:
   profiles: dev
   datasource:
-    url: jdbc:mysql://47.100.34.166:3307/activiti6?useUnicode=true&useSSL=false&amp;characterEncoding=utf8&allowMultiQueries=true
+    url: jdbc:mysql://47.100.34.166:3307/cpss?useUnicode=true&useSSL=false&amp;characterEncoding=utf8&allowMultiQueries=true
     username: uipath
     password: 123456789A
 

@@ -8,8 +8,8 @@
             </div>
             <div class="modal-body">
                 <div ng-if="canReferenceEntities.length>0" class="row">
-                    <label for="referenceEntitySelect" class="col-xs-3" style="float: left">:</label>
-                    <select id="referenceEntitySelect" class="col-xs-9" style="float: left">
+                    <label for="referenceEntitySelect" class="col-xs-3" style="float: none">{{'PROPERTY.REFERENCE.ENTITY.ID'|translate}}</label>
+                    <select id="referenceEntitySelect" class="col-xs-9 form-control" style="float: right; width: 75%;">
                         <option value="" selected>{{'PROPERTY.REFERENCE.ENTITY.SELECT'|translate}}</option>
                         <option ng-repeat="entity in canReferenceEntities"
                                 ng-selected="property.value===entity.id" value="{{entity.id}}">

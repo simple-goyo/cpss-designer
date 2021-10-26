@@ -10,8 +10,8 @@
                 <input class="form-control" type="text" id="initProperty" placeholder="" ng-hide="isSettingbyKG" ng-model="nameProperty.value"/>
                 <div class="row row-no-gutter" ng-hide="!isSettingbyKG">
                     <div class="form-group">
-                        <label class="col-xs-3" style="float: left" >{{'PROPERTY.SERVICES.RESOURCE.VALUE' | translate}}</label>
-                        <select class="form-control col-xs-8" style="float: right" ng-model="selectedRes">
+                        <label class="col-xs-3" style="float: none; padding-left: 10px;" >{{'PROPERTY.SERVICES.RESOURCE.VALUE' | translate}}</label>
+                        <select class="col-xs-9 form-control" style="float: right; width:75%" ng-model="selectedRes">
                             <option value="" selected="selected">{{'PROPERTY.SERVICES.RESOURCE.SELECT' | translate}}</option>
                             <option ng-repeat="x in resources" value="{{x.name}}">{{x.name}}</option>
                         </select>

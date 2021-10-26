@@ -994,7 +994,7 @@ angular.module('activitiModeler')
 
                 paletteHelpWrapper.css("height", anchor + offsetY + "px");
                 // splitLine.css("top", anchor + offsetY+ "px");
-                propertiesHelpWrapper.css("height", anchor - offsetY + "px");
+                // propertiesHelpWrapper.css("height", anchor - offsetY + "px");
 
             });
 
