@@ -527,8 +527,9 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 let type = service.stencil.id;
                 // interaction
                 let interaction = {};
+                let workertarget = {};
                 if(enactedBy.type === "Worker"){
-                    let workertarget = service.properties["workertarget"];
+                    workertarget = service.properties["workertarget"];
                     interaction["id"] = workertarget.properties["overrideid"];
                     interaction["name"] = workertarget.properties["name"];
                     interaction["type"] = workertarget.properties["type"];

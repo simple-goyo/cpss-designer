@@ -58,6 +58,14 @@ angular.module('activitiModeler')
                 $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "BodyMovement", resTemp);
             }
 
+            if (actionName === 'FillingofOrder') {
+                $scope.createResource($scope, selectedShape, "CyberObject");
+
+                let resTemp = resProperties;
+                resTemp["oryx-type"] = "CyberObject";
+                $scope.setNewResourceProperty($scope, $scope.editor.getSelection()[0], "Order", resTemp);
+            }
+
             if (actionName === 'HumanDetection') {
                 $scope.createResource($scope, selectedShape, "CyberObject");
 
