@@ -530,7 +530,19 @@ var ExportModelCtrl = ['$rootScope', '$scope', '$http', '$route', '$location',
                 let workertarget = {};
                 if(enactedBy.type === "Worker"){
                     workertarget = service.properties["workertarget"];
-                    interaction["id"] = workertarget.properties["overrideid"];
+                    if (workertarget.properties["overrideid"]){
+                        if(workertarget.properties["referenceentity"] && workertarget.properties["referenceentity"] !== ""){
+                            interaction["id"] = workertarget.properties["referenceentity"];
+                        }else {
+                            interaction["id"] = workertarget.properties["overrideid"];
+                        }
+                    }else if(workertarget.properties["oryx-overrideid"]){
+                        if(workertarget.properties["oryx-referenceentity"] && workertarget.properties["oryx-referenceentity"] !== ""){
+                            interaction["id"] = workertarget.properties["oryx-referenceentity"];
+                        }else {
+                            interaction["id"] = workertarget.properties["oryx-overrideid"];
+                        }
+                    }
                     interaction["name"] = workertarget.properties["name"];
                     interaction["type"] = workertarget.properties["type"];
                 }
